@@ -1,0 +1,249 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/mbtpp/src/parser"
+
+// Values
+pub fn parse_expr(String) -> Expr raise ParseError
+
+pub fn parse_program(String) -> Array[Decl] raise ParseError
+
+pub fn tokenize(String, line0? : Int, col0? : Int) -> Array[Token] raise ParseError
+
+// Errors
+pub suberror ParseError {
+  ParseError(Pos, String)
+}
+
+// Types and methods
+pub(all) struct Arm {
+  pos : Pos
+  pat : Pat
+  rhs : Expr?
+}
+pub impl Show for Arm
+
+pub(all) struct Binder {
+  pos : Pos
+  name : String
+  ty : Expr?
+}
+pub impl Show for Binder
+
+pub(all) struct ConDecl {
+  pos : Pos
+  name : String
+  impl_params : Array[Binder]
+  params : Array[Binder]
+  ret : Expr?
+}
+pub impl Show for ConDecl
+
+pub(all) enum Decl {
+  DFn(FnDecl)
+  DDef(Pos, String, Array[Binder], Expr?, Expr)
+  DEnum(EnumDecl)
+  DStruct(StructDecl)
+  DTrait(TraitDecl)
+  DImpl(ImplDecl)
+}
+pub impl Show for Decl
+
+pub(all) struct EnumDecl {
+  pos : Pos
+  name : String
+  impl_params : Array[Binder]
+  params : Array[Binder]?
+  sig : Expr?
+  cons : Array[ConDecl]
+  is_error : Bool
+}
+pub impl Show for EnumDecl
+
+pub(all) enum Expr {
+  EVar(Pos, String)
+  EHole(Pos)
+  EType(Pos)
+  EProp(Pos)
+  ELit(Pos, Lit)
+  EInterp(Pos, Array[InterpPart])
+  EApp(Pos, Expr, Array[Expr]?, Array[Expr]?)
+  EPi(Pos, Array[Binder], Array[Binder]?, Expr, Expr?)
+  ELam(Pos, Array[Binder], Array[Binder], Expr?, Expr)
+  EBlock(Pos, Array[Stmt])
+  EIf(Pos, Expr, Expr, Expr?)
+  EMatch(Pos, Expr, MatchRet?, Array[Arm])
+  EAnn(Pos, Expr, Expr)
+  EField(Pos, Expr, String)
+  EMethod(Pos, Expr, String, Array[Expr]?, Array[Expr])
+  EBin(Pos, String, Expr, Expr)
+  EUn(Pos, String, Expr)
+  ETuple(Pos, Array[Expr])
+  EArray(Pos, Array[Expr])
+  EStruct(Pos, Array[(String, Expr)])
+  ETry(Pos, Expr, Array[Arm])
+  ETryQ(Pos, Expr)
+  ERaise(Pos, Expr)
+  EMonad(Pos, Expr)
+  EBind(Pos, Expr)
+  EProof(Pos, Array[Tactic])
+  EReturn(Pos, Expr?)
+  EBreak(Pos)
+  EContinue(Pos)
+  ERange(Pos, Expr, Expr, Bool)
+}
+pub fn Expr::pos(Self) -> Pos
+pub impl Show for Expr
+
+pub(all) enum FnBody {
+  BodyExpr(Expr)
+  BodyExtern(String)
+}
+pub impl Show for FnBody
+
+pub(all) struct FnDecl {
+  pos : Pos
+  name : String
+  impl_params : Array[Binder]
+  params : Array[Binder]?
+  ret : Expr?
+  raises : Expr?
+  body : FnBody
+  is_lemma : Bool
+}
+pub impl Show for FnDecl
+
+pub(all) struct ImplDecl {
+  pos : Pos
+  impl_params : Array[Binder]
+  trait_name : String
+  for_ty : Expr
+  meth : String
+  params : Array[Binder]
+  body : Expr
+}
+pub impl Show for ImplDecl
+
+pub(all) enum InterpPart {
+  IStr(String)
+  IExpr(Expr)
+}
+pub impl Show for InterpPart
+
+pub(all) enum Lit {
+  LInt(Int)
+  LStr(String)
+  LChar(Char)
+  LBool(Bool)
+  LUnit
+}
+pub impl Eq for Lit
+pub impl Show for Lit
+
+pub(all) struct MatchRet {
+  as_name : String?
+  in_ty : Expr?
+  ret : Expr?
+}
+pub impl Show for MatchRet
+
+type Parser
+pub fn Parser::expr(Self) -> Expr raise ParseError
+
+pub(all) enum Pat {
+  PVar(Pos, String)
+  PWild(Pos)
+  PCon(Pos, String, Array[Pat]?, Array[Pat])
+  PLit(Pos, Lit)
+  PTuple(Pos, Array[Pat])
+}
+pub fn Pat::pos(Self) -> Pos
+pub impl Show for Pat
+
+pub(all) struct Pos {
+  line : Int
+  col : Int
+}
+pub fn Pos::to_string(Self) -> String
+pub impl Eq for Pos
+pub impl Show for Pos
+
+pub(all) enum Stmt {
+  SLet(Pos, Pat, Expr?, Expr)
+  SLetMut(Pos, String, Expr?, Expr)
+  SLetBind(Pos, Pat, Expr)
+  SFn(Pos, FnDecl)
+  SAssign(Pos, Expr, String, Expr)
+  SWhile(Pos, Expr, Expr)
+  SFor(Pos, Array[(String, Expr)], Expr?, Array[(String, Expr)], Expr)
+  SForIn(Pos, String, Expr, Expr)
+  SExpr(Pos, Expr)
+}
+pub impl Show for Stmt
+
+pub(all) enum StrPart {
+  SPStr(String)
+  SPExpr(String, Int, Int)
+}
+pub impl Eq for StrPart
+pub impl Show for StrPart
+
+pub(all) struct StructDecl {
+  pos : Pos
+  name : String
+  impl_params : Array[Binder]
+  params : Array[Binder]?
+  fields : Array[(Pos, String, Expr)]
+}
+pub impl Show for StructDecl
+
+pub(all) enum Tactic {
+  TIntros(Pos, Array[String])
+  TExact(Pos, Expr)
+  TRfl(Pos)
+  TDestruct(Pos, String)
+  TRewrite(Pos, Expr, Bool)
+  TApply(Pos, Expr)
+  TAssume(Pos, String, Expr)
+}
+pub impl Show for Tactic
+
+pub(all) enum Tok {
+  TIdent(String)
+  TInt(Int)
+  TStr(Array[StrPart])
+  TChar(Char)
+  TSym(String)
+  TEOF
+}
+pub impl Eq for Tok
+pub impl Show for Tok
+
+pub(all) struct Token {
+  tok : Tok
+  pos : Pos
+  nl : Bool
+}
+pub impl Show for Token
+
+pub(all) struct TraitDecl {
+  pos : Pos
+  name : String
+  self_kind : Expr?
+  supers : Array[String]
+  methods : Array[TraitMethod]
+}
+pub impl Show for TraitDecl
+
+pub(all) struct TraitMethod {
+  pos : Pos
+  name : String
+  impl_params : Array[Binder]
+  params : Array[Binder]
+  ret : Expr
+  raises : Expr?
+}
+pub impl Show for TraitMethod
+
+// Type aliases
+
+// Traits
+

@@ -1,0 +1,54 @@
+enum Vector[T] : Nat -> Type {
+  Nil : Vector[T](0)
+  Cons[n : Nat](T, Vector[T](n)) : Vector[T](S(n))
+}
+
+fn[T, n] Vector::head(self : Vector[T](S(n))) -> T {
+  let Cons(hd, _) = self
+  hd
+}
+
+fn[T, n] Vector::tail(self : Vector[T](S(n))) -> Vector[T](n) {
+  match self {
+    Nil
+    Cons(_, tl) => tl
+  }
+}
+
+fn[T, n : Nat, m : Nat] Vector::append(self : Vector[T](n), ys : Vector[T](m)) -> Vector[T](n + m) {
+  match self {
+    Nil => ys
+    Cons(x, xs) => Cons(x, xs.append(ys))
+  }
+}
+
+fn[T, U, n : Nat] Vector::map(self : Vector[T](n), f : (T) -> U) -> Vector[U](n) {
+  match self {
+    Nil => Nil
+    Cons(x, xs) => Cons(f(x), xs.map(f))
+  }
+}
+
+fn[T, n : Nat] Vector::to_list(self : Vector[T](n)) -> List[T] {
+  match self {
+    Nil => List::Nil
+    Cons(x, xs) => List::Cons(x, xs.to_list())
+  }
+}
+
+fn[A, B, n : Nat] zip(xs : Vector[A](n), ys : Vector[B](n)) -> Vector[(A, B)](n) {
+  match (xs, ys) {
+    (Nil, Nil) => Nil
+    (Cons(x, xt), Cons(y, yt)) => Cons((x, y), zip(xt, yt))
+  }
+}
+
+fn main {
+  let v : Vector[Int](3) = Cons(1, Cons(2, Cons(3, Nil)))
+  println(v.head())
+  println(v.tail().head())
+  let w = v.append(v.map(x => x * 10))
+  println(w.to_list())
+  let z = zip(v, v.map(x => x > 1))
+  println(z.tail().head().1)
+}

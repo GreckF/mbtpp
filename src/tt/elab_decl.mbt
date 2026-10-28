@@ -1,0 +1,848 @@
+///|
+/// Top-level declarations.
+fn register(name : String, ty : Tm, kind : GKind) -> Unit {
+  globals.set(name, { name, ty, vty: eval([], ty), kind })
+}
+
+///|
+fn set_body(name : String, body : Tm, arity : Int) -> Unit {
+  match globals.get(name) {
+    Some(g) => g.kind = GFunc(Some(body), contains_imperative(body), arity)
+    None => ()
+  }
+}
+
+///|
+fn contains_imperative(t : Tm) -> Bool {
+  match t {
+    LetMut(_, _, _, _)
+    | Assign(_, _)
+    | While(_, _, _)
+    | Break
+    | Continue
+    | Return(_)
+    | Raise(_)
+    | Try(_, _)
+    | ArrayLit(_)
+    | Seq(_, _) => true
+    Lam(_, _, _, b) => contains_imperative(b)
+    App(f, a, _) => contains_imperative(f) || contains_imperative(a)
+    Pi(_, _, _, a, b) => contains_imperative(a) || contains_imperative(b)
+    Let(_, a, v, b) =>
+      contains_imperative(a) || contains_imperative(v) || contains_imperative(b)
+    Match(ss, cls) =>
+      ss.iter().any(contains_imperative) ||
+      cls.iter().any(cl => contains_imperative(cl.body))
+    Raises(a, e) => contains_imperative(a) || contains_imperative(e)
+    _ => false
+  }
+}
+
+///|
+/// Replace solved metas.
+fn zonk(lvl : Int, t : Tm) -> Tm {
+  let go = (x : Tm) => zonk(lvl, x)
+  let solved_head = (h : Tm) => match h {
+    Meta(m) | InsertedMeta(m, _) => metas[m].sol is Some(_)
+    _ => false
+  }
+  match t {
+    Meta(_) | InsertedMeta(_, _) =>
+      if solved_head(t) {
+        quote(lvl, eval(fresh_vars(0, lvl), t))
+      } else {
+        t
+      }
+    App(_, _, _) => {
+      let (h, args) = flatten_app(t)
+      if solved_head(h) {
+        quote(lvl, eval(fresh_vars(0, lvl), t))
+      } else {
+        apps(go(h), args.map(a => (go(a.0), a.1)))
+      }
+    }
+    Lam(x, i, g, b) => Lam(x, i, g, zonk(lvl + 1, b))
+    Pi(x, i, g, a, b) => Pi(x, i, g, go(a), zonk(lvl + 1, b))
+    Let(x, a, v, b) => Let(x, go(a), go(v), zonk(lvl + 1, b))
+    LetMut(x, a, v, b) => LetMut(x, go(a), go(v), zonk(lvl + 1, b))
+    Match(ss, cls) =>
+      Match(
+        ss.map(go),
+        cls.map(cl => {
+          pats: cl.pats,
+          body: zonk(lvl + pats_slots(cl.pats), cl.body),
+        }),
+      )
+    Try(b, cls) =>
+      Try(
+        go(b),
+        cls.map(cl => {
+          pats: cl.pats,
+          body: zonk(lvl + pats_slots(cl.pats), cl.body),
+        }),
+      )
+    Raises(a, e) => Raises(go(a), go(e))
+    Assign(ix, v) => Assign(ix, go(v))
+    While(c, b, s) => While(go(c), go(b), go(s))
+    Return(v) => Return(go(v))
+    Raise(v) => Raise(go(v))
+    ArrayLit(es) => ArrayLit(es.map(go))
+    Seq(a, b) => Seq(go(a), go(b))
+    _ => t
+  }
+}
+
+///|
+fn has_metas(t : Tm) -> Bool {
+  match t {
+    Meta(_) | InsertedMeta(_, _) => true
+    Lam(_, _, _, b) => has_metas(b)
+    App(f, a, _) => has_metas(f) || has_metas(a)
+    Pi(_, _, _, a, b) => has_metas(a) || has_metas(b)
+    Let(_, a, v, b) | LetMut(_, a, v, b) =>
+      has_metas(a) || has_metas(v) || has_metas(b)
+    Match(ss, cls) =>
+      ss.iter().any(has_metas) || cls.iter().any(cl => has_metas(cl.body))
+    Try(b, cls) => has_metas(b) || cls.iter().any(cl => has_metas(cl.body))
+    Raises(a, e) => has_metas(a) || has_metas(e)
+    Assign(_, v) | Return(v) | Raise(v) => has_metas(v)
+    While(c, b, s) => has_metas(c) || has_metas(b) || has_metas(s)
+    ArrayLit(es) => es.iter().any(has_metas)
+    Seq(a, b) => has_metas(a) || has_metas(b)
+    _ => false
+  }
+}
+
+///|
+/// Finish elaborating a definition: resolve instances, default the types of
+/// unannotated implicit binders to `Type`, and zonk.
+fn finish(
+  cxt : Cxt,
+  what : String,
+  ts : Array[Tm],
+  lvl? : Int = 0,
+) -> Array[Tm] raise ElabError {
+  solve_pending(false)
+  for d in st.type_defaults {
+    let (m, n) = d
+    if metas[m].sol is None {
+      let mut t = U
+      for _ in 0..<n {
+        t = Lam("_", Expl, true, t)
+      }
+      metas[m].sol = Some(eval([], t))
+    }
+  }
+  st.type_defaults.clear()
+  solve_pending(true)
+  let out = ts.map(t => zonk(lvl, t))
+  for t in out {
+    if has_metas(t) {
+      cxt.fail("cannot infer all implicit arguments or types in " + what)
+    }
+  }
+  out
+}
+
+///|
+/// Context of the binders of a (closed) Pi type, and the remaining type.
+fn telescope_cxt(
+  cxt0 : Cxt,
+  ty : Tm,
+  n : Int,
+) -> (Cxt, Array[(String, Icit, Bool)], Val) {
+  let mut cxt = cxt0
+  let mut t = eval([], ty)
+  let bs : Array[(String, Icit, Bool)] = []
+  for _ in 0..<n {
+    match force(t) {
+      VPi(x, i, g, a, cl) => {
+        let v = v_var(cxt.lvl)
+        cxt = cxt.bind(x, a)
+        bs.push((x, i, g))
+        t = inst(cl, v)
+      }
+      _ => break
+    }
+  }
+  (cxt, bs, t)
+}
+
+///|
+fn wrap_lams(bs : Array[(String, Icit, Bool)], body : Tm) -> Tm {
+  let mut t = body
+  for k = bs.length() - 1; k >= 0; k = k - 1 {
+    let (x, i, g) = bs[k]
+    t = Lam(x, i, g, t)
+  }
+  t
+}
+
+// ---------------------------------------------------------------------------
+// Functions
+
+///|
+fn elab_fn_sig(fd : @parser.FnDecl) -> Unit raise ElabError {
+  let cxt = empty_cxt(fd.pos)
+  let (c1, bs1) = elab_impl_binders(cxt, fd.impl_params)
+  let (c2, bs2) = match fd.params {
+    Some(ps) => elab_expl_binders(c1, ps)
+    None => (c1, [])
+  }
+  let ret = match fd.ret {
+    Some(r) => check_type(c2, r)
+    None =>
+      if fd.name == "main" || fd.body is BodyExtern(_) {
+        Global("Unit")
+      } else {
+        c2.fresh_meta()
+      }
+  }
+  let ret = match fd.raises {
+    Some(r) => Raises(ret, check_type(c2, r))
+    None => ret
+  }
+  let bs = concat(bs1, bs2)
+  let ty = pis(bs, ret)
+  match fd.body {
+    BodyExtern(p) => {
+      let ty = finish(cxt, fd.name, [ty])[0]
+      register(fd.name, ty, GPrim(p, bs.length()))
+    }
+    BodyExpr(_) => register(fd.name, ty, GFunc(None, false, bs.length()))
+  }
+}
+
+///|
+fn elab_fn_body(fd : @parser.FnDecl) -> Unit raise ElabError {
+  let body = match fd.body {
+    BodyExpr(b) => b
+    BodyExtern(_) => return
+  }
+  let g = globals.get(fd.name).unwrap()
+  let n = match g.kind {
+    GFunc(_, _, n) => n
+    _ => 0
+  }
+  let cxt0 = empty_cxt(fd.pos)
+  let (cxt, bs, rty) = telescope_cxt(cxt0, g.ty, n)
+  let (body_ty, can_raise) = match force(rty) {
+    VRaises(a, _) => (a, true)
+    other => (other, false)
+  }
+  let bc = { ..cxt, can_raise, ret_ty: Some(body_ty) }
+  let t = check(bc, body, body_ty)
+  let res = finish(cxt, fd.name, [wrap_lams(bs, t), g.ty])
+  globals.set(fd.name, {
+    name: fd.name,
+    ty: res[1],
+    vty: eval([], res[1]),
+    kind: g.kind,
+  })
+  set_body(fd.name, res[0], n)
+}
+
+///|
+fn elab_def_sig(
+  pos : Pos,
+  name : String,
+  impls : Array[@parser.Binder],
+  ty : @parser.Expr?,
+  body : @parser.Expr,
+) -> Unit raise ElabError {
+  let cxt = empty_cxt(pos)
+  let (c1, bs) = elab_impl_binders(cxt, impls)
+  match ty {
+    Some(t) => {
+      let tt = check_type(c1, t)
+      register(name, pis(bs, tt), GFunc(None, false, bs.length()))
+    }
+    None => {
+      let (t, a) = infer_ins(c1, body)
+      let res = finish(cxt, name, [pis(bs, c1.quote(a)), lams(bs, t)])
+      register(name, res[0], GFunc(None, false, bs.length()))
+      set_body(name, res[1], bs.length())
+    }
+  }
+}
+
+///|
+fn elab_def_body(
+  pos : Pos,
+  name : String,
+  body : @parser.Expr,
+) -> Unit raise ElabError {
+  let g = globals.get(name).unwrap()
+  if g.kind is GFunc(Some(_), _, _) {
+    return
+  }
+  let n = match g.kind {
+    GFunc(_, _, n) => n
+    _ => 0
+  }
+  let (cxt, bs, rty) = telescope_cxt(empty_cxt(pos), g.ty, n)
+  let t = check({ ..cxt, ret_ty: Some(rty) }, body, rty)
+  let res = finish(cxt, name, [wrap_lams(bs, t)])
+  set_body(name, res[0], n)
+}
+
+// ---------------------------------------------------------------------------
+// Datatypes
+
+///|
+fn elab_data_header(
+  pos : Pos,
+  name : String,
+  impls : Array[@parser.Binder],
+  params : Array[@parser.Binder]?,
+  sig : @parser.Expr?,
+  cons : Array[String],
+  fields : Array[String]?,
+  is_trait : Bool,
+  is_error : Bool,
+) -> Unit raise ElabError {
+  let cxt = empty_cxt(pos)
+  let (c1, bs1) = elab_impl_binders(cxt, impls)
+  let (c2, bs2) = match params {
+    Some(ps) if ps.length() > 0 => elab_expl_binders(c1, ps)
+    _ => (c1, [])
+  }
+  let (st_tm, nidx, is_prop) = match sig {
+    Some(s) => {
+      let t = check_type(c2, s)
+      let mut cur = c2.eval(t)
+      let mut l = c2.lvl
+      let mut k = 0
+      while force(cur) is VPi(_, _, _, _, cl) {
+        cur = inst(cl, v_var(l))
+        l = l + 1
+        k = k + 1
+      }
+      match force(cur) {
+        VU => (t, k, false)
+        VProp => (t, k, true)
+        _ => c2.fail("the type of " + name + " must end in Type or Prop")
+      }
+    }
+    None => (U, 0, false)
+  }
+  let bs = concat(bs1, bs2)
+  let ty = finish(cxt, name, [pis(bs, st_tm)])[0]
+  register(
+    name,
+    ty,
+    GData({
+      name,
+      nparams: bs.length(),
+      nindices: nidx,
+      cons,
+      is_prop,
+      fields,
+      is_trait,
+      is_error,
+      builtin: false,
+    }),
+  )
+}
+
+///|
+/// Context binding the parameters of datatype `d`, and their binders (all
+/// implicit, for constructor types).
+fn data_params_cxt(
+  cxt0 : Cxt,
+  d : String,
+) -> (Cxt, Array[(String, Icit, Tm)]) raise ElabError {
+  let g = global_entry(cxt0, d)
+  let di = data_info(d).unwrap()
+  let mut cxt = cxt0
+  let bs : Array[(String, Icit, Tm)] = []
+  let mut t = g.ty
+  for _ in 0..<di.nparams {
+    match t {
+      Pi(x, _, _, a, b) => {
+        bs.push((x, Impl, a))
+        cxt = cxt.bind(x, cxt.eval(a))
+        t = b
+      }
+      _ => break
+    }
+  }
+  (cxt, bs)
+}
+
+///|
+/// `D` applied to its parameters, in a context whose first variables are
+/// the parameters.
+fn data_self(cxt : Cxt, d : String) -> Tm {
+  let g = globals.get(d).unwrap()
+  let di = data_info(d).unwrap()
+  let mut t = Global(d)
+  let mut ty = g.ty
+  for k = 0; k < di.nparams; k = k + 1 {
+    match ty {
+      Pi(_, i, _, _, b) => {
+        t = App(t, Var(cxt.lvl - 1 - k), i)
+        ty = b
+      }
+      _ => ()
+    }
+  }
+  t
+}
+
+///|
+fn elab_con(
+  d : String,
+  cd : @parser.ConDecl,
+  is_error : Bool,
+) -> Unit raise ElabError {
+  let cxt0 = empty_cxt(cd.pos)
+  let (pc, pbs) = data_params_cxt(cxt0, d)
+  let di = data_info(d).unwrap()
+  let (c1, ibs) = elab_impl_binders(pc, cd.impl_params)
+  let (c2, ebs) = if cd.params.length() > 0 {
+    elab_expl_binders(c1, cd.params)
+  } else {
+    (c1, [])
+  }
+  let ret = match cd.ret {
+    Some(r) => {
+      let rt = check_type(c2, r)
+      match force(c2.eval(rt)) {
+        VData(d2, sp) if d2 == d => {
+          for k = 0; k < di.nparams; k = k + 1 {
+            if !c2.try_unify(sp[k].0, v_var(k)) {
+              c2.fail(
+                "constructor " +
+                cd.name +
+                " must return " +
+                d +
+                " applied to its parameters",
+              )
+            }
+          }
+          rt
+        }
+        _ => c2.fail("constructor " + cd.name + " must return " + d)
+      }
+    }
+    None => {
+      if di.nindices > 0 {
+        c2.fail("constructor " + cd.name + " needs a return type")
+      }
+      data_self(c2, d)
+    }
+  }
+  let name = d + "::" + cd.name
+  let ty = finish(cxt0, name, [pis(concat(concat(pbs, ibs), ebs), ret)])[0]
+  ignore(is_error)
+  register(
+    name,
+    ty,
+    GCon({
+      name,
+      data: d,
+      nparams: di.nparams,
+      nargs: ibs.length() + ebs.length(),
+      nimpl: ibs.length(),
+    }),
+  )
+}
+
+///|
+fn elab_struct_decl(sd : @parser.StructDecl) -> Unit raise ElabError {
+  let d = sd.name
+  let fnames = sd.fields.map(f => f.1)
+  elab_data_header(
+    sd.pos,
+    d,
+    sd.impl_params,
+    sd.params,
+    None,
+    [d + "::mk"],
+    Some(fnames),
+    false,
+    false,
+  )
+  let cxt0 = empty_cxt(sd.pos)
+  let (pc, pbs) = data_params_cxt(cxt0, d)
+  let np = pbs.length()
+  // the constructor
+  let mut c = pc
+  let fbs : Array[(String, Icit, Tm)] = []
+  for f in sd.fields {
+    let ft = check_type(c.at(f.0), f.2)
+    fbs.push((f.1, Expl, ft))
+    c = c.bind(f.1, c.eval(ft))
+  }
+  let con_ty = finish(cxt0, d, [pis(concat(pbs, fbs), data_self(c, d))])[0]
+  register(
+    d + "::mk",
+    con_ty,
+    GCon({
+      name: d + "::mk",
+      data: d,
+      nparams: np,
+      nargs: fbs.length(),
+      nimpl: 0,
+    }),
+  )
+  // projections
+  let n = fbs.length()
+  let (pcx, pbs2) = data_params_cxt(cxt0, d)
+  let self_ty = data_self(pcx, d)
+  let sc = pcx.bind("self", pcx.eval(self_ty))
+  let mut cty = global_entry(cxt0, d + "::mk").vty
+  for k = 0; k < np; k = k + 1 {
+    match force(cty) {
+      VPi(_, _, _, _, cl) => cty = inst(cl, v_var(k))
+      _ => ()
+    }
+  }
+  for k = 0; k < n; k = k + 1 {
+    let fname = d + "::" + fnames[k]
+    let fty = match force(cty) {
+      VPi(_, _, _, a, _) => a
+      _ => VU
+    }
+    let pty = pis(concat(pbs2, [("self", Expl, self_ty)]), sc.quote(fty))
+    let vars = fnames.map(x => CPVar(x))
+    let body = lams(
+      concat(pbs2, [("self", Expl, self_ty)]),
+      Match([Var(0)], [
+        { pats: [CPCon(d + "::mk", vars)], body: Var(n - 1 - k) },
+      ]),
+    )
+    register(fname, pty, GFunc(Some(body), false, np + 1))
+    // later fields see this field as its projection
+    let pv = app_spine(
+      VGlobal(fname, []),
+      concat(fresh_vars(0, np).map(v => (v, Impl)), [(v_var(np), Expl)]),
+    )
+    match force(cty) {
+      VPi(_, _, _, _, cl) => cty = inst(cl, pv)
+      _ => ()
+    }
+  }
+}
+
+///|
+fn elab_enum(ed : @parser.EnumDecl) -> Unit raise ElabError {
+  let cons = ed.cons.map(c => ed.name + "::" + c.name)
+  elab_data_header(
+    ed.pos,
+    ed.name,
+    ed.impl_params,
+    ed.params,
+    ed.sig,
+    cons,
+    None,
+    false,
+    ed.is_error,
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Traits and instances
+
+///|
+fn elab_trait(td : @parser.TraitDecl) -> Unit raise ElabError {
+  let tr = td.name
+  let cxt0 = empty_cxt(td.pos)
+  let kind = match td.self_kind {
+    Some(k) => finish(cxt0, tr, [check_type(cxt0, k)])[0]
+    None => U
+  }
+  let fields = concat(
+    td.supers.map(s => "super$" + s),
+    td.methods.map(m => m.name),
+  )
+  register(
+    tr,
+    Pi("Self", Expl, true, kind, U),
+    GData({
+      name: tr,
+      nparams: 1,
+      nindices: 0,
+      cons: [tr + "::mk"],
+      is_prop: false,
+      fields: Some(fields),
+      is_trait: true,
+      is_error: false,
+      builtin: false,
+    }),
+  )
+  st.traits.set(tr, {
+    kind,
+    supers: td.supers,
+    methods: td.methods.map(m => m.name),
+  })
+  // field types, in the context [Self]
+  let sc = cxt0.bind("Self", cxt0.eval(kind))
+  let ftys : Array[Tm] = []
+  for s in td.supers {
+    ensure(cxt0, s)
+    ftys.push(App(Global(s), Var(0), Expl))
+  }
+  for m in td.methods {
+    let (c1, bs1) = elab_impl_binders(sc.at(m.pos), m.impl_params)
+    let (c2, bs2) = elab_expl_binders(c1, m.params)
+    let r = check_type(c2, m.ret)
+    let r = match m.raises {
+      Some(e) => Raises(r, check_type(c2, e))
+      None => r
+    }
+    ftys.push(
+      finish(sc, tr + "::" + m.name, [pis(concat(bs1, bs2), r)], lvl=1)[0],
+    )
+  }
+  let fbs = fields.mapi((k, f) => (f, Expl, tm_shift(ftys[k], k, 0)))
+  let con_ty = Pi(
+    "Self",
+    Impl,
+    false,
+    kind,
+    pis(fbs, tm_shift(App(Global(tr), Var(0), Expl), fields.length(), 0)),
+  )
+  register(
+    tr + "::mk",
+    con_ty,
+    GCon({
+      name: tr + "::mk",
+      data: tr,
+      nparams: 1,
+      nargs: fields.length(),
+      nimpl: 0,
+    }),
+  )
+  let n = fields.length()
+  for k = 0; k < n; k = k + 1 {
+    // [Self : K, inst : Tr(Self)] -> field type
+    let aty = Pi(
+      "Self",
+      Impl,
+      false,
+      kind,
+      Pi(
+        "inst",
+        Inst,
+        false,
+        App(Global(tr), Var(0), Expl),
+        tm_shift(ftys[k], 1, 0),
+      ),
+    )
+    let vars = fields.map(x => CPVar(x))
+    let body = Lam(
+      "Self",
+      Impl,
+      false,
+      Lam(
+        "inst",
+        Inst,
+        false,
+        Match([Var(0)], [
+          { pats: [CPCon(tr + "::mk", vars)], body: Var(n - 1 - k) },
+        ]),
+      ),
+    )
+    register(tr + "::" + fields[k], aty, GFunc(Some(body), false, 2))
+  }
+}
+
+///|
+fn impl_head(e : @parser.Expr) -> String {
+  match e {
+    EVar(_, n) => n
+    EApp(_, f, _, _) => impl_head(f)
+    EType(_) => "Type"
+    _ => "?"
+  }
+}
+
+///|
+fn elab_impl_sig(name : String, d : @parser.ImplDecl) -> Unit raise ElabError {
+  let cxt = empty_cxt(d.pos)
+  ensure(cxt, d.trait_name)
+  if !st.traits.contains(d.trait_name) {
+    cxt.fail(d.trait_name + " is not a trait")
+  }
+  let (c1, bs) = elab_impl_binders(cxt, d.impl_params)
+  let kind = st.traits.get(d.trait_name).unwrap().kind
+  let ty = check(c1.at(d.for_ty.pos()), d.for_ty, eval([], kind))
+  let ity = finish(cxt, name, [pis(bs, App(Global(d.trait_name), ty, Expl))])[0]
+  register(name, ity, GFunc(None, false, bs.length()))
+  map_push(st.instances, d.trait_name, name)
+}
+
+///|
+fn elab_impl_body(
+  name : String,
+  ds : Array[@parser.ImplDecl],
+) -> Unit raise ElabError {
+  let d0 = ds[0]
+  let tr = d0.trait_name
+  let g = globals.get(name).unwrap()
+  let n = match g.kind {
+    GFunc(_, _, n) => n
+    _ => 0
+  }
+  let (cxt, bs, rty) = telescope_cxt(empty_cxt(d0.pos), g.ty, n)
+  let self_v = match force(rty) {
+    VData(_, [(s, _)]) => s
+    _ => cxt.fail("bad instance type")
+  }
+  let info = st.traits.get(tr).unwrap()
+  let fields = data_info(tr).unwrap().fields.unwrap()
+  let mut cty = global_entry(cxt, tr + "::mk").vty
+  match force(cty) {
+    VPi(_, _, _, _, cl) => cty = inst(cl, self_v)
+    _ => ()
+  }
+  let args : Array[(Tm, Icit)] = [(cxt.quote(self_v), Impl)]
+  for d in ds {
+    if !info.methods.contains(d.meth) {
+      cxt.at(d.pos).fail(d.meth + " is not a method of " + tr)
+    }
+  }
+  for f in fields {
+    let fty = match force(cty) {
+      VPi(_, _, _, a, _) => a
+      _ => cxt.fail("bad trait constructor")
+    }
+    let arg = if f.has_prefix("super$") {
+      match search_instance(cxt, fty, 0) {
+        Some(t) => t
+        None =>
+          cxt.fail("missing instance " + cxt.show(fty) + " required by " + tr)
+      }
+    } else {
+      match ds.iter().find_first(d => d.meth == f) {
+        Some(d) => {
+          let lam : @parser.Expr = ELam(d.pos, [], d.params, None, d.body)
+          check(cxt.at(d.pos), lam, fty)
+        }
+        None => cxt.fail("missing method " + f + " in impl of " + tr)
+      }
+    }
+    args.push((arg, Expl))
+    match force(cty) {
+      VPi(_, _, _, _, cl) => cty = inst(cl, cxt.eval(arg))
+      _ => ()
+    }
+  }
+  let body = wrap_lams(bs, apps(Global(tr + "::mk"), args))
+  let res = finish(cxt, name, [body])
+  set_body(name, res[0], n)
+}
+
+// ---------------------------------------------------------------------------
+// Programs
+
+///|
+fn add_thunk(name : String, th : () -> Unit raise ElabError) -> Unit {
+  st.thunks.set(name, th)
+}
+
+///|
+/// A thunk shared by several names, run at most once.
+fn shared_thunk(names : Array[String], th : () -> Unit raise ElabError) -> Unit {
+  let done = Ref::new(false)
+  let f = () => if !done.val {
+    done.val = true
+    th()
+  }
+  for n in names {
+    add_thunk(n, f)
+  }
+}
+
+///|
+pub fn check_decls(decls : Array[@parser.Decl]) -> Unit raise ElabError {
+  // Datatypes first; then, in source order, each function's signature
+  // directly followed by its body, so that later signatures can compute with
+  // earlier functions. Forward references get their signatures on demand.
+  let types : Array[String] = []
+  let steps : Array[() -> Unit raise ElabError] = []
+  let impl_groups : Map[String, Array[@parser.ImplDecl]] = {}
+  let nowhere = empty_cxt({ line: 0, col: 0 })
+  for d in decls {
+    match d {
+      DFn(fd) => {
+        add_thunk(fd.name, () => elab_fn_sig(fd))
+        steps.push(() => {
+          ensure(nowhere, fd.name)
+          elab_fn_body(fd)
+        })
+      }
+      DDef(pos, name, impls, ty, body) => {
+        add_thunk(name, () => elab_def_sig(pos, name, impls, ty, body))
+        steps.push(() => {
+          ensure(nowhere, name)
+          elab_def_body(pos, name, body)
+        })
+      }
+      DEnum(ed) => {
+        let names = ed.cons.map(c => ed.name + "::" + c.name)
+        for k = 0; k < names.length(); k = k + 1 {
+          map_push(st.cons_by_short, ed.cons[k].name, names[k])
+        }
+        add_thunk(ed.name, () => elab_enum(ed))
+        shared_thunk(names, () => {
+          ensure(empty_cxt(ed.pos), ed.name)
+          for c in ed.cons {
+            elab_con(ed.name, c, ed.is_error)
+          }
+        })
+        types.push(ed.name)
+        for n in names {
+          types.push(n)
+        }
+      }
+      DStruct(sd) => {
+        let names = [
+          sd.name,
+          sd.name + "::mk",
+          ..sd.fields.map(f => sd.name + "::" + f.1),
+        ]
+        shared_thunk(names, () => elab_struct_decl(sd))
+        types.push(sd.name)
+      }
+      DTrait(td) => {
+        for m in td.methods {
+          map_push(st.trait_methods, m.name, td.name)
+        }
+        let names = [
+          td.name,
+          td.name + "::mk",
+          ..td.methods.map(m => td.name + "::" + m.name),
+          ..td.supers.map(s => td.name + "::super$" + s),
+        ]
+        shared_thunk(names, () => elab_trait(td))
+        types.push(td.name)
+      }
+      DImpl(id) => {
+        let h = impl_head(id.for_ty)
+        let key = "impl$" + id.trait_name + "$" + h
+        match impl_groups.get(key) {
+          Some(g) => g.push(id)
+          None => {
+            impl_groups.set(key, [id])
+            map_push(st.instance_heads, id.trait_name, h)
+            map_push(st.impl_sigs, id.trait_name, key)
+            add_thunk(key, () => elab_impl_sig(key, id))
+            steps.push(() => {
+              ensure(nowhere, key)
+              elab_impl_body(key, impl_groups.get(key).unwrap())
+            })
+          }
+        }
+      }
+    }
+  }
+  for name in types {
+    ensure(nowhere, name)
+  }
+  for step in steps {
+    step()
+  }
+}

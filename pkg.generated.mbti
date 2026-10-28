@@ -1,0 +1,16 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/mbtpp"
+
+// Values
+pub fn check_source(String, String) -> String
+
+pub fn run_source(String, String) -> String
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

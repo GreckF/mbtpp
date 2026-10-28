@@ -1,0 +1,123 @@
+// Proofs about natural numbers, lists and length-indexed vectors.
+
+// ---- Nat -----------------------------------------------------------------
+
+lemma plus_zero(n : Nat) -> n + 0 === n {
+  match n {
+    Z => Refl
+    S(k) => Eq::cong(S, plus_zero(k))
+  }
+}
+
+lemma plus_succ(n : Nat, m : Nat) -> n + S(m) === S(n + m) {
+  match n {
+    Z => Refl
+    S(k) => Eq::cong(S, plus_succ(k, m))
+  }
+}
+
+lemma plus_assoc(n : Nat, m : Nat, k : Nat) -> n + m + k === n + (m + k) {
+  match n {
+    Z => Refl
+    S(p) => Eq::cong(S, plus_assoc(p, m, k))
+  }
+}
+
+// commutativity, with tactics
+lemma plus_comm : forall n m : Nat, n + m === m + n = proof {
+  intros n m
+  destruct n
+  rewrite plus_zero(m)
+  rfl
+  rewrite plus_succ(m, n_0)
+  rewrite plus_comm(n_0, m)
+  rfl
+}
+
+// ---- lists: the lemma from the language description ------------------------
+
+lemma append_nil[T](xs : List[T]) -> xs.append(Nil) === xs {
+  match xs {
+    Nil => Refl
+    Cons(x, rest) => Eq::cong(r => List::Cons(x, r), append_nil(rest))
+  }
+}
+
+lemma append_assoc[T](xs : List[T], ys : List[T], zs : List[T]) -> xs.append(ys).append(zs) === xs.append(ys.append(zs)) {
+  match xs {
+    Nil => Refl
+    Cons(x, rest) => Eq::cong(r => List::Cons(x, r), append_assoc(rest, ys, zs))
+  }
+}
+
+lemma reverse_append[T](xs : List[T], ys : List[T]) -> xs.append(ys).reverse() === ys.reverse().append(xs.reverse()) {
+  match xs {
+    Nil => Eq::sym(append_nil(ys.reverse()))
+    Cons(x, rest) => {
+      let ih = Eq::cong(r => r.append(Cons(x, Nil)), reverse_append(rest, ys))
+      Eq::trans(ih, append_assoc(ys.reverse(), rest.reverse(), Cons(x, Nil)))
+    }
+  }
+}
+
+lemma reverse_reverse[T] : forall xs : List[T], xs.reverse().reverse() === xs = proof {
+  intros xs
+  destruct xs
+  rfl
+  rewrite reverse_append(xs_1.reverse(), Cons(xs_0, Nil))
+  rewrite reverse_reverse(xs_1)
+  rfl
+}
+
+// ---- vectors ---------------------------------------------------------------
+
+enum Vector[T] : Nat -> Type {
+  Nil : Vector[T](0)
+  Cons[n : Nat](T, Vector[T](n)) : Vector[T](S(n))
+}
+
+fn[T, n : Nat, m : Nat] Vector::append(self : Vector[T](n), ys : Vector[T](m)) -> Vector[T](n + m) {
+  match self {
+    Nil => ys
+    Cons(x, xs) => Cons(x, xs.append(ys))
+  }
+}
+
+// transport along an equation between lengths
+fn[T, a : Nat, b : Nat] cast(p : a === b, v : Vector[T](a)) -> Vector[T](b) {
+  match p {
+    Refl => v
+  }
+}
+
+lemma cast_cons[T, a : Nat, b : Nat](p : a === b, x : T, v : Vector[T](a)) -> cast(Eq::cong(S, p), Vector::Cons(x, v)) === Vector::Cons(x, cast(p, v)) {
+  match p {
+    Refl => Refl
+  }
+}
+
+lemma vappend_assoc[T, n : Nat, m : Nat, k : Nat](xs : Vector[T](n), ys : Vector[T](m), zs : Vector[T](k)) -> cast(plus_assoc(n, m, k), xs.append(ys).append(zs)) === xs.append(ys.append(zs)) {
+  match xs {
+    Nil => Refl
+    Cons(x, rest) =>
+      Eq::trans(
+        cast_cons(plus_assoc(_, m, k), x, rest.append(ys).append(zs)),
+        Eq::cong(v => Vector::Cons(x, v), vappend_assoc(rest, ys, zs)),
+      )
+  }
+}
+
+fn[T, n : Nat] Vector::to_list(self : Vector[T](n)) -> List[T] {
+  match self {
+    Nil => List::Nil
+    Cons(x, xs) => List::Cons(x, xs.to_list())
+  }
+}
+
+fn main {
+  let v : Vector[Int](2) = Cons(1, Cons(2, Nil))
+  let w = cast(plus_assoc(2, 2, 2), v.append(v).append(v))
+  println(w.to_list())
+  let l : List[Int] = Cons(1, Cons(2, Cons(3, Nil)))
+  println(l.reverse().reverse())
+}

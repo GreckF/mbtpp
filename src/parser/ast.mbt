@@ -1,0 +1,256 @@
+///|
+/// Surface syntax of MoonBit++.
+pub(all) struct Pos {
+  line : Int
+  col : Int
+} derive(Show, Eq)
+
+///|
+pub fn Pos::to_string(self : Pos) -> String {
+  self.line.to_string() + ":" + self.col.to_string()
+}
+
+///|
+pub(all) enum Lit {
+  LInt(Int)
+  LStr(String)
+  LChar(Char)
+  LBool(Bool)
+  LUnit
+} derive(Show, Eq)
+
+///|
+/// A binder `x`, `x : A` or (in parameter lists) an anonymous type `A`.
+pub(all) struct Binder {
+  pos : Pos
+  name : String
+  ty : Expr?
+} derive(Show)
+
+///|
+pub(all) enum InterpPart {
+  IStr(String)
+  IExpr(Expr)
+} derive(Show)
+
+///|
+pub(all) enum Expr {
+  EVar(Pos, String)
+  EHole(Pos)
+  EType(Pos)
+  EProp(Pos)
+  ELit(Pos, Lit)
+  EInterp(Pos, Array[InterpPart])
+  /// `f[impl](expl)`; either list may be absent.
+  EApp(Pos, Expr, Array[Expr]?, Array[Expr]?)
+  /// `[impl](expl) -> cod raise err`
+  EPi(Pos, Array[Binder], Array[Binder]?, Expr, Expr?)
+  /// `fn[impl](params) -> ret { body }` or an arrow function.
+  ELam(Pos, Array[Binder], Array[Binder], Expr?, Expr)
+  EBlock(Pos, Array[Stmt])
+  EIf(Pos, Expr, Expr, Expr?)
+  EMatch(Pos, Expr, MatchRet?, Array[Arm])
+  EAnn(Pos, Expr, Expr)
+  /// `e.f` (field access).
+  EField(Pos, Expr, String)
+  /// `e.m[impl](args)`
+  EMethod(Pos, Expr, String, Array[Expr]?, Array[Expr])
+  EBin(Pos, String, Expr, Expr)
+  EUn(Pos, String, Expr)
+  ETuple(Pos, Array[Expr])
+  EArray(Pos, Array[Expr])
+  EStruct(Pos, Array[(String, Expr)])
+  ETry(Pos, Expr, Array[Arm])
+  ETryQ(Pos, Expr)
+  ERaise(Pos, Expr)
+  EMonad(Pos, Expr)
+  /// `<- e` inside a monad block.
+  EBind(Pos, Expr)
+  EProof(Pos, Array[Tactic])
+  EReturn(Pos, Expr?)
+  EBreak(Pos)
+  EContinue(Pos)
+  /// `a..<b` / `a..=b`
+  ERange(Pos, Expr, Expr, Bool)
+} derive(Show)
+
+///|
+pub(all) struct MatchRet {
+  as_name : String?
+  in_ty : Expr?
+  ret : Expr?
+} derive(Show)
+
+///|
+pub(all) struct Arm {
+  pos : Pos
+  pat : Pat
+  rhs : Expr?
+} derive(Show)
+
+///|
+pub(all) enum Pat {
+  PVar(Pos, String)
+  PWild(Pos)
+  /// `C[impl](expl)`
+  PCon(Pos, String, Array[Pat]?, Array[Pat])
+  PLit(Pos, Lit)
+  PTuple(Pos, Array[Pat])
+} derive(Show)
+
+///|
+pub(all) enum Stmt {
+  SLet(Pos, Pat, Expr?, Expr)
+  SLetMut(Pos, String, Expr?, Expr)
+  /// `let x <- m` inside a monad block.
+  SLetBind(Pos, Pat, Expr)
+  SFn(Pos, FnDecl)
+  SAssign(Pos, Expr, String, Expr)
+  SWhile(Pos, Expr, Expr)
+  /// `for x = a, y = b; cond; x = e, y = e { body }`
+  SFor(Pos, Array[(String, Expr)], Expr?, Array[(String, Expr)], Expr)
+  SForIn(Pos, String, Expr, Expr)
+  SExpr(Pos, Expr)
+} derive(Show)
+
+///|
+pub(all) enum Tactic {
+  TIntros(Pos, Array[String])
+  TExact(Pos, Expr)
+  TRfl(Pos)
+  TDestruct(Pos, String)
+  TRewrite(Pos, Expr, Bool)
+  TApply(Pos, Expr)
+  TAssume(Pos, String, Expr)
+} derive(Show)
+
+///|
+pub(all) enum FnBody {
+  BodyExpr(Expr)
+  BodyExtern(String)
+} derive(Show)
+
+///|
+pub(all) struct FnDecl {
+  pos : Pos
+  name : String
+  impl_params : Array[Binder]
+  params : Array[Binder]?
+  ret : Expr?
+  raises : Expr?
+  body : FnBody
+  is_lemma : Bool
+} derive(Show)
+
+///|
+pub(all) struct ConDecl {
+  pos : Pos
+  name : String
+  impl_params : Array[Binder]
+  params : Array[Binder]
+  ret : Expr?
+} derive(Show)
+
+///|
+pub(all) struct EnumDecl {
+  pos : Pos
+  name : String
+  impl_params : Array[Binder]
+  params : Array[Binder]?
+  sig : Expr?
+  cons : Array[ConDecl]
+  is_error : Bool
+} derive(Show)
+
+///|
+pub(all) struct StructDecl {
+  pos : Pos
+  name : String
+  impl_params : Array[Binder]
+  params : Array[Binder]?
+  fields : Array[(Pos, String, Expr)]
+} derive(Show)
+
+///|
+pub(all) struct TraitMethod {
+  pos : Pos
+  name : String
+  impl_params : Array[Binder]
+  params : Array[Binder]
+  ret : Expr
+  raises : Expr?
+} derive(Show)
+
+///|
+pub(all) struct TraitDecl {
+  pos : Pos
+  name : String
+  self_kind : Expr?
+  supers : Array[String]
+  methods : Array[TraitMethod]
+} derive(Show)
+
+///|
+pub(all) struct ImplDecl {
+  pos : Pos
+  impl_params : Array[Binder]
+  trait_name : String
+  for_ty : Expr
+  meth : String
+  params : Array[Binder]
+  body : Expr
+} derive(Show)
+
+///|
+pub(all) enum Decl {
+  DFn(FnDecl)
+  /// `lemma name[impl] : ty = e` / `let name : ty = e`
+  DDef(Pos, String, Array[Binder], Expr?, Expr)
+  DEnum(EnumDecl)
+  DStruct(StructDecl)
+  DTrait(TraitDecl)
+  DImpl(ImplDecl)
+} derive(Show)
+
+///|
+pub fn Expr::pos(self : Expr) -> Pos {
+  match self {
+    EVar(p, _)
+    | EHole(p)
+    | EType(p)
+    | EProp(p)
+    | ELit(p, _)
+    | EInterp(p, _)
+    | EApp(p, _, _, _)
+    | EPi(p, _, _, _, _)
+    | ELam(p, _, _, _, _)
+    | EBlock(p, _)
+    | EIf(p, _, _, _)
+    | EMatch(p, _, _, _)
+    | EAnn(p, _, _)
+    | EField(p, _, _)
+    | EMethod(p, _, _, _, _)
+    | EBin(p, _, _, _)
+    | EUn(p, _, _)
+    | ETuple(p, _)
+    | EArray(p, _)
+    | EStruct(p, _)
+    | ETry(p, _, _)
+    | ETryQ(p, _)
+    | ERaise(p, _)
+    | EMonad(p, _)
+    | EBind(p, _)
+    | EProof(p, _)
+    | EReturn(p, _)
+    | EBreak(p)
+    | EContinue(p)
+    | ERange(p, _, _, _) => p
+  }
+}
+
+///|
+pub fn Pat::pos(self : Pat) -> Pos {
+  match self {
+    PVar(p, _) | PWild(p) | PCon(p, _, _, _) | PLit(p, _) | PTuple(p, _) => p
+  }
+}

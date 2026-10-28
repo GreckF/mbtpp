@@ -1,0 +1,5 @@
+{
+  "import": [
+    { "path": "username/mbtpp/src/tt", "alias": "tt" }
+  ]
+}

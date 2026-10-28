@@ -1,0 +1,10 @@
+{
+  "is-main": true,
+  "import": [
+    
+    { "path": "username/mbtpp/src/tt", "alias": "tt" },
+    { "path": "username/mbtpp/src/interp", "alias": "interp" },
+    { "path": "moonbitlang/x/sys", "alias": "sys" },
+    { "path": "moonbitlang/x/fs", "alias": "fs" }
+  ]
+}

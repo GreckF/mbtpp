@@ -1,0 +1,44 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/mbtpp/src/interp"
+
+import {
+  "username/mbtpp/src/parser",
+  "username/mbtpp/src/tt",
+}
+
+// Values
+pub fn eval_global(String) -> String raise RunError
+
+pub fn run_main((String) -> Unit) -> Unit raise RunError
+
+pub fn show_rval(RVal) -> String
+
+// Errors
+pub suberror RunError {
+  RunError(String)
+}
+
+// Types and methods
+pub(all) enum Partial {
+  PCon(String, Int, Int)
+  PPrim(String, Int)
+}
+
+pub(all) enum REnv {
+  ENil
+  ECons(Ref[RVal], REnv)
+}
+
+pub(all) enum RVal {
+  RLit(@parser.Lit)
+  RCon(String, Array[RVal])
+  RPartial(Partial, Array[(RVal, @tt.Icit)])
+  RClo(REnv, @tt.Tm)
+  RArr(Array[RVal])
+  RType
+}
+
+// Type aliases
+
+// Traits
+

@@ -1,0 +1,52 @@
+// Rocq-style return clauses, impossible cases and type-level computation.
+
+enum Vector[T] : Nat -> Type {
+  Nil : Vector[T](0)
+  Cons[n : Nat](T, Vector[T](n)) : Vector[T](S(n))
+}
+
+// A type computed from a value.
+fn NAry(n : Nat) -> Type {
+  match n {
+    Z => Int
+    S(k) => (Int) -> NAry(k)
+  }
+}
+
+fn sum_n(n : Nat, acc : Int) -> NAry(n) {
+  match n as m return NAry(m) {
+    Z => acc
+    S(k) => x => sum_n(k, acc + x)
+  }
+}
+
+// The motive mentions the index.
+fn[T, n : Nat] Vector::length_eq(self : Vector[T](n)) -> Nat {
+  match self as v in Vector[_](m) return Nat {
+    Nil => Z
+    Cons(_, xs) => S(xs.length_eq())
+  }
+}
+
+fn[n : Nat] Nat::pred_eq(self : S(n) === S(n)) -> n === n {
+  Refl
+}
+
+fn[T, n : Nat] Vector::last(self : Vector[T](S(n))) -> T {
+  match self {
+    Cons(x, Nil) => x
+    Cons(_, Cons(y, ys)) => Cons(y, ys).last()
+  }
+}
+
+lemma zero_ne_one : (0 : Nat) === 1 -> Int = proof {
+  intros h
+  destruct h
+}
+
+fn main {
+  println(sum_n(3, 0)(1)(2)(3))
+  let v : Vector[Int](2) = Cons(7, Cons(8, Nil))
+  println(v.length_eq())
+  println(v.last())
+}

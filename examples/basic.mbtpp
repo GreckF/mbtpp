@@ -1,0 +1,26 @@
+enum Exp : [T] -> Type {
+  IntLit(Int) : Exp[Int]
+  BoolLit(Bool) : Exp[Bool]
+  Add(Exp[Int], Exp[Int]) : Exp[Int]
+  If[T](Exp[Bool], Exp[T], Exp[T]) : Exp[T]
+}
+
+fn[T] Exp::eval(self : Exp[T]) -> T {
+  match self {
+    IntLit(n) => n
+    BoolLit(b) => b
+    Add(lhs, rhs) => lhs.eval() + rhs.eval()
+    If[_](test, tru, fls) => {
+      if test.eval() {
+        tru.eval()
+      } else {
+        fls.eval()
+      }
+    }
+  }
+}
+
+fn main {
+  let e = If(BoolLit(true), Add(IntLit(1), IntLit(2)), IntLit(0))
+  println(e.eval())
+}

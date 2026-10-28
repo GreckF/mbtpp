@@ -1,0 +1,36 @@
+{
+  "name": "mbtpp",
+  "displayName": "MoonBit++",
+  "description": "Syntax highlighting for MoonBit++ (.mbtpp)",
+  "version": "0.1.0",
+  "publisher": "greckf",
+  "license": "Apache-2.0",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "mbtpp",
+        "aliases": [
+          "MoonBit++",
+          "mbtpp"
+        ],
+        "extensions": [
+          ".mbtpp"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "mbtpp",
+        "scopeName": "source.mbtpp",
+        "path": "./syntaxes/mbtpp.tmLanguage.json"
+      }
+    ]
+  }
+}

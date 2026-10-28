@@ -1,0 +1,244 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "MoonBit++",
+  "scopeName": "source.mbtpp",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#proof" },
+    { "include": "#strings" },
+    { "include": "#chars" },
+    { "include": "#declarations" },
+    { "include": "#keywords" },
+    { "include": "#numbers" },
+    { "include": "#operators" },
+    { "include": "#identifiers" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.documentation.mbtpp",
+          "match": "///.*$"
+        },
+        {
+          "name": "comment.line.double-slash.mbtpp",
+          "match": "//.*$"
+        }
+      ]
+    },
+    "proof": {
+      "comment": "Tactic blocks: proof { intros x; rewrite h; rfl }",
+      "begin": "\\b(proof)\\s*(\\{)",
+      "beginCaptures": {
+        "1": { "name": "keyword.other.proof.mbtpp" },
+        "2": { "name": "punctuation.section.block.begin.mbtpp" }
+      },
+      "end": "\\}",
+      "endCaptures": {
+        "0": { "name": "punctuation.section.block.end.mbtpp" }
+      },
+      "name": "meta.proof.mbtpp",
+      "patterns": [
+        { "include": "#comments" },
+        {
+          "name": "keyword.control.tactic.mbtpp",
+          "match": "\\b(intros|intro|exact|rfl|destruct|cases|rewrite|rw|apply|assume|have)\\b"
+        },
+        { "include": "#braces" },
+        { "include": "$self" }
+      ]
+    },
+    "braces": {
+      "begin": "\\{",
+      "end": "\\}",
+      "patterns": [{ "include": "$self" }]
+    },
+    "strings": {
+      "name": "string.quoted.double.mbtpp",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.mbtpp",
+          "match": "\\\\[ntr0\\\\\"']"
+        },
+        {
+          "name": "meta.interpolation.mbtpp",
+          "begin": "\\\\\\{",
+          "beginCaptures": {
+            "0": { "name": "punctuation.section.interpolation.begin.mbtpp" }
+          },
+          "end": "\\}",
+          "endCaptures": {
+            "0": { "name": "punctuation.section.interpolation.end.mbtpp" }
+          },
+          "contentName": "source.mbtpp.embedded",
+          "patterns": [{ "include": "$self" }]
+        }
+      ]
+    },
+    "chars": {
+      "name": "string.quoted.single.mbtpp",
+      "match": "'(?:\\\\[ntr0\\\\\"']|[^'\\\\])'"
+    },
+    "declarations": {
+      "patterns": [
+        {
+          "comment": "fn name / fn Type::method / lemma name",
+          "match": "\\b(fn|lemma)\\s+(?:([A-Z]\\w*)(::))?([a-z_]\\w*)",
+          "captures": {
+            "1": { "name": "keyword.declaration.function.mbtpp" },
+            "2": { "name": "entity.name.type.mbtpp" },
+            "3": { "name": "punctuation.separator.namespace.mbtpp" },
+            "4": { "name": "entity.name.function.mbtpp" }
+          }
+        },
+        {
+          "comment": "fn[T] ... : the binders are tokenized normally",
+          "match": "\\b(fn|lemma)(?=\\s*\\[)",
+          "name": "keyword.declaration.function.mbtpp"
+        },
+        {
+          "comment": "the name after `fn[T]` / `lemma name[T]`",
+          "match": "(?<=\\])\\s*(?:([A-Z]\\w*)(::))?([a-z_]\\w*)(?=\\s*[\\(\\[:])",
+          "captures": {
+            "1": { "name": "entity.name.type.mbtpp" },
+            "2": { "name": "punctuation.separator.namespace.mbtpp" },
+            "3": { "name": "entity.name.function.mbtpp" }
+          }
+        },
+        {
+          "match": "\\b(enum|struct|trait|suberror)\\s+([A-Z]\\w*)",
+          "captures": {
+            "1": { "name": "keyword.declaration.type.mbtpp" },
+            "2": { "name": "entity.name.type.mbtpp" }
+          }
+        },
+        {
+          "comment": "impl[T : Show] Show for Array[T] with to_string",
+          "match": "\\b(with)\\s+([a-z_]\\w*)",
+          "captures": {
+            "1": { "name": "keyword.other.with.mbtpp" },
+            "2": { "name": "entity.name.function.mbtpp" }
+          }
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.mbtpp",
+          "match": "\\b(if|else|match|while|for|in|return|break|continue|raise|try|catch|noraise|loop|as)\\b"
+        },
+        {
+          "name": "keyword.declaration.mbtpp",
+          "match": "\\b(fn|let|mut|enum|struct|trait|impl|lemma|suberror|derive|pub|priv|with|monad|proof|forall)\\b"
+        },
+        {
+          "name": "constant.language.boolean.mbtpp",
+          "match": "\\b(true|false)\\b"
+        },
+        {
+          "name": "storage.type.universe.mbtpp",
+          "match": "\\b(Type|Prop)\\b"
+        },
+        {
+          "name": "variable.language.self.mbtpp",
+          "match": "\\b(self|Self)\\b"
+        }
+      ]
+    },
+    "numbers": {
+      "name": "constant.numeric.mbtpp",
+      "match": "\\b\\d[\\d_]*\\b"
+    },
+    "operators": {
+      "patterns": [
+        {
+          "comment": "propositional equality",
+          "name": "keyword.operator.equality.propositional.mbtpp",
+          "match": "==="
+        },
+        {
+          "name": "keyword.operator.arrow.mbtpp",
+          "match": "->|=>|<-"
+        },
+        {
+          "name": "keyword.operator.pipe.mbtpp",
+          "match": "\\|>"
+        },
+        {
+          "name": "keyword.operator.range.mbtpp",
+          "match": "\\.\\.[<=]"
+        },
+        {
+          "name": "punctuation.separator.namespace.mbtpp",
+          "match": "::"
+        },
+        {
+          "name": "keyword.operator.comparison.mbtpp",
+          "match": "==|!=|<=|>=|<|>"
+        },
+        {
+          "name": "keyword.operator.logical.mbtpp",
+          "match": "&&|\\|\\||!"
+        },
+        {
+          "name": "keyword.operator.assignment.mbtpp",
+          "match": "\\+=|-=|\\*=|/=|="
+        },
+        {
+          "name": "keyword.operator.arithmetic.mbtpp",
+          "match": "[+\\-*/%]"
+        },
+        {
+          "name": "variable.language.hole.mbtpp",
+          "match": "\\b_\\b"
+        }
+      ]
+    },
+    "identifiers": {
+      "patterns": [
+        {
+          "comment": "Type::method(...) and Type::Constructor",
+          "match": "\\b([A-Z]\\w*)(::)([a-z_]\\w*)",
+          "captures": {
+            "1": { "name": "entity.name.type.mbtpp" },
+            "2": { "name": "punctuation.separator.namespace.mbtpp" },
+            "3": { "name": "entity.name.function.mbtpp" }
+          }
+        },
+        {
+          "comment": "types and constructors start with an upper-case letter",
+          "name": "entity.name.type.mbtpp",
+          "match": "\\b[A-Z]\\w*\\b"
+        },
+        {
+          "comment": "method calls: x.name(",
+          "match": "(\\.)([a-z_]\\w*)(?=\\s*[\\(\\[])",
+          "captures": {
+            "1": { "name": "punctuation.accessor.mbtpp" },
+            "2": { "name": "entity.name.function.method.mbtpp" }
+          }
+        },
+        {
+          "comment": "field access: x.name",
+          "match": "(\\.)([a-z_]\\w*|\\d+)",
+          "captures": {
+            "1": { "name": "punctuation.accessor.mbtpp" },
+            "2": { "name": "variable.other.property.mbtpp" }
+          }
+        },
+        {
+          "comment": "function calls: name(",
+          "match": "\\b([a-z_]\\w*)(?=\\s*\\()",
+          "name": "entity.name.function.call.mbtpp"
+        },
+        {
+          "name": "variable.other.mbtpp",
+          "match": "\\b[a-z_]\\w*\\b"
+        }
+      ]
+    }
+  }
+}

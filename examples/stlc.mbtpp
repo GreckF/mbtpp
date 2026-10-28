@@ -1,0 +1,110 @@
+// Safe indexing and a well-typed interpreter for the simply typed
+// lambda calculus: terms are indexed by their context and type, so `eval`
+// cannot go wrong.
+
+enum Vector[T] : Nat -> Type {
+  Nil : Vector[T](0)
+  Cons[n : Nat](T, Vector[T](n)) : Vector[T](S(n))
+}
+
+enum Fin : (Nat) -> Type {
+  FZ[n : Nat] : Fin(S(n))
+  FS[n : Nat](Fin(n)) : Fin(S(n))
+}
+
+// No case for Nil: Fin(0) is empty.
+fn[T, n : Nat] Vector::get(self : Vector[T](n), i : Fin(n)) -> T {
+  match (self, i) {
+    (Cons(x, _), FZ) => x
+    (Cons(_, xs), FS(j)) => xs.get(j)
+  }
+}
+
+fn[n : Nat] Fin::to_int(self : Fin(n)) -> Int {
+  match self {
+    FZ => 0
+    FS(j) => j.to_int() + 1
+  }
+}
+
+// ---- types and their meaning -------------------------------------------------
+
+enum Ty {
+  TInt
+  TBool
+  TArr(Ty, Ty)
+}
+
+fn Ty::interp(self : Ty) -> Type {
+  match self {
+    TInt => Int
+    TBool => Bool
+    TArr(a, b) => (a.interp()) -> b.interp()
+  }
+}
+
+enum Ctx {
+  Empty
+  Ext(Ctx, Ty)
+}
+
+enum Elem : (Ctx, Ty) -> Type {
+  Here[g : Ctx, t : Ty] : Elem(Ext(g, t), t)
+  There[g : Ctx, t : Ty, s : Ty](Elem(g, t)) : Elem(Ext(g, s), t)
+}
+
+enum Term : (Ctx, Ty) -> Type {
+  Var[g : Ctx, t : Ty](Elem(g, t)) : Term(g, t)
+  Lit[g : Ctx](Int) : Term(g, TInt)
+  Plus[g : Ctx](Term(g, TInt), Term(g, TInt)) : Term(g, TInt)
+  Leq[g : Ctx](Term(g, TInt), Term(g, TInt)) : Term(g, TBool)
+  Cond[g : Ctx, t : Ty](Term(g, TBool), Term(g, t), Term(g, t)) : Term(g, t)
+  Lam[g : Ctx, a : Ty, b : Ty](Term(Ext(g, a), b)) : Term(g, TArr(a, b))
+  App[g : Ctx, a : Ty, b : Ty](Term(g, TArr(a, b)), Term(g, a)) : Term(g, b)
+}
+
+enum Env : (Ctx) -> Type {
+  ENil : Env(Empty)
+  ECons[g : Ctx, t : Ty](Env(g), t.interp()) : Env(Ext(g, t))
+}
+
+fn[g : Ctx, t : Ty] Env::lookup(self : Env(g), e : Elem(g, t)) -> t.interp() {
+  match (self, e) {
+    (ECons(_, v), Here) => v
+    (ECons(rest, _), There(e2)) => rest.lookup(e2)
+  }
+}
+
+fn[g : Ctx, t : Ty] Term::eval(self : Term(g, t), env : Env(g)) -> t.interp() {
+  match self {
+    Var(e) => env.lookup(e)
+    Lit(n) => n
+    Plus(a, b) => a.eval(env) + b.eval(env)
+    Leq(a, b) => a.eval(env) <= b.eval(env)
+    Cond(c, x, y) => if c.eval(env) { x.eval(env) } else { y.eval(env) }
+    Lam(body) => x => body.eval(ECons(env, x))
+    App(f, a) => f.eval(env)(a.eval(env))
+  }
+}
+
+// The meaning of a closed term is computed at type-checking time.
+lemma two_plus_two : Plus(Lit(2), Lit(2)).eval(ENil) === 4 = Refl
+
+fn main {
+  let v : Vector[String](3) = Cons("a", Cons("b", Cons("c", Nil)))
+  println(v.get(FS(FS(FZ))))
+
+  // (fn x => x + 1)(41)
+  let inc : Term(Empty, TArr(TInt, TInt)) = Lam(Plus(Var(Here), Lit(1)))
+  println(App(inc, Lit(41)).eval(ENil))
+
+  // K combinator
+  let k : Term(Empty, TArr(TInt, TArr(TInt, TInt))) = Lam(Lam(Var(There(Here))))
+  println(App(App(k, Lit(1)), Lit(2)).eval(ENil))
+
+  // max as a closed term, used from MoonBit++ as an ordinary function
+  let max : Term(Empty, TArr(TInt, TArr(TInt, TInt))) =
+    Lam(Lam(Cond(Leq(Var(There(Here)), Var(Here)), Var(Here), Var(There(Here)))))
+  let f = max.eval(ENil)
+  println(f(3)(7))
+}

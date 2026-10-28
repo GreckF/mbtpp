@@ -1,0 +1,31 @@
+fn[M : Monad, T, U, V] lift2(f : (T, U) -> V, m : M[T], n : M[U]) -> M[V] {
+  monad {
+    let t <- m
+    let u <- n
+    Monad::pure(f(t, u))
+  }
+}
+
+fn[M : Monad, T, U, V] lift2_nested(f : (T, U) -> V, m : M[T], n : M[U]) -> M[V] {
+  monad {
+    Monad::pure(f(<- m, <- n))
+  }
+}
+
+fn safe_div(a : Int, b : Int) -> Option[Int] {
+  if b == 0 { None } else { Some(a / b) }
+}
+
+fn main {
+  println(lift2((a, b) => a + b, Some(1), Some(2)))
+  println(lift2_nested((a, b) => a + b, Some(1), None))
+  let xs : List[Int] = Cons(1, Cons(2, Nil))
+  let ys : List[Int] = Cons(10, Cons(20, Nil))
+  println(lift2_nested((a, b) => a * b, xs, ys))
+  let r = monad {
+    let x <- safe_div(10, 2)
+    let y <- safe_div(x, 0)
+    Monad::pure(x + y)
+  }
+  println(r)
+}

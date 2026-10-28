@@ -1,0 +1,52 @@
+# Implementation notes
+
+## Packages
+
+- `src/parser`: lexer (newline-sensitive like MoonBit, string interpolation)
+  and a recursive-descent parser producing the surface AST.
+- `src/tt`: the type checker.
+  - `core.mbt`: core terms (de Bruijn indices) and values (levels).
+  - `eval.mbt`: normalisation by evaluation. Global functions are kept folded
+    (`VGlobal`) and unfolded on demand by `force`; a function stays folded when
+    its unfolding is stuck on a `match`.
+  - `unify.mbt`: pattern unification with a first-order fallback (used to infer
+    higher-kinded arguments such as `M[T] = Option[Int]`) and definitional
+    proof irrelevance.
+  - `cxt.mbt`: elaboration contexts. Variables are bound or *defined*; pattern
+    matching refines a context by defining bound variables (`Cxt::refine`).
+  - `elab*.mbt`: bidirectional elaboration of expressions, statements,
+    `match` (with coverage checking), declarations and `monad` blocks.
+  - `instance.mbt`: trait instance search (local instances, superclasses,
+    global instances).
+  - `tactic.mbt`: `intros`, `exact`, `rfl`, `destruct`, `rewrite`, `apply`,
+    `assume`.
+  - `prelude.mbt`: the prelude, written in MoonBit++.
+- `src/interp`: a tree-walking interpreter over elaborated core terms.
+- `app`: the command line.
+
+## Core language
+
+- Uncurried functions are curried Pi types whose explicit binders carry a
+  "starts a new argument group" flag; unification compares the flags, and
+  application requires a whole group. Implicit binders attach to the following
+  explicit group. A function with no parameters takes one `Unit` argument.
+- `Type : Type`; `Prop : Type` is impredicative and proof irrelevant.
+  Matching on a proof is only allowed into a proposition unless the datatype is
+  a subsingleton (such as `===`).
+- `match` compiles to a core `Match` over a list of scrutinees and clauses with
+  nested patterns. Every pattern node occupies one variable slot (the value it
+  matches), followed by the slots of a constructor's arguments, both in the
+  type checker and in the interpreter.
+- Functions whose body uses mutation, loops, `return`, `raise`, `try`,
+  sequencing or array literals are opaque: they never unfold during type
+  checking.
+- There is no termination or positivity checking, so type checking can loop.
+
+## Differences from the original description
+
+- `Eq` is `enum Eq[T](x : T) : (y : T) -> Prop { Refl : Eq[T](x)(x) }`;
+  `a === b` is `Eq[_](a)(b)`.
+- The kind of `Self` in `Monad` is `[T] -> Type`, like `Array` and `Option`.
+- The boolean equality trait is called `Equal` (`Eq` is propositional
+  equality).
+- Resumable algebraic effects, `simp`, `omega` and `auto` are not implemented.

@@ -1,0 +1,276 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/mbtpp/src/tt"
+
+import {
+  "username/mbtpp/src/parser",
+}
+
+// Values
+pub fn app_spine(Val, Array[(Val, Icit)]) -> Val
+
+pub fn app_val(Val, Val, Icit) -> Val
+
+pub fn apps(Tm, Array[(Tm, Icit)]) -> Tm
+
+pub fn check(Cxt, @parser.Expr, Val) -> Tm raise ElabError
+
+pub fn check_decls(Array[@parser.Decl]) -> Unit raise ElabError
+
+pub fn check_program(String, String, prelude? : Bool) -> Unit raise CheckError
+
+pub fn clause_body_val(Array[Val], Int, Clause) -> Val
+
+pub fn con_info(String) -> ConInfo?
+
+pub fn[T] concat(Array[T], Array[T]) -> Array[T]
+
+pub fn data_info(String) -> DataInfo?
+
+pub fn empty_cxt(@parser.Pos) -> Cxt
+
+pub fn env_push(Array[Val], Val) -> Array[Val]
+
+pub fn eval(Array[Val], Tm) -> Val
+
+pub fn force(Val) -> Val
+
+pub fn force_meta(Val) -> Val
+
+pub fn fresh_vars(Int, Int) -> Array[Val]
+
+pub fn global_body(String) -> Tm?
+
+pub fn global_val(String) -> Val
+
+pub let globals : Map[String, GEntry]
+
+pub fn infer(Cxt, @parser.Expr) -> (Tm, Val) raise ElabError
+
+pub fn inst(Closure, Val) -> Val
+
+pub fn is_proof(Array[Val?], Val) -> Bool
+
+pub fn is_prop_type(Array[Val?], Val) -> Bool
+
+pub fn lit_type(@parser.Lit) -> Val
+
+pub fn lookup_global(String) -> GEntry?
+
+pub fn match_vals_opt(Array[Val], Array[Val], Array[Clause]) -> Val?
+
+pub fn meta_sol(Int) -> Val?
+
+pub let metas : Array[MetaEntry]
+
+pub fn new_meta() -> Int
+
+pub fn nf(Array[Val], Tm) -> Tm
+
+pub fn normalize(Tm) -> String
+
+pub fn pat_slots(CPat) -> Int
+
+pub fn pats_slots(Array[CPat]) -> Int
+
+pub let prelude_src : String
+
+pub fn prim_pure(String, Array[@parser.Lit]) -> @parser.Lit?
+
+pub fn quote(Int, Val) -> Tm
+
+pub fn quote_full(Int, Val) -> Tm
+
+pub fn reset_state() -> Unit
+
+pub fn restore_metas(Array[Val?]) -> Unit
+
+pub fn setup() -> Unit
+
+pub fn show_global_type(String) -> String?
+
+pub fn show_tm(Array[String], Tm) -> String
+
+pub fn snapshot_metas() -> Array[Val?]
+
+pub fn type_of(Array[Val?], Val) -> Val?
+
+pub fn unfold(String, Array[(Val, Icit)]) -> Val?
+
+pub fn unfold_any(String, Array[(Val, Icit)]) -> Val?
+
+pub fn unify(Array[Val?], Val, Val) -> Unit raise UnifyError
+
+pub fn v_var(Int) -> Val
+
+// Errors
+pub suberror CheckError {
+  CheckError(String)
+}
+
+pub suberror ElabError {
+  ElabError(@parser.Pos, String)
+}
+
+pub suberror UnifyError {
+  UnifyError(String)
+}
+
+// Types and methods
+pub(all) enum CPat {
+  CPVar(String)
+  CPWild
+  CPCon(String, Array[CPat])
+  CPLit(@parser.Lit)
+}
+pub impl Show for CPat
+
+pub(all) struct Clause {
+  pats : Array[CPat]
+  body : Tm
+}
+pub impl Show for Clause
+
+pub(all) struct Closure {
+  env : Array[Val]
+  body : Tm
+}
+
+pub(all) struct ConInfo {
+  name : String
+  data : String
+  nparams : Int
+  nargs : Int
+  nimpl : Int
+}
+
+pub(all) struct Cxt {
+  env : Array[Val]
+  names : Array[String]
+  types : Array[Val]
+  bound : Array[Bool]
+  muts : Array[Bool]
+  lvl : Int
+  pos : @parser.Pos
+  can_raise : Bool
+  ret_ty : Val?
+  in_loop : Bool
+}
+pub fn Cxt::at(Self, @parser.Pos) -> Self
+pub fn Cxt::bind(Self, String, Val) -> Self
+pub fn Cxt::bind_mut(Self, String, Val) -> Self
+pub fn Cxt::define_local(Self, String, Val, Val) -> Self
+pub fn Cxt::define_var(Self, Int, Val) -> Self
+pub fn Cxt::eval(Self, Tm) -> Val
+pub fn[T] Cxt::fail(Self, String) -> T raise ElabError
+pub fn Cxt::fresh_meta(Self) -> Tm
+pub fn Cxt::lookup(Self, String) -> Int?
+pub fn Cxt::ltypes(Self) -> Array[Val?]
+pub fn Cxt::quote(Self, Val) -> Tm
+pub fn Cxt::refine(Self, Array[(Val, Val)]) -> Refined
+pub fn Cxt::show(Self, Val) -> String
+pub fn Cxt::subst(Self, Val) -> Val
+pub fn Cxt::try_unify(Self, Val, Val) -> Bool
+pub fn Cxt::unify(Self, Val, Val) -> Unit raise ElabError
+
+pub(all) struct DataInfo {
+  name : String
+  nparams : Int
+  nindices : Int
+  cons : Array[String]
+  mut is_prop : Bool
+  fields : Array[String]?
+  is_trait : Bool
+  is_error : Bool
+  builtin : Bool
+}
+
+pub(all) struct GEntry {
+  name : String
+  ty : Tm
+  vty : Val
+  mut kind : GKind
+}
+
+pub(all) enum GKind {
+  GFunc(Tm?, Bool, Int)
+  GData(DataInfo)
+  GCon(ConInfo)
+  GPrim(String, Int)
+}
+
+pub(all) enum Icit {
+  Expl
+  Impl
+  Inst
+}
+pub impl Eq for Icit
+pub impl Show for Icit
+
+pub(all) struct MetaEntry {
+  mut sol : Val?
+}
+
+pub(all) enum Refined {
+  ROk(Cxt)
+  RConflict
+  RStuck(String)
+}
+
+pub(all) enum Tm {
+  Var(Int)
+  Global(String)
+  Meta(Int)
+  InsertedMeta(Int, Array[Bool])
+  Lam(String, Icit, Bool, Tm)
+  App(Tm, Tm, Icit)
+  Pi(String, Icit, Bool, Tm, Tm)
+  Let(String, Tm, Tm, Tm)
+  U
+  PropU
+  Lit(@parser.Lit)
+  Match(Array[Tm], Array[Clause])
+  Raises(Tm, Tm)
+  LetMut(String, Tm, Tm, Tm)
+  Assign(Int, Tm)
+  While(Tm, Tm, Tm)
+  Break
+  Continue
+  Return(Tm)
+  Raise(Tm)
+  Try(Tm, Array[Clause])
+  ArrayLit(Array[Tm])
+  Seq(Tm, Tm)
+}
+pub impl Show for Tm
+
+pub(all) enum Val {
+  VRigid(Int, Array[(Val, Icit)])
+  VFlex(Int, Array[(Val, Icit)])
+  VGlobal(String, Array[(Val, Icit)])
+  VData(String, Array[(Val, Icit)])
+  VCon(String, Array[(Val, Icit)])
+  VPrim(String, Array[(Val, Icit)])
+  VLam(String, Icit, Bool, Closure)
+  VPi(String, Icit, Bool, Val, Closure)
+  VU
+  VProp
+  VLit(@parser.Lit)
+  VRaises(Val, Val)
+  VMatch(Array[Val], Array[Val], Array[Clause], Array[(Val, Icit)])
+  VStuck(Array[Val], Tm, Array[(Val, Icit)])
+  VArrLit(Array[Val])
+}
+
+// Type aliases
+pub type Env = Array[Val]
+
+pub type LTypes = Array[Val?]
+
+pub using @parser {type Lit}
+
+pub using @parser {type Pos}
+
+pub type Spine = Array[(Val, Icit)]
+
+// Traits
+

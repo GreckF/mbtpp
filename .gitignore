@@ -1,0 +1,16 @@
+# build output
+_build/
+target
+.mooncakes/
+.moonagent/
+
+# editor and OS files
+.vscode/
+.DS_Store
+
+# VS Code extension packaging
+*.vsix
+node_modules/
+
+# personal notes
+Temp.md

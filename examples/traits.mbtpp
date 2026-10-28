@@ -1,0 +1,72 @@
+trait Shape {
+  area(Self) -> Int
+  name(Self) -> String
+}
+
+trait Solid : Shape {
+  volume(Self, Int) -> Int
+}
+
+struct Square {
+  side : Int
+}
+
+struct Rect {
+  w : Int
+  h : Int
+}
+
+impl Shape for Square with area(self) { self.side * self.side }
+impl Shape for Square with name(self) { "square" }
+impl Solid for Square with volume(self, depth) { self.area() * depth }
+impl Shape for Rect with area(self) { self.w * self.h }
+impl Shape for Rect with name(_) { "rect" }
+
+fn[S : Shape] describe(s : S) -> String {
+  "\{s.name()} with area \{s.area()}"
+}
+
+fn[S : Solid] describe_solid(s : S) -> String {
+  // Shape methods are available through the superclass
+  describe(s) + ", volume \{s.volume(2)}"
+}
+
+fn[T : Show] show_all(xs : Array[T]) -> String {
+  fn wrap(s : String) -> String { "<" + s + ">" }
+  let mut out = ""
+  for x in xs {
+    out = out + wrap(x.to_string())
+  }
+  out
+}
+
+enum And[A : Prop, B : Prop] : Prop {
+  Conj(A, B)
+}
+
+lemma and_comm[A : Prop, B : Prop] : (And[A, B]) -> And[B, A] = proof {
+  intros p
+  destruct p
+  exact Conj(p_1, p_0)
+}
+
+// a two-argument (uncurried) function type
+lemma modus_ponens[A : Prop, B : Prop] : (A, (A) -> B) -> B = proof {
+  intros a f
+  apply f
+  exact a
+}
+
+lemma use_assume : forall n : Nat, plus(0, n) === n = proof {
+  intros n
+  assume h : plus(0, n) === n
+  exact h
+  rfl
+}
+
+fn main {
+  println(describe({ side: 3 }))
+  println(describe({ w: 2, h: 5 }))
+  println(describe_solid({ side: 2 }))
+  println(show_all([1, 2, 3]))
+}

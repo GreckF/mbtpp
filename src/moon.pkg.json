@@ -1,7 +1,8 @@
 {
   "import": [
     { "path": "username/mbtpp/tt", "alias": "tt" },
-    { "path": "username/mbtpp/interp", "alias": "interp" }
+    { "path": "username/mbtpp/interp", "alias": "interp" },
+    { "path": "username/mbtpp/codegen", "alias": "codegen" }
   ],
   "test-import": [
     { "path": "moonbitlang/x/fs", "alias": "fs" }

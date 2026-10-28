@@ -29,13 +29,23 @@ moonpp check                   # type check all packages
 moonpp add moonbitlang/x       # add a dependency (runs `moon add`, generates missing .mbti)
 moonpp install                 # install dependencies (runs `moon install`)
 moonpp run examples/vector.mbtpp   # a single file also works
+moonpp build                   # compile to MoonBit (src/mbtpp_out/<pkg>) and `moon build` it
+moonpp run --compiled          # compile to MoonBit and run it with `moon run`
 ```
 
 A project is a MoonBit module (`moon.mod.json`); a package is a directory of
 `.mbtpp` files. The MoonBit packages a package uses are listed in the `import`
 field of its `moon.pkg.json` and referred to as `@pkg.name`; they are only
-type checked, so running a call to them stops with an error (see
+type checked by the interpreter (running a call to them stops with an
+error), and really called by the compiled program (see
 [examples/import](examples/import)).
+
+The compiler translates MoonBit++ to MoonBit: functions over types MoonBit
+can express (numbers, strings, datatypes with type parameters, functions)
+become ordinary MoonBit code, e.g. `Vector[T](n)` becomes
+`enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }`; the rest (dependent
+types computed at run time, traits, ...) uses a uniform value
+representation.
 
 `moon test` runs the examples in `examples/` and the tests in `src/*_test.mbt`.
 

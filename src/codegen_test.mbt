@@ -1,0 +1,178 @@
+///|
+/// The signatures of the functions generated for a program (the lines
+/// starting with `fn`, without the numbering of the identifiers), and the
+/// native enums.
+fn signatures(src : String) -> String {
+  @tt.check_program("t.mbtpp", src) catch {
+    @tt.CheckError(msg) => return msg
+  }
+  let code = @codegen.generate([]) catch {
+    @codegen.CodegenError(msg) => return msg
+  }
+  let out : Array[String] = []
+  for line in code.split("\n") {
+    let l = line.to_string()
+    if (
+        l.has_prefix("fn") &&
+        !l.contains("_v()") &&
+        !l.contains("_to_value") &&
+        !l.contains("_of_value")
+      ) ||
+      l.has_prefix("enum E_") {
+      // drop the counters: f12_fib -> f_fib, x_34 -> x
+      let buf = StringBuilder::new()
+      let cs : Array[Char] = l.iter().collect()
+      let mut i = 0
+      while i < cs.length() {
+        let c = cs[i]
+        if (c == '_' || (c == 'f' && (i == 0 || !is_word(cs[i - 1])))) &&
+          i + 1 < cs.length() &&
+          cs[i + 1] >= '0' &&
+          cs[i + 1] <= '9' &&
+          (c == 'f' || (i > 0 && is_word(cs[i - 1]))) {
+          buf.write_char(if c == 'f' { 'f' } else { ' ' })
+          i = i + 1
+          while i < cs.length() && cs[i] >= '0' && cs[i] <= '9' {
+            i = i + 1
+          }
+          if c == '_' {
+            // `x_34` -> `x`
+            let s = buf.to_string()
+            buf.reset()
+            buf.write_string(s.unsafe_substring(start=0, end=s.length() - 1))
+          }
+        } else {
+          buf.write_char(c)
+          i = i + 1
+        }
+      }
+      out.push(buf.to_string())
+    }
+  }
+  out.join("\n")
+}
+
+///|
+fn is_word(c : Char) -> Bool {
+  (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')
+}
+
+///|
+test "codegen: native functions over scalars" {
+  inspect(
+    signatures(
+      (
+        #|fn fib(n : Int) -> Int { if n < 2 { n } else { fib(n - 1) + fib(n - 2) } }
+        #|fn main { println(fib(10)) }
+      ),
+    ),
+    content=(
+      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
+      #|fn f_show_to_string(inst : Value) -> Value raise {
+      #|fn f_fib_t(n : Int) -> Int raise {
+      #|fn f_fib(a0 : Value) -> Value raise {
+      #|fn main {
+    ),
+  )
+}
+
+///|
+test "codegen: indexed datatypes become generic enums; indices are erased" {
+  inspect(
+    signatures(
+      (
+        #|enum Vector[T] : Nat -> Type {
+        #|  Nil : Vector[T](0)
+        #|  Cons[n : Nat](T, Vector[T](n)) : Vector[T](S(n))
+        #|}
+        #|fn[T, n : Nat, m : Nat] Vector::append(self : Vector[T](n), ys : Vector[T](m)) -> Vector[T](n + m) {
+        #|  match self {
+        #|    Nil => ys
+        #|    Cons(x, xs) => Cons(x, xs.append(ys))
+        #|  }
+        #|}
+        #|fn[T, U, n : Nat] Vector::map(self : Vector[T](n), f : (T) -> U) -> Vector[U](n) {
+        #|  match self {
+        #|    Nil => Nil
+        #|    Cons(x, xs) => Cons(f(x), xs.map(f))
+        #|  }
+        #|}
+        #|fn main {
+        #|  let v : Vector[Int](1) = Cons(1, Nil)
+        #|  let w = v.append(v).map(x => x + 1)
+        #|}
+      ),
+    ),
+    content=(
+      #|enum E_Vector[T0] {
+      #|fn[T0, T1] f_vector_map_t(self : E_Vector[T0], f : (T0) -> T1 raise) -> E_Vector[T1] raise {
+      #|fn f_vector_map(a3 : Value, a4 : Value) -> Value raise {
+      #|fn[T0] f_vector_append_t(self : E_Vector[T0], ys : E_Vector[T0]) -> E_Vector[T0] raise {
+      #|fn f_vector_append(a3 : Value, a4 : Value) -> Value raise {
+      #|fn main {
+    ),
+  )
+}
+
+///|
+test "codegen: an implicit field used at runtime is kept" {
+  inspect(
+    signatures(
+      (
+        #|enum Vector[T] : Nat -> Type {
+        #|  Nil : Vector[T](0)
+        #|  Cons[n : Nat](T, Vector[T](n)) : Vector[T](S(n))
+        #|}
+        #|fn[T, n : Nat] len(v : Vector[T](n)) -> Nat {
+        #|  match v {
+        #|    Nil => Z
+        #|    Cons[m](_, _) => S(m)
+        #|  }
+        #|}
+        #|fn main { println(len(Vector::Cons(1, Nil))) }
+      ),
+    ),
+    content=(
+      #|enum E_Nat {
+      #|enum E_Vector[T0] {
+      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
+      #|fn f_show_to_string(inst : Value) -> Value raise {
+      #|fn[T0] f_len_t(v : E_Vector[T0]) -> E_Nat raise {
+      #|fn f_len(a2 : Value) -> Value raise {
+      #|fn f_nat_to_string_t(self : E_Nat) -> String raise {
+      #|fn f_nat_to_string(a0 : Value) -> Value raise {
+      #|fn f_nat_to_int_t(self : E_Nat) -> Int raise {
+      #|fn f_nat_to_int(a0 : Value) -> Value raise {
+      #|fn main {
+    ),
+  )
+}
+
+///|
+test "codegen: dependent results stay uniform" {
+  inspect(
+    signatures(
+      (
+        #|fn NAry(n : Nat) -> Type {
+        #|  match n {
+        #|    Z => Int
+        #|    S(k) => (Int) -> NAry(k)
+        #|  }
+        #|}
+        #|fn sum_n(n : Nat, acc : Int) -> NAry(n) {
+        #|  match n as m return NAry(m) {
+        #|    Z => acc
+        #|    S(k) => x => sum_n(k, acc + x)
+        #|  }
+        #|}
+        #|fn main { println(sum_n(2, 0)(1)(2)) }
+      ),
+    ),
+    content=(
+      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
+      #|fn f_show_to_string(inst : Value) -> Value raise {
+      #|fn f_sum_n(n : Value, acc : Value) -> Value raise {
+      #|fn main {
+    ),
+  )
+}

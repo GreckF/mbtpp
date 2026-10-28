@@ -22,10 +22,36 @@
     `assume`.
   - `prelude.mbt`: the prelude, written in MoonBit++.
 - `src/interp`: a tree-walking interpreter over elaborated core terms.
+- `src/codegen`: the compiler to MoonBit (see below).
 - `src/moonpp`: the `moonpp` build tool (projects, packages, `moon` calls
   through a Node.js FFI in `host_js.mbt`; `bin/moonpp.js` runs it in a worker
   thread with a large stack); `src/mbtpp.mbt`: check-and-run helpers used by
   the tests in `src/*_test.mbt`.
+
+## Compiler (`src/codegen`)
+
+- `runtime.mbt`: the support code emitted with every program: the uniform
+  representation `Value` (`VInt`, `VCon(name, args)`, `VFun`, ...), `apply`,
+  primitives, a pattern matcher for patterns MoonBit cannot express.
+- `codegen.mbt`: the uniform translation. Only globals reachable from
+  `main` are emitted. A function of n parameters becomes a MoonBit function
+  (saturated calls are direct, `<id>_v()` is its curried value); constants
+  are cached; `match` becomes a MoonBit `match` on `VCon`; `if`, constructors
+  and primitive operations are inlined.
+- `erase.mbt`: erasure analysis (greatest fixed point over the program):
+  type parameters are always erased; other implicit parameters and implicit
+  constructor fields are erased unless used at run time.
+- `typed.mbt`: the native translation. Functions whose (not erased)
+  parameters and result have native types (scalars, type parameters,
+  datatypes with type parameters, function types) and whose bodies stay in
+  the first-order fragment get a native MoonBit version `f_t`; which ones is
+  decided by a fixed point. Native datatypes become generic MoonBit enums
+  without indices or erased fields, with conversions to and from `Value`.
+  Typed code calls imported MoonBit functions directly.
+- `ffi.mbt`: calls of imported MoonBit functions from uniform code, with
+  conversions derived from their signatures (scalars, type variables,
+  `Array`, `Option`, callbacks, opaque foreign types boxed in a generated
+  `Foreign` enum, labelled and optional arguments, errors).
 
 ## Core language
 

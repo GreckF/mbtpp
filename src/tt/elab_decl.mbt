@@ -803,7 +803,14 @@ fn shared_thunk(names : Array[String], th : () -> Unit raise ElabError) -> Unit 
 }
 
 ///|
-pub fn check_decls(decls : Array[@parser.Decl]) -> Unit raise ElabError {
+/// With `lenient` (used for imported interfaces), declarations whose names
+/// are already taken, or that fail to elaborate, are skipped and their names
+/// added to `skipped`.
+pub fn check_decls(
+  decls : Array[@parser.Decl],
+  lenient? : Bool = false,
+  skipped? : Array[String] = [],
+) -> Unit raise ElabError {
   // Datatypes first; then, in source order, each function's signature
   // directly followed by its body, so that later signatures can compute with
   // earlier functions. Forward references get their signatures on demand.
@@ -811,8 +818,33 @@ pub fn check_decls(decls : Array[@parser.Decl]) -> Unit raise ElabError {
   let steps : Array[() -> Unit raise ElabError] = []
   let impl_groups : Map[String, Array[@parser.ImplDecl]] = {}
   let nowhere = empty_cxt({ line: 0, col: 0 })
+  let taken = (n : String) => globals.contains(n) || st.thunks.contains(n)
   for d in decls {
+    if lenient {
+      let name = match d {
+        DFn(fd) => fd.name
+        DDef(_, n, _, _, _) | DOpaque(_, n, _) => n
+        DEnum(ed) => ed.name
+        DStruct(sd) => sd.name
+        DTrait(td) => td.name
+        DImpl(id) => "impl$" + id.trait_name + "$" + impl_head(id.for_ty)
+      }
+      if taken(name) && !(d is DImpl(_) && impl_groups.contains(name)) {
+        skipped.push(name)
+        continue
+      }
+    }
     match d {
+      DOpaque(_, name, k) => {
+        add_thunk(name, () => {
+          let mut ty = U
+          for _ in 0..<k {
+            ty = Pi("T", Impl, false, U, ty)
+          }
+          builtin_data(name, ty, k, false)
+        })
+        types.push(name)
+      }
       DFn(fd) => {
         add_thunk(fd.name, () => elab_fn_sig(fd))
         steps.push(() => {
@@ -886,9 +918,29 @@ pub fn check_decls(decls : Array[@parser.Decl]) -> Unit raise ElabError {
     }
   }
   for name in types {
-    ensure(nowhere, name)
+    if lenient {
+      ensure(nowhere, name) catch {
+        _ => skipped.push(name)
+      }
+    } else {
+      ensure(nowhere, name)
+    }
   }
-  for step in steps {
-    step()
+  for k = 0; k < steps.length(); k = k + 1 {
+    if lenient {
+      let npending = st.pending.length()
+      steps[k]() catch {
+        ElabError(_, msg) => {
+          // drop what the failed declaration left behind
+          while st.pending.length() > npending {
+            ignore(st.pending.pop())
+          }
+          st.type_defaults.clear()
+          skipped.push(msg)
+        }
+      }
+    } else {
+      steps[k]()
+    }
   }
 }

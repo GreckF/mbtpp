@@ -64,6 +64,7 @@ fn tok_desc(t : Tok) -> String {
   match t {
     TIdent(s) => "identifier '" + s + "'"
     TInt(n) => "number " + n.to_string()
+    TDouble(d) => "number " + d.to_string()
     TStr(_) => "string literal"
     TChar(_) => "character literal"
     TSym(s) => "'" + s + "'"
@@ -258,6 +259,10 @@ pub fn Parser::expr(self : Parser) -> Expr raise ParseError {
 fn Parser::raises_opt(self : Parser) -> Expr? raise ParseError {
   if self.is_same_line("raise") {
     ignore(self.advance())
+    // `raise?` (error polymorphism) is treated as not raising
+    if self.accept("?") {
+      return None
+    }
     if self.at("{") ||
       self.at("=") ||
       self.at_stmt_end() ||
@@ -361,6 +366,10 @@ fn Parser::unary(self : Parser) -> Expr raise ParseError {
       TInt(n) => {
         ignore(self.advance())
         return self.postfix(ELit(pos, LInt(-n)))
+      }
+      TDouble(d) => {
+        ignore(self.advance())
+        return self.postfix(ELit(pos, LDouble(-d)))
       }
       _ => ()
     }
@@ -558,6 +567,22 @@ fn Parser::primary(self : Parser) -> Expr raise ParseError {
     TChar(c) => {
       ignore(self.advance())
       ELit(pos, LChar(c))
+    }
+    TDouble(d) => {
+      ignore(self.advance())
+      ELit(pos, LDouble(d))
+    }
+    TSym("@") => {
+      // `@pkg.name`: a name from an imported package
+      ignore(self.advance())
+      let pkg = self.ident()
+      self.expect(".")
+      let mut name = "@" + pkg + "." + self.ident()
+      while self.at("::") {
+        ignore(self.advance())
+        name = name + "::" + self.ident()
+      }
+      EVar(pos, name)
     }
     TStr(parts) => {
       ignore(self.advance())
@@ -832,6 +857,41 @@ fn is_upper(s : String) -> Bool {
 }
 
 ///|
+/// The arguments of a constructor pattern `C[impl](expl)`.
+fn Parser::con_pattern_args(
+  self : Parser,
+  pos : Pos,
+  name : String,
+) -> Pat raise ParseError {
+  let impl_ps = if self.is_same_line("[") {
+    ignore(self.advance())
+    let ps : Array[Pat] = []
+    while !self.at("]") {
+      ps.push(self.pattern())
+      if !self.accept(",") {
+        break
+      }
+    }
+    self.expect("]")
+    Some(ps)
+  } else {
+    None
+  }
+  let ps : Array[Pat] = []
+  if self.is_same_line("(") {
+    ignore(self.advance())
+    while !self.at(")") {
+      ps.push(self.pattern())
+      if !self.accept(",") {
+        break
+      }
+    }
+    self.expect(")")
+  }
+  PCon(pos, name, impl_ps, ps)
+}
+
+///|
 fn Parser::pattern(self : Parser) -> Pat raise ParseError {
   let t = self.peek()
   let pos = t.pos
@@ -870,6 +930,18 @@ fn Parser::pattern(self : Parser) -> Pat raise ParseError {
       ignore(self.advance())
       PLit(pos, LBool(false))
     }
+    TSym("@") => {
+      // `@pkg.Type::Ctor(..)`: a constructor of an imported type
+      ignore(self.advance())
+      let pkg = self.ident()
+      self.expect(".")
+      let mut name = "@" + pkg + "." + self.ident()
+      while self.at("::") {
+        ignore(self.advance())
+        name = name + "::" + self.ident()
+      }
+      self.con_pattern_args(pos, name)
+    }
     TSym("(") => {
       ignore(self.advance())
       let ps : Array[Pat] = []
@@ -901,32 +973,7 @@ fn Parser::pattern(self : Parser) -> Pat raise ParseError {
       if !is_upper(x) && !name.contains("::") {
         return PVar(pos, name)
       }
-      let impl_ps = if self.is_same_line("[") {
-        ignore(self.advance())
-        let ps : Array[Pat] = []
-        while !self.at("]") {
-          ps.push(self.pattern())
-          if !self.accept(",") {
-            break
-          }
-        }
-        self.expect("]")
-        Some(ps)
-      } else {
-        None
-      }
-      let ps : Array[Pat] = []
-      if self.is_same_line("(") {
-        ignore(self.advance())
-        while !self.at(")") {
-          ps.push(self.pattern())
-          if !self.accept(",") {
-            break
-          }
-        }
-        self.expect(")")
-      }
-      PCon(pos, name, impl_ps, ps)
+      self.con_pattern_args(pos, name)
     }
     _ => self.fail("expected a pattern")
   }

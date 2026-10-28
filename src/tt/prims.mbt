@@ -55,6 +55,20 @@ pub fn prim_pure(name : String, args : Array[Lit]) -> Lit? {
     ("%char_to_int", [LChar(a)]) => Some(LInt(a.to_int()))
     ("%char_to_string", [LChar(a)]) => Some(LStr(a.to_string()))
     ("%unit_to_string", [LUnit]) => Some(LStr("()"))
+    ("%double_add", [LDouble(a), LDouble(b)]) => Some(LDouble(a + b))
+    ("%double_sub", [LDouble(a), LDouble(b)]) => Some(LDouble(a - b))
+    ("%double_mul", [LDouble(a), LDouble(b)]) => Some(LDouble(a * b))
+    ("%double_div", [LDouble(a), LDouble(b)]) => Some(LDouble(a / b))
+    ("%double_neg", [LDouble(a)]) => Some(LDouble(-a))
+    ("%double_eq", [LDouble(a), LDouble(b)]) => Some(LBool(a == b))
+    ("%double_lt", [LDouble(a), LDouble(b)]) => Some(LBool(a < b))
+    ("%double_le", [LDouble(a), LDouble(b)]) => Some(LBool(a <= b))
+    ("%double_gt", [LDouble(a), LDouble(b)]) => Some(LBool(a > b))
+    ("%double_ge", [LDouble(a), LDouble(b)]) => Some(LBool(a >= b))
+    ("%double_compare", [LDouble(a), LDouble(b)]) => Some(LInt(a.compare(b)))
+    ("%double_to_string", [LDouble(a)]) => Some(LStr(a.to_string()))
+    ("%double_to_int", [LDouble(a)]) => Some(LInt(a.to_int()))
+    ("%int_to_double", [LInt(a)]) => Some(LDouble(a.to_double()))
     _ => None
   }
 }

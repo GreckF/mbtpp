@@ -53,6 +53,10 @@ fn search_instance(cxt : Cxt, goal : Val, depth : Int) -> Tm? raise ElabError {
     _ => return None
   }
   ensure_impls(cxt, tr)
+  // an opaque (imported, unknown) trait has no methods: build its instance
+  if st.opaque_traits.contains(tr) {
+    return Some(App(Global(tr + "::mk"), cxt.quote(gsp[0].0), Impl))
+  }
   // local instances
   for l = cxt.lvl - 1; l >= 0; l = l - 1 {
     let paths : Array[(Tm, Val)] = []

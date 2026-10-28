@@ -1,9 +1,0 @@
-{
-  "import": [
-    { "path": "username/mbtpp/src/tt", "alias": "tt" },
-    { "path": "username/mbtpp/src/interp", "alias": "interp" }
-  ],
-  "test-import": [
-    { "path": "moonbitlang/x/fs", "alias": "fs" }
-  ]
-}

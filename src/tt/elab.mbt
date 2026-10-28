@@ -11,6 +11,9 @@ priv struct ElabState {
   instance_heads : Map[String, Array[String]]
   /// Trait -> (self kind, supers, methods).
   traits : Map[String, TraitInfo]
+  /// Traits of imported packages that are not known here: every type is
+  /// taken to implement them.
+  opaque_traits : Array[String]
   /// Deferred elaboration of declarations, by global name.
   thunks : Map[String, () -> Unit raise ElabError]
   /// Trait -> instance signature thunk names.
@@ -59,6 +62,7 @@ let st : ElabState = {
   instances: {},
   instance_heads: {},
   traits: {},
+  opaque_traits: [],
   thunks: {},
   impl_sigs: {},
   labels: {},
@@ -75,6 +79,7 @@ fn reset_elab() -> Unit {
   st.instances.clear()
   st.instance_heads.clear()
   st.traits.clear()
+  st.opaque_traits.clear()
   st.thunks.clear()
   st.impl_sigs.clear()
   st.labels.clear()
@@ -111,7 +116,12 @@ fn ensure(cxt : Cxt, name : String) -> Unit raise ElabError {
     Some(th) => {
       st.thunks.remove(name)
       st.running.push(name)
-      th()
+      th() catch {
+        e => {
+          ignore(st.running.pop())
+          raise e
+        }
+      }
       ignore(st.running.pop())
     }
     None => ()
@@ -282,13 +292,16 @@ fn elab_impl_binders(
   for b in bs {
     let c0 = c.at(b.pos)
     match b.ty {
-      Some(EVar(_, tr)) if is_trait(c0, tr) => {
-        let info = st.traits.get(tr).unwrap()
+      Some(t) if trait_bounds(c0, t) is Some(trs) => {
+        // `T : Eq + Show`: T, then one instance argument per trait
+        let info = st.traits.get(trs[0]).unwrap()
         out.push((b.name, Impl, info.kind))
         c = c.bind(b.name, c.eval(info.kind))
-        let inst_ty = App(Global(tr), Var(0), Expl)
-        out.push(("_inst_" + b.name, Inst, inst_ty))
-        c = c.bind("_inst_" + b.name, c.eval(inst_ty))
+        for k = 0; k < trs.length(); k = k + 1 {
+          let inst_ty = App(Global(trs[k]), Var(k), Expl)
+          out.push(("_inst_" + b.name, Inst, inst_ty))
+          c = c.bind("_inst_" + b.name, c.eval(inst_ty))
+        }
       }
       Some(t) => {
         let a = check_type(c0, t)
@@ -303,6 +316,20 @@ fn elab_impl_binders(
     }
   }
   (c, out)
+}
+
+///|
+/// `Tr` or `Tr1 + Tr2 + ...` where every `Tr` is a trait.
+fn trait_bounds(cxt : Cxt, e : @parser.Expr) -> Array[String]? raise ElabError {
+  match e {
+    EVar(_, tr) => if is_trait(cxt, tr) { Some([tr]) } else { None }
+    EBin(_, "+", a, b) =>
+      match (trait_bounds(cxt, a), trait_bounds(cxt, b)) {
+        (Some(x), Some(y)) => Some(concat(x, y))
+        _ => None
+      }
+    _ => None
+  }
 }
 
 ///|

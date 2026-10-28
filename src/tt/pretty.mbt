@@ -56,6 +56,7 @@ fn show_lit(l : Lit) -> String {
     LStr(s) => s.escape()
     LChar(c) => c.to_string().escape()
     LBool(b) => b.to_string()
+    LDouble(d) => d.to_string()
     LUnit => "()"
   }
 }

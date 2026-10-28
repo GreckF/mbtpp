@@ -2,6 +2,7 @@
 pub(all) enum Tok {
   TIdent(String)
   TInt(Int)
+  TDouble(Double)
   TStr(Array[StrPart])
   TChar(Char)
   /// Keywords and symbols.
@@ -112,6 +113,28 @@ pub fn tokenize(
           v = v * 10 + (cs[i].to_int() - '0'.to_int())
         }
         adv()
+      }
+      // `1.5` is a Double, but not `0..n` or the field access `t.0.1`
+      let after_dot = toks.length() > 0 &&
+        toks[toks.length() - 1].tok == TSym(".")
+      if !after_dot &&
+        i + 1 < n &&
+        cs[i] == '.' &&
+        cs[i + 1] >= '0' &&
+        cs[i + 1] <= '9' {
+        adv()
+        let mut d = v.to_double()
+        let mut scale = 0.1
+        while i < n && ((cs[i] >= '0' && cs[i] <= '9') || cs[i] == '_') {
+          if cs[i] != '_' {
+            d = d + (cs[i].to_int() - '0'.to_int()).to_double() * scale
+            scale = scale / 10.0
+          }
+          adv()
+        }
+        toks.push({ tok: TDouble(d), pos, nl })
+        nl = false
+        continue
       }
       toks.push({ tok: TInt(v), pos, nl })
       nl = false

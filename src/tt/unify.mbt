@@ -360,6 +360,7 @@ pub fn lit_type(l : Lit) -> Val {
     LStr(_) => VData("String", [])
     LChar(_) => VData("Char", [])
     LBool(_) => VData("Bool", [])
+    LDouble(_) => VData("Double", [])
     LUnit => VData("Unit", [])
   }
 }

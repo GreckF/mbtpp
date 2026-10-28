@@ -201,7 +201,33 @@ fn main {
 }
 ```
 
-## 9. MoonBit++ → MoonBit 编译器
+## 9. 导入 MoonBit 包
+
+与 MoonBit 一样，依赖写在源文件旁边的 `moon.pkg.json` 里，代码中用 `@pkg.name` 引用：
+
+```json
+{ "import": [ "moonbitlang/core/math", { "path": "moonbitlang/core/strconv", "alias": "conv" } ] }
+```
+
+```moonbit
+fn distance(x : Double, y : Double) -> Double { @math.hypot(x, y) }
+fn parse_hex(s : String) -> Int raise { @conv.parse_int(s, base=16) }
+```
+
+- 接口从包的 `.mbti` 文件读取：`moonbitlang/core/*` 在 `$MOON_HOME/lib/core`（默认
+  `~/.moon/lib/core`），其他包在源文件所在目录或上级目录的 `.mooncakes/` 中。
+- 导入的函数只有类型、没有定义：类型检查时它们是不透明常量，不会展开；
+  解释器运行到导入的函数时会报错（导入目前只用于类型检查）。
+- 名字：包里的函数、类型、构造子分别为 `@pkg.f`、`@pkg.T`、`@pkg.T::C`（构造子也可以按期望类型
+  直接写 `C`），方法照常用 `x.m()` 调用。`#as_free_fn` 的方法也可以写成 `@pkg.m`。
+- 不支持的项会被跳过（`--verbose` 列出）：trait 对象 `&T`、自动填充的 `loc~`、泛型 `impl`，
+  以及 `Show`/`Eq`/`Compare` 之外的 `impl`。`#deprecated` 的项不导入。
+- 接口中出现但未定义的类型（如 `Int64`、`Map`）成为不透明类型；未知的 trait 约束
+  （如 `Hash`）成为不透明 trait，任何类型都视为满足。`StringView`、`ArrayView[T]` 视为
+  `String`、`Array[T]`。
+- 为此新增了 `Double` 字面量与运算，以及多个 trait 约束 `[T : Eq + Show]`。
+
+## 10. MoonBit++ → MoonBit 编译器
 
 见之前的讨论：可行，但做法是混合的。能用 MoonBit 类型表达的部分生成原生代码，
 其余部分（GADT 细化、类型层计算、HKT trait）退化为统一的值表示。核心语言为此保留

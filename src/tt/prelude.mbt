@@ -57,6 +57,21 @@ pub let prelude_src : String =
   #|fn Int::compare(self : Int, other : Int) -> Int = "%int_compare"
   #|fn Int::to_string(self : Int) -> String = "%int_to_string"
   #|fn Int::unsafe_to_char(self : Int) -> Char = "%int_to_char"
+  #|fn Int::to_double(self : Int) -> Double = "%int_to_double"
+  #|
+  #|fn Double::op_add(self : Double, other : Double) -> Double = "%double_add"
+  #|fn Double::op_sub(self : Double, other : Double) -> Double = "%double_sub"
+  #|fn Double::op_mul(self : Double, other : Double) -> Double = "%double_mul"
+  #|fn Double::op_div(self : Double, other : Double) -> Double = "%double_div"
+  #|fn Double::op_neg(self : Double) -> Double = "%double_neg"
+  #|fn Double::op_equal(self : Double, other : Double) -> Bool = "%double_eq"
+  #|fn Double::op_lt(self : Double, other : Double) -> Bool = "%double_lt"
+  #|fn Double::op_le(self : Double, other : Double) -> Bool = "%double_le"
+  #|fn Double::op_gt(self : Double, other : Double) -> Bool = "%double_gt"
+  #|fn Double::op_ge(self : Double, other : Double) -> Bool = "%double_ge"
+  #|fn Double::compare(self : Double, other : Double) -> Int = "%double_compare"
+  #|fn Double::to_string(self : Double) -> String = "%double_to_string"
+  #|fn Double::to_int(self : Double) -> Int = "%double_to_int"
   #|
   #|fn String::op_add(self : String, other : String) -> String = "%str_add"
   #|fn String::op_equal(self : String, other : String) -> Bool = "%str_eq"
@@ -204,6 +219,7 @@ pub let prelude_src : String =
   #|impl Show for Char with to_string(self) { self.to_string() }
   #|impl Show for Unit with to_string(self) { self.to_string() }
   #|impl Show for Nat with to_string(self) { self.to_string() }
+  #|impl Show for Double with to_string(self) { self.to_string() }
   #|
   #|impl[T : Show] Show for Array[T] with to_string(self) {
   #|  let mut s = "["
@@ -237,6 +253,7 @@ pub let prelude_src : String =
   #|impl Eq for Bool with op_equal(a, b) { a == b }
   #|impl Eq for Char with op_equal(a, b) { a == b }
   #|impl Eq for Nat with op_equal(a, b) { a == b }
+  #|impl Eq for Double with op_equal(a, b) { a == b }
   #|
   #|trait Compare : Eq {
   #|  compare(Self, Self) -> Int
@@ -245,6 +262,7 @@ pub let prelude_src : String =
   #|impl Compare for Int with compare(a, b) { a.compare(b) }
   #|impl Compare for String with compare(a, b) { a.compare(b) }
   #|impl Compare for Char with compare(a, b) { a.compare(b) }
+  #|impl Compare for Double with compare(a, b) { a.compare(b) }
   #|
   #|trait Add {
   #|  op_add(Self, Self) -> Self
@@ -253,6 +271,7 @@ pub let prelude_src : String =
   #|impl Add for Int with op_add(a, b) { a + b }
   #|impl Add for String with op_add(a, b) { a + b }
   #|impl Add for Nat with op_add(a, b) { a + b }
+  #|impl Add for Double with op_add(a, b) { a + b }
   #|
   #|trait Monad(Self : [T] -> Type) {
   #|  fn[T] pure(T) -> Self[T]

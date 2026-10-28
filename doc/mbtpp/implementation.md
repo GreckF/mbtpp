@@ -22,7 +22,8 @@
     `assume`.
   - `prelude.mbt`: the prelude, written in MoonBit++.
 - `src/interp`: a tree-walking interpreter over elaborated core terms.
-- `app`: the command line.
+- `src/app`: the command line; `src/mbtpp.mbt`: check-and-run helpers used by
+  the tests in `src/*_test.mbt`.
 
 ## Core language
 
@@ -44,6 +45,14 @@
   type only has positional parameters (in declaration order). A call is
   rearranged by `place_tagged`; an omitted `x~ : T = e` calls a helper
   `f$default$x[impl](earlier params, ())`, an omitted `x? : T` becomes `None`.
+- MoonBit imports (`src/parser/mbti.mbt`, `load_imports` in
+  `src/tt/driver.mbt`, `src/app/imports.mbt`): each item of a `.mbti` is parsed
+  with the MoonBit++ parser and turned into a declaration whose functions are
+  external (`"@mbt:<package>.<name>"`), so they never unfold. Imported
+  declarations are elaborated leniently: one that fails is skipped (with the
+  instance constraints it left behind) instead of failing the program.
+  Unknown types and traits become opaque; an opaque trait is solved by its
+  (empty) record constructor.
 - There is no termination or positivity checking, so type checking can loop.
 
 ## Differences from the original description

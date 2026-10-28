@@ -1,8 +1,14 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/mbtpp/src/parser"
+package "username/mbtpp/parser"
 
 // Values
+pub fn decl_bound_names(Decl) -> Array[String]
+
+pub fn decl_type_names(Decl) -> Map[String, Int]
+
 pub fn parse_expr(String) -> Expr raise ParseError
+
+pub fn parse_mbti(String, String, String, Map[String, String]) -> MbtiResult
 
 pub fn parse_program(String) -> Array[Decl] raise ParseError
 
@@ -45,6 +51,7 @@ pub(all) enum Decl {
   DStruct(StructDecl)
   DTrait(TraitDecl)
   DImpl(ImplDecl)
+  DOpaque(Pos, String, Int)
 }
 pub impl Show for Decl
 
@@ -136,6 +143,7 @@ pub(all) enum Lit {
   LChar(Char)
   LBool(Bool)
   LUnit
+  LDouble(Double)
 }
 pub impl Eq for Lit
 pub impl Show for Lit
@@ -146,6 +154,11 @@ pub(all) struct MatchRet {
   ret : Expr?
 }
 pub impl Show for MatchRet
+
+pub(all) struct MbtiResult {
+  decls : Array[Decl]
+  skipped : Array[String]
+}
 
 pub(all) enum ParamKind {
   Positional
@@ -218,6 +231,7 @@ pub impl Show for Tactic
 pub(all) enum Tok {
   TIdent(String)
   TInt(Int)
+  TDouble(Double)
   TStr(Array[StrPart])
   TChar(Char)
   TSym(String)

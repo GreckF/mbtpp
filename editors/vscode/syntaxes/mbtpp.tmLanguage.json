@@ -150,7 +150,7 @@
     },
     "numbers": {
       "name": "constant.numeric.mbtpp",
-      "match": "\\b\\d[\\d_]*\\b"
+      "match": "\\b\\d[\\d_]*(?:\\.\\d[\\d_]*)?\\b"
     },
     "operators": {
       "patterns": [
@@ -207,6 +207,14 @@
     },
     "identifiers": {
       "patterns": [
+        {
+          "comment": "@pkg. prefix of names from imported MoonBit packages",
+          "match": "(@[a-z_]\\w*)(\\.)",
+          "captures": {
+            "1": { "name": "entity.name.namespace.mbtpp" },
+            "2": { "name": "punctuation.separator.namespace.mbtpp" }
+          }
+        },
         {
           "comment": "Type::method(...) and Type::Constructor",
           "match": "\\b([A-Z]\\w*)(::)([a-z_]\\w*)",

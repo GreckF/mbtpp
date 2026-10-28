@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/mbtpp/src/tt"
+package "username/mbtpp/tt"
 
 import {
-  "username/mbtpp/src/parser",
+  "username/mbtpp/parser",
 }
 
 // Values
@@ -14,9 +14,9 @@ pub fn apps(Tm, Array[(Tm, Icit)]) -> Tm
 
 pub fn check(Cxt, @parser.Expr, Val) -> Tm raise ElabError
 
-pub fn check_decls(Array[@parser.Decl]) -> Unit raise ElabError
+pub fn check_decls(Array[@parser.Decl], lenient? : Bool, skipped? : Array[String]) -> Unit raise ElabError
 
-pub fn check_program(String, String, prelude? : Bool) -> Unit raise CheckError
+pub fn check_program(String, String, prelude? : Bool, imports? : Array[Import]) -> Unit raise CheckError
 
 pub fn clause_body_val(Array[Val], Int, Clause) -> Val
 
@@ -43,6 +43,8 @@ pub fn global_body(String) -> Tm?
 pub fn global_val(String) -> Val
 
 pub let globals : Map[String, GEntry]
+
+pub let import_skipped : Array[String]
 
 pub fn infer(Cxt, @parser.Expr) -> (Tm, Val) raise ElabError
 
@@ -205,6 +207,12 @@ pub(all) enum Icit {
 }
 pub impl Eq for Icit
 pub impl Show for Icit
+
+pub(all) struct Import {
+  alias : String
+  path : String
+  mbti : String
+}
 
 pub(all) struct MetaEntry {
   mut sol : Val?

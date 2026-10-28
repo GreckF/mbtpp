@@ -17,6 +17,7 @@ pub(all) enum Lit {
   LChar(Char)
   LBool(Bool)
   LUnit
+  LDouble(Double)
 } derive(Show, Eq)
 
 ///|
@@ -224,6 +225,9 @@ pub(all) enum Decl {
   DStruct(StructDecl)
   DTrait(TraitDecl)
   DImpl(ImplDecl)
+  /// An opaque type with the given number of (implicit) parameters, e.g. a
+  /// type imported from MoonBit whose definition is not visible.
+  DOpaque(Pos, String, Int)
 } derive(Show)
 
 ///|

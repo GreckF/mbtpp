@@ -71,6 +71,7 @@ pub fn show_rval(v : RVal) -> String {
     RLit(LInt(n)) => n.to_string()
     RLit(LBool(b)) => b.to_string()
     RLit(LUnit) => "()"
+    RLit(LDouble(d)) => d.to_string()
     RCon(c, args) => {
       let short = match c.rev_find("::") {
         Some(i) => c.unsafe_substring(start=i + 2, end=c.length())
@@ -106,6 +107,7 @@ fn Machine::global(self : Machine, n : String) -> RVal raise Ctl {
           } else {
             RPartial(PCon(n, ci.nparams, ci.nparams + ci.nargs), [])
           }
+        GPrim(p, 0) => self.prim(p, [])
         GPrim(p, arity) => RPartial(PPrim(p, arity), [])
       }
     None => raise CAbort("unknown global " + n)
@@ -299,6 +301,12 @@ fn Machine::prim(
       RLit(LUnit)
     }
     ("%error_to_string", [e]) => RLit(LStr(show_rval(e)))
+    (p, _) if p.has_prefix("@mbt:") =>
+      raise CAbort(
+        "cannot run the imported MoonBit function " +
+        p.unsafe_substring(start=5, end=p.length()) +
+        " in the interpreter (imports are only type checked)",
+      )
     ("%panic", _) => raise CAbort("panic")
     ("%abort", [RLit(LStr(s))]) => raise CAbort(s)
     ("%array_make", [RLit(LInt(n)), x]) => RArr(Array::make(n, x))

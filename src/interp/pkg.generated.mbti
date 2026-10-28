@@ -1,9 +1,9 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/mbtpp/src/interp"
+package "username/mbtpp/interp"
 
 import {
-  "username/mbtpp/src/parser",
-  "username/mbtpp/src/tt",
+  "username/mbtpp/parser",
+  "username/mbtpp/tt",
 }
 
 // Values

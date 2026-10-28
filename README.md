@@ -16,8 +16,11 @@ moonrun _build/wasm-gc/release/build/app/app.wasm -- examples/vector.mbtpp      
 moonrun _build/wasm-gc/release/build/app/app.wasm -- check examples/vector.mbtpp  # only check
 ```
 
-`moon test` runs the examples in `examples/` and the rejection tests in
-`rejects_test.mbt`.
+MoonBit packages listed in a `moon.pkg.json` next to the source file can be
+imported and used as `@pkg.name` (type checking only; see
+[examples/import](examples/import)).
+
+`moon test` runs the examples in `examples/` and the tests in `src/*_test.mbt`.
 
 The language is described in [doc/mbtpp/proposal.md](doc/mbtpp/proposal.md),
 the implementation in [doc/mbtpp/implementation.md](doc/mbtpp/implementation.md).

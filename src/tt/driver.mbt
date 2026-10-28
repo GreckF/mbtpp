@@ -73,13 +73,53 @@ pub fn check_program(
   prelude? : Bool = true,
   imports? : Array[Import] = [],
 ) -> Unit raise CheckError {
+  check_package([(file, src)], prelude~, imports~)
+}
+
+///|
+/// Lines of the k-th file of a package are numbered from `(k + 1) * stride`,
+/// so that a position tells which file it is in.
+let file_stride : Int = 1000000
+
+///|
+fn package_pos(files : Array[(String, String)], p : Pos) -> String {
+  let k = p.line / file_stride - 1
+  if k >= 0 && k < files.length() {
+    format_pos(files[k].0, { line: p.line % file_stride, col: p.col })
+  } else {
+    format_pos("<unknown>", p)
+  }
+}
+
+///|
+/// Type check a package: several files (name, source) sharing one scope, as
+/// in MoonBit.
+pub fn check_package(
+  files : Array[(String, String)],
+  prelude? : Bool = true,
+  imports? : Array[Import] = [],
+) -> Unit raise CheckError {
   setup()
   if prelude {
     check_src("<prelude>", prelude_src)
   }
   import_skipped.clear()
   load_imports(imports)
-  check_src(file, src)
+  let decls : Array[@parser.Decl] = []
+  for k = 0; k < files.length(); k = k + 1 {
+    let (_, src) = files[k]
+    let ds = @parser.parse_program(src, line0=(k + 1) * file_stride + 1) catch {
+      @parser.ParseError(p, msg) =>
+        raise CheckError(package_pos(files, p) + ": parse error: " + msg)
+    }
+    for d in ds {
+      decls.push(d)
+    }
+  }
+  check_decls(decls) catch {
+    ElabError(p, msg) =>
+      raise CheckError(package_pos(files, p) + ": error: " + msg)
+  }
 }
 
 ///|

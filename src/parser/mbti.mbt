@@ -44,10 +44,13 @@ fn mbti_items(src : String) -> (Array[String], Array[MbtiItem]) {
       i = i + 1
       continue
     }
-    if t.has_prefix("import(") {
+    // `import( ... )`, or `import { ... }` in newer interfaces
+    if t.has_prefix("import(") || t.has_prefix("import {") {
+      let close = if t.has_prefix("import(") { ")" } else { "}" }
       i = i + 1
-      while i < lines.length() && lines[i].trim(chars=" \t").to_string() != ")" {
-        let q = lines[i].trim(chars=" \t\"").to_string()
+      while i < lines.length() &&
+            lines[i].trim(chars=" \t").to_string() != close {
+        let q = lines[i].trim(chars=" \t\",").to_string()
         // `"path" @alias` is possible; keep the path
         let path = match q.find("\"") {
           Some(k) => q.unsafe_substring(start=0, end=k)

@@ -22,7 +22,9 @@
     `assume`.
   - `prelude.mbt`: the prelude, written in MoonBit++.
 - `src/interp`: a tree-walking interpreter over elaborated core terms.
-- `src/app`: the command line; `src/mbtpp.mbt`: check-and-run helpers used by
+- `src/moonpp`: the `moonpp` build tool (projects, packages, `moon` calls
+  through a Node.js FFI in `host_js.mbt`; `bin/moonpp.js` runs it in a worker
+  thread with a large stack); `src/mbtpp.mbt`: check-and-run helpers used by
   the tests in `src/*_test.mbt`.
 
 ## Core language
@@ -46,7 +48,7 @@
   rearranged by `place_tagged`; an omitted `x~ : T = e` calls a helper
   `f$default$x[impl](earlier params, ())`, an omitted `x? : T` becomes `None`.
 - MoonBit imports (`src/parser/mbti.mbt`, `load_imports` in
-  `src/tt/driver.mbt`, `src/app/imports.mbt`): each item of a `.mbti` is parsed
+  `src/tt/driver.mbt`, `src/moonpp/imports.mbt`): each item of a `.mbti` is parsed
   with the MoonBit++ parser and turned into a declaration whose functions are
   external (`"@mbt:<package>.<name>"`), so they never unfold. Imported
   declarations are elaborated leniently: one that fails is skipped (with the

@@ -10,14 +10,31 @@ tree-walking interpreter, written in MoonBit.
 语言标准大致来自：
 [写给一般月兔用户的MoonBit++入门](https://zhuanlan.zhihu.com/p/2067605478985749711)（知乎，作者：用户名可以重复吗）
 
+## moonpp
+
+`moonpp` is the build tool, modelled on `moon`. It needs Node.js: build it
+once with
+
 ```sh
-moon build --target wasm-gc
-moonrun _build/wasm-gc/release/build/app/app.wasm -- examples/vector.mbtpp        # check and run
-moonrun _build/wasm-gc/release/build/app/app.wasm -- check examples/vector.mbtpp  # only check
+moon build --target js
 ```
 
-MoonBit packages listed in a `moon.pkg.json` next to the source file can be
-imported and used as `@pkg.name` (type checking only; see
+and put `bin/` on your `PATH` (or call `bin/moonpp`, `bin\moonpp.cmd` on
+Windows).
+
+```sh
+moonpp new hello && cd hello   # create a project
+moonpp run                     # run the main package
+moonpp check                   # type check all packages
+moonpp add moonbitlang/x       # add a dependency (runs `moon add`, generates missing .mbti)
+moonpp install                 # install dependencies (runs `moon install`)
+moonpp run examples/vector.mbtpp   # a single file also works
+```
+
+A project is a MoonBit module (`moon.mod.json`); a package is a directory of
+`.mbtpp` files. The MoonBit packages a package uses are listed in the `import`
+field of its `moon.pkg.json` and referred to as `@pkg.name`; they are only
+type checked, so running a call to them stops with an error (see
 [examples/import](examples/import)).
 
 `moon test` runs the examples in `examples/` and the tests in `src/*_test.mbt`.

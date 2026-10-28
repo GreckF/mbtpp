@@ -16,6 +16,8 @@ pub fn check(Cxt, @parser.Expr, Val) -> Tm raise ElabError
 
 pub fn check_decls(Array[@parser.Decl], lenient? : Bool, skipped? : Array[String]) -> Unit raise ElabError
 
+pub fn check_package(Array[(String, String)], prelude? : Bool, imports? : Array[Import]) -> Unit raise CheckError
+
 pub fn check_program(String, String, prelude? : Bool, imports? : Array[Import]) -> Unit raise CheckError
 
 pub fn clause_body_val(Array[Val], Int, Clause) -> Val

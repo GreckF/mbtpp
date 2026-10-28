@@ -10,7 +10,7 @@ pub fn parse_expr(String) -> Expr raise ParseError
 
 pub fn parse_mbti(String, String, String, Map[String, String]) -> MbtiResult
 
-pub fn parse_program(String) -> Array[Decl] raise ParseError
+pub fn parse_program(String, line0? : Int) -> Array[Decl] raise ParseError
 
 pub fn tokenize(String, line0? : Int, col0? : Int) -> Array[Token] raise ParseError
 

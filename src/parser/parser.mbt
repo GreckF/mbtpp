@@ -1336,8 +1336,11 @@ fn Parser::decl(self : Parser) -> Decl raise ParseError {
 }
 
 ///|
-pub fn parse_program(src : String) -> Array[Decl] raise ParseError {
-  let p = { toks: tokenize(src), i: 0 }
+pub fn parse_program(
+  src : String,
+  line0? : Int = 1,
+) -> Array[Decl] raise ParseError {
+  let p = { toks: tokenize(src, line0~), i: 0 }
   let ds : Array[Decl] = []
   while p.peek().tok != TEOF {
     if p.accept(";") {

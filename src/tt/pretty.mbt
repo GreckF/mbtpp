@@ -152,7 +152,7 @@ fn show_prec(names : Array[String], t : Tm, prec : Int) -> String {
       }
       let (h, args) = flatten_app(t)
       match (h, args) {
-        (Global("Eq"), [_, (a, Expl), (b, Expl)]) =>
+        (Global("Id"), [_, (a, Expl), (b, Expl)]) =>
           return paren(
             prec > 1,
             show_prec(names, a, 2) + " === " + show_prec(names, b, 2),

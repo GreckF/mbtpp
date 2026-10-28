@@ -64,14 +64,14 @@ enum Vector[T] : Nat -> Type {
   Cons[n : Nat](T, Vector[T](n)) : Vector[T](S(n))
 }
 
-enum Eq[T](x : T) : (y : T) -> Prop {
-  Refl : Eq[T](x)(x)
+enum Id[T](x : T) : (y : T) -> Prop {
+  Refl : Id[T](x)(x)
 }
-// a === b  是  Eq[_](a)(b)
+// a === b  是  Id[_](a)(b)
 ```
 
 - `enum 名字[参数](参数) : 索引类型 -> 宇宙`。参数组和每个索引组都是独立的参数组，
-  所以 `Eq` 的完整写法是 `Eq[T](x)(y)`。
+  所以 `Id` 的完整写法是 `Id[T](x)(y)`。命题相等叫 `Id`，`Eq` 留给布尔相等的 trait（与 MoonBit 一致）。
 - 构造子写作 `C[自己的隐式](显式) : 返回类型`；没有索引时可以省略返回类型。
 - 构造子参数可以命名并被后面的参数引用：`MkSigma[A](fst : A, snd : P(fst))`。
 - 重名构造子按期望类型消歧，或写成 `Vector::Cons`。

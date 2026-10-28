@@ -5,21 +5,21 @@
 lemma plus_zero(n : Nat) -> n + 0 === n {
   match n {
     Z => Refl
-    S(k) => Eq::cong(S, plus_zero(k))
+    S(k) => Id::cong(S, plus_zero(k))
   }
 }
 
 lemma plus_succ(n : Nat, m : Nat) -> n + S(m) === S(n + m) {
   match n {
     Z => Refl
-    S(k) => Eq::cong(S, plus_succ(k, m))
+    S(k) => Id::cong(S, plus_succ(k, m))
   }
 }
 
 lemma plus_assoc(n : Nat, m : Nat, k : Nat) -> n + m + k === n + (m + k) {
   match n {
     Z => Refl
-    S(p) => Eq::cong(S, plus_assoc(p, m, k))
+    S(p) => Id::cong(S, plus_assoc(p, m, k))
   }
 }
 
@@ -39,23 +39,23 @@ lemma plus_comm : forall n m : Nat, n + m === m + n = proof {
 lemma append_nil[T](xs : List[T]) -> xs.append(Nil) === xs {
   match xs {
     Nil => Refl
-    Cons(x, rest) => Eq::cong(r => List::Cons(x, r), append_nil(rest))
+    Cons(x, rest) => Id::cong(r => List::Cons(x, r), append_nil(rest))
   }
 }
 
 lemma append_assoc[T](xs : List[T], ys : List[T], zs : List[T]) -> xs.append(ys).append(zs) === xs.append(ys.append(zs)) {
   match xs {
     Nil => Refl
-    Cons(x, rest) => Eq::cong(r => List::Cons(x, r), append_assoc(rest, ys, zs))
+    Cons(x, rest) => Id::cong(r => List::Cons(x, r), append_assoc(rest, ys, zs))
   }
 }
 
 lemma reverse_append[T](xs : List[T], ys : List[T]) -> xs.append(ys).reverse() === ys.reverse().append(xs.reverse()) {
   match xs {
-    Nil => Eq::sym(append_nil(ys.reverse()))
+    Nil => Id::sym(append_nil(ys.reverse()))
     Cons(x, rest) => {
-      let ih = Eq::cong(r => r.append(Cons(x, Nil)), reverse_append(rest, ys))
-      Eq::trans(ih, append_assoc(ys.reverse(), rest.reverse(), Cons(x, Nil)))
+      let ih = Id::cong(r => r.append(Cons(x, Nil)), reverse_append(rest, ys))
+      Id::trans(ih, append_assoc(ys.reverse(), rest.reverse(), Cons(x, Nil)))
     }
   }
 }
@@ -90,7 +90,7 @@ fn[T, a : Nat, b : Nat] cast(p : a === b, v : Vector[T](a)) -> Vector[T](b) {
   }
 }
 
-lemma cast_cons[T, a : Nat, b : Nat](p : a === b, x : T, v : Vector[T](a)) -> cast(Eq::cong(S, p), Vector::Cons(x, v)) === Vector::Cons(x, cast(p, v)) {
+lemma cast_cons[T, a : Nat, b : Nat](p : a === b, x : T, v : Vector[T](a)) -> cast(Id::cong(S, p), Vector::Cons(x, v)) === Vector::Cons(x, cast(p, v)) {
   match p {
     Refl => Refl
   }
@@ -100,9 +100,9 @@ lemma vappend_assoc[T, n : Nat, m : Nat, k : Nat](xs : Vector[T](n), ys : Vector
   match xs {
     Nil => Refl
     Cons(x, rest) =>
-      Eq::trans(
+      Id::trans(
         cast_cons(plus_assoc(_, m, k), x, rest.append(ys).append(zs)),
-        Eq::cong(v => Vector::Cons(x, v), vappend_assoc(rest, ys, zs)),
+        Id::cong(v => Vector::Cons(x, v), vappend_assoc(rest, ys, zs)),
       )
   }
 }

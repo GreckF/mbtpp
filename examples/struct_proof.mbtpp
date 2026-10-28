@@ -22,7 +22,7 @@ lemma plus_zero : forall n : Nat, plus(n, 0) === n = proof {
 lemma plus_succ(n : Nat, m : Nat) -> plus(n, S(m)) === S(plus(n, m)) {
   match n {
     Z => Refl
-    S(k) => Eq::cong(S, plus_succ(k, m))
+    S(k) => Id::cong(S, plus_succ(k, m))
   }
 }
 

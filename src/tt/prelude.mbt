@@ -7,8 +7,8 @@ pub let prelude_src : String =
   #|  S(Nat)
   #|}
   #|
-  #|enum Eq[T](x : T) : (y : T) -> Prop {
-  #|  Refl : Eq[T](x)(x)
+  #|enum Id[T](x : T) : (y : T) -> Prop {
+  #|  Refl : Id[T](x)(x)
   #|}
   #|
   #|enum Option[T] {
@@ -138,25 +138,25 @@ pub let prelude_src : String =
   #|
   #|// ---- propositional equality -----------------------------------------
   #|
-  #|fn[T, x : T, y : T] Eq::sym(p : x === y) -> y === x {
+  #|fn[T, x : T, y : T] Id::sym(p : x === y) -> y === x {
   #|  match p {
   #|    Refl => Refl
   #|  }
   #|}
   #|
-  #|fn[T, x : T, y : T, z : T] Eq::trans(p : x === y, q : y === z) -> x === z {
+  #|fn[T, x : T, y : T, z : T] Id::trans(p : x === y, q : y === z) -> x === z {
   #|  match q {
   #|    Refl => p
   #|  }
   #|}
   #|
-  #|fn[T, U, x : T, y : T] Eq::cong(f : (T) -> U, p : x === y) -> f(x) === f(y) {
+  #|fn[T, U, x : T, y : T] Id::cong(f : (T) -> U, p : x === y) -> f(x) === f(y) {
   #|  match p {
   #|    Refl => Refl
   #|  }
   #|}
   #|
-  #|fn[T, x : T, y : T] Eq::subst(p : x === y, motive : (T) -> Type, px : motive(x)) -> motive(y) {
+  #|fn[T, x : T, y : T] Id::subst(p : x === y, motive : (T) -> Type, px : motive(x)) -> motive(y) {
   #|  match p {
   #|    Refl => px
   #|  }
@@ -228,17 +228,17 @@ pub let prelude_src : String =
   #|  }
   #|}
   #|
-  #|trait Equal {
+  #|trait Eq {
   #|  op_equal(Self, Self) -> Bool
   #|}
   #|
-  #|impl Equal for Int with op_equal(a, b) { a == b }
-  #|impl Equal for String with op_equal(a, b) { a == b }
-  #|impl Equal for Bool with op_equal(a, b) { a == b }
-  #|impl Equal for Char with op_equal(a, b) { a == b }
-  #|impl Equal for Nat with op_equal(a, b) { a == b }
+  #|impl Eq for Int with op_equal(a, b) { a == b }
+  #|impl Eq for String with op_equal(a, b) { a == b }
+  #|impl Eq for Bool with op_equal(a, b) { a == b }
+  #|impl Eq for Char with op_equal(a, b) { a == b }
+  #|impl Eq for Nat with op_equal(a, b) { a == b }
   #|
-  #|trait Compare : Equal {
+  #|trait Compare : Eq {
   #|  compare(Self, Self) -> Int
   #|}
   #|

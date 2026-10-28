@@ -741,7 +741,7 @@ fn infer_bin(
     "===" => {
       let (ta, ty) = infer_ins(cxt, a)
       let tb = check(cxt, b, ty)
-      let t = apps(Global("Eq"), [(cxt.quote(ty), Impl), (ta, Expl), (tb, Expl)])
+      let t = apps(Global("Id"), [(cxt.quote(ty), Impl), (ta, Expl), (tb, Expl)])
       (t, VProp)
     }
     "&&" | "||" => {

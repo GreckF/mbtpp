@@ -138,7 +138,7 @@ fn run_tactics(
         new_goals.push(cur)
       }
       TExact(_, e) => solve_goal(g, check(g.cxt, e, g.ty))
-      TRfl(p) => solve_goal(g, check(g.cxt, EVar(p, "Eq::Refl"), g.ty))
+      TRfl(p) => solve_goal(g, check(g.cxt, EVar(p, "Id::Refl"), g.ty))
       TApply(_, e) => {
         let (t0, fty) = infer(g.cxt, e)
         let mut t = t0
@@ -219,7 +219,7 @@ fn run_tactics(
       TRewrite(_, h, rev) => {
         let (th, hty) = infer_ins(g.cxt, h)
         let (ety, a, b) = match force(hty) {
-          VData("Eq", [(t, _), (a, _), (b, _)]) => (t, a, b)
+          VData("Id", [(t, _), (a, _), (b, _)]) => (t, a, b)
           other =>
             g.cxt.fail("rewrite needs an equation, not " + g.cxt.show(other))
         }
@@ -246,7 +246,7 @@ fn run_tactics(
         let eq_tm = if rev {
           th
         } else {
-          apps(Global("Eq::sym"), [
+          apps(Global("Id::sym"), [
             (c.quote(ety), Impl),
             (c.quote(a), Impl),
             (c.quote(b), Impl),
@@ -256,13 +256,13 @@ fn run_tactics(
         let new_ty = eval(push1(c.env, to), motive)
         let c2 = c.bind(
           "_",
-          VData("Eq", [(ety, Impl), (to, Expl), (from, Expl)]),
+          VData("Id", [(ety, Impl), (to, Expl), (from, Expl)]),
         )
         let h2 = new_goal(c2, new_ty)
         new_goals.push(h2)
         solve_goal(
           g,
-          Match([eq_tm], [{ pats: [CPCon("Eq::Refl", [])], body: h2.meta }]),
+          Match([eq_tm], [{ pats: [CPCon("Id::Refl", [])], body: h2.meta }]),
         )
       }
       TAssume(_, x, pe) => {

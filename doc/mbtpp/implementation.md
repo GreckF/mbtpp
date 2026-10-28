@@ -44,9 +44,8 @@
 
 ## Differences from the original description
 
-- `Eq` is `enum Eq[T](x : T) : (y : T) -> Prop { Refl : Eq[T](x)(x) }`;
-  `a === b` is `Eq[_](a)(b)`.
+- Propositional equality is `enum Id[T](x : T) : (y : T) -> Prop { Refl : Id[T](x)(x) }`;
+  `a === b` is `Id[_](a)(b)`. The name `Eq` is the boolean equality trait,
+  as in MoonBit.
 - The kind of `Self` in `Monad` is `[T] -> Type`, like `Array` and `Option`.
-- The boolean equality trait is called `Equal` (`Eq` is propositional
-  equality).
 - Resumable algebraic effects, `simp`, `omega` and `auto` are not implemented.

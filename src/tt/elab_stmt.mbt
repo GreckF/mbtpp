@@ -216,14 +216,22 @@ fn monad_bind(p : Pos, m : @parser.Expr, f : @parser.Expr) -> @parser.Expr {
 ///|
 fn pat_lam(p : Pos, pat : @parser.Pat, body : @parser.Expr) -> @parser.Expr {
   match pat {
-    PVar(q, x) => ELam(p, [], [{ pos: q, name: x, ty: None }], None, body)
-    PWild(q) => ELam(p, [], [{ pos: q, name: "_", ty: None }], None, body)
+    PVar(q, x) =>
+      ELam(p, [], [{ pos: q, name: x, ty: None, kind: Positional }], None, body)
+    PWild(q) =>
+      ELam(
+        p,
+        [],
+        [{ pos: q, name: "_", ty: None, kind: Positional }],
+        None,
+        body,
+      )
     _ => {
       let x = fresh_name_gen("__p")
       ELam(
         p,
         [],
-        [{ pos: p, name: x, ty: None }],
+        [{ pos: p, name: x, ty: None, kind: Positional }],
         None,
         EMatch(p, EVar(p, x), None, [{ pos: p, pat, rhs: Some(body) }]),
       )

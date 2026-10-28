@@ -40,6 +40,10 @@
 - Functions whose body uses mutation, loops, `return`, `raise`, `try`,
   sequencing or array literals are opaque: they never unfold during type
   checking.
+- Tagged arguments are metadata of top-level declarations: the core Pi
+  type only has positional parameters (in declaration order). A call is
+  rearranged by `place_tagged`; an omitted `x~ : T = e` calls a helper
+  `f$default$x[impl](earlier params, ())`, an omitted `x? : T` becomes `None`.
 - There is no termination or positivity checking, so type checking can loop.
 
 ## Differences from the original description

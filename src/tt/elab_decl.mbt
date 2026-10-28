@@ -204,6 +204,11 @@ fn elab_fn_sig(fd : @parser.FnDecl) -> Unit raise ElabError {
   }
   let bs = concat(bs1, bs2)
   let ty = pis(bs, ret)
+  match fd.params {
+    Some(ps) if ps.iter().any(p => !(p.kind is Positional)) =>
+      st.labels.set(fd.name, elab_tagged_params(fd.name, c1, bs1, bs2, ps))
+    _ => ()
+  }
   match fd.body {
     BodyExtern(p) => {
       let ty = finish(cxt, fd.name, [ty])[0]
@@ -211,6 +216,47 @@ fn elab_fn_sig(fd : @parser.FnDecl) -> Unit raise ElabError {
     }
     BodyExpr(_) => register(fd.name, ty, GFunc(None, false, bs.length()))
   }
+}
+
+///|
+/// Label information of the explicit parameters of a top-level function.
+/// Each default value `x~ : T = e` becomes a helper function
+/// `f$default$x[impl](previous params, ())`, called at every call site that
+/// omits `x` (so the default is evaluated each time, as in MoonBit).
+fn elab_tagged_params(
+  fname : String,
+  c1 : Cxt,
+  bs1 : Array[(String, Icit, Tm)],
+  bs2 : Array[(String, Icit, Tm)],
+  ps : Array[@parser.Binder],
+) -> Array[LabelInfo] raise ElabError {
+  let infos : Array[LabelInfo] = []
+  let mut c = c1
+  for k = 0; k < ps.length(); k = k + 1 {
+    let p = ps[k]
+    let info = match p.kind {
+      Positional => LPos
+      Optional => LOpt(p.name)
+      Labelled(None) => LReq(p.name)
+      Labelled(Some(e)) => {
+        let helper = fname + "$default$" + p.name
+        let unit_bs : Array[(String, Icit, Tm)] = [("_", Expl, Global("Unit"))]
+        let hbs = concat(concat(bs1, bs2[0:k].to_array()), unit_bs)
+        let cu = c.bind("_", VData("Unit", []))
+        let t = check(cu.at(e.pos()), e, c.eval(bs2[k].2))
+        let res = finish(c1, helper, [
+          pis(hbs, tm_shift(bs2[k].2, 1, 0)),
+          lams(hbs, t),
+        ])
+        register(helper, res[0], GFunc(None, false, hbs.length()))
+        set_body(helper, res[1], hbs.length())
+        LDefault(p.name, helper)
+      }
+    }
+    infos.push(info)
+    c = c.bind(p.name, c.eval(bs2[k].2))
+  }
+  infos
 }
 
 ///|

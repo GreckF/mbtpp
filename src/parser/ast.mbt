@@ -25,6 +25,18 @@ pub(all) struct Binder {
   pos : Pos
   name : String
   ty : Expr?
+  kind : ParamKind
+} derive(Show)
+
+///|
+/// How a function parameter is passed (MoonBit's tagged arguments).
+pub(all) enum ParamKind {
+  /// `x : T`
+  Positional
+  /// `x~ : T`, or `x~ : T = default`
+  Labelled(Expr?)
+  /// `x? : T`: the parameter has type `T?` and defaults to `None`
+  Optional
 } derive(Show)
 
 ///|
@@ -72,6 +84,8 @@ pub(all) enum Expr {
   EContinue(Pos)
   /// `a..<b` / `a..=b`
   ERange(Pos, Expr, Expr, Bool)
+  /// A tagged call argument `label=e` (`label?=e` when the flag is set).
+  ETagged(Pos, String, Expr, Bool)
 } derive(Show)
 
 ///|
@@ -244,7 +258,8 @@ pub fn Expr::pos(self : Expr) -> Pos {
     | EReturn(p, _)
     | EBreak(p)
     | EContinue(p)
-    | ERange(p, _, _, _) => p
+    | ERange(p, _, _, _)
+    | ETagged(p, _, _, _) => p
   }
 }
 

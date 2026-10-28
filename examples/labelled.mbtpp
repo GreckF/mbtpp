@@ -1,0 +1,72 @@
+// Tagged (labelled and optional) arguments, as in MoonBit.
+
+fn labelled(arg1~ : Int, arg2~ : Int) -> Int {
+  arg1 - arg2
+}
+
+// a default value, evaluated at every call
+fn optional(opt~ : Int = 42) -> Int {
+  opt
+}
+
+// the default may depend on earlier parameters
+fn create_rectangle(a : Int, b~ : Int = a) -> (Int, Int) {
+  (a, b)
+}
+
+// `x? : T` has type `T?` (Option[T]) in the body
+fn greet(name : String, title? : String) -> String {
+  match title {
+    Some(t) => "Hello, " + t + " " + name
+    None => "Hello, " + name
+  }
+}
+
+fn greet_doctor(name : String, title? : String) -> String {
+  // pass an optional argument on with `title?`
+  let t = match title {
+    None => Some("Dr.")
+    other => other
+  }
+  greet(name, title?=t)
+}
+
+fn Int::clamp(self : Int, lo~ : Int = 0, hi~ : Int) -> Int {
+  if self < lo { lo } else if self > hi { hi } else { self }
+}
+
+// tagged arguments of dependent functions
+enum Vector[T] : Nat -> Type {
+  Nil : Vector[T](0)
+  Cons[n : Nat](T, Vector[T](n)) : Vector[T](S(n))
+}
+
+fn[T] replicate(n : Nat, value~ : T) -> Vector[T](n) {
+  match n as m return Vector[T](m) {
+    Z => Nil
+    S(k) => Cons(value, replicate(k, value~))
+  }
+}
+
+fn[T, n : Nat] Vector::to_list(self : Vector[T](n)) -> List[T] {
+  match self {
+    Nil => List::Nil
+    Cons(x, xs) => List::Cons(x, xs.to_list())
+  }
+}
+
+fn main {
+  let arg1 = 10
+  println(labelled(arg2=3, arg1~))
+  println(optional())
+  println(optional(opt=0))
+  println(create_rectangle(10).1)
+  println(create_rectangle(10, b=20).1)
+  println(greet("Alice"))
+  println(greet("Bob", title="Mr."))
+  println(greet_doctor("Carol"))
+  println((-5).clamp(hi=10))
+  println(15.clamp(hi=10, lo=3))
+  let v : Vector[String](3) = replicate(3, value="x")
+  println(v.to_list())
+}

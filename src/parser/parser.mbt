@@ -157,7 +157,7 @@ fn Parser::impl_binders(self : Parser) -> Array[Binder] raise ParseError {
     let pos = self.pos()
     let name = if self.accept("_") { "_" } else { self.ident() }
     let ty = if self.accept(":") { Some(self.expr()) } else { None }
-    bs.push({ pos, name, ty })
+    bs.push({ pos, name, ty, kind: Positional })
     if !self.accept(",") {
       break
     }
@@ -177,15 +177,32 @@ fn Parser::params(
   let bs : Array[Binder] = []
   while !self.at(")") {
     let pos = self.pos()
-    if (self.is_ident() || self.at("_")) && self.at_k(1, ":") {
+    if self.is_ident() && (self.at_k(1, "~") || self.at_k(1, "?")) {
+      // tagged parameters: `x~ : T`, `x~ : T = default`, `x? : T`
+      let name = self.ident()
+      let labelled = self.accept("~")
+      if !labelled {
+        self.expect("?")
+      }
+      self.expect(":")
+      let ty = self.expr()
+      let kind : ParamKind = if !labelled {
+        Optional
+      } else if self.accept("=") {
+        Labelled(Some(self.expr()))
+      } else {
+        Labelled(None)
+      }
+      bs.push({ pos, name, ty: Some(ty), kind })
+    } else if (self.is_ident() || self.at("_")) && self.at_k(1, ":") {
       let name = if self.accept("_") { "_" } else { self.ident() }
       ignore(self.advance())
-      bs.push({ pos, name, ty: Some(self.expr()) })
+      bs.push({ pos, name, ty: Some(self.expr()), kind: Positional })
     } else if names_only {
       let name = if self.accept("_") { "_" } else { self.ident() }
-      bs.push({ pos, name, ty: None })
+      bs.push({ pos, name, ty: None, kind: Positional })
     } else {
-      bs.push({ pos, name: "_", ty: Some(self.expr()) })
+      bs.push({ pos, name: "_", ty: Some(self.expr()), kind: Positional })
     }
     if !self.accept(",") {
       break
@@ -199,9 +216,9 @@ fn Parser::params(
 /// Turn the elements of a parenthesised list into Pi binders.
 fn exprs_to_binders(es : Array[Expr]) -> Array[Binder] {
   es.map(e => match e {
-    EAnn(p, EVar(_, x), t) => { pos: p, name: x, ty: Some(t) }
-    EAnn(p, EHole(_), t) => { pos: p, name: "_", ty: Some(t) }
-    _ => { pos: e.pos(), name: "_", ty: Some(e) }
+    EAnn(p, EVar(_, x), t) => { pos: p, name: x, ty: Some(t), kind: Positional }
+    EAnn(p, EHole(_), t) => { pos: p, name: "_", ty: Some(t), kind: Positional }
+    _ => { pos: e.pos(), name: "_", ty: Some(e), kind: Positional }
   })
 }
 
@@ -209,10 +226,10 @@ fn exprs_to_binders(es : Array[Expr]) -> Array[Binder] {
 /// Turn the elements of a parenthesised list into lambda parameters.
 fn exprs_to_params(es : Array[Expr]) -> Array[Binder] raise ParseError {
   es.map(e => match e {
-    EVar(p, x) => { pos: p, name: x, ty: None }
-    EHole(p) => { pos: p, name: "_", ty: None }
-    EAnn(p, EVar(_, x), t) => { pos: p, name: x, ty: Some(t) }
-    EAnn(p, EHole(_), t) => { pos: p, name: "_", ty: Some(t) }
+    EVar(p, x) => { pos: p, name: x, ty: None, kind: Positional }
+    EHole(p) => { pos: p, name: "_", ty: None, kind: Positional }
+    EAnn(p, EVar(_, x), t) => { pos: p, name: x, ty: Some(t), kind: Positional }
+    EAnn(p, EHole(_), t) => { pos: p, name: "_", ty: Some(t), kind: Positional }
     _ => raise ParseError(e.pos(), "invalid lambda parameter")
   })
 }
@@ -221,10 +238,10 @@ fn exprs_to_params(es : Array[Expr]) -> Array[Binder] raise ParseError {
 /// Turn the elements of a `[...]` list into implicit binders.
 fn exprs_to_impl_binders(es : Array[Expr]) -> Array[Binder] raise ParseError {
   es.map(e => match e {
-    EVar(p, x) => { pos: p, name: x, ty: None }
-    EHole(p) => { pos: p, name: "_", ty: None }
-    EAnn(p, EVar(_, x), t) => { pos: p, name: x, ty: Some(t) }
-    EAnn(p, EHole(_), t) => { pos: p, name: "_", ty: Some(t) }
+    EVar(p, x) => { pos: p, name: x, ty: None, kind: Positional }
+    EHole(p) => { pos: p, name: "_", ty: None, kind: Positional }
+    EAnn(p, EVar(_, x), t) => { pos: p, name: x, ty: Some(t), kind: Positional }
+    EAnn(p, EHole(_), t) => { pos: p, name: "_", ty: Some(t), kind: Positional }
     _ => raise ParseError(e.pos(), "invalid implicit binder")
   })
 }
@@ -362,13 +379,44 @@ fn Parser::unary(self : Parser) -> Expr raise ParseError {
 fn Parser::args(self : Parser, close : String) -> Array[Expr] raise ParseError {
   let es : Array[Expr] = []
   while !self.at(close) {
-    es.push(self.expr())
+    es.push(self.arg())
     if !self.accept(",") {
       break
     }
   }
   self.expect(close)
   es
+}
+
+///|
+/// A call argument: an expression or a tagged argument `label=e`, `label~`,
+/// `label?=e`, `label?`.
+fn Parser::arg(self : Parser) -> Expr raise ParseError {
+  let pos = self.pos()
+  match self.peek().tok {
+    TIdent(x) if self.at_k(1, "=") => {
+      ignore(self.advance())
+      ignore(self.advance())
+      ETagged(pos, x, self.expr(), false)
+    }
+    TIdent(x) if self.at_k(1, "~") => {
+      ignore(self.advance())
+      ignore(self.advance())
+      ETagged(pos, x, EVar(pos, x), false)
+    }
+    TIdent(x) if self.at_k(1, "?") && self.at_k(2, "=") => {
+      ignore(self.advance())
+      ignore(self.advance())
+      ignore(self.advance())
+      ETagged(pos, x, self.expr(), true)
+    }
+    TIdent(x) if self.at_k(1, "?") && (self.at_k(2, ",") || self.at_k(2, ")")) => {
+      ignore(self.advance())
+      ignore(self.advance())
+      ETagged(pos, x, EVar(pos, x), true)
+    }
+    _ => self.expr()
+  }
 }
 
 ///|
@@ -388,6 +436,10 @@ fn Parser::postfix(self : Parser, e0 : Expr) -> Expr raise ParseError {
       ignore(self.advance())
       let args = self.args("]")
       e = EApp(pos, e, Some(args), None)
+    } else if self.is_same_line("?") {
+      // `T?` is `Option[T]` (tagged arguments `x?=e` are parsed by `arg`)
+      ignore(self.advance())
+      e = EApp(pos, EVar(pos, "Option"), Some([e]), None)
     } else if self.at(".") && !self.at_k(1, ".") {
       ignore(self.advance())
       match self.peek().tok {
@@ -537,7 +589,7 @@ fn Parser::primary(self : Parser) -> Expr raise ParseError {
         return ELam(
           pos,
           [],
-          [{ pos, name: x, ty: None }],
+          [{ pos, name: x, ty: None, kind: Positional }],
           None,
           self.lambda_body(),
         )
@@ -555,7 +607,7 @@ fn Parser::primary(self : Parser) -> Expr raise ParseError {
         return ELam(
           pos,
           [],
-          [{ pos, name: "_", ty: None }],
+          [{ pos, name: "_", ty: None, kind: Positional }],
           None,
           self.lambda_body(),
         )
@@ -701,7 +753,7 @@ fn Parser::primary(self : Parser) -> Expr raise ParseError {
       let ty = if self.accept(":") { Some(self.expr()) } else { None }
       self.expect(",")
       let body = self.expr()
-      let bs = names.map(pn => { pos: pn.0, name: pn.1, ty })
+      let bs = names.map(pn => { pos: pn.0, name: pn.1, ty, kind: Positional })
       EPi(pos, [], Some(bs), body, None)
     }
     _ => self.fail("expected an expression")
@@ -1118,7 +1170,7 @@ fn Parser::decl(self : Parser) -> Decl raise ParseError {
           pos,
           name,
           impl_params: [],
-          params: [{ pos, name: "_", ty: Some(ty) }],
+          params: [{ pos, name: "_", ty: Some(ty), kind: Positional }],
           ret: None,
         },
       ]

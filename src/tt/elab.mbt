@@ -15,12 +15,27 @@ priv struct ElabState {
   thunks : Map[String, () -> Unit raise ElabError]
   /// Trait -> instance signature thunk names.
   impl_sigs : Map[String, Array[String]]
+  /// Tagged parameters of top-level functions (one entry per explicit
+  /// parameter).
+  labels : Map[String, Array[LabelInfo]]
   running : Array[String]
   pending : Array[PendingInst]
   /// Metas standing for the types of unannotated implicit binders, with the
   /// number of variables they abstract over; defaulted to `Type`.
   type_defaults : Array[(Int, Int)]
   mut fresh : Int
+}
+
+///|
+/// How an explicit parameter of a top-level function is passed.
+priv enum LabelInfo {
+  LPos
+  /// `x~ : T`
+  LReq(String)
+  /// `x~ : T = e`; the default is computed by the given helper function.
+  LDefault(String, String)
+  /// `x? : T`
+  LOpt(String)
 }
 
 ///|
@@ -46,6 +61,7 @@ let st : ElabState = {
   traits: {},
   thunks: {},
   impl_sigs: {},
+  labels: {},
   running: [],
   pending: [],
   type_defaults: [],
@@ -61,6 +77,7 @@ fn reset_elab() -> Unit {
   st.traits.clear()
   st.thunks.clear()
   st.impl_sigs.clear()
+  st.labels.clear()
   st.running.clear()
   st.pending.clear()
   st.type_defaults.clear()
@@ -307,6 +324,12 @@ fn elab_expl_binders(
       Some(t) => check_type(c0, t)
       None => c0.fresh_meta()
     }
+    let a = if b.kind is Optional {
+      ensure(c0, "Option")
+      App(Global("Option"), a, Impl)
+    } else {
+      a
+    }
     out.push((b.name, Expl, a))
     c = c.bind(b.name, c.eval(a))
   }
@@ -375,11 +398,16 @@ fn infer_pi(
 priv enum Arg {
   AE(@parser.Expr)
   AV(Tm, Val)
+  /// The default value of a tagged parameter, computed by a helper.
+  ADefault(String)
 }
 
 ///|
 fn check_arg(cxt : Cxt, a : Arg, ty : Val) -> Tm raise ElabError {
   match a {
+    AE(ETagged(p, x, _, _)) =>
+      cxt.at(p).fail("this function has no labelled parameter " + x)
+    ADefault(_) => cxt.fail("internal error: unexpected default argument")
     AE(e) => check(cxt, e, ty)
     AV(t, aty) => {
       let (t, aty) = insert_until(cxt, t, aty, ty)
@@ -434,6 +462,7 @@ fn app_core(
   let impls = impl_args.unwrap_or([])
   let mut k = 0
   let mut skip = skip_params
+  let impl_terms : Array[(Tm, Icit)] = []
   while force(ty) is VPi(_, i, _, a, cl) && i != Expl {
     let arg = if i == Inst {
       let m = cxt.fresh_meta()
@@ -448,6 +477,7 @@ fn app_core(
     } else {
       cxt.fresh_meta()
     }
+    impl_terms.push((arg, i))
     t = App(t, arg, i)
     ty = inst(cl, cxt.eval(arg))
   }
@@ -472,7 +502,15 @@ fn app_core(
       if n == 0 {
         cxt.fail("not a function: " + cxt.show(ty))
       }
-      let args = if args.length() == 0 && n == 1 {
+      let labels = match head {
+        Global(name) => st.labels.get(name)
+        _ => None
+      }
+      let args = match labels {
+        Some(infos) if infos.length() == n => place_tagged(cxt, infos, args)
+        _ => args
+      }
+      let args = if args.length() == 0 && n == 1 && labels is None {
         [AV(Lit(LUnit), VData("Unit", []))]
       } else {
         args
@@ -488,10 +526,16 @@ fn app_core(
       // Lambdas are checked last, so that the other arguments can
       // determine the types of their parameters.
       let deferred : Array[(Tm, @parser.Expr, Val)] = []
+      let expl_terms : Array[(Tm, Icit)] = []
       for a in args {
         match force(ty) {
           VPi(_, _, _, dom, cl) => {
             let arg = match a {
+              ADefault(helper) =>
+                apps(
+                  Global(helper),
+                  concat(concat(impl_terms, expl_terms), [(Lit(LUnit), Expl)]),
+                )
               AE(ELam(_, _, ps, _, _) as e) if ps.iter().any(p => p.ty is None) => {
                 let m = cxt.fresh_meta()
                 deferred.push((m, e, dom))
@@ -499,6 +543,7 @@ fn app_core(
               }
               _ => check_arg(cxt, a, dom)
             }
+            expl_terms.push((arg, Expl))
             t = App(t, arg, Expl)
             ty = inst(cl, cxt.eval(arg))
           }
@@ -523,6 +568,72 @@ fn app_core(
       }
     }
   }
+}
+
+///|
+/// Put tagged arguments (`label=e`, `label~`, `label?=e`) in the positions of
+/// their parameters, and fill in omitted ones (default values, `None`).
+fn place_tagged(
+  cxt : Cxt,
+  infos : Array[LabelInfo],
+  args : Array[Arg],
+) -> Array[Arg] raise ElabError {
+  let slots : Array[Arg?] = infos.map(_ => None)
+  let mut next = 0
+  for a in args {
+    match a {
+      AE(ETagged(p, x, e, opt)) => {
+        let c = cxt.at(p)
+        let mut k = -1
+        for j = 0; j < infos.length(); j = j + 1 {
+          match infos[j] {
+            LReq(l) | LDefault(l, _) | LOpt(l) if l == x => k = j
+            _ => ()
+          }
+        }
+        if k < 0 {
+          c.fail("no labelled parameter " + x)
+        }
+        if slots[k] is Some(_) {
+          c.fail("argument " + x + " is given twice")
+        }
+        slots[k] = Some(
+          match (infos[k], opt) {
+            (LOpt(_), true) => AE(e)
+            (LOpt(_), false) =>
+              AE(EApp(p, EVar(p, "Option::Some"), None, Some([e])))
+            (_, true) =>
+              c.fail(
+                "`" + x + "?=` is only for parameters declared `" + x + "?`",
+              )
+            _ => AE(e)
+          },
+        )
+      }
+      _ => {
+        while next < infos.length() &&
+              !(infos[next] is LPos && slots[next] is None) {
+          next = next + 1
+        }
+        if next >= infos.length() {
+          cxt.fail("too many positional arguments")
+        }
+        slots[next] = Some(a)
+        next = next + 1
+      }
+    }
+  }
+  let out : Array[Arg] = []
+  for k = 0; k < infos.length(); k = k + 1 {
+    match (slots[k], infos[k]) {
+      (Some(a), _) => out.push(a)
+      (None, LPos) => cxt.fail("missing positional argument")
+      (None, LReq(l)) => cxt.fail("missing labelled argument " + l + "~")
+      (None, LDefault(_, helper)) => out.push(ADefault(helper))
+      (None, LOpt(_)) => out.push(AE(EVar(cxt.pos, "Option::None")))
+    }
+  }
+  out
 }
 
 ///|
@@ -933,6 +1044,7 @@ fn check_lam(
   body : @parser.Expr,
   ty0 : Val,
 ) -> Tm raise ElabError {
+  reject_tagged(cxt0, ps)
   let mut cxt = cxt0
   let mut ty = force(ty0)
   if ty is VFlex(_, _) {
@@ -966,7 +1078,7 @@ fn check_lam(
   }
   let n = group_size(ty, cxt.lvl)
   let ps = if ps.length() == 0 {
-    [({ pos: cxt.pos, name: "_", ty: None } : @parser.Binder)]
+    [({ pos: cxt.pos, name: "_", ty: None, kind: Positional } : @parser.Binder)]
   } else {
     ps
   }
@@ -1006,12 +1118,25 @@ fn check_lam(
 }
 
 ///|
+/// As in MoonBit, only top-level functions have tagged parameters.
+fn reject_tagged(cxt : Cxt, ps : Array[@parser.Binder]) -> Unit raise ElabError {
+  for p in ps {
+    if !(p.kind is Positional) {
+      cxt
+      .at(p.pos)
+      .fail("only top-level functions can have labelled parameters")
+    }
+  }
+}
+
+///|
 fn infer_lam_type(
   cxt : Cxt,
   impls : Array[@parser.Binder],
   ps : Array[@parser.Binder],
   ret : @parser.Expr?,
 ) -> (Tm, Val) raise ElabError {
+  reject_tagged(cxt, ps)
   let (c1, bs1) = elab_impl_binders(cxt, impls)
   let (c2, bs2) = elab_expl_binders(c1, ps)
   let r = match ret {
@@ -1135,6 +1260,8 @@ pub fn infer(cxt0 : Cxt, e : @parser.Expr) -> (Tm, Val) raise ElabError {
       (check(cxt, e, a), a)
     }
     EBind(_, _) => cxt.fail("`<-` can only be used inside a monad block")
+    ETagged(_, x, _, _) =>
+      cxt.fail("labelled argument " + x + "= can only appear in a call")
     ERange(_, _, _, _) => cxt.fail("a range can only be used in a for loop")
   }
 }

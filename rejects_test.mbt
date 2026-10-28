@@ -383,3 +383,89 @@ test "unbound object variable" {
 test "no termination check: a looping proof is accepted (by design)" {
   inspect(check("lemma bad(n : Nat) -> n === S(n) { bad(n) }"), content="ok")
 }
+
+///|
+let labelled_prelude : String =
+  #|fn f(x : Int, a~ : Int, b~ : Int = 1, c? : Int) -> Int { x + a + b }
+  #|
+
+///|
+test "tagged: missing labelled argument" {
+  inspect(
+    check(labelled_prelude + "fn main { println(f(1)) }"),
+    content="t.mbtpp:2:20: error: missing labelled argument a~",
+  )
+}
+
+///|
+test "tagged: unknown label" {
+  inspect(
+    check(labelled_prelude + "fn main { println(f(1, a=2, d=3)) }"),
+    content="t.mbtpp:2:29: error: no labelled parameter d",
+  )
+}
+
+///|
+test "tagged: argument given twice" {
+  inspect(
+    check(labelled_prelude + "fn main { println(f(1, a=2, a=3)) }"),
+    content="t.mbtpp:2:29: error: argument a is given twice",
+  )
+}
+
+///|
+test "tagged: `?=` on a parameter that is not optional" {
+  inspect(
+    check(labelled_prelude + "fn main { println(f(1, a?=Some(2))) }"),
+    content="t.mbtpp:2:24: error: `a?=` is only for parameters declared `a?`",
+  )
+}
+
+///|
+test "tagged: too many positional arguments" {
+  inspect(
+    check(labelled_prelude + "fn main { println(f(1, 2, a=3)) }"),
+    content="t.mbtpp:2:20: error: too many positional arguments",
+  )
+}
+
+///|
+test "tagged: wrong type for an optional argument" {
+  inspect(
+    check(labelled_prelude + "fn main { println(f(1, a=2, c=\"x\")) }"),
+    content=(
+      #|t.mbtpp:2:29: error: type mismatch
+      #|  expected: Option[Int]
+      #|  actual:   Option[String]
+    ),
+  )
+}
+
+///|
+test "tagged: lambdas cannot have labelled parameters" {
+  inspect(
+    check("fn main { let g = fn(x~ : Int) { x }; println(g(x=1)) }"),
+    content="t.mbtpp:1:22: error: only top-level functions can have labelled parameters",
+  )
+}
+
+///|
+test "tagged: all accepted call forms" {
+  inspect(
+    check(
+      labelled_prelude +
+      (
+        #|fn main {
+        #|  let a = 2
+        #|  let c : Int? = None
+        #|  println(f(1, a~))
+        #|  println(f(b=5, a=1, 0))
+        #|  println(f(1, a=2, c=3))
+        #|  println(f(1, a=2, c?))
+        #|  println(f(1, a=2, c?=Some(4)))
+        #|}
+      ),
+    ),
+    content="ok",
+  )
+}

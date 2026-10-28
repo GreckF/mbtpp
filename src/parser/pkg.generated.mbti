@@ -25,6 +25,7 @@ pub(all) struct Binder {
   pos : Pos
   name : String
   ty : Expr?
+  kind : ParamKind
 }
 pub impl Show for Binder
 
@@ -89,6 +90,7 @@ pub(all) enum Expr {
   EBreak(Pos)
   EContinue(Pos)
   ERange(Pos, Expr, Expr, Bool)
+  ETagged(Pos, String, Expr, Bool)
 }
 pub fn Expr::pos(Self) -> Pos
 pub impl Show for Expr
@@ -144,6 +146,13 @@ pub(all) struct MatchRet {
   ret : Expr?
 }
 pub impl Show for MatchRet
+
+pub(all) enum ParamKind {
+  Positional
+  Labelled(Expr?)
+  Optional
+}
+pub impl Show for ParamKind
 
 type Parser
 pub fn Parser::expr(Self) -> Expr raise ParseError

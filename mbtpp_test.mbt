@@ -119,3 +119,24 @@ test "example stlc" {
     ),
   )
 }
+
+///|
+test "example labelled" {
+  inspect(
+    run_example("labelled.mbtpp"),
+    content=(
+      #|7
+      #|42
+      #|0
+      #|10
+      #|20
+      #|Hello, Alice
+      #|Hello, Mr. Bob
+      #|Hello, Dr. Carol
+      #|0
+      #|10
+      #|Cons(x, Cons(x, Cons(x, Nil)))
+      #|
+    ),
+  )
+}

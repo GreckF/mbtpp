@@ -32,13 +32,25 @@ fn lift_pren_n(p : PRen, k : Int) -> PRen {
 }
 
 ///|
-fn invert(lvl : Int, m : Int, sp : Spine) -> PRen raise UnifyError {
+/// Duplicated variables are left out of the renaming. With `prune`, so are
+/// arguments that are not variables (e.g. values that a variable was refined
+/// to by pattern matching): the solution may then not mention them, which is
+/// correct but not most general, so it is only tried last.
+fn invert(
+  lvl : Int,
+  m : Int,
+  sp : Spine,
+  prune : Bool,
+) -> PRen raise UnifyError {
   let ren : Map[Int, Int] = {}
   let dup : Array[Int] = []
   for k = 0; k < sp.length(); k = k + 1 {
     match force(sp[k].0) {
       VRigid(x, []) => if ren.contains(x) { dup.push(x) } else { ren.set(x, k) }
-      _ => raise UnifyError("meta spine is not a list of distinct variables")
+      _ =>
+        if !prune {
+          raise UnifyError("meta spine is not a list of distinct variables")
+        }
     }
   }
   for x in dup {
@@ -112,8 +124,14 @@ fn rename(p : PRen, v : Val) -> Tm raise UnifyError {
 }
 
 ///|
-fn solve(lvl : Int, m : Int, sp : Spine, rhs : Val) -> Unit raise UnifyError {
-  let p = invert(lvl, m, sp)
+fn solve(
+  lvl : Int,
+  m : Int,
+  sp : Spine,
+  rhs : Val,
+  prune? : Bool = false,
+) -> Unit raise UnifyError {
+  let p = invert(lvl, m, sp, prune)
   let mut t = rename(p, rhs)
   for k = sp.length() - 1; k >= 0; k = k - 1 {
     t = Lam("x" + k.to_string(), sp[k].1, true, t)
@@ -139,7 +157,7 @@ fn solve_fo(
         VCon(n, sp2) => (s => VCon(n, s), sp2)
         VRigid(x, sp2) => (s => VRigid(x, s), sp2)
         VGlobal(n, sp2) => (s => VGlobal(n, s), sp2)
-        _ => raise e
+        _ => return solve(lvl, m, sp, rhs, prune=true)
       }
       for j = 1; j <= sp.length() && j <= sp2.length(); j = j + 1 {
         let snap = snapshot_metas()
@@ -155,7 +173,10 @@ fn solve_fo(
           _ => restore_metas(snap)
         }
       }
-      raise e
+      // last resort: leave out the arguments that are not variables
+      solve(lvl, m, sp, rhs, prune=true) catch {
+        _ => raise e
+      }
     }
   }
 }

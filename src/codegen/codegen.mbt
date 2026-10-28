@@ -28,6 +28,17 @@ priv struct Gen {
   aliases : Map[String, String]
   er : Erasure
   mut fresh : Int
+  /// Datatypes that can be native enums (see typed.mbt).
+  enums_ok : Map[String, Bool]
+  enums_done : Array[String]
+  enum_defs : StringBuilder
+  /// Functions with a native translation.
+  typed_set : Array[String]
+  /// The native result type of the function being translated.
+  mut cur_result : NTy?
+  /// While deciding the typed functions nothing is emitted.
+  mut dry : Bool
+  scheduled : Map[String, Bool]
 }
 
 ///|
@@ -59,7 +70,10 @@ fn Gen::name(self : Gen, base : String) -> String {
 /// The MoonBit identifier of a global (scheduling it for emission).
 fn Gen::gid(self : Gen, name : String) -> String {
   match self.ids.get(name) {
-    Some(id) => id
+    Some(id) => {
+      self.schedule(name)
+      id
+    }
     None => {
       let buf = StringBuilder::new()
       let short = match name.rev_find("::") {
@@ -79,9 +93,17 @@ fn Gen::gid(self : Gen, name : String) -> String {
       }
       let id = "f" + self.ids.length().to_string() + "_" + buf.to_string()
       self.ids.set(name, id)
-      self.todo.push(name)
+      self.schedule(name)
       id
     }
+  }
+}
+
+///|
+fn Gen::schedule(self : Gen, name : String) -> Unit {
+  if !self.dry && !self.scheduled.contains(name) {
+    self.scheduled.set(name, true)
+    self.todo.push(name)
   }
 }
 
@@ -806,6 +828,43 @@ fn Gen::global(self : Gen, name : String) -> Unit raise CodegenError {
   }
   let id = self.gid(name)
   match g.kind {
+    GFunc(Some(_), _, _) if self.typed_set.contains(name) => {
+      let code = self.typed_fn(name).unwrap()
+      let sig = self.native_sig(name).unwrap()
+      let n = sig.params.length()
+      let params : Array[String] = []
+      let conv : Array[String] = []
+      let pass : Array[String] = []
+      for i = 0; i < n; i = i + 1 {
+        match sig.params[i] {
+          Some(nt) => {
+            let p = "a" + i.to_string()
+            params.push(p + " : Value")
+            conv.push(self.of_value(nt, p))
+            pass.push(p)
+          }
+          None => ()
+        }
+      }
+      let call = self.to_value(sig.result, id + "_t(" + conv.join(", ") + ")")
+      self.defs.write_string(
+        "\n/// " +
+        name +
+        "\n" +
+        code +
+        "\nfn " +
+        id +
+        "(" +
+        params.join(", ") +
+        ") -> Value raise {\n  " +
+        call +
+        "\n}\n\nfn " +
+        id +
+        "_v() -> Value {\n  " +
+        curried(n, id + "(" + pass.join(", ") + ")") +
+        "\n}\n",
+      )
+    }
     GFunc(Some(body), _, _) if func_arity(name) is Some(n) => {
       // a function: strip its n lambdas
       let erased : Array[Bool] = []
@@ -922,10 +981,20 @@ pub fn generate(imports : Array[(String, String)]) -> String raise CodegenError 
     aliases: {},
     er: compute_erasure(),
     fresh: 0,
+    enums_ok: {},
+    enums_done: [],
+    enum_defs: StringBuilder::new(),
+    typed_set: [],
+    cur_result: None,
+    dry: false,
+    scheduled: {},
   }
   for im in imports {
     g.aliases.set(im.0, im.1)
   }
+  g.dry = true
+  g.compute_typed()
+  g.dry = false
   let main_value = g.global_value("main")
   while g.todo.length() > 0 {
     let n = g.todo.pop().unwrap()
@@ -943,6 +1012,7 @@ pub fn generate(imports : Array[(String, String)]) -> String raise CodegenError 
   foreign.to_string() +
   g.ffi.to_string() +
   "\n// ---- the program ------------------------------------------------------\n" +
+  g.enum_defs.to_string() +
   g.defs.to_string() +
   "\nfn main {\n  run_main(() => " +
   main_value +

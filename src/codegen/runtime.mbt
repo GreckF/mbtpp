@@ -53,6 +53,22 @@ let runtime_src : String =
   #|  raise CRaise(v)
   #|}
   #|
+  #|fn int_div(a : Int, b : Int) -> Int raise {
+  #|  if b == 0 {
+  #|    rt_fail("division by zero")
+  #|  } else {
+  #|    a / b
+  #|  }
+  #|}
+  #|
+  #|fn int_mod(a : Int, b : Int) -> Int raise {
+  #|  if b == 0 {
+  #|    rt_fail("division by zero")
+  #|  } else {
+  #|    a % b
+  #|  }
+  #|}
+  #|
   #|fn apply(f : Value, a : Value) -> Value raise {
   #|  match f {
   #|    VFun(g) => g(a)

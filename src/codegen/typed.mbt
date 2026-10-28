@@ -782,6 +782,8 @@ fn Gen::typed_app(
         (if cs.length() == 0 { "" } else { "(" + cs.join(", ") + ")" })
       (code, NEnum(ci.data, targs))
     }
+    GPrim(p, k) if args.length() == k && p.has_prefix("@mbt:") =>
+      self.typed_ffi(env, n, p, g.ty, args)
     GPrim(p, k) if args.length() == k => {
       let (tpl, tys, res) = match native_prims.get(p) {
         Some(x) => x
@@ -835,6 +837,110 @@ fn Gen::typed_app(
         _ => raise NotTyped
       }
     _ => raise NotTyped
+  }
+}
+
+///|
+/// A call of an imported MoonBit function from typed code: a direct MoonBit
+/// call (no conversion), for scalar types, type parameters and functions.
+/// `StringView` arguments and results are converted from and to `String`;
+/// an optional argument `x? : T` given as `Some(e)` is passed as `x=e`, and
+/// omitted when it is `None`.
+fn Gen::typed_ffi(
+  self : Gen,
+  env : Array[TLocal],
+  name : String,
+  prim : String,
+  ty : @tt.Tm,
+  args : Array[@tt.Tm],
+) -> (String, NTy) raise NotTyped {
+  let labels = @tt.param_labels(name).unwrap_or([])
+  let ctx : Array[TyCtx] = []
+  let conv : Array[String] = []
+  let mut t = ty
+  let mut expl = 0
+  for i = 0; i < args.length(); i = i + 1 {
+    match t {
+      Pi(_, Impl, _, U, b) => {
+        ctx.push(TyIs(self.type_arg(env, args[i])))
+        t = b
+      }
+      Pi(_, Expl, _, a, b) => {
+        let label = if expl < labels.length() { labels[expl] } else { None }
+        expl = expl + 1
+        let unit_only = a is Global("Unit") &&
+          i == args.length() - 1 &&
+          expl == 1
+        if !unit_only {
+          match label {
+            Some((l, true)) => {
+              // `x? : T`: the argument is `Some(e)` or `None`
+              let inner = match a {
+                App(Global("Option"), x, _) => x
+                _ => raise NotTyped
+              }
+              let (h, xs) = flatten_app(args[i])
+              match h {
+                Global("Option::None") => ()
+                Global("Option::Some") if xs.length() == 2 => {
+                  let nt = match self.native_ty_in(ctx, inner) {
+                    Some(nt) => nt
+                    None => raise NotTyped
+                  }
+                  conv.push(l + "=" + self.typed_check(env, xs[1], nt))
+                }
+                _ => raise NotTyped
+              }
+            }
+            _ => {
+              let code = if a is Global("StringView") {
+                self.typed_check(env, args[i], NString) + "[:]"
+              } else {
+                match self.native_ty_in(ctx, a) {
+                  Some(nt) if !(nt is NEnum(_, _)) =>
+                    self.typed_check(env, args[i], nt)
+                  _ => raise NotTyped
+                }
+              }
+              conv.push(
+                match label {
+                  Some((l, _)) => l + "=" + code
+                  None => code
+                },
+              )
+            }
+          }
+        }
+        ctx.push(TyOther)
+        t = b
+      }
+      _ => raise NotTyped
+    }
+  }
+  let (res_tm, raises) = match t {
+    Raises(r, _) => (r, true)
+    _ => (t, false)
+  }
+  let target = prim.unsafe_substring(start=5, end=prim.length())
+  let call = match self.ffi_call(target, conv) {
+    Ok(c) => c
+    Err(_) => raise NotTyped
+  }
+  let (call, res) = if res_tm is Global("StringView") {
+    (call + ".to_string()", NString)
+  } else {
+    match self.native_ty_in(ctx, res_tm) {
+      Some(nt) if !(nt is NEnum(_, _)) => (call, nt)
+      _ => raise NotTyped
+    }
+  }
+  if raises {
+    (
+      "(try { " + call + " } catch { err => raise CRaise(foreign_error(err)) })",
+      res,
+    )
+  } else {
+    (call, res)
   }
 }
 

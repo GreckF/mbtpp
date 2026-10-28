@@ -328,7 +328,30 @@ fn Gen::ffi_body(
     Raises(r, _) => (r, true)
     _ => (t, false)
   }
-  // what to call
+  let call = match self.ffi_call(target, conv) {
+    Ok(c) => c
+    Err(e) => return Err(e)
+  }
+  let call = if raises {
+    "try { " + call + " } catch { err => raise CRaise(foreign_error(err)) }"
+  } else {
+    call
+  }
+  match self.from_mbt(stack, res_ty, "r") {
+    Some(back) => Ok(lets.to_string() + "  let r = " + call + "\n  " + back)
+    None => Err("unsupported result type")
+  }
+}
+
+///|
+/// The MoonBit call of an imported function (`target` is the part of its
+/// primitive name after `@mbt:`) with the given (converted, labelled)
+/// arguments.
+fn Gen::ffi_call(
+  self : Gen,
+  target : String,
+  conv : Array[String],
+) -> Result[String, String] {
   let call = if target.has_prefix("@") || !target.contains(".") {
     // `impl Show for T`: a method of the type
     match target.find("::") {
@@ -362,15 +385,7 @@ fn Gen::ffi_body(
       None => "@" + alias + "." + fname + "(" + conv.join(", ") + ")"
     }
   }
-  let call = if raises {
-    "try { " + call + " } catch { err => raise CRaise(foreign_error(err)) }"
-  } else {
-    call
-  }
-  match self.from_mbt(stack, res_ty, "r") {
-    Some(back) => Ok(lets.to_string() + "  let r = " + call + "\n  " + back)
-    None => Err("unsupported result type")
-  }
+  Ok(call)
 }
 
 ///|

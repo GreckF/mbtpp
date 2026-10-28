@@ -4,6 +4,8 @@ package "username/mbtpp/codegen"
 // Values
 pub fn generate(Array[(String, String)]) -> String raise CodegenError
 
+pub fn runtime_code() -> String
+
 // Errors
 pub suberror CodegenError {
   CodegenError(String)

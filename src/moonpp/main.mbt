@@ -245,6 +245,11 @@ fn compile(opts : Options, path : String?) -> (String, String) raise Failure {
     ),
   )
   write_file(out + "/main.mbt", code)
+  write_file(out + "/runtime.mbt", @codegen.runtime_code())
+  // format the generated code (best effort)
+  if can_run_commands {
+    ignore(run_quiet("moon fmt", mod_dir))
+  }
   (mod_dir, pkg_rel)
 }
 

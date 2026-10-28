@@ -2,8 +2,15 @@
 /// MoonBit++ → MoonBit: elaborated core terms are translated to MoonBit
 /// code over the uniform representation `Value` of the runtime
 /// (`runtime.mbt`). Only the globals reachable from `main` are emitted.
-/// Calls of imported MoonBit functions go through generated glue that
-/// converts between `Value` and MoonBit types (see `ffi`).
+///
+/// - A function of n parameters becomes a MoonBit function; a saturated
+///   call is a direct call, and `<id>_v()` is the function as a value
+///   (curried closure) for other uses.
+/// - Implicit parameters whose type is a sort (type parameters) are erased.
+/// - Constructors and primitive operations of saturated applications are
+///   inlined; `match` becomes a MoonBit `match` on `VCon(name, args)`.
+/// - Calls of imported MoonBit functions go through generated glue that
+///   converts between `Value` and MoonBit types (see `ffi.mbt`).
 pub suberror CodegenError {
   CodegenError(String)
 }
@@ -19,13 +26,33 @@ priv struct Gen {
   foreign_order : Array[String]
   /// Package path -> alias, for imported packages.
   aliases : Map[String, String]
+  er : Erasure
   mut fresh : Int
 }
 
 ///|
+/// A fresh local name based on a source name.
 fn Gen::name(self : Gen, base : String) -> String {
   self.fresh = self.fresh + 1
-  base + self.fresh.to_string()
+  let buf = StringBuilder::new()
+  for c in base {
+    if (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_' {
+      buf.write_char(c)
+    } else if c >= 'A' && c <= 'Z' {
+      buf.write_char(Int::unsafe_to_char(c.to_int() + 32))
+    }
+  }
+  let b = buf.to_string()
+  let b = if b == "" ||
+    b == "_" ||
+    (b.get_char(0).unwrap() >= '0' && b.get_char(0).unwrap() <= '9') {
+    "v"
+  } else if b.has_prefix("_") {
+    "v" + b
+  } else {
+    b
+  }
+  b + "_" + self.fresh.to_string()
 }
 
 ///|
@@ -35,27 +62,133 @@ fn Gen::gid(self : Gen, name : String) -> String {
     Some(id) => id
     None => {
       let buf = StringBuilder::new()
-      for c in name {
-        if (c >= 'a' && c <= 'z') ||
-          (c >= 'A' && c <= 'Z') ||
-          (c >= '0' && c <= '9') {
-          buf.write_char(
-            if c >= 'A' && c <= 'Z' {
-              Int::unsafe_to_char(c.to_int() + 32)
-            } else {
-              c
-            },
-          )
-        } else {
-          buf.write_char('_')
+      let short = match name.rev_find("::") {
+        Some(_) => name
+        None => name
+      }
+      for c in short {
+        if (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') {
+          buf.write_char(c)
+        } else if c >= 'A' && c <= 'Z' {
+          buf.write_char(Int::unsafe_to_char(c.to_int() + 32))
+        } else if c == ':' || c == '.' || c == '$' || c == '_' {
+          if !buf.to_string().has_suffix("_") {
+            buf.write_char('_')
+          }
         }
       }
-      let id = "g" + self.ids.length().to_string() + "_" + buf.to_string()
+      let id = "f" + self.ids.length().to_string() + "_" + buf.to_string()
       self.ids.set(name, id)
       self.todo.push(name)
       id
     }
   }
+}
+
+// ---------------------------------------------------------------------------
+// Globals
+
+///|
+/// Number of leading lambdas of a term.
+fn lam_count(t : @tt.Tm) -> Int {
+  match t {
+    Lam(_, _, _, b) => 1 + lam_count(b)
+    _ => 0
+  }
+}
+
+///|
+/// The parameters of a global function (its arity), if it is one.
+fn func_arity(name : String) -> Int? {
+  match @tt.globals.get(name) {
+    Some({ kind: GFunc(Some(body), _, n), .. }) if n > 0 && lam_count(body) >= n =>
+      Some(n)
+    _ => None
+  }
+}
+
+///|
+fn is_sort_like(t : @tt.Tm) -> Bool {
+  match t {
+    U | PropU => true
+    Pi(_, _, _, _, b) => is_sort_like(b)
+    _ => false
+  }
+}
+
+///|
+/// Which of the first `n` parameters of a global are erased: implicit
+/// parameters whose type is a sort (type parameters).
+fn erased_params(name : String, n : Int) -> Array[Bool] {
+  let out : Array[Bool] = []
+  let mut t = match @tt.globals.get(name) {
+    Some(g) => g.ty
+    None => @tt.Tm::U
+  }
+  for _ in 0..<n {
+    match t {
+      Pi(_, i, _, a, b) => {
+        out.push(i == Impl && is_sort_like(a))
+        t = b
+      }
+      _ => out.push(false)
+    }
+  }
+  out
+}
+
+///|
+/// Does `t` contain a `return` of the function it is the body of?
+fn has_return(t : @tt.Tm) -> Bool {
+  match t {
+    Return(_) => true
+    Lam(_, _, _, _) => false
+    App(f, a, _) => has_return(f) || has_return(a)
+    Let(_, _, v, b) | LetMut(_, _, v, b) => has_return(v) || has_return(b)
+    Match(ss, cls) =>
+      ss.iter().any(has_return) || cls.iter().any(cl => has_return(cl.body))
+    Try(b, cls) => has_return(b) || cls.iter().any(cl => has_return(cl.body))
+    Assign(_, v) | Raise(v) => has_return(v)
+    While(c, b, s) => has_return(c) || has_return(b) || has_return(s)
+    Seq(a, b) => has_return(a) || has_return(b)
+    ArrayLit(es) => es.iter().any(has_return)
+    _ => false
+  }
+}
+
+///|
+fn catch_return(has_ret : Bool, body : String) -> String {
+  if has_ret {
+    "try {\n(" + body + ")\n} catch {\nCReturn(r) => r\ne => raise e\n}"
+  } else {
+    body
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Terms
+
+///|
+priv enum Local {
+  LVar(String)
+  LMut(String)
+  LErased
+}
+
+///|
+fn local_code(l : Local) -> String {
+  match l {
+    LVar(n) => n
+    LMut(n) => n + ".val"
+    LErased => "VType"
+  }
+}
+
+///|
+fn push_local(env : Array[Local], l : Local) -> Array[Local] {
+  let e = env.copy()
+  e.push(l)
+  e
 }
 
 ///|
@@ -75,11 +208,26 @@ fn double_lit(d : Double) -> String {
 }
 
 ///|
+fn char_lit(c : Char) -> String {
+  let digits = "0123456789abcdef"
+  let mut n = c.to_int()
+  let mut hex = ""
+  while true {
+    hex = digits.get_char(n % 16).unwrap().to_string() + hex
+    n = n / 16
+    if n == 0 {
+      break
+    }
+  }
+  "'\\u{" + hex + "}'"
+}
+
+///|
 fn lit_code(l : @tt.Lit) -> String {
   match l {
     LInt(n) => "VInt(" + n.to_string() + ")"
     LStr(s) => "VStr(" + s.escape() + ")"
-    LChar(c) => "VChar(Int::unsafe_to_char(" + c.to_int().to_string() + "))"
+    LChar(c) => "VChar(" + char_lit(c) + ")"
     LBool(b) => "VBool(" + b.to_string() + ")"
     LUnit => "VUnit"
     LDouble(d) => "VDouble(" + double_lit(d) + ")"
@@ -97,22 +245,163 @@ fn pat_code(p : @tt.CPat) -> String {
 }
 
 ///|
-priv struct Local {
-  name : String
-  mutable : Bool
+fn has_double_pat(p : @tt.CPat) -> Bool {
+  match p {
+    CPLit(LDouble(_)) => true
+    CPCon(_, ps) => ps.iter().any(has_double_pat)
+    _ => false
+  }
 }
 
 ///|
-fn push_local(env : Array[Local], l : Local) -> Array[Local] {
-  let e = env.copy()
-  e.push(l)
-  e
+fn short_con(c : String) -> String {
+  match c.rev_find("::") {
+    Some(i) => c.unsafe_substring(start=i + 2, end=c.length())
+    None => c
+  }
 }
 
 ///|
-/// The clauses of a match (or of a handler) as an `if` chain over
-/// `match_pats`; `fallback` is the code for when no clause matches.
-fn Gen::clauses(
+/// A MoonBit pattern for a core pattern; `names` receives the variables of
+/// its slots (in slot order).
+fn Gen::native_pat(self : Gen, p : @tt.CPat, names : Array[Local]) -> String {
+  match p {
+    CPVar(x) => {
+      let n = self.name(x)
+      names.push(LVar(n))
+      var_marker + n + end_marker
+    }
+    CPWild => {
+      let n = self.name("w")
+      names.push(LVar(n))
+      var_marker + n + end_marker
+    }
+    CPCon(c, ps) => {
+      let n = self.name(short_con(c))
+      names.push(LVar(n))
+      let subs : Array[String] = []
+      for j = 0; j < ps.length(); j = j + 1 {
+        if self.er.con_erased(c, j) {
+          // an erased field (only variables bind it, see erase.mbt)
+          names.push(LErased)
+        } else {
+          subs.push(self.native_pat(ps[j], names))
+        }
+      }
+      "(VCon(" +
+      c.escape() +
+      ", [" +
+      subs.join(", ") +
+      "])" +
+      as_marker +
+      n +
+      end_marker +
+      ")"
+    }
+    CPLit(l) => {
+      let n = self.name("lit")
+      names.push(LVar(n))
+      let lp = match l {
+        LInt(k) => "VInt(" + k.to_string() + ")"
+        LStr(s) => "VStr(" + s.escape() + ")"
+        LChar(c) => "VChar(" + char_lit(c) + ")"
+        LBool(b) => "VBool(" + b.to_string() + ")"
+        LUnit => "VUnit"
+        LDouble(_) => "_"
+      }
+      "(" + lp + as_marker + n + end_marker + ")"
+    }
+  }
+}
+
+///|
+/// Markers around the names bound by a generated pattern: they are turned
+/// into bindings, or dropped when unused, by `resolve_bindings`.
+let var_marker : String = Int::unsafe_to_char(1).to_string()
+
+///|
+let as_marker : String = Int::unsafe_to_char(3).to_string()
+
+///|
+let end_marker : String = Int::unsafe_to_char(2).to_string()
+
+///|
+fn is_ident(s : String) -> Bool {
+  s != "" &&
+  s
+  .iter()
+  .all(c => (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_')
+}
+
+///|
+fn is_ident_char(c : Char) -> Bool {
+  (c >= 'a' && c <= 'z') ||
+  (c >= 'A' && c <= 'Z') ||
+  (c >= '0' && c <= '9') ||
+  c == '_'
+}
+
+///|
+/// Does `name` occur in `code` as a whole identifier?
+fn uses(code : String, name : String) -> Bool {
+  let cs : Array[Char] = code.iter().collect()
+  let ns : Array[Char] = name.iter().collect()
+  let n = ns.length()
+  for i = 0; i + n <= cs.length(); i = i + 1 {
+    let mut same = true
+    for k = 0; k < n; k = k + 1 {
+      if cs[i + k] != ns[k] {
+        same = false
+        break
+      }
+    }
+    if same &&
+      (i == 0 || !is_ident_char(cs[i - 1])) &&
+      (i + n == cs.length() || !is_ident_char(cs[i + n])) {
+      return true
+    }
+  }
+  false
+}
+
+///|
+/// Turn the binding markers of a pattern into bindings, dropping the unused
+/// ones (an unused variable becomes `_`).
+fn resolve_bindings(pat : String, body : String) -> String {
+  let out = StringBuilder::new()
+  let cs : Array[Char] = pat.iter().collect()
+  let v = var_marker.get_char(0).unwrap()
+  let a = as_marker.get_char(0).unwrap()
+  let e = end_marker.get_char(0).unwrap()
+  let mut i = 0
+  while i < cs.length() {
+    let c = cs[i]
+    if c == v || c == a {
+      let mut j = i + 1
+      let name = StringBuilder::new()
+      while cs[j] != e {
+        name.write_char(cs[j])
+        j = j + 1
+      }
+      let n = name.to_string()
+      if uses(body, n) {
+        out.write_string(if c == v { n } else { " as " + n })
+      } else if c == v {
+        out.write_char('_')
+      }
+      i = j + 1
+    } else {
+      out.write_char(c)
+      i = i + 1
+    }
+  }
+  out.to_string()
+}
+
+///|
+/// Clauses as an `if` chain over the runtime matcher (used for patterns
+/// MoonBit cannot express, like Double literals).
+fn Gen::clauses_dynamic(
   self : Gen,
   env : Array[Local],
   scruts : String,
@@ -128,7 +417,7 @@ fn Gen::clauses(
     for k = 0; k < @tt.pats_slots(cl.pats); k = k + 1 {
       let x = self.name("v")
       binds.write_string("let " + x + " = " + out + "[" + k.to_string() + "]\n")
-      env2 = push_local(env2, { name: x, mutable: false })
+      env2 = push_local(env2, LVar(x))
     }
     buf.write_string(
       "if match_pats([" +
@@ -140,7 +429,6 @@ fn Gen::clauses(
       ") {\n",
     )
     buf.write_string(binds.to_string())
-    // parenthesised: a lone variable in braces would be a record literal
     buf.write_string("(" + self.tm(env2, cl.body) + ")")
     buf.write_string("\n} else ")
   }
@@ -149,50 +437,225 @@ fn Gen::clauses(
 }
 
 ///|
+/// A match on already evaluated scrutinees (given as MoonBit expressions).
+fn Gen::match_code(
+  self : Gen,
+  env : Array[Local],
+  scruts : Array[String],
+  cls : Array[@tt.Clause],
+  fallback : String,
+) -> String {
+  if cls.iter().any(cl => cl.pats.iter().any(has_double_pat)) {
+    return self.clauses_dynamic(
+      env,
+      "[" + scruts.join(", ") + "]",
+      cls,
+      fallback,
+    )
+  }
+  let subject = if scruts.length() == 1 {
+    scruts[0]
+  } else {
+    "(" + scruts.join(", ") + ")"
+  }
+  let buf = StringBuilder::new()
+  buf.write_string("match " + subject + " {\n")
+  for cl in cls {
+    let names : Array[Local] = []
+    let ps = cl.pats.map(p => self.native_pat(p, names))
+    let mut env2 = env
+    for n in names {
+      env2 = push_local(env2, n)
+    }
+    let lhs = if ps.length() == 1 { ps[0] } else { "(" + ps.join(", ") + ")" }
+    let body = self.tm(env2, cl.body)
+    buf.write_string(resolve_bindings(lhs, body) + " => (" + body + ")\n")
+  }
+  buf.write_string("_ => " + fallback + "\n}")
+  buf.to_string()
+}
+
+///|
+/// Primitive operations that are inlined (`$0`, `$1` are the arguments).
+let inline_prims : Map[String, String] = {
+  "%int_add": "VInt(as_int($0) + as_int($1))",
+  "%int_sub": "VInt(as_int($0) - as_int($1))",
+  "%int_mul": "VInt(as_int($0) * as_int($1))",
+  "%int_neg": "VInt(-as_int($0))",
+  "%int_eq": "VBool(as_int($0) == as_int($1))",
+  "%int_lt": "VBool(as_int($0) < as_int($1))",
+  "%int_le": "VBool(as_int($0) <= as_int($1))",
+  "%int_gt": "VBool(as_int($0) > as_int($1))",
+  "%int_ge": "VBool(as_int($0) >= as_int($1))",
+  "%int_compare": "VInt(as_int($0).compare(as_int($1)))",
+  "%int_to_string": "VStr(as_int($0).to_string())",
+  "%int_to_double": "VDouble(as_int($0).to_double())",
+  "%double_add": "VDouble(as_double($0) + as_double($1))",
+  "%double_sub": "VDouble(as_double($0) - as_double($1))",
+  "%double_mul": "VDouble(as_double($0) * as_double($1))",
+  "%double_div": "VDouble(as_double($0) / as_double($1))",
+  "%double_neg": "VDouble(-as_double($0))",
+  "%double_lt": "VBool(as_double($0) < as_double($1))",
+  "%double_le": "VBool(as_double($0) <= as_double($1))",
+  "%double_gt": "VBool(as_double($0) > as_double($1))",
+  "%double_ge": "VBool(as_double($0) >= as_double($1))",
+  "%double_eq": "VBool(as_double($0) == as_double($1))",
+  "%double_to_string": "VStr(as_double($0).to_string())",
+  "%str_add": "VStr(as_str($0) + as_str($1))",
+  "%str_eq": "VBool(as_str($0) == as_str($1))",
+  "%str_length": "VInt(as_str($0).length())",
+  "%bool_eq": "VBool(as_bool($0) == as_bool($1))",
+  "%bool_not": "VBool(!as_bool($0))",
+  "%bool_to_string": "VStr(as_bool($0).to_string())",
+  "%char_eq": "VBool(as_char($0) == as_char($1))",
+  "%char_to_string": "VStr(as_char($0).to_string())",
+  "%array_length": "VInt(as_arr($0).length())",
+  "%array_push": "{ as_arr($0).push($1); VUnit }",
+  "%print": "{ rt_write(as_str($0)); VUnit }",
+}
+
+///|
+fn subst_args(template : String, args : Array[String]) -> String {
+  let mut s = template
+  for k = args.length() - 1; k >= 0; k = k - 1 {
+    s = s.replace_all(old="$" + k.to_string(), new=args[k])
+  }
+  s
+}
+
+///|
+fn Gen::prim_call(self : Gen, p : String, args : Array[String]) -> String {
+  ignore(self)
+  match inline_prims.get(p) {
+    Some(tpl) if args.iter().all(a => !a.contains("$")) => subst_args(tpl, args)
+    _ => "prim(" + p.escape() + ", [" + args.join(", ") + "])"
+  }
+}
+
+///|
+fn flatten_app(t : @tt.Tm) -> (@tt.Tm, Array[@tt.Tm]) {
+  let args : Array[@tt.Tm] = []
+  let mut h = t
+  while h is App(f, a, _) {
+    args.push(a)
+    h = f
+  }
+  args.rev_in_place()
+  (h, args)
+}
+
+///|
+fn apply_rest(code : String, rest : Array[String]) -> String {
+  let mut c = code
+  for a in rest {
+    c = "apply(" + c + ", " + a + ")"
+  }
+  c
+}
+
+///|
+/// An application, calling known globals directly when it is saturated.
+fn Gen::app(self : Gen, env : Array[Local], t : @tt.Tm) -> String {
+  let (h, args) = flatten_app(t)
+  match h {
+    Global(n) =>
+      match @tt.globals.get(n) {
+        Some(g) =>
+          match g.kind {
+            GFunc(_, _, _) if func_arity(n) is Some(k) && args.length() >= k => {
+              let direct : Array[String] = []
+              for i = 0; i < k; i = i + 1 {
+                if !self.er.fun_erased(n, i) {
+                  direct.push(self.tm(env, args[i]))
+                }
+              }
+              let rest = args[k:].to_array().map(a => self.tm(env, a))
+              return apply_rest(
+                self.gid(n) + "(" + direct.join(", ") + ")",
+                rest,
+              )
+            }
+            GCon(ci) if args.length() >= ci.nparams + ci.nargs => {
+              let total = ci.nparams + ci.nargs
+              let own : Array[String] = []
+              for j = 0; j < ci.nargs; j = j + 1 {
+                if !self.er.con_erased(n, j) {
+                  own.push(self.tm(env, args[ci.nparams + j]))
+                }
+              }
+              let rest = args[total:].to_array().map(a => self.tm(env, a))
+              return apply_rest(
+                "VCon(" + n.escape() + ", [" + own.join(", ") + "])",
+                rest,
+              )
+            }
+            GPrim(p, k) if args.length() >= k && !p.has_prefix("@mbt:") => {
+              let icits = binder_icits(g.ty, k)
+              let expl : Array[String] = []
+              for i = 0; i < k; i = i + 1 {
+                if icits[i] == Expl {
+                  expl.push(self.tm(env, args[i]))
+                }
+              }
+              let rest = args[k:].to_array().map(a => self.tm(env, a))
+              return apply_rest(self.prim_call(p, expl), rest)
+            }
+            _ => ()
+          }
+        None => ()
+      }
+    _ => ()
+  }
+  apply_rest(self.tm(env, h), args.map(a => self.tm(env, a)))
+}
+
+///|
+/// `if c { a } else { b }` as elaborated by the checker.
+fn if_parts(
+  ss : Array[@tt.Tm],
+  cls : Array[@tt.Clause],
+) -> (@tt.Tm, @tt.Tm, @tt.Tm)? {
+  match (ss, cls) {
+    (
+      [c],
+      [
+        { pats: [CPLit(LBool(true))], body: a },
+        { pats: [CPWild | CPLit(LBool(false))], body: b },
+      ],
+    ) => Some((c, a, b))
+    _ => None
+  }
+}
+
+///|
 fn Gen::tm(self : Gen, env : Array[Local], t : @tt.Tm) -> String {
   match t {
-    Var(ix) => {
-      let l = env[env.length() - 1 - ix]
-      if l.mutable {
-        l.name + ".val"
-      } else {
-        l.name
-      }
+    Var(ix) => local_code(env[env.length() - 1 - ix])
+    Global(n) => self.global_value(n)
+    Lam(x, _, _, b) => {
+      let v = self.name(x)
+      let body = self.tm(push_local(env, LVar(v)), b)
+      "VFun(" + v + " => " + catch_return(has_return(b), body) + ")"
     }
-    Global(n) => self.gid(n) + "()"
-    Lam(_, _, _, b) => {
-      let x = self.name("x")
-      let body = self.tm(push_local(env, { name: x, mutable: false }), b)
-      if b is Lam(_, _, _, _) {
-        "VFun(" + x + " => " + body + ")"
-      } else {
-        // the body of a function: `return` stops here
-        "VFun(" +
-        x +
-        " => try { (" +
-        body +
-        ") } catch { CReturn(r) => r; e => raise e })"
-      }
-    }
-    App(f, a, _) => "apply(" + self.tm(env, f) + ", " + self.tm(env, a) + ")"
-    Let(_, _, v, b) => {
-      let x = self.name("v")
+    App(_, _, _) => self.app(env, t)
+    Let(x, _, v, b) => {
+      let n = self.name(x)
       "{\nlet " +
-      x +
+      n +
       " = " +
       self.tm(env, v) +
       "\n" +
-      self.tm(push_local(env, { name: x, mutable: false }), b) +
+      self.tm(push_local(env, LVar(n)), b) +
       "\n}"
     }
-    LetMut(_, _, v, b) => {
-      let x = self.name("m")
+    LetMut(x, _, v, b) => {
+      let n = self.name(x)
       "{\nlet " +
-      x +
+      n +
       " = Ref::new(" +
       self.tm(env, v) +
       ")\n" +
-      self.tm(push_local(env, { name: x, mutable: true }), b) +
+      self.tm(push_local(env, LMut(n)), b) +
       "\n}"
     }
     U
@@ -202,28 +665,57 @@ fn Gen::tm(self : Gen, env : Array[Local], t : @tt.Tm) -> String {
     | Meta(_)
     | InsertedMeta(_, _) => "VType"
     Lit(l) => lit_code(l)
-    Match(ss, cls) => {
-      let s = self.name("s")
-      "{\nlet " +
-      s +
-      " = [" +
-      ss.map(x => self.tm(env, x)).join(", ") +
-      "]\n" +
-      self.clauses(env, s, cls, "rt_fail(\"no match\")") +
-      "\n}"
-    }
-    Assign(ix, v) => {
-      let l = env[env.length() - 1 - ix]
-      "{\n" + l.name + ".val = " + self.tm(env, v) + "\nVUnit\n}"
-    }
+    Match(ss, cls) =>
+      match if_parts(ss, cls) {
+        Some((c, a, b)) => {
+          // the branches are under one (unused) slot: the condition
+          let n = self.name("cond")
+          let env2 = push_local(env, LVar(n))
+          "{\nlet " +
+          n +
+          " = " +
+          self.tm(env, c) +
+          "\nif truthy(" +
+          n +
+          ") {\n" +
+          self.tm(env2, a) +
+          "\n} else {\n" +
+          self.tm(env2, b) +
+          "\n}\n}"
+        }
+        None => {
+          let lets = StringBuilder::new()
+          let names = ss.map(s => {
+            let code = self.tm(env, s)
+            if is_ident(code) {
+              code
+            } else {
+              let n = self.name("s")
+              lets.write_string("let " + n + " = " + code + "\n")
+              n
+            }
+          })
+          let m = self.match_code(env, names, cls, "rt_fail(\"no match\")")
+          if lets.is_empty() {
+            m
+          } else {
+            "{\n" + lets.to_string() + m + "\n}"
+          }
+        }
+      }
+    Assign(ix, v) =>
+      match env[env.length() - 1 - ix] {
+        LMut(n) => "{\n" + n + ".val = " + self.tm(env, v) + "\nVUnit\n}"
+        _ => "rt_fail(\"assignment to an immutable variable\")"
+      }
     While(c, b, step) =>
       "{\nwhile truthy(" +
       self.tm(env, c) +
       ") {\n" +
-      "let brk = try { ignore(" +
+      "let brk = try {\nignore(" +
       self.tm(env, b) +
-      "); false } catch { CBreak => true; CContinue => false; e => raise e }\n" +
-      "if brk { break }\nignore(" +
+      ")\nfalse\n} catch {\nCBreak => true\nCContinue => false\ne => raise e\n}\n" +
+      "if brk {\nbreak\n}\nignore(" +
       self.tm(env, step) +
       ")\n}\nVUnit\n}"
     Break => "rt_break()"
@@ -232,17 +724,28 @@ fn Gen::tm(self : Gen, env : Array[Local], t : @tt.Tm) -> String {
     Raise(v) => "rt_raise(" + self.tm(env, v) + ")"
     Try(b, cls) => {
       let err = self.name("err")
-      "(try { (" +
+      "(try {\n(" +
       self.tm(env, b) +
-      ") } catch {\nCRaise(" +
+      ")\n} catch {\nCRaise(" +
       err +
       ") => " +
-      self.clauses(env, "[" + err + "]", cls, "rt_raise(" + err + ")") +
+      self.match_code(env, [err], cls, "rt_raise(" + err + ")") +
       "\ne => raise e\n})"
     }
     ArrayLit(es) => "VArr([" + es.map(x => self.tm(env, x)).join(", ") + "])"
     Seq(a, b) =>
       "{\nignore(" + self.tm(env, a) + ")\n" + self.tm(env, b) + "\n}"
+  }
+}
+
+///|
+/// A global used as a value.
+fn Gen::global_value(self : Gen, n : String) -> String {
+  match @tt.globals.get(n) {
+    Some({ kind: GCon(ci), .. }) if ci.nparams + ci.nargs == 0 =>
+      "VCon(" + n.escape() + ", [])"
+    Some({ kind: GData(_), .. }) => "VType"
+    _ => self.gid(n) + "_v()"
   }
 }
 
@@ -274,28 +777,105 @@ fn binder_icits(ty : @tt.Tm, n : Int) -> Array[@tt.Icit] {
 }
 
 ///|
+fn Gen::cached(self : Gen, id : String, code : String) -> Unit {
+  self.defs.write_string(
+    (
+      $|
+      $|let \{id}_cache : Ref[Value?] = Ref::new(None)
+      $|
+      $|fn \{id}_v() -> Value raise {
+      $|  match \{id}_cache.val {
+      $|    Some(v) => v
+      $|    None => {
+      $|      let v = \{code}
+      $|      \{id}_cache.val = Some(v)
+      $|      v
+      $|    }
+      $|  }
+      $|}
+      $|
+    ),
+  )
+}
+
+///|
 fn Gen::global(self : Gen, name : String) -> Unit raise CodegenError {
   let g = match @tt.globals.get(name) {
     Some(g) => g
     None => raise CodegenError("unknown global " + name)
   }
-  let code = match g.kind {
-    GFunc(Some(body), _, _) => self.tm([], body)
-    GFunc(None, _, _) => "rt_fail(\"" + name + " has no definition\")"
-    GData(_) => "VType"
-    GCon(ci) =>
-      if ci.nparams + ci.nargs == 0 {
-        "VCon(" + name.escape() + ", [])"
-      } else {
-        let args : Array[String] = []
-        for k = ci.nparams; k < ci.nparams + ci.nargs; k = k + 1 {
-          args.push("a" + k.to_string())
+  let id = self.gid(name)
+  match g.kind {
+    GFunc(Some(body), _, _) if func_arity(name) is Some(n) => {
+      // a function: strip its n lambdas
+      let erased : Array[Bool] = []
+      for i = 0; i < n; i = i + 1 {
+        erased.push(self.er.fun_erased(name, i))
+      }
+      let params : Array[String] = []
+      let mut env : Array[Local] = []
+      let mut b = body
+      for i = 0; i < n; i = i + 1 {
+        match b {
+          Lam(x, _, _, rest) => {
+            if erased[i] {
+              env = push_local(env, LErased)
+            } else {
+              let p = self.name(x)
+              params.push(p)
+              env = push_local(env, LVar(p))
+            }
+            b = rest
+          }
+          _ => ()
         }
+      }
+      let code = catch_return(has_return(b), self.tm(env, b))
+      let sig = params.map(p => p + " : Value").join(", ")
+      // as a value: a curried closure over all n parameters
+      let pass : Array[String] = []
+      for i = 0; i < n; i = i + 1 {
+        if !erased[i] {
+          pass.push("a" + i.to_string())
+        }
+      }
+      self.defs.write_string(
+        (
+          $|
+          $|/// \{name}
+          $|fn \{id}(\{sig}) -> Value raise {
+          $|\{code}
+          $|}
+          $|
+          $|fn \{id}_v() -> Value {
+          $|  \{curried(n, id + "(" + pass.join(", ") + ")")}
+          $|}
+          $|
+        ),
+      )
+    }
+    GFunc(Some(body), _, _) => {
+      self.defs.write_string("\n/// " + name)
+      self.cached(id, catch_return(has_return(body), self.tm([], body)))
+    }
+    GFunc(None, _, _) =>
+      self.cached(id, "rt_fail(\"" + name + " has no definition\")")
+    GData(_) => self.cached(id, "VType")
+    GCon(ci) => {
+      let args : Array[String] = []
+      for j = 0; j < ci.nargs; j = j + 1 {
+        if !self.er.con_erased(name, j) {
+          args.push("a" + (ci.nparams + j).to_string())
+        }
+      }
+      self.cached(
+        id,
         curried(
           ci.nparams + ci.nargs,
           "VCon(" + name.escape() + ", [" + args.join(", ") + "])",
-        )
-      }
+        ),
+      )
+    }
     GPrim(p, arity) => {
       let all : Array[String] = []
       for k = 0; k < arity; k = k + 1 {
@@ -311,30 +891,18 @@ fn Gen::global(self : Gen, name : String) -> Unit raise CodegenError {
             expl.push("a" + k.to_string())
           }
         }
-        "prim(" + p.escape() + ", [" + expl.join(", ") + "])"
+        self.prim_call(p, expl)
       }
-      curried(arity, call)
+      self.cached(id, curried(arity, call))
     }
   }
-  let id = self.gid(name)
-  self.defs.write_string(
-    (
-      $|
-      $|let \{id}_cache : Ref[Value?] = Ref::new(None)
-      $|
-      $|fn \{id}() -> Value raise {
-      $|  match \{id}_cache.val {
-      $|    Some(v) => v
-      $|    None => {
-      $|      let v = \{code}
-      $|      \{id}_cache.val = Some(v)
-      $|      v
-      $|    }
-      $|  }
-      $|}
-      $|
-    ),
-  )
+}
+
+///|
+/// The runtime support file of generated programs (`runtime.mbt`).
+pub fn runtime_code() -> String {
+  "// Generated by moonpp: the runtime support of compiled MoonBit++.\n\n" +
+  runtime_src
 }
 
 ///|
@@ -352,12 +920,13 @@ pub fn generate(imports : Array[(String, String)]) -> String raise CodegenError 
     foreign: {},
     foreign_order: [],
     aliases: {},
+    er: compute_erasure(),
     fresh: 0,
   }
   for im in imports {
     g.aliases.set(im.0, im.1)
   }
-  let main_id = g.gid("main")
+  let main_value = g.global_value("main")
   while g.todo.length() > 0 {
     let n = g.todo.pop().unwrap()
     g.global(n)
@@ -368,14 +937,14 @@ pub fn generate(imports : Array[(String, String)]) -> String raise CodegenError 
     foreign.write_string("  " + g.foreign.get(ty).unwrap() + "(" + ty + ")\n")
   }
   foreign.write_string("}\n")
-  "// Generated by moonpp from MoonBit++. Do not edit.\n\n" +
-  runtime_src +
-  "\n// ---- foreign MoonBit values and functions ----------------------------\n\n" +
+  "// Generated by moonpp from MoonBit++. Do not edit.\n" +
+  "// The runtime support (Value, apply, prim, ...) is in runtime.mbt.\n\n" +
+  "// ---- foreign MoonBit values and functions ----------------------------\n\n" +
   foreign.to_string() +
   g.ffi.to_string() +
   "\n// ---- the program ------------------------------------------------------\n" +
   g.defs.to_string() +
   "\nfn main {\n  run_main(() => " +
-  main_id +
-  "())\n}\n"
+  main_value +
+  ")\n}\n"
 }

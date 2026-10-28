@@ -200,6 +200,8 @@ fn new_project(name : String) -> Unit raise Failure {
         #|.mooncakes/
         #|_build/
         #|target/
+        #|_mbtpp_build/
+        #|src/mbtpp_out/
         #|
       ),
     ),

@@ -7,6 +7,19 @@ extern "js" fn js_run(cmd : String, cwd : String) -> Int =
   #|}
 
 ///|
+extern "js" fn js_run_quiet(cmd : String, cwd : String) -> Int =
+  #|(cmd, cwd) => {
+  #|  const r = require("child_process").spawnSync(cmd, { cwd, stdio: "ignore", shell: true });
+  #|  return r.status === null ? 1 : r.status;
+  #|}
+
+///|
+/// Run a shell command without showing its output.
+fn run_quiet(cmd : String, cwd : String) -> Int {
+  js_run_quiet(cmd, cwd)
+}
+
+///|
 extern "js" fn js_cwd() -> String = "() => process.cwd()"
 
 ///|

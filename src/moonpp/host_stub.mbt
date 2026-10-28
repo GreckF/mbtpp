@@ -8,6 +8,11 @@ fn run_command(cmd : String, cwd : String) -> Int {
 }
 
 ///|
+fn run_quiet(cmd : String, cwd : String) -> Int {
+  run_command(cmd, cwd)
+}
+
+///|
 fn current_dir() -> String {
   "."
 }

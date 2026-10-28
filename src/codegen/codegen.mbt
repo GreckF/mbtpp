@@ -828,43 +828,8 @@ fn Gen::global(self : Gen, name : String) -> Unit raise CodegenError {
   }
   let id = self.gid(name)
   match g.kind {
-    GFunc(Some(_), _, _) if self.typed_set.contains(name) => {
-      let code = self.typed_fn(name).unwrap()
-      let sig = self.native_sig(name).unwrap()
-      let n = sig.params.length()
-      let params : Array[String] = []
-      let conv : Array[String] = []
-      let pass : Array[String] = []
-      for i = 0; i < n; i = i + 1 {
-        match sig.params[i] {
-          Some(nt) => {
-            let p = "a" + i.to_string()
-            params.push(p + " : Value")
-            conv.push(self.of_value(nt, p))
-            pass.push(p)
-          }
-          None => ()
-        }
-      }
-      let call = self.to_value(sig.result, id + "_t(" + conv.join(", ") + ")")
-      self.defs.write_string(
-        "\n/// " +
-        name +
-        "\n" +
-        code +
-        "\nfn " +
-        id +
-        "(" +
-        params.join(", ") +
-        ") -> Value raise {\n  " +
-        call +
-        "\n}\n\nfn " +
-        id +
-        "_v() -> Value {\n  " +
-        curried(n, id + "(" + pass.join(", ") + ")") +
-        "\n}\n",
-      )
-    }
+    GFunc(Some(_), _, _) if self.typed_set.contains(name) =>
+      self.defs.write_string(self.typed_def(name))
     GFunc(Some(body), _, _) if func_arity(name) is Some(n) => {
       // a function: strip its n lambdas
       let erased : Array[Bool] = []

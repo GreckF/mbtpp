@@ -1,12 +1,17 @@
 ///|
 /// Typed (native) translation. A function whose parameters and result have
 /// types that MoonBit can represent directly, and whose body stays in a
-/// first-order fragment, is translated to an ordinary MoonBit function over
-/// native types (`f_t`); the uniform version `f` becomes a wrapper that
-/// converts its arguments and result. Other functions keep the uniform
-/// translation. Native types: `Int`, `Double`, `Bool`, `Char`, `String`,
-/// `Unit` and datatypes without parameters or indices whose fields are
-/// native (they become MoonBit enums).
+/// first-order fragment, is translated to an ordinary (possibly generic)
+/// MoonBit function over native types (`f_t`); the uniform version `f`
+/// becomes a wrapper converting its arguments and result, with the type
+/// parameters instantiated to `Value`. Other functions keep the uniform
+/// translation.
+///
+/// Native types: `Int`, `Double`, `Bool`, `Char`, `String`, `Unit`, type
+/// parameters, and datatypes whose parameters are types and whose (not
+/// erased) fields are native. Indices and erased fields disappear: e.g.
+/// `Vector[T](n)` becomes the MoonBit enum `E_Vector[T0]` with constructors
+/// `Nil` and `Cons(T0, E_Vector[T0])`.
 priv enum NTy {
   NInt
   NDouble
@@ -14,7 +19,11 @@ priv enum NTy {
   NChar
   NString
   NUnit
-  NEnum(String)
+  NEnum(String, Array[NTy])
+  /// The k-th type parameter (of the enum or function being translated).
+  NVar(Int)
+  /// A function type `(A, B) -> C` (one argument group).
+  NFun(Array[NTy], NTy)
   /// The type of `break`, `continue`, `return`, ... (any type).
   NAny
 } derive(Eq)
@@ -23,6 +32,9 @@ priv enum NTy {
 priv struct TSig {
   /// Parameter index -> native type (`None` for erased parameters).
   params : Array[NTy?]
+  /// For each parameter: the index of the type parameter it is, if any.
+  tparams : Array[Int?]
+  ntvars : Int
   result : NTy
 }
 
@@ -30,7 +42,16 @@ priv struct TSig {
 priv enum TLocal {
   TVar(String, NTy)
   TMut(String, NTy)
+  /// A type parameter, standing for the given native type.
+  TType(NTy)
   TNone
+}
+
+///|
+/// What a variable of a type expression stands for.
+priv enum TyCtx {
+  TyIs(NTy)
+  TyOther
 }
 
 ///|
@@ -49,6 +70,26 @@ fn unify_nty(a : NTy, b : NTy) -> NTy? {
 }
 
 ///|
+fn subst_nty(t : NTy, args : Array[NTy]) -> NTy {
+  match t {
+    NVar(k) => if k < args.length() { args[k] } else { t }
+    NEnum(d, xs) => NEnum(d, xs.map(x => subst_nty(x, args)))
+    NFun(ps, r) => NFun(ps.map(x => subst_nty(x, args)), subst_nty(r, args))
+    _ => t
+  }
+}
+
+///|
+fn has_var(t : NTy) -> Bool {
+  match t {
+    NVar(_) => true
+    NEnum(_, xs) => xs.iter().any(has_var)
+    NFun(ps, r) => ps.iter().any(has_var) || has_var(r)
+    _ => false
+  }
+}
+
+///|
 /// Can datatype `d` be a native MoonBit enum?
 fn Gen::enum_ok(self : Gen, d : String) -> Bool {
   match self.enums_ok.get(d) {
@@ -61,10 +102,9 @@ fn Gen::enum_ok(self : Gen, d : String) -> Bool {
       !di.is_prop &&
       !di.is_trait &&
       !di.is_error &&
-      di.nparams == 0 &&
-      di.nindices == 0 &&
       !d.has_prefix("@") &&
-      di.cons.length() > 0
+      di.cons.length() > 0 &&
+      data_params_are_types(d, di.nparams)
     None => false
   }
   if !ok {
@@ -73,41 +113,62 @@ fn Gen::enum_ok(self : Gen, d : String) -> Bool {
   }
   // assume it is (recursive types), then check the fields
   self.enums_ok.set(d, true)
-  let di = @tt.data_info(d).unwrap()
-  for c in di.cons {
-    match self.con_fields(c) {
-      Some(_) => ()
-      None => {
-        self.enums_ok.set(d, false)
-        return false
-      }
+  for c in @tt.data_info(d).unwrap().cons {
+    if self.con_fields(c) is None {
+      self.enums_ok.set(d, false)
+      return false
     }
   }
   true
 }
 
 ///|
-/// The native types of the fields of a constructor of a native datatype.
-fn Gen::con_fields(self : Gen, c : String) -> Array[NTy]? {
+/// Are all parameters of datatype `d` of type `Type`?
+fn data_params_are_types(d : String, n : Int) -> Bool {
+  let mut t = @tt.globals.get(d).unwrap().ty
+  for _ in 0..<n {
+    match t {
+      Pi(_, _, _, U, b) => t = b
+      _ => return false
+    }
+  }
+  true
+}
+
+///|
+/// The native types of the own fields of a constructor (`None` for erased
+/// fields), in terms of the datatype's parameters (`NVar`).
+fn Gen::con_fields(self : Gen, c : String) -> Array[NTy?]? {
   let ci = match @tt.con_info(c) {
     Some(ci) => ci
     None => return None
   }
-  if ci.nimpl > 0 || ci.nparams > 0 {
-    return None
-  }
   let mut t = @tt.globals.get(c).unwrap().ty
-  let out : Array[NTy] = []
-  for _ in 0..<ci.nargs {
+  let ctx : Array[TyCtx] = []
+  for k = 0; k < ci.nparams; k = k + 1 {
     match t {
-      Pi(_, Expl, _, a, b) =>
-        match self.native_ty(a) {
-          Some(nt) => {
-            out.push(nt)
-            t = b
+      Pi(_, _, _, _, b) => {
+        ctx.push(TyIs(NVar(k)))
+        t = b
+      }
+      _ => return None
+    }
+  }
+  let out : Array[NTy?] = []
+  for j = 0; j < ci.nargs; j = j + 1 {
+    match t {
+      Pi(_, _, _, a, b) => {
+        if self.er.con_erased(c, j) {
+          out.push(None)
+        } else {
+          match self.native_ty_in(ctx, a) {
+            Some(nt) => out.push(Some(nt))
+            None => return None
           }
-          None => return None
         }
+        ctx.push(TyOther)
+        t = b
+      }
       _ => return None
     }
   }
@@ -115,28 +176,68 @@ fn Gen::con_fields(self : Gen, c : String) -> Array[NTy]? {
 }
 
 ///|
-fn Gen::native_ty(self : Gen, t : @tt.Tm) -> NTy? {
+/// The native type denoted by a type term, in a context saying what its
+/// variables stand for.
+fn Gen::native_ty_in(self : Gen, ctx : Array[TyCtx], t : @tt.Tm) -> NTy? {
   match t {
+    Var(ix) => {
+      let i = ctx.length() - 1 - ix
+      if i >= 0 && ctx[i] is TyIs(nt) {
+        Some(nt)
+      } else {
+        None
+      }
+    }
     Global("Int") => Some(NInt)
     Global("Double") => Some(NDouble)
     Global("Bool") => Some(NBool)
     Global("Char") => Some(NChar)
     Global("String") => Some(NString)
     Global("Unit") => Some(NUnit)
-    Global(d) => if self.enum_ok(d) { Some(NEnum(d)) } else { None }
-    _ => None
-  }
-}
-
-///|
-/// The constructor name in a native enum (upper case, as MoonBit requires).
-fn native_con(c : String) -> String {
-  let s = short_con(c)
-  match s.get_char(0) {
-    Some(ch) if ch >= 'a' && ch <= 'z' =>
-      Int::unsafe_to_char(ch.to_int() - 32).to_string() +
-      s.unsafe_substring(start=1, end=s.length())
-    _ => s
+    Pi(_, Expl, true, _, _) => {
+      // one explicit argument group; the result may not depend on it
+      let ps : Array[NTy] = []
+      let ctx2 = ctx.copy()
+      let mut cur = t
+      let mut first = true
+      while cur is Pi(_, Expl, g, a, b) && (first || !g) {
+        first = false
+        match self.native_ty_in(ctx2, a) {
+          Some(nt) => ps.push(nt)
+          None => return None
+        }
+        ctx2.push(TyOther)
+        cur = b
+      }
+      let r = match cur {
+        Raises(r, _) => r
+        _ => cur
+      }
+      match self.native_ty_in(ctx2, r) {
+        Some(nr) => Some(NFun(ps, nr))
+        None => None
+      }
+    }
+    _ => {
+      let (h, args) = flatten_app(t)
+      match h {
+        Global(d) if self.enum_ok(d) => {
+          let np = @tt.data_info(d).unwrap().nparams
+          if args.length() < np {
+            return None
+          }
+          let targs : Array[NTy] = []
+          for k = 0; k < np; k = k + 1 {
+            match self.native_ty_in(ctx, args[k]) {
+              Some(a) => targs.push(a)
+              None => return None
+            }
+          }
+          Some(NEnum(d, targs))
+        }
+        _ => None
+      }
+    }
   }
 }
 
@@ -169,6 +270,23 @@ fn enum_fn(d : String, what : String) -> String {
 }
 
 ///|
+/// The constructor name in a native enum (upper case, as MoonBit requires).
+fn native_con(c : String) -> String {
+  let s = short_con(c)
+  match s.get_char(0) {
+    Some(ch) if ch >= 'a' && ch <= 'z' =>
+      Int::unsafe_to_char(ch.to_int() - 32).to_string() +
+      s.unsafe_substring(start=1, end=s.length())
+    _ => s
+  }
+}
+
+///|
+fn tvar(k : Int) -> String {
+  "T" + k.to_string()
+}
+
+///|
 fn Gen::mbt_ty(self : Gen, t : NTy) -> String {
   match t {
     NInt => "Int"
@@ -177,16 +295,33 @@ fn Gen::mbt_ty(self : Gen, t : NTy) -> String {
     NChar => "Char"
     NString => "String"
     NUnit | NAny => "Unit"
-    NEnum(d) => {
+    NVar(k) => tvar(k)
+    NFun(ps, r) =>
+      "(" +
+      ps.map(p => self.mbt_ty(p)).join(", ") +
+      ") -> " +
+      self.mbt_ty(r) +
+      " raise"
+    NEnum(d, args) => {
       self.need_enum(d)
-      enum_name(d)
+      if args.length() == 0 {
+        enum_name(d)
+      } else {
+        enum_name(d) + "[" + args.map(a => self.mbt_ty(a)).join(", ") + "]"
+      }
     }
   }
 }
 
 ///|
-/// Convert native `e` of type `t` to a `Value`.
-fn Gen::to_value(self : Gen, t : NTy, e : String) -> String {
+/// Convert native `e` of type `t` to a `Value`. `convs[k]` converts values
+/// of the type parameter k (`None`: they are already `Value`s).
+fn Gen::to_value(
+  self : Gen,
+  t : NTy,
+  e : String,
+  convs : Array[String]?,
+) -> String {
   match t {
     NInt => "VInt(" + e + ")"
     NDouble => "VDouble(" + e + ")"
@@ -194,16 +329,44 @@ fn Gen::to_value(self : Gen, t : NTy, e : String) -> String {
     NChar => "VChar(" + e + ")"
     NString => "VStr(" + e + ")"
     NUnit | NAny => "{ ignore(" + e + "); VUnit }"
-    NEnum(d) => {
+    NVar(k) =>
+      match convs {
+        Some(cs) => cs[k] + "(" + e + ")"
+        None => e
+      }
+    NFun(ps, r) => {
+      // a curried Value function calling the native one
+      let f = self.name("f")
+      let xs = ps.map(_ => self.name("a"))
+      let call = f +
+        "(" +
+        ps.mapi((i, p) => self.of_value(p, xs[i], convs)).join(", ") +
+        ")"
+      let mut code = self.to_value(r, call, convs)
+      for i = xs.length() - 1; i >= 0; i = i - 1 {
+        code = "VFun(" + xs[i] + " => " + code + ")"
+      }
+      "{\nlet " + f + " = " + e + "\n" + code + "\n}"
+    }
+    NEnum(d, args) => {
       self.need_enum(d)
-      enum_fn(d, "to_value") + "(" + e + ")"
+      let fs = args.map(a => {
+        let x = self.name("x")
+        "(" + x + " => " + self.to_value(a, x, convs) + ")"
+      })
+      enum_fn(d, "to_value") + "(" + [e, ..fs].join(", ") + ")"
     }
   }
 }
 
 ///|
-/// Convert the `Value` `e` to the native type `t`.
-fn Gen::of_value(self : Gen, t : NTy, e : String) -> String {
+/// Convert the `Value` `e` to the native type `t` (see `to_value`).
+fn Gen::of_value(
+  self : Gen,
+  t : NTy,
+  e : String,
+  convs : Array[String]?,
+) -> String {
   match t {
     NInt => "as_int(" + e + ")"
     NDouble => "as_double(" + e + ")"
@@ -211,9 +374,36 @@ fn Gen::of_value(self : Gen, t : NTy, e : String) -> String {
     NChar => "as_char(" + e + ")"
     NString => "as_str(" + e + ")"
     NUnit | NAny => "as_unit(" + e + ")"
-    NEnum(d) => {
+    NVar(k) =>
+      match convs {
+        Some(cs) => cs[k] + "(" + e + ")"
+        None => e
+      }
+    NFun(ps, r) => {
+      // a native function applying the Value function
+      let f = self.name("f")
+      let xs = ps.map(_ => self.name("a"))
+      let mut call = f
+      for i = 0; i < xs.length(); i = i + 1 {
+        call = "apply(" + call + ", " + self.to_value(ps[i], xs[i], convs) + ")"
+      }
+      "{\nlet " +
+      f +
+      " = " +
+      e +
+      "\n(" +
+      xs.join(", ") +
+      ") => " +
+      self.of_value(r, call, convs) +
+      "\n}"
+    }
+    NEnum(d, args) => {
       self.need_enum(d)
-      enum_fn(d, "of_value") + "(" + e + ")"
+      let fs = args.map(a => {
+        let x = self.name("x")
+        "(" + x + " => " + self.of_value(a, x, convs) + ")"
+      })
+      enum_fn(d, "of_value") + "(" + [e, ..fs].join(", ") + ")"
     }
   }
 }
@@ -226,69 +416,101 @@ fn Gen::need_enum(self : Gen, d : String) -> Unit {
   }
   self.enums_done.push(d)
   let di = @tt.data_info(d).unwrap()
-  let en = enum_name(d)
+  let n = di.nparams
+  let tvs : Array[String] = []
+  for k = 0; k < n; k = k + 1 {
+    tvs.push(tvar(k))
+  }
+  let gen = if n == 0 { "" } else { "[" + tvs.join(", ") + "]" }
+  let en = enum_name(d) + gen
+  let to_convs = tvs.mapi((k, _) => "to" + k.to_string())
+  let of_convs = tvs.mapi((k, _) => "of" + k.to_string())
+  let to_params = tvs.mapi((k, tv) => to_convs[k] + " : (" + tv + ") -> Value")
+  let of_params = tvs.mapi((k, tv) => of_convs[k] +
+    " : (Value) -> " +
+    tv +
+    " raise")
   let decl = StringBuilder::new()
   let to = StringBuilder::new()
   let of = StringBuilder::new()
   decl.write_string("\n/// MoonBit++ " + d + "\nenum " + en + " {\n")
   to.write_string(
-    "\nfn " +
+    "\nfn" +
+    gen +
+    " " +
     enum_fn(d, "to_value") +
-    "(x : " +
-    en +
+    "(" +
+    ["x : " + en, ..to_params].join(", ") +
     ") -> Value {\n  match x {\n",
   )
   of.write_string(
-    "\nfn " +
+    "\nfn" +
+    gen +
+    " " +
     enum_fn(d, "of_value") +
-    "(v : Value) -> " +
+    "(" +
+    ["v : Value", ..of_params].join(", ") +
+    ") -> " +
     en +
     " raise {\n  match v {\n",
   )
   for c in di.cons {
     let fields = self.con_fields(c).unwrap()
     let cn = native_con(c)
-    let vars = fields.mapi((k, _) => "a" + k.to_string())
-    let args = if fields.length() == 0 {
+    let kept : Array[(String, NTy)] = []
+    let vpats : Array[String] = []
+    for j = 0; j < fields.length(); j = j + 1 {
+      match fields[j] {
+        Some(ft) => {
+          let x = "a" + j.to_string()
+          kept.push((x, ft))
+          vpats.push(x)
+        }
+        None => ()
+      }
+    }
+    let args = if kept.length() == 0 {
       ""
     } else {
-      "(" + vars.join(", ") + ")"
+      "(" + kept.map(k => k.0).join(", ") + ")"
     }
     decl.write_string(
       "  " +
       cn +
-      (if fields.length() == 0 {
+      (if kept.length() == 0 {
         ""
       } else {
-        "(" + fields.map(f => self.mbt_ty(f)).join(", ") + ")"
+        "(" + kept.map(k => self.mbt_ty(k.1)).join(", ") + ")"
       }) +
       "\n",
     )
     to.write_string(
       "    " +
-      en +
+      enum_name(d) +
       "::" +
       cn +
       args +
       " => VCon(" +
       c.escape() +
       ", [" +
-      fields.mapi((k, f) => self.to_value(f, vars[k])).join(", ") +
+      kept.map(k => self.to_value(k.1, k.0, Some(to_convs))).join(", ") +
       "])\n",
     )
     of.write_string(
       "    VCon(" +
       c.escape() +
       ", [" +
-      vars.join(", ") +
+      vpats.join(", ") +
       "]) => " +
-      en +
+      enum_name(d) +
       "::" +
       cn +
-      (if fields.length() == 0 {
+      (if kept.length() == 0 {
         ""
       } else {
-        "(" + fields.mapi((k, f) => self.of_value(f, vars[k])).join(", ") + ")"
+        "(" +
+        kept.map(k => self.of_value(k.1, k.0, Some(of_convs))).join(", ") +
+        ")"
       }) +
       "\n",
     )
@@ -304,7 +526,8 @@ fn Gen::need_enum(self : Gen, d : String) -> Unit {
 }
 
 ///|
-/// The native signature of a global function, if it has one.
+/// The native signature of a global function, if it has one: its type
+/// parameters are the erased implicit parameters of type `Type`.
 fn Gen::native_sig(self : Gen, name : String) -> TSig? {
   let n = match func_arity(name) {
     Some(n) => n
@@ -312,18 +535,31 @@ fn Gen::native_sig(self : Gen, name : String) -> TSig? {
   }
   let mut t = @tt.globals.get(name).unwrap().ty
   let params : Array[NTy?] = []
+  let tparams : Array[Int?] = []
+  let ctx : Array[TyCtx] = []
+  let mut ntvars = 0
   for i = 0; i < n; i = i + 1 {
     match t {
       Pi(_, icit, _, a, b) => {
         if self.er.fun_erased(name, i) {
           params.push(None)
+          if a is U {
+            tparams.push(Some(ntvars))
+            ctx.push(TyIs(NVar(ntvars)))
+            ntvars = ntvars + 1
+          } else {
+            tparams.push(None)
+            ctx.push(TyOther)
+          }
         } else if icit != Expl {
           return None
         } else {
-          match self.native_ty(a) {
+          match self.native_ty_in(ctx, a) {
             Some(nt) => params.push(Some(nt))
             None => return None
           }
+          tparams.push(None)
+          ctx.push(TyOther)
         }
         t = b
       }
@@ -334,8 +570,8 @@ fn Gen::native_sig(self : Gen, name : String) -> TSig? {
     Raises(r, _) => r
     _ => t
   }
-  match self.native_ty(result) {
-    Some(r) => Some({ params, result: r })
+  match self.native_ty_in(ctx, result) {
+    Some(r) => Some({ params, tparams, ntvars, result: r })
     None => None
   }
 }
@@ -397,6 +633,27 @@ fn unify_t(a : NTy, b : NTy) -> NTy raise NotTyped {
 }
 
 ///|
+/// The context of type expressions corresponding to a typed environment.
+fn ty_ctx(env : Array[TLocal]) -> Array[TyCtx] {
+  env.map(l => match l {
+    TType(t) => TyIs(t)
+    _ => TyOther
+  })
+}
+
+///|
+fn Gen::type_arg(
+  self : Gen,
+  env : Array[TLocal],
+  t : @tt.Tm,
+) -> NTy raise NotTyped {
+  match self.native_ty_in(ty_ctx(env), t) {
+    Some(nt) => nt
+    None => raise NotTyped
+  }
+}
+
+///|
 fn Gen::typed_args(
   self : Gen,
   env : Array[TLocal],
@@ -408,11 +665,54 @@ fn Gen::typed_args(
   }
   let out : Array[String] = []
   for k = 0; k < args.length(); k = k + 1 {
-    let (c, t) = self.typed(env, args[k])
-    ignore(unify_t(t, tys[k]))
-    out.push(c)
+    out.push(self.typed_check(env, args[k], tys[k]))
   }
   out
+}
+
+///|
+/// Translate `t` at the expected type `ty` (lambdas need it for their
+/// parameters).
+fn Gen::typed_check(
+  self : Gen,
+  env : Array[TLocal],
+  t : @tt.Tm,
+  ty : NTy,
+) -> String raise NotTyped {
+  match (t, ty) {
+    (Lam(_, Expl, _, _), NFun(ps, r)) => {
+      let mut e = env
+      let xs : Array[String] = []
+      let mut b = t
+      for p in ps {
+        match b {
+          Lam(x, Expl, _, rest) => {
+            let n = self.name(x)
+            xs.push(n)
+            e = tpush(e, TVar(n, p))
+            b = rest
+          }
+          _ => raise NotTyped
+        }
+      }
+      // `return` in the lambda returns from it
+      let saved = self.cur_result
+      self.cur_result = Some(r)
+      let res = try? self.typed(e, b)
+      self.cur_result = saved
+      let (cb, tb) = match res {
+        Ok(x) => x
+        Err(_) => raise NotTyped
+      }
+      ignore(unify_t(tb, r))
+      "(" + xs.join(", ") + ") => {\n" + cb + "\n}"
+    }
+    _ => {
+      let (c, t2) = self.typed(env, t)
+      ignore(unify_t(t2, ty))
+      c
+    }
+  }
 }
 
 ///|
@@ -424,6 +724,29 @@ fn Gen::typed_app(
   let (h, args) = flatten_app(t)
   let n = match h {
     Global(n) => n
+    Var(_) => {
+      // calling a function value, one argument group at a time
+      let (code0, ty0) = self.typed(env, h)
+      let mut code = code0
+      let mut ty = ty0
+      let mut i = 0
+      while i < args.length() {
+        match ty {
+          NFun(ps, r) if i + ps.length() <= args.length() => {
+            let cs = self.typed_args(
+              env,
+              args[i:i + ps.length()].to_array(),
+              ps,
+            )
+            code = code + "(" + cs.join(", ") + ")"
+            ty = r
+            i = i + ps.length()
+          }
+          _ => raise NotTyped
+        }
+      }
+      return (code, ty)
+    }
     _ => raise NotTyped
   }
   let g = match @tt.globals.get(n) {
@@ -435,13 +758,29 @@ fn Gen::typed_app(
       if args.length() != ci.nparams + ci.nargs || !self.enum_ok(ci.data) {
         raise NotTyped
       }
+      let targs : Array[NTy] = []
+      for k = 0; k < ci.nparams; k = k + 1 {
+        targs.push(self.type_arg(env, args[k]))
+      }
       let fields = self.con_fields(n).unwrap()
-      let cs = self.typed_args(env, args, fields)
+      let fargs : Array[@tt.Tm] = []
+      let ftys : Array[NTy] = []
+      for j = 0; j < ci.nargs; j = j + 1 {
+        match fields[j] {
+          Some(ft) => {
+            fargs.push(args[ci.nparams + j])
+            ftys.push(subst_nty(ft, targs))
+          }
+          None => ()
+        }
+      }
+      let cs = self.typed_args(env, fargs, ftys)
       self.need_enum(ci.data)
-      (
-        enum_name(ci.data) + "::" + native_con(n) + "(" + cs.join(", ") + ")",
-        NEnum(ci.data),
-      )
+      let code = enum_name(ci.data) +
+        "::" +
+        native_con(n) +
+        (if cs.length() == 0 { "" } else { "(" + cs.join(", ") + ")" })
+      (code, NEnum(ci.data, targs))
     }
     GPrim(p, k) if args.length() == k => {
       let (tpl, tys, res) = match native_prims.get(p) {
@@ -460,28 +799,37 @@ fn Gen::typed_app(
     GFunc(_, _, _) =>
       match self.native_sig(n) {
         Some(sig) if args.length() == sig.params.length() => {
+          // instantiate the type parameters from the type arguments
+          let inst : Array[NTy] = Array::make(sig.ntvars, NAny)
+          for i = 0; i < args.length(); i = i + 1 {
+            match sig.tparams[i] {
+              Some(k) => inst[k] = self.type_arg(env, args[i])
+              None => ()
+            }
+          }
           let ps : Array[@tt.Tm] = []
           let tys : Array[NTy] = []
           for i = 0; i < args.length(); i = i + 1 {
             match sig.params[i] {
               Some(nt) => {
                 ps.push(args[i])
-                tys.push(nt)
+                tys.push(subst_nty(nt, inst))
               }
               None => ()
             }
           }
+          let res = subst_nty(sig.result, inst)
           let cs = self.typed_args(env, ps, tys)
           let id = self.gid(n)
           if self.typed_set.contains(n) {
-            (id + "_t(" + cs.join(", ") + ")", sig.result)
+            (id + "_t(" + cs.join(", ") + ")", res)
           } else {
-            // through the uniform version
-            let vs = cs.mapi((i, c) => self.to_value(tys[i], c))
-            (
-              self.of_value(sig.result, id + "(" + vs.join(", ") + ")"),
-              sig.result,
-            )
+            // through the uniform version: only with concrete types
+            if has_var(res) || tys.iter().any(has_var) {
+              raise NotTyped
+            }
+            let vs = cs.mapi((i, c) => self.to_value(tys[i], c, None))
+            (self.of_value(res, id + "(" + vs.join(", ") + ")", None), res)
           }
         }
         _ => raise NotTyped
@@ -510,8 +858,8 @@ fn Gen::typed_pat(
       var_marker + n + end_marker
     }
     CPCon(c, ps) => {
-      let d = match ty {
-        NEnum(d) => d
+      let (d, targs) = match ty {
+        NEnum(d, targs) => (d, targs)
         _ => raise NotTyped
       }
       let fields = match self.con_fields(c) {
@@ -522,7 +870,13 @@ fn Gen::typed_pat(
       names.push(TVar(n, ty))
       let subs : Array[String] = []
       for j = 0; j < ps.length(); j = j + 1 {
-        subs.push(self.typed_pat(ps[j], fields[j], names))
+        match fields[j] {
+          Some(ft) =>
+            subs.push(self.typed_pat(ps[j], subst_nty(ft, targs), names))
+          None =>
+            // an erased field: only variables bind it (see erase.mbt)
+            names.push(TNone)
+        }
       }
       let args = if subs.length() == 0 {
         ""
@@ -580,7 +934,7 @@ fn Gen::typed(
     Var(ix) =>
       match env[env.length() - 1 - ix] {
         TVar(n, ty) | TMut(n, ty) => (n, ty)
-        TNone => raise NotTyped
+        _ => raise NotTyped
       }
     Lit(LInt(k)) =>
       (if k < 0 { "(" + k.to_string() + ")" } else { k.to_string() }, NInt)
@@ -589,15 +943,7 @@ fn Gen::typed(
     Lit(LChar(c)) => (char_lit(c), NChar)
     Lit(LBool(b)) => (b.to_string(), NBool)
     Lit(LUnit) => ("()", NUnit)
-    Global(n) =>
-      match @tt.globals.get(n) {
-        Some({ kind: GCon(ci), .. }) if ci.nparams + ci.nargs == 0 &&
-          self.enum_ok(ci.data) => {
-          self.need_enum(ci.data)
-          (enum_name(ci.data) + "::" + native_con(n), NEnum(ci.data))
-        }
-        _ => raise NotTyped
-      }
+    Global(_) => self.typed_app(env, t)
     App(_, _, _) => self.typed_app(env, t)
     Let(x, _, v, b) => {
       let (cv, tv) = self.typed(env, v)
@@ -732,8 +1078,7 @@ fn has_continue(t : @tt.Tm) -> Bool {
 }
 
 ///|
-/// The native translation of a function (its body and signature), if it is
-/// in the typed fragment.
+/// The native translation of a function, if it is in the typed fragment.
 fn Gen::typed_fn(self : Gen, name : String) -> String? {
   let sig = match self.native_sig(name) {
     Some(s) => s
@@ -749,13 +1094,14 @@ fn Gen::typed_fn(self : Gen, name : String) -> String? {
   for i = 0; i < sig.params.length(); i = i + 1 {
     match b {
       Lam(x, _, _, rest) => {
-        match sig.params[i] {
-          Some(nt) => {
+        match (sig.params[i], sig.tparams[i]) {
+          (Some(nt), _) => {
             let p = self.name(x)
             params.push(p + " : " + self.mbt_ty(nt))
             env = tpush(env, TVar(p, nt))
           }
-          None => env = tpush(env, TNone)
+          (None, Some(k)) => env = tpush(env, TType(NVar(k)))
+          (None, None) => env = tpush(env, TNone)
         }
         b = rest
       }
@@ -770,8 +1116,19 @@ fn Gen::typed_fn(self : Gen, name : String) -> String? {
       match unify_nty(ty, sig.result) {
         Some(_) => {
           let id = self.gid(name)
+          let gen = if sig.ntvars == 0 {
+            ""
+          } else {
+            let tvs : Array[String] = []
+            for k = 0; k < sig.ntvars; k = k + 1 {
+              tvs.push(tvar(k))
+            }
+            "[" + tvs.join(", ") + "]"
+          }
           Some(
-            "fn " +
+            "fn" +
+            gen +
+            " " +
             id +
             "_t(" +
             params.join(", ") +
@@ -786,6 +1143,46 @@ fn Gen::typed_fn(self : Gen, name : String) -> String? {
       }
     Err(_) => None
   }
+}
+
+///|
+/// The definitions of a typed function: its native version, the uniform
+/// wrapper (type parameters instantiated to `Value`) and its value.
+fn Gen::typed_def(self : Gen, name : String) -> String {
+  let code = self.typed_fn(name).unwrap()
+  let sig = self.native_sig(name).unwrap()
+  let id = self.gid(name)
+  let n = sig.params.length()
+  let params : Array[String] = []
+  let conv : Array[String] = []
+  let pass : Array[String] = []
+  for i = 0; i < n; i = i + 1 {
+    match sig.params[i] {
+      Some(nt) => {
+        let p = "a" + i.to_string()
+        params.push(p + " : Value")
+        conv.push(self.of_value(nt, p, None))
+        pass.push(p)
+      }
+      None => ()
+    }
+  }
+  let call = self.to_value(sig.result, id + "_t(" + conv.join(", ") + ")", None)
+  "\n/// " +
+  name +
+  "\n" +
+  code +
+  "\nfn " +
+  id +
+  "(" +
+  params.join(", ") +
+  ") -> Value raise {\n  " +
+  call +
+  "\n}\n\nfn " +
+  id +
+  "_v() -> Value {\n  " +
+  curried(n, id + "(" + pass.join(", ") + ")") +
+  "\n}\n"
 }
 
 ///|

@@ -14,3 +14,7 @@ node_modules/
 
 # personal notes
 Temp.md
+
+# compiled MoonBit++ output
+_mbtpp_build/
+mbtpp_out/

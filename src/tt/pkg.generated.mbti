@@ -52,6 +52,8 @@ pub fn infer(Cxt, @parser.Expr) -> (Tm, Val) raise ElabError
 
 pub fn inst(Closure, Val) -> Val
 
+pub fn is_opaque_trait(String) -> Bool
+
 pub fn is_proof(Array[Val?], Val) -> Bool
 
 pub fn is_prop_type(Array[Val?], Val) -> Bool
@@ -71,6 +73,8 @@ pub fn new_meta() -> Int
 pub fn nf(Array[Val], Tm) -> Tm
 
 pub fn normalize(Tm) -> String
+
+pub fn param_labels(String) -> Array[(String, Bool)?]?
 
 pub fn pat_slots(CPat) -> Int
 

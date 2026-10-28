@@ -251,3 +251,28 @@ pub fn global_body(name : String) -> Tm? {
 pub fn normalize(t : Tm) -> String {
   show_tm([], nf([], t))
 }
+
+///|
+/// Tagged parameters of a top-level function, one per explicit parameter:
+/// `None` for a positional one, `Some((label, optional))` for `label~` /
+/// `label?` (`optional` is true for `label?`).
+pub fn param_labels(name : String) -> Array[(String, Bool)?]? {
+  match st.labels.get(name) {
+    Some(infos) =>
+      Some(
+        infos.map(i => match i {
+          LPos => None
+          LReq(l) | LDefault(l, _) => Some((l, false))
+          LOpt(l) => Some((l, true))
+        }),
+      )
+    None => None
+  }
+}
+
+///|
+/// Names of the traits whose instances are taken for granted (unknown
+/// traits of imported packages).
+pub fn is_opaque_trait(name : String) -> Bool {
+  st.opaque_traits.contains(name)
+}

@@ -7,6 +7,9 @@ let help_msg : String =
   #|  moonpp new <name>          create a new project
   #|  moonpp check [path]        type check the project (or a package directory or file)
   #|  moonpp run [path]          run the main package (or a package directory or file)
+  #|  moonpp build [path]        compile to MoonBit (`moon build`); the generated code is in
+  #|                             src/mbtpp_out/<pkg> (or _mbtpp_build/<file> for a single file)
+  #|  moonpp run --compiled [path]  compile to MoonBit and run it with `moon run`
   #|  moonpp add <user/module>   add a dependency (`moon add`) and extract its interfaces
   #|  moonpp remove <module>     remove a dependency (`moon remove`)
   #|  moonpp install             install the dependencies (`moon install`) and extract interfaces
@@ -18,6 +21,7 @@ let help_msg : String =
   #|options:
   #|  --no-prelude   do not load the prelude
   #|  --verbose      list the interface items that could not be imported
+  #|  --compiled     (run) run the program compiled to MoonBit instead of interpreting it
   #|
   #|A package is a directory of .mbtpp files. The MoonBit packages it uses are
   #|listed in the "import" field of its moon.pkg.json and referred to as
@@ -56,6 +60,7 @@ fn Out::flush(self : Out) -> Unit {
 struct Options {
   prelude : Bool
   verbose : Bool
+  compiled : Bool
 }
 
 ///|
@@ -140,7 +145,124 @@ fn cmd_check(opts : Options, path : String?) -> Bool raise Failure {
 }
 
 ///|
+/// The package to run or build.
+fn main_package(path : String?) -> (String, Array[String]) raise Failure {
+  let (_, pkgs) = targets(path)
+  if pkgs.length() == 1 {
+    pkgs[0]
+  } else {
+    match pkgs.iter().find_first(p => is_main_package(p.0)) {
+      Some(p) => p
+      None =>
+        die(
+          "no main package; mark one with \"is-main\": true in its moon.pkg.json",
+        )
+    }
+  }
+}
+
+///|
+fn write_file(path : String, content : String) -> Unit raise Failure {
+  @fs.write_string_to_file(path, content) catch {
+    e => die("cannot write " + path + ": " + e.to_string())
+  }
+}
+
+///|
+fn make_dirs(path : String) -> Unit {
+  let parts = path.split("/").map(s => s.to_string()).to_array()
+  let mut d = ""
+  for p in parts {
+    d = if d == "" { p } else { d + "/" + p }
+    if d != "" && d != "." && !@fs.path_exists(d) {
+      @fs.create_dir(d) catch {
+        _ => ()
+      }
+    }
+  }
+}
+
+///|
+/// Compile a package (or file) to MoonBit. Returns the module directory and
+/// the path of the generated package in it.
+fn compile(opts : Options, path : String?) -> (String, String) raise Failure {
+  let (dir, files) = main_package(path)
+  check_files(opts, dir, files)
+  let imports = load_imports(dir)
+  let code = @codegen.generate(imports.map(i => (i.path, i.alias))) catch {
+    @codegen.CodegenError(msg) => die("cannot compile: " + msg)
+  }
+  let single = match path {
+    Some(p) => p.has_suffix(".mbtpp")
+    None => false
+  }
+  let project = if single { None } else { find_project(dir) }
+  let (mod_dir, pkg_rel) = match project {
+    Some(root) => {
+      let src = module_source(root)
+      let rel = (if src == "" { "" } else { src + "/" }) +
+        "mbtpp_out/" +
+        last_segment(dir)
+      (root, rel)
+    }
+    None => {
+      let stem = last_segment(files[0]).replace(old=".mbtpp", new="")
+      let m = dir_of(files[0]) + "/_mbtpp_build/" + stem
+      make_dirs(m)
+      write_file(
+        m + "/moon.mod.json",
+        (
+          $|{
+          $|  "name": "mbtpp/\{stem}",
+          $|  "version": "0.1.0"
+          $|}
+          $|
+        ),
+      )
+      (m, "main")
+    }
+  }
+  let out = mod_dir + "/" + pkg_rel
+  make_dirs(out)
+  let imports_json = imports
+    .map(i => "    { \"path\": " +
+      i.path.escape() +
+      ", \"alias\": " +
+      i.alias.escape() +
+      " }")
+    .join(",\n")
+  write_file(
+    out + "/moon.pkg.json",
+    (
+      $|{
+      $|  "is-main": true,
+      $|  "warn-list": "-a",
+      $|  "import": [
+      $|\{imports_json}
+      $|  ]
+      $|}
+      $|
+    ),
+  )
+  write_file(out + "/main.mbt", code)
+  (mod_dir, pkg_rel)
+}
+
+///|
+fn cmd_build(opts : Options, path : String?) -> Bool raise Failure {
+  let (mod_dir, pkg) = compile(opts, path)
+  moon("build", mod_dir)
+  println("compiled to " + relative(mod_dir + "/" + pkg, current_dir()))
+  true
+}
+
+///|
 fn cmd_run(opts : Options, path : String?) -> Bool raise Failure {
+  if opts.compiled {
+    let (mod_dir, pkg) = compile(opts, path)
+    moon("run -q " + pkg, mod_dir)
+    return true
+  }
   let (base, pkgs) = targets(path)
   let (dir, files) = if pkgs.length() == 1 {
     pkgs[0]
@@ -241,14 +363,16 @@ fn run_cli(args : Array[String]) -> Bool raise Failure {
   let rest : Array[String] = []
   let mut prelude = true
   let mut verbose = false
+  let mut compiled = false
   for a in args {
     match a {
       "--no-prelude" => prelude = false
       "--verbose" => verbose = true
+      "--compiled" => compiled = true
       _ => rest.push(a)
     }
   }
-  let opts = { prelude, verbose }
+  let opts = { prelude, verbose, compiled }
   match rest {
     [] | ["help"] | ["--help"] | ["-h"] => {
       println(help_msg)
@@ -265,6 +389,8 @@ fn run_cli(args : Array[String]) -> Bool raise Failure {
     }
     ["check"] => cmd_check(opts, None)
     ["check", p] => cmd_check(opts, Some(p))
+    ["build"] => cmd_build(opts, None)
+    ["build", p] => cmd_build(opts, Some(p))
     ["run"] => cmd_run(opts, None)
     ["run", p] => cmd_run(opts, Some(p))
     [p] if p.has_suffix(".mbtpp") => cmd_run(opts, Some(p))

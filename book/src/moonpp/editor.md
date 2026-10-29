@@ -1,12 +1,20 @@
 # 编辑器
 
-仓库的 `editors/vscode` 是 VS Code 插件，每个 Release 都附有打包好的 `mbtpp-vscode.vsix`：
+仓库的 `editors/vscode` 是 VS Code 插件，每个 Release 都附有打包好的 `mbtpp-vscode.vsix`。
+下载最新版并安装（再次运行即更新，装完重新加载 VS Code 窗口）：
 
-```bash
-code --install-extension mbtpp-vscode.vsix
+```powershell
+# Windows PowerShell
+$f="$env:TEMP\mbtpp-vscode.vsix"; iwr https://github.com/GreckF/mbtpp/releases/latest/download/mbtpp-vscode.vsix -OutFile $f; code --install-extension $f --force
 ```
 
-也可以在 VS Code 中运行 “Extensions: Install from VSIX...”。插件调用 `moonpp` 命令完成检查，
+```bash
+# macOS、Linux、Git Bash
+curl -fsSLo /tmp/mbtpp-vscode.vsix https://github.com/GreckF/mbtpp/releases/latest/download/mbtpp-vscode.vsix && code --install-extension /tmp/mbtpp-vscode.vsix --force
+```
+
+也可以手动下载后运行 `code --install-extension mbtpp-vscode.vsix`，或在 VS Code 中运行
+“Extensions: Install from VSIX...”。插件调用 `moonpp` 命令完成检查，
 所以要先[安装 moonpp](install.md)；如果它不在 `PATH` 上，把设置 `mbtpp.moonppPath` 设为例如
 `node C:/path/to/mbtpp/bin/moonpp.js`。
 

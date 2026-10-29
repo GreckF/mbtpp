@@ -23,6 +23,18 @@ attached to each release): highlighting, errors while typing, hover types, go
 to definition, `#mbt` quick fixes, an info view with the goals of tactic
 proofs, and run/check/build commands. It uses `moonpp ide`.
 
+Install (or update) it from the latest release:
+
+```powershell
+# Windows PowerShell
+$f="$env:TEMP\mbtpp-vscode.vsix"; iwr https://github.com/GreckF/mbtpp/releases/latest/download/mbtpp-vscode.vsix -OutFile $f; code --install-extension $f --force
+```
+
+```sh
+# macOS, Linux, Git Bash
+curl -fsSLo /tmp/mbtpp-vscode.vsix https://github.com/GreckF/mbtpp/releases/latest/download/mbtpp-vscode.vsix && code --install-extension /tmp/mbtpp-vscode.vsix --force
+```
+
 ## moonpp
 
 `moonpp` is the build tool, modelled on `moon`. It needs Node.js, and a

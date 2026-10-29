@@ -40,7 +40,19 @@ alone), passing unsaved buffers.
 
 ## Install
 
-Download `mbtpp-vscode.vsix` from the
+Install (or update) the latest release:
+
+```powershell
+# Windows PowerShell
+$f="$env:TEMP\mbtpp-vscode.vsix"; iwr https://github.com/GreckF/mbtpp/releases/latest/download/mbtpp-vscode.vsix -OutFile $f; code --install-extension $f --force
+```
+
+```sh
+# macOS, Linux, Git Bash
+curl -fsSLo /tmp/mbtpp-vscode.vsix https://github.com/GreckF/mbtpp/releases/latest/download/mbtpp-vscode.vsix && code --install-extension /tmp/mbtpp-vscode.vsix --force
+```
+
+Or download `mbtpp-vscode.vsix` from the
 [releases](https://github.com/GreckF/mbtpp/releases) and run "Extensions:
 Install from VSIX...", or `code --install-extension mbtpp-vscode.vsix`.
 From a checkout, `python scripts/package-vscode.py` builds

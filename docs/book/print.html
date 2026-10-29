@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-1a219928.js";
+            window.path_to_searchindex_js = "searchindex-872d5a02.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-393214f6.js"></script>
@@ -1345,10 +1345,16 @@ moon run main
 <p>生成的代码是什么样的，见<a href="#编译到-moonbit">编译到 MoonBit</a>。</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="编辑器"><a class="header" href="#编辑器">编辑器</a></h1>
-<p>仓库的 <code>editors/vscode</code> 是 VS Code 插件，每个 Release 都附有打包好的 <code>mbtpp-vscode.vsix</code>：</p>
-<pre><code class="language-bash">code --install-extension mbtpp-vscode.vsix
+<p>仓库的 <code>editors/vscode</code> 是 VS Code 插件，每个 Release 都附有打包好的 <code>mbtpp-vscode.vsix</code>。
+下载最新版并安装（再次运行即更新，装完重新加载 VS Code 窗口）：</p>
+<pre><code class="language-powershell"># Windows PowerShell
+$f="$env:TEMP\mbtpp-vscode.vsix"; iwr https://github.com/GreckF/mbtpp/releases/latest/download/mbtpp-vscode.vsix -OutFile $f; code --install-extension $f --force
 </code></pre>
-<p>也可以在 VS Code 中运行 “Extensions: Install from VSIX…”。插件调用 <code>moonpp</code> 命令完成检查，
+<pre><code class="language-bash"># macOS、Linux、Git Bash
+curl -fsSLo /tmp/mbtpp-vscode.vsix https://github.com/GreckF/mbtpp/releases/latest/download/mbtpp-vscode.vsix &amp;&amp; code --install-extension /tmp/mbtpp-vscode.vsix --force
+</code></pre>
+<p>也可以手动下载后运行 <code>code --install-extension mbtpp-vscode.vsix</code>，或在 VS Code 中运行
+“Extensions: Install from VSIX…”。插件调用 <code>moonpp</code> 命令完成检查，
 所以要先<a href="#安装">安装 moonpp</a>；如果它不在 <code>PATH</code> 上，把设置 <code>mbtpp.moonppPath</code> 设为例如
 <code>node C:/path/to/mbtpp/bin/moonpp.js</code>。</p>
 <h2 id="功能"><a class="header" href="#功能">功能</a></h2>

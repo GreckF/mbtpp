@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MoonBit++ Playground</title>
+<meta name="description" content="在线类型检查、运行 MoonBit++ 程序，并查看编译到 MoonBit 的结果">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/mode/simple.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+<style>
+:root {
+  --bg: #f6f7f9;
+  --panel: #ffffff;
+  --border: #dde1e6;
+  --text: #1d2228;
+  --muted: #66707b;
+  --accent: #6d4aff;
+  --accent-text: #ffffff;
+  --ok: #1a7f37;
+  --err: #c62828;
+  --err-bg: #fdecec;
+  --line-err: rgba(198, 40, 40, 0.12);
+  --kw: #8a2be2;
+  --ty: #0b6e99;
+  --str: #2f7d32;
+  --num: #b4530a;
+  --com: #8b949e;
+  --op: #57606a;
+  --fn: #6639ba;
+  --cursor: #1d2228;
+  --sel: #dbe4ff;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111418;
+    --panel: #181c21;
+    --border: #2b3139;
+    --text: #e3e7ec;
+    --muted: #8d97a3;
+    --accent: #8f76ff;
+    --accent-text: #ffffff;
+    --ok: #4ac26b;
+    --err: #ff7b72;
+    --err-bg: #3a1d1d;
+    --line-err: rgba(255, 123, 114, 0.14);
+    --kw: #d2a8ff;
+    --ty: #79c0ff;
+    --str: #a5d6a7;
+    --num: #ffa657;
+    --com: #6e7781;
+    --op: #a0aab4;
+    --fn: #c4b5fd;
+    --cursor: #e3e7ec;
+    --sel: #2d3a5c;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111418;
+  --panel: #181c21;
+  --border: #2b3139;
+  --text: #e3e7ec;
+  --muted: #8d97a3;
+  --accent: #8f76ff;
+  --accent-text: #ffffff;
+  --ok: #4ac26b;
+  --err: #ff7b72;
+  --err-bg: #3a1d1d;
+  --line-err: rgba(255, 123, 114, 0.14);
+  --kw: #d2a8ff;
+  --ty: #79c0ff;
+  --str: #a5d6a7;
+  --num: #ffa657;
+  --com: #6e7781;
+  --op: #a0aab4;
+  --fn: #c4b5fd;
+  --cursor: #e3e7ec;
+  --sel: #2d3a5c;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.5 system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+  flex-wrap: wrap;
+}
+.brand { font-weight: 700; font-size: 16px; margin-right: 6px; white-space: nowrap; }
+.brand span { color: var(--accent); }
+select, button {
+  font: inherit;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+button:hover, select:hover { border-color: var(--accent); }
+button.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+button:disabled { opacity: 0.6; cursor: default; }
+.spacer { flex: 1; }
+header a { color: var(--muted); text-decoration: none; white-space: nowrap; }
+header a:hover { color: var(--accent); }
+main {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 12px 16px 16px;
+}
+.pane {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.pane-head {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--border);
+  min-height: 38px;
+  color: var(--muted);
+}
+.pane-head .title { padding: 0 4px; }
+.tab {
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: none;
+  color: var(--muted);
+  padding: 8px 8px 6px;
+}
+.tab[aria-selected="true"] { color: var(--text); border-bottom-color: var(--accent); }
+.editor-wrap, .out-wrap { flex: 1; min-height: 0; position: relative; }
+.CodeMirror {
+  height: 100%;
+  font: 13.5px/1.55 ui-monospace, "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+  background: var(--panel);
+  color: var(--text);
+  font-variant-ligatures: none;
+}
+.CodeMirror pre.CodeMirror-line, .CodeMirror pre.CodeMirror-line-like { font-variant-ligatures: none; }
+.CodeMirror-gutters { background: var(--panel); border-right: 1px solid var(--border); }
+.CodeMirror-linenumber { color: var(--muted); }
+.CodeMirror-cursor { border-left-color: var(--cursor); }
+.CodeMirror-selected, .CodeMirror-focused .CodeMirror-selected { background: var(--sel); }
+.CodeMirror-matchingbracket { color: var(--accent) !important; font-weight: 700; }
+.cm-s-default .cm-keyword { color: var(--kw); }
+.cm-s-default .cm-type, .cm-s-default .cm-variable-2 { color: var(--ty); }
+.cm-s-default .cm-string { color: var(--str); }
+.cm-s-default .cm-number, .cm-s-default .cm-atom { color: var(--num); }
+.cm-s-default .cm-comment { color: var(--com); font-style: italic; }
+.cm-s-default .cm-operator { color: var(--op); }
+.cm-s-default .cm-def { color: var(--fn); }
+.cm-s-default .cm-meta { color: var(--accent); }
+.cm-s-default .cm-variable { color: var(--text); }
+.err-line { background: var(--line-err); }
+.status {
+  border-top: 1px solid var(--border);
+  padding: 6px 12px;
+  font: 12.5px/1.5 ui-monospace, "Cascadia Code", Consolas, monospace;
+  white-space: pre-wrap;
+  max-height: 30%;
+  overflow: auto;
+  color: var(--muted);
+}
+.status.ok { color: var(--ok); }
+.status.err { color: var(--err); background: var(--err-bg); cursor: pointer; }
+#output {
+  margin: 0;
+  padding: 10px 14px;
+  height: 100%;
+  overflow: auto;
+  font: 13px/1.55 ui-monospace, "Cascadia Code", Consolas, monospace;
+  white-space: pre-wrap;
+}
+#output.err { color: var(--err); }
+#output .hint { color: var(--muted); }
+.hidden { display: none !important; }
+.note { color: var(--muted); font-size: 12px; margin-left: auto; padding-right: 4px; }
+@media (max-width: 800px) {
+  main { grid-template-columns: 1fr; grid-template-rows: 60vh 60vh; height: auto; }
+  body { height: auto; }
+  header { gap: 8px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">MoonBit<span>++</span> Playground</div>
+  <select id="examples" aria-label="示例"></select>
+  <button id="run" class="primary" title="Ctrl+Enter">运行</button>
+  <button id="compile" title="Ctrl+Shift+Enter">编译到 MoonBit</button>
+  <button id="share" title="复制带代码的链接">分享</button>
+  <div class="spacer"></div>
+  <a href="https://github.com/GreckF/mbtpp">GitHub</a>
+</header>
+<main>
+  <section class="pane">
+    <div class="pane-head"><span class="title">main.mbtpp</span><span class="note">编辑时自动类型检查</span></div>
+    <div class="editor-wrap"><textarea id="src"></textarea></div>
+    <div id="status" class="status">正在加载…</div>
+  </section>
+  <section class="pane">
+    <div class="pane-head" role="tablist">
+      <button class="tab" role="tab" data-tab="output" aria-selected="true">输出</button>
+      <button class="tab" role="tab" data-tab="main" aria-selected="false">main.mbt</button>
+      <button class="tab" role="tab" data-tab="runtime" aria-selected="false">runtime.mbt</button>
+      <span id="out-note" class="note"></span>
+    </div>
+    <div class="out-wrap">
+      <pre id="output"><span class="hint">点击“运行”用解释器执行，点击“编译到 MoonBit”查看生成的代码。</span></pre>
+      <div id="code-wrap" class="hidden" style="height:100%"><textarea id="code"></textarea></div>
+    </div>
+  </section>
+</main>
+<script type="module" src="playground.js"></script>
+</body>
+</html>

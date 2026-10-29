@@ -9,6 +9,13 @@ tree-walking interpreter, written in MoonBit.
 语言标准大致来自：
 [写给一般月兔用户的MoonBit++入门](https://zhuanlan.zhihu.com/p/2067605478985749711)（知乎，作者：用户名可以重复吗）
 
+## Playground
+
+Try it online: <https://greckf.github.io/mbtpp/> — type checking while you
+edit, running with the interpreter, and the MoonBit code the compiler
+generates. The page lives in [docs/](docs); rebuild it with
+`node scripts/build-web.mjs`.
+
 ## moonpp
 
 `moonpp` is the build tool, modelled on `moon`. It needs Node.js: build it

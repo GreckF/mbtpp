@@ -1,0 +1,13 @@
+{
+  "import": [
+    { "path": "username/mbtpp/tt", "alias": "tt" },
+    { "path": "username/mbtpp/interp", "alias": "interp" },
+    { "path": "username/mbtpp/codegen", "alias": "codegen" }
+  ],
+  "link": {
+    "js": {
+      "exports": ["check", "run", "compile", "runtime"],
+      "format": "esm"
+    }
+  }
+}

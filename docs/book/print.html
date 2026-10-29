@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-872d5a02.js";
+            window.path_to_searchindex_js = "searchindex-451f4561.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-393214f6.js"></script>
@@ -983,6 +983,22 @@ fn main {
 <code>impl[T : Show] Show for Array[T] with to_string(self) { … }</code>。</li>
 <li><strong>约束</strong>：<code>fn[T : Tr]</code>，多个约束 <code>[T : Eq + Show]</code>。</li>
 <li><strong>调用</strong>：<code>x.m()</code> 或 <code>Tr::m(x)</code>。</li>
+</ul>
+<h3 id="约束与隐式参数"><a class="header" href="#约束与隐式参数">约束与隐式参数</a></h3>
+<p><code>[T : Add]</code> 和 <code>[n : Nat]</code> 写法相同，由冒号右边的名字区分：</p>
+<ul>
+<li>右边是 trait（或用 <code>+</code> 连接的几个 trait）时，这是<strong>约束</strong>：<code>T</code> 是一个类型（种类由 trait 的
+<code>Self</code> 决定：<code>Add</code> 的是 <code>Type</code>，<code>Monad</code> 的是 <code>[T] -&gt; Type</code>），每个 trait 另有一个由检查器
+自动填充的实例参数。读作“实现了 <code>Add</code> 的类型 <code>T</code>”。</li>
+<li>右边是类型时，这是普通的<strong>隐式参数</strong>：<code>n</code> 是 <code>Nat</code> 的一个值，例如
+<code>fn[T, n : Nat] Vector::head(…)</code>。</li>
+</ul>
+<p>trait 和类型在同一个命名空间中，不能同名，所以不会有歧义。注意：</p>
+<ul>
+<li>这条规则只用于 <code>[...]</code>。显式参数 <code>(x : Add)</code> 按类型检查，会报错：没有 MoonBit 的 trait
+对象 <code>&amp;Add</code>。</li>
+<li>局部名字优先：如果外层有与 trait 同名的参数，冒号右边指的是那个参数。</li>
+<li>多个约束的种类要相同（<code>T</code> 的种类取自第一个 trait），<code>[M : Monad + Show]</code> 会报错。</li>
 <li><strong>实例搜索</strong>：约束对应的实例由检查器自动填充：先找局部约束（以及它们的父 trait），再找全局
 实例（包括泛型实例）。</li>
 </ul>

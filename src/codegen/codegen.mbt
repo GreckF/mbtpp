@@ -58,6 +58,11 @@ priv struct Gen {
   /// Constructors used, as variants of `Value`: name -> (variant, arity).
   ctors : Map[String, (String, Int32)]
   ctor_order : Array[String]
+  /// The global being emitted.
+  mut cur_global : String
+  /// Uses of async functions outside of native code (which are errors):
+  /// (async function, global using it).
+  async_misuse : Array[(String, String)]
 }
 
 ///|
@@ -453,6 +458,12 @@ fn Gen::clauses_dynamic(
       binds.write_string("let " + x + " = " + out + "[" + k.to_string() + "]\n")
       env2 = push_local(env2, LVar(x))
     }
+    // a guard is tested with the slots bound in its own block
+    let when = match cl.cond {
+      Some(g) =>
+        " && truthy({\n" + binds.to_string() + self.tm(env2, g) + "\n})"
+      None => ""
+    }
     buf.write_string(
       "if match_pats([" +
       cl.pats.map(pat_code).join(", ") +
@@ -460,7 +471,9 @@ fn Gen::clauses_dynamic(
       scruts +
       ", " +
       out +
-      ") {\n",
+      ")" +
+      when +
+      " {\n",
     )
     buf.write_string(binds.to_string())
     buf.write_string("(" + self.tm(env2, cl.body) + ")")
@@ -499,16 +512,38 @@ fn Gen::match_code(
   let proofs = proofs.unwrap_or(scruts.map(_ => false))
   if proofs.iter().any(p => p) {
     if proofs.iter().all(p => p) {
-      return match cls {
-        [] => "abort(\"unreachable: a proof of an empty proposition\")"
-        [cl, ..] => {
-          let mut env2 = env
-          for _ in 0..<@tt.pats_slots(cl.pats) {
-            env2 = push_local(env2, LErased)
+      // the clauses up to the first one without a guard, as an `if` chain
+      let buf = StringBuilder::new()
+      for cl in cls {
+        let mut env2 = env
+        for _ in 0..<@tt.pats_slots(cl.pats) {
+          env2 = push_local(env2, LErased)
+        }
+        match cl.cond {
+          Some(g) =>
+            buf.write_string(
+              "if truthy(" +
+              self.tm(env2, g) +
+              ") {\n" +
+              self.tm(env2, cl.body) +
+              "\n} else ",
+            )
+          None => {
+            let body = self.tm(env2, cl.body)
+            // (a lone `{ x }` would be a record)
+            if buf.is_empty() {
+              return body
+            }
+            buf.write_string("{\n" + body + "\n}")
+            return buf.to_string()
           }
-          self.tm(env2, cl.body)
         }
       }
+      if cls.length() == 0 {
+        return "abort(\"unreachable: a proof of an empty proposition\")"
+      }
+      buf.write_string("{\n" + fallback + "\n}")
+      return buf.to_string()
     }
     if cls.iter().any(cl => cl.pats.iter().any(has_double_pat)) {
       return "abort(\"unsupported: a match on a proof and a Double literal\")"
@@ -547,7 +582,13 @@ fn Gen::match_code(
     }
     let lhs = if ps.length() == 1 { ps[0] } else { "(" + ps.join(", ") + ")" }
     let body = self.tm(env2, cl.body)
-    buf.write_string(resolve_bindings(lhs, body) + " => (" + body + ")\n")
+    let when = match cl.cond {
+      Some(g) => " if truthy(" + self.tm(env2, g) + ")"
+      None => ""
+    }
+    buf.write_string(
+      resolve_bindings(lhs, body + when) + when + " => (" + body + ")\n",
+    )
   }
   buf.write_string("_ => " + fallback + "\n}")
   buf.to_string()
@@ -640,6 +681,9 @@ fn apply_rest(code : String, rest : Array[String]) -> String {
 /// An application, calling known globals directly when it is saturated.
 fn Gen::app(self : Gen, env : Array[Local], t : @tt.Tm) -> String {
   let (h, args) = flatten_app(t)
+  if h is Global(n) && @tt.is_async_global(n) {
+    return self.async_use(n)
+  }
   match h {
     Global(n) =>
       match @tt.globals.get(n) {
@@ -699,8 +743,8 @@ fn if_parts(
     (
       [c],
       [
-        { pats: [CPLit(LBool(true))], body: a, },
-        { pats: [CPWild | CPLit(LBool(false))], body: b, },
+        { pats: [CPLit(LBool(true))], cond: None, body: a, },
+        { pats: [CPWild | CPLit(LBool(false))], cond: None, body: b, },
       ],
     ) => Some((c, a, b))
     _ => None
@@ -835,6 +879,9 @@ fn Gen::tm(self : Gen, env : Array[Local], t : @tt.Tm) -> String {
 ///|
 /// A global used as a value.
 fn Gen::global_value(self : Gen, n : String) -> String {
+  if @tt.is_async_global(n) {
+    return self.async_use(n)
+  }
   match @tt.globals.get(n) {
     Some({ kind: GCon(ci), .. }) if ci.nparams + ci.nargs == 0 =>
       self.con_code(n, [])
@@ -897,6 +944,7 @@ fn Gen::global(self : Gen, name : String) -> Unit raise CodegenError {
   // the definition goes to the file of its source
   let saved = self.cur_file
   self.cur_file = self.file_of(name)
+  self.cur_global = name
   self.global_def(name) catch {
     e => {
       self.cur_file = saved
@@ -913,6 +961,15 @@ fn Gen::global_def(self : Gen, name : String) -> Unit raise CodegenError {
     None => raise CodegenError("unknown global " + name)
   }
   let id = self.gid(name)
+  // an async function only has its native version (see `check_async_fns`;
+  // uses in uniform code are errors, see `async_use`)
+  if @tt.is_async_global(name) {
+    if g.kind is GFunc(Some(_), _, _) && self.typed_set.contains(name) {
+      self.write("\n/// " + name + "\n" + self.typed_fn(name).unwrap())
+      self.export_fn(name, self.native_sig(name).unwrap())
+    }
+    return
+  }
   match g.kind {
     GFunc(Some(body), _, _) if self.typed_set.contains(name) =>
       match self.native_sig(name) {
@@ -1074,6 +1131,8 @@ fn Gen::new(imports : Array[(String, String)]) -> Gen {
     culprit: None,
     ctors: {},
     ctor_order: [],
+    cur_global: "",
+    async_misuse: [],
   }
   for im in imports {
     g.aliases.set(im.0, im.1)
@@ -1130,8 +1189,14 @@ pub fn generate_files(
   g.dry = true
   g.compute_typed()
   g.check_mbt_fns()
+  g.check_async_fns()
   g.dry = false
-  let main_value = g.global_value("main")
+  let main_async = @tt.is_async_global("main")
+  let main_code = if main_async {
+    g.async_main()
+  } else {
+    "\n///|\nfn main {\n  run_main(() => " + g.global_value("main") + ")\n}\n"
+  }
   // `#mbt` functions are exported whether `main` uses them or not
   for f, _ in @tt.mbt_fns {
     ignore(g.gid(f))
@@ -1144,9 +1209,17 @@ pub fn generate_files(
     let n = g.todo.pop().unwrap()
     g.global(n)
   }
-  g.write_to(
-    g.file_of("main"),
-    "\n///|\nfn main {\n  run_main(() => " + main_value + ")\n}\n",
-  )
+  g.write_to(g.file_of("main"), main_code)
+  match g.async_misuse {
+    [] => ()
+    [(f, user), ..] =>
+      raise CodegenError(
+        "async fn " +
+        f +
+        " is used by " +
+        user +
+        ", which is not compiled to native MoonBit code (async functions can only be used from native code)",
+      )
+  }
   g.output_files()
 }

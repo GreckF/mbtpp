@@ -27,6 +27,7 @@
   - [Trait Objects](lang/trait-objects.md)
 - [Mutable State and Loops](lang/mutation.md)
 - [Error Handling](lang/errors.md)
+- [async Functions](lang/async.md)
 - [Prelude](lang/prelude.md)
 
 # moonpp

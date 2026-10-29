@@ -83,9 +83,15 @@ fn check_src(file : String, src : String) -> Unit raise CheckError {
     @parser.ParseError(p, msg) =>
       raise CheckError(format_pos(file, p) + ": parse error: " + msg)
   }
-  // MoonBit's `Json` is an opaque type of the Prelude
+  // MoonBit's `Json` is an opaque type of the Prelude; `%Async[E]` and
+  // `%NoRaise` are the effects of async functions (see async.mbt)
   let decls = if file == "<prelude>" {
-    [@parser.DOpaque({ line: 0, col: 0, }, "Json", 0), ..decls]
+    [
+      @parser.DOpaque({ line: 0, col: 0, }, "Json", 0),
+      @parser.DOpaque({ line: 0, col: 0, }, "%Async", 1),
+      @parser.DOpaque({ line: 0, col: 0, }, "%NoRaise", 0),
+      ..decls,
+    ]
   } else {
     decls
   }

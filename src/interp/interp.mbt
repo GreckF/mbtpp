@@ -175,7 +175,12 @@ fn Machine::run_clauses(
       }
     }
     if ok {
-      return Some(self.eval(push_env(env, out), cl.body))
+      let env2 = push_env(env, out)
+      match cl.cond {
+        Some(g) => if !(self.eval(env2, g) is RLit(LBool(true))) { continue }
+        None => ()
+      }
+      return Some(self.eval(env2, cl.body))
     }
   }
   None

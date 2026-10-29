@@ -79,7 +79,7 @@ fn mbt_only(t : NTy) -> Bool {
   match t {
     NEnum(d, args) => is_mbt_type(d) && args.iter().all(mbt_only)
     NForeign(_, args) => args.iter().all(mbt_only)
-    NFun(ps, r) => ps.iter().all(mbt_only) && mbt_only(r)
+    NFun(ps, r) | NAsyncFun(ps, r) => ps.iter().all(mbt_only) && mbt_only(r)
     _ => true
   }
 }
@@ -445,7 +445,7 @@ fn Gen::impl_code(self : Gen, i : String) -> String? {
       let call = "(" +
         code +
         ")(" +
-        (if unit { "()" } else { names.join(", ") }) +
+        (if unit { "" } else { names.join(", ") }) +
         ")"
       let call = if mbt_method_raises(tr, m) {
         call
@@ -565,6 +565,8 @@ fn Gen::convertible(self : Gen, t : NTy, into : Bool) -> Bool {
       self.convertible(r, into)
     // boxed as is: the arguments would have to be `Value`s
     NForeign(_, args) => args.length() == 0
+    // `Value` functions are synchronous
+    NAsyncFun(_, _) => false
     _ => true
   }
 }

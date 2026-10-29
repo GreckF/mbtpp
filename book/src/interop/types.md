@@ -58,11 +58,13 @@ MoonBit 填入。填入的位置是生成的 `.mbt` 中的位置。
 `@builtin` 的 trait（`pub using @builtin {trait Show}`）就是 Prelude 中的 trait；其他 trait 的
 重新导出不导入。
 
+`async` 函数导入为 MoonBit++ 的 async 函数，参数中的 `async` 函数类型也一样（见
+[async 函数](../lang/async.md)），`nocancel` 标记被忽略。
+
 ## 不导入的项
 
 下面的项会被跳过，`moonpp check --verbose` 会列出它们：
 
-- `async` 函数，以及参数中的 `async` 函数类型；
 - trait 既不是 Prelude trait、也不是导入的 trait 的 `impl`（例如没有导入 `moonbitlang/core/debug`
   时的 `@debug.Debug`）；
 - `#deprecated` 的项；

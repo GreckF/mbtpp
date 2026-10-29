@@ -233,7 +233,17 @@ fn show_prec(names : Array[String], t : Tm, prec : Int32) -> String {
       if expls.length() > 0 {
         s = s + "(" + expls.join(", ") + ")"
       }
-      paren(prec > 0, s + " -> " + show_prec(ns, cur, 0))
+      // `async (A) -> B raise E` (the effect is in the codomain)
+      let (pre, cod) = match cur {
+        Raises(r, App(Global("%Async"), Global("%NoRaise"), _)) =>
+          ("async ", show_prec(ns, r, 1) + " noraise")
+        Raises(r, App(Global("%Async"), Global("Error"), _)) =>
+          ("async ", show_prec(ns, r, 1))
+        Raises(r, App(Global("%Async"), e, _)) =>
+          ("async ", show_prec(ns, r, 1) + " raise " + show_prec(ns, e, 1))
+        _ => ("", show_prec(ns, cur, 0))
+      }
+      paren(prec > 0, pre + s + " -> " + cod)
     }
     Lam(_, _, _, _) => {
       let mut ns = names

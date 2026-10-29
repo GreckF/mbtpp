@@ -2,6 +2,8 @@
 //   node scripts/check-book.mjs
 // Every ```moonbit block is type checked with moonpp, and run when it has a
 // `main`; blocks are standalone programs (```text is used for fragments).
+// A block starting with a `// requires <module>` line needs a dependency:
+// it is not checked.
 import { execSync } from "node:child_process";
 import { mkdtempSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -25,6 +27,7 @@ for (const file of srcs.flatMap((d) => [...markdown(d)])) {
   const text = readFileSync(file, "utf8").replace(/\r\n/g, "\n");
   const blocks = [...text.matchAll(/```moonbit\n([\s\S]*?)```/g)].map((m) => m[1]);
   blocks.forEach((code, k) => {
+    if (code.startsWith("// requires ")) return;
     count++;
     const f = join(tmp, `b${count}.mbtpp`);
     writeFileSync(f, code);

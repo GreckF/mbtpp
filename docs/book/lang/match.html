@@ -36,10 +36,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-19c48d11.js";
+            window.path_to_searchindex_js = "../searchindex-5ff180b8.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-73e1d097.js"></script>
+        <script src="../toc-77b35725.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -201,6 +201,77 @@ fn main {
 <li>分支按顺序匹配，可以重叠，第一个匹配的分支生效。</li>
 <li><strong>构造子的隐式参数</strong>可以在模式中绑定或忽略：<code>If[t](c, a, b)</code>、<code>IZ[_, a] =&gt; a</code>。</li>
 <li><strong><code>let</code> 模式</strong>：<code>let (a, b) = pair</code>。</li>
+</ul>
+<h2 id="或模式as-与守卫"><a class="header" href="#或模式as-与守卫">或模式、<code>as</code> 与守卫</a></h2>
+<pre><code class="language-moonbit">enum Shape {
+  Circle(Int)
+  Rect(Int, Int)
+  Square(Int)
+}
+
+fn kind(s : Shape) -&gt; String {
+  match s {
+    Rect(_, _) | Square(_) =&gt; "polygon"
+    Circle(r) if r &gt; 10 =&gt; "big circle"
+    Circle(_) =&gt; "circle"
+  }
+}
+
+fn widest(s : Shape) -&gt; Shape {
+  match s {
+    Rect(w, _) | Square(w) as big if w &gt; 100 =&gt; big
+    other =&gt; other
+  }
+}
+
+fn main {
+  println(kind(Circle(11)))
+  println(widest(Square(200)) is Square(_))
+}
+</code></pre>
+<ul>
+<li><strong>或模式</strong> <code>p | q</code>：可以嵌套（<code>Some(1 | 2)</code>），各个选项必须绑定相同的变量。检查器把它展开成多个
+分支，每个分支各自做依赖匹配。</li>
+<li><strong><code>p as x</code></strong>：<code>x</code> 是整个被匹配的值。<code>as</code> 结合得最松，<code>A | B as x</code> 中的 <code>x</code> 是 <code>A | B</code> 匹配到的值。</li>
+<li><strong>守卫</strong> <code>p if cond =&gt; …</code>：条件为假时继续尝试后面的分支，条件中可以使用模式绑定的变量。带守卫的
+分支不计入覆盖检查。</li>
+</ul>
+<h2 id="is-与-guard"><a class="header" href="#is-与-guard"><code>is</code> 与 <code>guard</code></a></h2>
+<pre><code class="language-moonbit">fn get(o : Option[Int]) -&gt; Int {
+  if o is Some(x) &amp;&amp; x &gt; 5 {
+    x
+  } else {
+    0
+  }
+}
+
+fn length(xs : List[Int]) -&gt; Int {
+  let mut cur = xs
+  let mut n = 0
+  while cur is Cons(_, rest) {
+    n = n + 1
+    cur = rest
+  }
+  n
+}
+
+fn head_or(xs : List[Int], d : Int) -&gt; Int {
+  guard xs is Cons(h, _) else { return d }
+  h
+}
+
+fn main {
+  println(get(Some(9)))
+  println(length(Cons(1, Cons(2, Nil))))
+  println(head_or(Nil, 42))
+}
+</code></pre>
+<ul>
+<li><strong><code>e is p</code></strong> 的值是 <code>Bool</code>。在 <code>if</code>、<code>while</code>、<code>guard</code> 的条件中，<code>p</code> 绑定的变量在 <code>&amp;&amp;</code> 链的后续
+部分和条件成立时执行的代码中可见。</li>
+<li><strong><code>guard cond else { … }</code></strong>：条件不成立时执行 <code>else</code> 块，块中通常是 <code>return</code>、<code>break</code> 或
+<code>abort(…)</code>。之后的语句可以使用 <code>cond</code> 绑定的变量。省略 <code>else</code> 时，条件不成立会中止程序。</li>
+<li>条件中有 <code>is</code> 时，<code>else</code> 分支在每个 <code>is</code> 失败的地方各展开一次，代码会重复。</li>
 </ul>
 <p>MoonBit++ 的模式匹配是依赖的：</p>
 <ul>

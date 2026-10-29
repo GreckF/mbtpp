@@ -37,10 +37,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-aec47b78.js";
+            window.path_to_searchindex_js = "searchindex-2b6d7b0f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-1277b054.js"></script>
+        <script src="toc-ec08c6a2.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -274,7 +274,7 @@ fn main {
 <h2 id="keywords"><a class="header" href="#keywords">Keywords</a></h2>
 <pre><code class="language-text">fn let mut if else match enum struct trait impl for in with while return break
 continue raise try catch true false Type Prop forall lemma proof monad as suberror
-derive pub priv noraise loop
+derive pub priv noraise loop is guard async
 </code></pre>
 <p><code>pub</code>, <code>priv</code>, and <code>derive(...)</code> are accepted but ignored: a package is a single scope with no visibility control.</p>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -650,6 +650,80 @@ fn main {
 <li>Arms are tried in order and may overlap; the first matching arm wins.</li>
 <li><strong>Implicit parameters of constructors</strong> can be bound or ignored in patterns: <code>If[t](c, a, b)</code>, <code>IZ[_, a] =&gt; a</code>.</li>
 <li><strong><code>let</code> patterns</strong>: <code>let (a, b) = pair</code>.</li>
+</ul>
+<h2 id="or-patterns-as-and-guards"><a class="header" href="#or-patterns-as-and-guards">Or-patterns, <code>as</code>, and guards</a></h2>
+<pre><code class="language-moonbit">enum Shape {
+  Circle(Int)
+  Rect(Int, Int)
+  Square(Int)
+}
+
+fn kind(s : Shape) -&gt; String {
+  match s {
+    Rect(_, _) | Square(_) =&gt; "polygon"
+    Circle(r) if r &gt; 10 =&gt; "big circle"
+    Circle(_) =&gt; "circle"
+  }
+}
+
+fn widest(s : Shape) -&gt; Shape {
+  match s {
+    Rect(w, _) | Square(w) as big if w &gt; 100 =&gt; big
+    other =&gt; other
+  }
+}
+
+fn main {
+  println(kind(Circle(11)))
+  println(widest(Square(200)) is Square(_))
+}
+</code></pre>
+<ul>
+<li><strong>Or-patterns</strong> <code>p | q</code> can be nested (<code>Some(1 | 2)</code>); all alternatives must bind the same
+variables. The checker expands them into separate arms, each matched dependently on its own.</li>
+<li><strong><code>p as x</code></strong>: <code>x</code> is the whole matched value. <code>as</code> binds loosest: in <code>A | B as x</code>, <code>x</code> is the
+value matched by <code>A | B</code>.</li>
+<li><strong>Guards</strong> <code>p if cond =&gt; …</code>: when the condition is false, the following arms are tried. The
+condition can use the variables bound by the pattern. Guarded arms do not count for coverage.</li>
+</ul>
+<h2 id="is-and-guard"><a class="header" href="#is-and-guard"><code>is</code> and <code>guard</code></a></h2>
+<pre><code class="language-moonbit">fn get(o : Option[Int]) -&gt; Int {
+  if o is Some(x) &amp;&amp; x &gt; 5 {
+    x
+  } else {
+    0
+  }
+}
+
+fn length(xs : List[Int]) -&gt; Int {
+  let mut cur = xs
+  let mut n = 0
+  while cur is Cons(_, rest) {
+    n = n + 1
+    cur = rest
+  }
+  n
+}
+
+fn head_or(xs : List[Int], d : Int) -&gt; Int {
+  guard xs is Cons(h, _) else { return d }
+  h
+}
+
+fn main {
+  println(get(Some(9)))
+  println(length(Cons(1, Cons(2, Nil))))
+  println(head_or(Nil, 42))
+}
+</code></pre>
+<ul>
+<li><strong><code>e is p</code></strong> is a <code>Bool</code>. In the condition of an <code>if</code>, <code>while</code> or <code>guard</code>, the variables bound
+by <code>p</code> are visible in the rest of the <code>&amp;&amp;</code> chain and in the code run when the condition holds.</li>
+<li><strong><code>guard cond else { … }</code></strong>: when the condition fails, the <code>else</code> block runs; it usually
+<code>return</code>s, <code>break</code>s or calls <code>abort(…)</code>. The following statements can use the variables bound
+by <code>cond</code>. Without <code>else</code>, a failed condition aborts the program.</li>
+<li>With <code>is</code> in a condition, the <code>else</code> branch is expanded once at each <code>is</code> that can fail, so its
+code is duplicated.</li>
 </ul>
 <p>Pattern matching in MoonBit++ is dependent:</p>
 <ul>
@@ -1277,6 +1351,115 @@ match no arm keep propagating outward.</li>
 </ul>
 <p>Like mutable state, <code>raise</code> and <code>try</code> keep a function from being unfolded during type checking (see
 <a href="#mutable-state-and-loops">Mutable State and Loops</a>).</p>
+<h2 id="catch-without-try-and-noraise"><a class="header" href="#catch-without-try-and-noraise"><code>catch</code> without <code>try</code>, and <code>noraise</code></a></h2>
+<pre><code class="language-moonbit">suberror Oops {
+  Oops(Int)
+}
+
+fn risky(n : Int) -&gt; Int raise Oops {
+  if n &lt; 0 {
+    raise Oops(n)
+  } else {
+    n * 2
+  }
+}
+
+fn safe(n : Int) -&gt; Int {
+  risky(n) catch {
+    Oops(k) =&gt; k
+  }
+}
+
+fn describe(n : Int) -&gt; String {
+  try risky(n) catch {
+    Oops(k) if k &lt; -5 =&gt; "very bad"
+    _ =&gt; "bad"
+  } noraise {
+    v =&gt; "ok \{v}"
+  }
+}
+
+fn main {
+  println(safe(-3))
+  println(describe(4))
+  println(describe(-9))
+}
+</code></pre>
+<ul>
+<li><code>e catch { … }</code> is the same as <code>try e catch { … }</code>; <code>catch</code> must be on the same line as <code>e</code>.</li>
+<li><code>noraise { pattern =&gt; … }</code> handles the result when no error was raised. Errors raised in the
+<code>catch</code> and <code>noraise</code> arms are not caught by the same <code>try</code>.</li>
+<li><code>catch</code> arms can use or-patterns, <code>as</code> and guards.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="async-functions"><a class="header" href="#async-functions">async functions</a></h1>
+<p>MoonBit++ supports MoonBit’s <code>async</code> functions:</p>
+<pre><code class="language-moonbit">async fn twice(f : async (Int) -&gt; Int, x : Int) -&gt; Int {
+  f(f(x))
+}
+
+async fn inc(x : Int) -&gt; Int noraise {
+  x + 1
+}
+
+async fn main {
+  let g = async fn(x : Int) -&gt; Int { inc(x) * 2 }
+  println(twice(g, 1))
+  println(twice(x =&gt; inc(x), 5))
+}
+</code></pre>
+<ul>
+<li><strong>Syntax</strong>: top-level and local functions are written <code>async fn name(…)</code>, anonymous functions
+<code>async fn(…) { … }</code>, and function types <code>async (A) -&gt; B</code>.</li>
+<li><strong>Errors</strong>: as in MoonBit, an async function may raise any error by default (like <code>raise Error</code>). <code>raise E</code> restricts the error type, and <code>noraise</code> says it does not raise.</li>
+<li><strong>Calls</strong>: an async function can only be called from an async function. A lambda (including
+<code>x =&gt; …</code>) checked against an async function type is async, like the second argument of <code>twice</code>
+above. A synchronous function can pass an async function around as a value, but cannot call it.</li>
+<li><strong><code>async fn main</code></strong>: the entry point can be async.</li>
+<li><strong>Interpreter</strong>: <code>moonpp run</code> runs async functions synchronously, one after another, without
+concurrency. Imported MoonBit async functions, like other imported functions, can only be called
+once compiled.</li>
+</ul>
+<h2 id="using-moonbitlangasync"><a class="header" href="#using-moonbitlangasync">Using moonbitlang/async</a></h2>
+<p>Add the dependency with <code>moonpp add moonbitlang/async</code> and import it in the package’s <code>moon.pkg</code>
+to use its task groups, timers and IO:</p>
+<pre><code class="language-moonbit">// requires moonbitlang/async
+async fn tick(name : String, n : Int, delay : Int) -&gt; Unit {
+  for i = 0; i &lt; n; i = i + 1 {
+    @async.sleep(delay)
+    println(name + " " + i.to_string())
+  }
+}
+
+async fn main {
+  @async.with_task_group(fn(g) {
+    g.spawn_bg(fn() { tick("a", 3, 30) })
+    g.spawn_bg(fn() { tick("b", 2, 45) })
+  })
+  println("done")
+}
+</code></pre>
+<p>With <code>moonpp run --compiled</code>, the two tasks interleave:</p>
+<pre><code class="language-text">a 0
+b 0
+a 1
+b 1
+a 2
+done
+</code></pre>
+<p><code>async</code> is a keyword, but it can still be a package alias: <code>@async.sleep</code>.</p>
+<h2 id="compilation"><a class="header" href="#compilation">Compilation</a></h2>
+<ul>
+<li>Async functions are only compiled to native MoonBit code, because functions in the uniform
+representation are synchronous. Their signature and body must be in the native fragment;
+otherwise compilation fails and names the first term that is not, with the same rules as
+<a href="#mbt-functions"><code>#mbt</code> functions</a>.</li>
+<li>Async functions can also only be used by native code. If code in the uniform representation
+refers to an async function, for example a synchronous function outside the native fragment that
+returns an async lambda, compilation fails.</li>
+<li><code>async fn main</code> compiles to MoonBit’s <code>async fn main</code>, and <code>#mbt async fn</code> is exported as <code>pub async fn</code>.</li>
+<li><code>moonbitlang/async</code> supports the native, JS and wasm targets, but not wasm-gc.</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="prelude"><a class="header" href="#prelude">Prelude</a></h1>
 <p>The Prelude is loaded automatically into every program (<code>moonpp --no-prelude</code> turns it off).</p>
@@ -1701,10 +1884,11 @@ and MoonBit fills them in in the compiled program. The location is the one in th
 </ul>
 <p>The traits of <code>@builtin</code> (<code>pub using @builtin {trait Show}</code>) are the Prelude’s; other trait
 re-exports are not imported.</p>
+<p><code>async</code> functions are imported as MoonBit++ async functions, and so are <code>async</code> function types in
+parameters (see <a href="#async-functions">async Functions</a>); the <code>nocancel</code> mark is ignored.</p>
 <h2 id="skipped-items"><a class="header" href="#skipped-items">Skipped items</a></h2>
 <p>The following items are skipped; <code>moonpp check --verbose</code> lists them:</p>
 <ul>
-<li><code>async</code> functions, and <code>async</code> function types in parameters;</li>
 <li><code>impl</code>s of traits that are neither Prelude traits nor imported traits (e.g. <code>@debug.Debug</code>
 when <code>moonbitlang/core/debug</code> is not imported);</li>
 <li><code>#deprecated</code> items;</li>
@@ -1982,7 +2166,7 @@ test file <code>export_wbtest.mbt</code> to the <code>main/</code> directory of 
 <h2 id="imports"><a class="header" href="#imports">Imports</a></h2>
 <ul>
 <li>The interpreter cannot run imported MoonBit functions; they can only be called after compilation.</li>
-<li>MoonBit’s <code>async</code> (<code>async fn</code>, <code>async</code> function types) is not supported.</li>
+<li>The interpreter runs async functions synchronously, without concurrency; async functions are only compiled to native code (see <a href="#async-functions">async Functions</a>).</li>
 <li>Generic <code>impl</code>s, trait objects, and similar items in imported packages are not imported (see <a href="#type-mapping-and-skipped-items">Type mapping and items not imported</a>).</li>
 </ul>
 <h2 id="compiler"><a class="header" href="#compiler">Compiler</a></h2>

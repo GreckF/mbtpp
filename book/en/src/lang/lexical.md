@@ -34,7 +34,7 @@ fn main {
 ```text
 fn let mut if else match enum struct trait impl for in with while return break
 continue raise try catch true false Type Prop forall lemma proof monad as suberror
-derive pub priv noraise loop
+derive pub priv noraise loop is guard async
 ```
 
 `pub`, `priv`, and `derive(...)` are accepted but ignored: a package is a single scope with no visibility control.

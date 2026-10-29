@@ -16,6 +16,8 @@ pub(all) struct Cxt {
   lvl : Int32
   pos : Pos
   can_raise : Bool
+  /// In an async function: async functions can be called.
+  can_async : Bool
   ret_ty : Val?
   in_loop : Bool
 }
@@ -31,6 +33,7 @@ pub fn empty_cxt(pos : Pos) -> Cxt {
     lvl: 0,
     pos,
     can_raise: false,
+    can_async: false,
     ret_ty: None,
     in_loop: false,
   }

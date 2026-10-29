@@ -70,19 +70,10 @@ fn zonk(lvl : Int32, t : Tm) -> Tm {
     Match(ss, cls) =>
       Match(
         ss.map(go),
-        cls.map(cl => {
-          pats: cl.pats,
-          body: zonk(lvl + pats_slots(cl.pats), cl.body),
-        }),
+        cls.map(cl => cl.map(b => zonk(lvl + pats_slots(cl.pats), b))),
       )
     Try(b, cls) =>
-      Try(
-        go(b),
-        cls.map(cl => {
-          pats: cl.pats,
-          body: zonk(lvl + pats_slots(cl.pats), cl.body),
-        }),
-      )
+      Try(go(b), cls.map(cl => cl.map(b => zonk(lvl + pats_slots(cl.pats), b))))
     Raises(a, e) => Raises(go(a), go(e))
     Assign(ix, v) => Assign(ix, go(v))
     While(c, b, s) => While(go(c), go(b), go(s))
@@ -274,11 +265,8 @@ fn elab_fn_body(fd : @parser.FnDecl) -> Unit raise ElabError {
   }
   let cxt0 = empty_cxt(fd.pos)
   let (cxt, bs, rty) = telescope_cxt(cxt0, g.ty, n)
-  let (body_ty, can_raise) = match force(rty) {
-    VRaises(a, _) => (a, true)
-    other => (other, false)
-  }
-  let bc = { ..cxt, can_raise, ret_ty: Some(body_ty), }
+  let (body_ty, can_raise, can_async) = body_effects(rty)
+  let bc = { ..cxt, can_raise, can_async, ret_ty: Some(body_ty), }
   let t = check(bc, body, body_ty)
   let res = finish(cxt, fd.name, [wrap_lams(bs, t), g.ty])
   globals.set(fd.name, {
@@ -558,7 +546,7 @@ fn elab_struct_decl(sd : @parser.StructDecl) -> Unit raise ElabError {
     let body = lams(
       concat(pbs2, [("self", Expl, self_ty)]),
       Match([Var(0)], [
-        { pats: [CPCon(d + "::mk", vars)], body: Var(n - 1 - k), },
+        { pats: [CPCon(d + "::mk", vars)], cond: None, body: Var(n - 1 - k), },
       ]),
     )
     register(fname, pty, GFunc(Some(body), false, np + 1))
@@ -689,7 +677,11 @@ fn elab_trait(td : @parser.TraitDecl) -> Unit raise ElabError {
         Inst,
         false,
         Match([Var(0)], [
-          { pats: [CPCon(tr + "::mk", vars)], body: Var(n - 1 - k), },
+          {
+            pats: [CPCon(tr + "::mk", vars)],
+            cond: None,
+            body: Var(n - 1 - k),
+          },
         ]),
       ),
     )

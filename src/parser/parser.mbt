@@ -99,7 +99,7 @@ fn Parser::ident(self : Parser) -> String raise ParseError {
 /// A name, or `@pkg.Name` from an imported package.
 fn Parser::qual_ident(self : Parser) -> String raise ParseError {
   if self.accept("@") {
-    let pkg = self.ident()
+    let pkg = self.pkg_name()
     self.expect(".")
     "@" + pkg + "." + self.ident()
   } else {
@@ -276,7 +276,15 @@ fn exprs_to_impl_binders(es : Array[Expr]) -> Array[Binder] raise ParseError {
 
 ///|
 pub fn Parser::expr(self : Parser) -> Expr raise ParseError {
-  self.arrow()
+  let e = self.arrow()
+  // `e catch { arms }`: a `try` without the keyword
+  if self.is_same_line("catch") {
+    let pos = self.pos()
+    ignore(self.advance())
+    let arms = self.arms()
+    return ETry(pos, e, arms, self.noraise_opt())
+  }
+  e
 }
 
 ///|
@@ -302,16 +310,55 @@ fn Parser::raises_opt(self : Parser) -> Expr? raise ParseError {
 }
 
 ///|
+/// The effect after a result type: `raise E`, `noraise` or nothing, and for
+/// an `async` function the async effect `%Async[E]` (`E` is `Error` by
+/// default, as async functions raise by default, and `%NoRaise` for
+/// `noraise`).
+fn Parser::effect_opt(self : Parser, is_async : Bool) -> Expr? raise ParseError {
+  let pos = self.pos()
+  let no_raise = self.is_same_line("noraise")
+  if no_raise {
+    ignore(self.advance())
+  }
+  let r = if no_raise { None } else { self.raises_opt() }
+  if !is_async {
+    return r
+  }
+  let err : Expr = if no_raise {
+    EVar(pos, "%NoRaise")
+  } else {
+    r.unwrap_or(EVar(pos, "Error"))
+  }
+  Some(EApp(pos, EVar(pos, "%Async"), Some([err]), None))
+}
+
+///|
+/// The result type of a lambda with its effect.
+fn lam_ret(pos : Pos, ret : Expr?, eff : Expr?) -> Expr? {
+  match eff {
+    Some(e) => Some(EEff(pos, ret.unwrap_or(EHole(pos)), e))
+    None => ret
+  }
+}
+
+///|
 fn Parser::arrow(self : Parser) -> Expr raise ParseError {
   let pos = self.pos()
+  let is_async = self.at("async") && self.at_k(1, "(")
+  if is_async {
+    ignore(self.advance())
+  }
   let parenthesised = self.at("(")
   let lhs = self.pipe()
   if !self.at("->") {
+    if is_async {
+      self.fail("expected `->` in an async function type")
+    }
     return lhs
   }
   ignore(self.advance())
   let cod = self.arrow()
-  let raises = self.raises_opt()
+  let raises = self.effect_opt(is_async)
   let binders = match lhs {
     ETuple(_, es) if parenthesised => exprs_to_binders(es)
     ELit(_, LUnit) if parenthesised => []
@@ -343,7 +390,7 @@ fn bin_prec(op : String) -> Int32 {
   match op {
     "||" => 1
     "&&" => 2
-    "==" | "!=" | "===" | "<" | ">" | "<=" | ">=" => 3
+    "==" | "!=" | "===" | "<" | ">" | "<=" | ">=" | "is" => 3
     "..<" | "..=" => 4
     "|" => 5
     "^" => 6
@@ -373,6 +420,10 @@ fn Parser::binary(self : Parser, min_prec : Int32) -> Expr raise ParseError {
       break
     }
     ignore(self.advance())
+    if op == "is" {
+      lhs = EIs(t.pos, lhs, self.pattern())
+      continue
+    }
     let rhs = self.binary(prec + 1)
     lhs = if op == "..<" || op == "..=" {
       ERange(t.pos, lhs, rhs, op == "..=")
@@ -606,7 +657,7 @@ fn Parser::primary(self : Parser) -> Expr raise ParseError {
     TSym("@") => {
       // `@pkg.name`: a name from an imported package
       ignore(self.advance())
-      let pkg = self.ident()
+      let pkg = self.pkg_name()
       self.expect(".")
       let mut name = "@" + pkg + "." + self.ident()
       while self.at("::") {
@@ -751,13 +802,14 @@ fn Parser::primary(self : Parser) -> Expr raise ParseError {
       } else {
         self.block()
       }
-    TSym("fn") => {
-      ignore(self.advance())
+    TSym("fn") | TSym("async") => {
+      let is_async = self.accept("async")
+      self.expect("fn")
       let impl_bs = self.impl_binders()
       let ps = self.params(true)
       let ret = if self.accept("->") { Some(self.expr()) } else { None }
-      ignore(self.raises_opt())
-      ELam(pos, impl_bs, ps, ret, self.block())
+      let eff = self.effect_opt(is_async)
+      ELam(pos, impl_bs, ps, lam_ret(pos, ret, eff), self.block())
     }
     TSym("if") => self.if_expr()
     TSym("match") => self.match_expr()
@@ -766,9 +818,10 @@ fn Parser::primary(self : Parser) -> Expr raise ParseError {
       if self.accept("?") {
         return ETryQ(pos, self.expr())
       }
-      let body = if self.at("{") { self.block() } else { self.expr() }
+      let body = if self.at("{") { self.block() } else { self.arrow() }
       self.expect("catch")
-      ETry(pos, body, self.arms())
+      let arms = self.arms()
+      ETry(pos, body, arms, self.noraise_opt())
     }
     TSym("raise") => {
       ignore(self.advance())
@@ -817,6 +870,16 @@ fn Parser::primary(self : Parser) -> Expr raise ParseError {
 }
 
 ///|
+/// `noraise { arms }` after the handlers of a `try`.
+fn Parser::noraise_opt(self : Parser) -> Array[Arm]? raise ParseError {
+  if self.accept("noraise") {
+    Some(self.arms())
+  } else {
+    None
+  }
+}
+
+///|
 fn Parser::if_expr(self : Parser) -> Expr raise ParseError {
   let pos = self.pos()
   self.expect("if")
@@ -856,6 +919,7 @@ fn Parser::arms(self : Parser) -> Array[Arm] raise ParseError {
     }
     let pos = self.pos()
     let pat = self.pattern()
+    let cond = if self.accept("if") { Some(self.expr()) } else { None }
     let rhs = if self.accept("=>") {
       Some(
         if self.at("{") && !self.is_struct_literal() {
@@ -867,7 +931,7 @@ fn Parser::arms(self : Parser) -> Array[Arm] raise ParseError {
     } else {
       None
     }
-    arms.push({ pos, pat, rhs, })
+    arms.push({ pos, pat, cond, rhs, })
     if !self.at("}") {
       self.end_stmt()
     }
@@ -923,7 +987,24 @@ fn Parser::con_pattern_args(
 }
 
 ///|
+/// `p | q`, `p as x` (`as` binds loosest).
 fn Parser::pattern(self : Parser) -> Pat raise ParseError {
+  let mut p = self.pattern_atom()
+  while self.at("|") {
+    let pos = self.pos()
+    ignore(self.advance())
+    p = POr(pos, p, self.pattern_atom())
+  }
+  while self.at("as") {
+    let pos = self.pos()
+    ignore(self.advance())
+    p = PAs(pos, p, self.ident())
+  }
+  p
+}
+
+///|
+fn Parser::pattern_atom(self : Parser) -> Pat raise ParseError {
   let t = self.peek()
   let pos = t.pos
   match t.tok {
@@ -964,7 +1045,7 @@ fn Parser::pattern(self : Parser) -> Pat raise ParseError {
     TSym("@") => {
       // `@pkg.Type::Ctor(..)`: a constructor of an imported type
       ignore(self.advance())
-      let pkg = self.ident()
+      let pkg = self.pkg_name()
       self.expect(".")
       let mut name = "@" + pkg + "." + self.ident()
       while self.at("::") {
@@ -1034,6 +1115,18 @@ fn Parser::stmt(self : Parser) -> Stmt raise ParseError {
   if self.at("fn") && (self.peek_at(1).tok is TIdent(_) || self.at_k(1, "[")) {
     ignore(self.advance())
     return SFn(pos, self.fn_rest(pos, false))
+  }
+  if self.at("async") &&
+    self.at_k(1, "fn") &&
+    (self.peek_at(2).tok is TIdent(_) || self.at_k(2, "[")) {
+    ignore(self.advance())
+    ignore(self.advance())
+    return SFn(pos, self.fn_rest(pos, false, is_async=true))
+  }
+  if self.accept("guard") {
+    let c = self.expr()
+    let e = if self.accept("else") { Some(self.block()) } else { None }
+    return SGuard(pos, c, e)
   }
   if self.accept("while") {
     let c = self.expr()
@@ -1133,6 +1226,7 @@ fn Parser::fn_rest(
   self : Parser,
   pos : Pos,
   is_lemma : Bool,
+  is_async~ : Bool = false,
 ) -> FnDecl raise ParseError {
   let mut impl_bs = self.impl_binders()
   let mut name = self.ident()
@@ -1144,7 +1238,7 @@ fn Parser::fn_rest(
   }
   let params = if self.at("(") { Some(self.params(false)) } else { None }
   let ret = if self.accept("->") { Some(self.expr()) } else { None }
-  let raises = self.raises_opt()
+  let raises = self.effect_opt(is_async)
   let body = if self.accept("=") {
     match self.peek().tok {
       TStr([SPStr(s)]) => {
@@ -1263,6 +1357,11 @@ fn Parser::decl_body(self : Parser) -> Decl raise ParseError {
   let pos = self.pos()
   if self.accept("fn") {
     return DFn(self.fn_rest(pos, false))
+  }
+  if self.at("async") && self.at_k(1, "fn") {
+    ignore(self.advance())
+    ignore(self.advance())
+    return DFn(self.fn_rest(pos, false, is_async=true))
   }
   if self.accept("lemma") {
     // `lemma name[T](x : A) -> P { ... }` or `lemma name[T] : P = e`
@@ -1472,4 +1571,16 @@ pub fn parse_expr(src : String) -> Expr raise ParseError {
     p.fail("unexpected token")
   }
   e
+}
+
+///|
+/// The package alias after `@`: a keyword is a valid alias (`@async`).
+fn Parser::pkg_name(self : Parser) -> String raise ParseError {
+  match self.peek().tok {
+    TSym(s) if s.length() > 0 && s.get_char(0).unwrap().is_ascii_alphabetic() => {
+      ignore(self.advance())
+      s
+    }
+    _ => self.ident()
+  }
 }

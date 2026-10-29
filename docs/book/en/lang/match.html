@@ -36,10 +36,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-aec47b78.js";
+            window.path_to_searchindex_js = "../searchindex-2b6d7b0f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-1277b054.js"></script>
+        <script src="../toc-ec08c6a2.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -201,6 +201,80 @@ fn main {
 <li>Arms are tried in order and may overlap; the first matching arm wins.</li>
 <li><strong>Implicit parameters of constructors</strong> can be bound or ignored in patterns: <code>If[t](c, a, b)</code>, <code>IZ[_, a] =&gt; a</code>.</li>
 <li><strong><code>let</code> patterns</strong>: <code>let (a, b) = pair</code>.</li>
+</ul>
+<h2 id="or-patterns-as-and-guards"><a class="header" href="#or-patterns-as-and-guards">Or-patterns, <code>as</code>, and guards</a></h2>
+<pre><code class="language-moonbit">enum Shape {
+  Circle(Int)
+  Rect(Int, Int)
+  Square(Int)
+}
+
+fn kind(s : Shape) -&gt; String {
+  match s {
+    Rect(_, _) | Square(_) =&gt; "polygon"
+    Circle(r) if r &gt; 10 =&gt; "big circle"
+    Circle(_) =&gt; "circle"
+  }
+}
+
+fn widest(s : Shape) -&gt; Shape {
+  match s {
+    Rect(w, _) | Square(w) as big if w &gt; 100 =&gt; big
+    other =&gt; other
+  }
+}
+
+fn main {
+  println(kind(Circle(11)))
+  println(widest(Square(200)) is Square(_))
+}
+</code></pre>
+<ul>
+<li><strong>Or-patterns</strong> <code>p | q</code> can be nested (<code>Some(1 | 2)</code>); all alternatives must bind the same
+variables. The checker expands them into separate arms, each matched dependently on its own.</li>
+<li><strong><code>p as x</code></strong>: <code>x</code> is the whole matched value. <code>as</code> binds loosest: in <code>A | B as x</code>, <code>x</code> is the
+value matched by <code>A | B</code>.</li>
+<li><strong>Guards</strong> <code>p if cond =&gt; …</code>: when the condition is false, the following arms are tried. The
+condition can use the variables bound by the pattern. Guarded arms do not count for coverage.</li>
+</ul>
+<h2 id="is-and-guard"><a class="header" href="#is-and-guard"><code>is</code> and <code>guard</code></a></h2>
+<pre><code class="language-moonbit">fn get(o : Option[Int]) -&gt; Int {
+  if o is Some(x) &amp;&amp; x &gt; 5 {
+    x
+  } else {
+    0
+  }
+}
+
+fn length(xs : List[Int]) -&gt; Int {
+  let mut cur = xs
+  let mut n = 0
+  while cur is Cons(_, rest) {
+    n = n + 1
+    cur = rest
+  }
+  n
+}
+
+fn head_or(xs : List[Int], d : Int) -&gt; Int {
+  guard xs is Cons(h, _) else { return d }
+  h
+}
+
+fn main {
+  println(get(Some(9)))
+  println(length(Cons(1, Cons(2, Nil))))
+  println(head_or(Nil, 42))
+}
+</code></pre>
+<ul>
+<li><strong><code>e is p</code></strong> is a <code>Bool</code>. In the condition of an <code>if</code>, <code>while</code> or <code>guard</code>, the variables bound
+by <code>p</code> are visible in the rest of the <code>&amp;&amp;</code> chain and in the code run when the condition holds.</li>
+<li><strong><code>guard cond else { … }</code></strong>: when the condition fails, the <code>else</code> block runs; it usually
+<code>return</code>s, <code>break</code>s or calls <code>abort(…)</code>. The following statements can use the variables bound
+by <code>cond</code>. Without <code>else</code>, a failed condition aborts the program.</li>
+<li>With <code>is</code> in a condition, the <code>else</code> branch is expanded once at each <code>is</code> that can fail, so its
+code is duplicated.</li>
 </ul>
 <p>Pattern matching in MoonBit++ is dependent:</p>
 <ul>

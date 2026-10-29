@@ -35,7 +35,7 @@ let keywords : Array[String] = [
   "fn", "let", "mut", "if", "else", "match", "enum", "struct", "trait", "impl", "for",
   "in", "with", "while", "return", "break", "continue", "raise", "try", "catch",
   "true", "false", "Type", "Prop", "forall", "lemma", "proof", "monad", "as", "suberror",
-  "derive", "pub", "priv", "noraise", "loop",
+  "derive", "pub", "priv", "noraise", "loop", "is", "guard", "async",
 ]
 
 ///|

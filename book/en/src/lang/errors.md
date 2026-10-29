@@ -35,3 +35,45 @@ fn main {
 
 Like mutable state, `raise` and `try` keep a function from being unfolded during type checking (see
 [Mutable State and Loops](mutation.md)).
+
+## `catch` without `try`, and `noraise`
+
+```moonbit
+suberror Oops {
+  Oops(Int)
+}
+
+fn risky(n : Int) -> Int raise Oops {
+  if n < 0 {
+    raise Oops(n)
+  } else {
+    n * 2
+  }
+}
+
+fn safe(n : Int) -> Int {
+  risky(n) catch {
+    Oops(k) => k
+  }
+}
+
+fn describe(n : Int) -> String {
+  try risky(n) catch {
+    Oops(k) if k < -5 => "very bad"
+    _ => "bad"
+  } noraise {
+    v => "ok \{v}"
+  }
+}
+
+fn main {
+  println(safe(-3))
+  println(describe(4))
+  println(describe(-9))
+}
+```
+
+- `e catch { … }` is the same as `try e catch { … }`; `catch` must be on the same line as `e`.
+- `noraise { pattern => … }` handles the result when no error was raised. Errors raised in the
+  `catch` and `noraise` arms are not caught by the same `try`.
+- `catch` arms can use or-patterns, `as` and guards.

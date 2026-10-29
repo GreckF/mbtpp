@@ -18,10 +18,7 @@ fn tm_shift(t : Tm, d : Int32, c : Int32) -> Tm {
     Match(ss, cls) =>
       Match(
         ss.map(go),
-        cls.map(cl => {
-          pats: cl.pats,
-          body: tm_shift(cl.body, d, c + pats_slots(cl.pats)),
-        }),
+        cls.map(cl => cl.map(b => tm_shift(b, d, c + pats_slots(cl.pats)))),
       )
     Raises(a, e) => Raises(go(a), go(e))
     _ => t
@@ -67,7 +64,7 @@ fn tm_abstract(t : Tm, a : Tm, d : Int32) -> (Tm, Bool) {
     Match(ss, cls) =>
       Match(
         ss.map(x => go(x, 0)),
-        cls.map(cl => { pats: cl.pats, body: go(cl.body, pats_slots(cl.pats)), }),
+        cls.map(cl => cl.map(b => go(b, pats_slots(cl.pats)))),
       )
     Raises(s, e) => Raises(go(s, 0), go(e, 0))
     _ => t
@@ -222,7 +219,7 @@ fn run_tactics(
           }
           let h = new_goal(out.cxt, out.cxt.subst(g.ty))
           new_goals.push(h)
-          clauses.push({ pats: [out.pat], body: h.meta, })
+          clauses.push({ pats: [out.pat], cond: None, body: h.meta, })
         }
         solve_goal(g, Match([Var(g.cxt.lvl - 1 - l)], clauses))
       }
@@ -272,7 +269,9 @@ fn run_tactics(
         new_goals.push(h2)
         solve_goal(
           g,
-          Match([eq_tm], [{ pats: [CPCon("Id::Refl", [])], body: h2.meta, }]),
+          Match([eq_tm], [
+            { pats: [CPCon("Id::Refl", [])], cond: None, body: h2.meta, },
+          ]),
         )
       }
       TAssume(_, x, pe) => {

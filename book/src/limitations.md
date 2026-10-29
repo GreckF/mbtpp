@@ -11,7 +11,7 @@
 ## 导入
 
 - 解释器不能运行导入的 MoonBit 函数，只能在编译后调用。
-- 不支持 MoonBit 的 `async`（`async fn`、`async` 函数类型）。
+- 解释器同步执行 async 函数，没有并发；async 函数只编译成原生代码（见 [async 函数](lang/async.md)）。
 - 导入包中的泛型 `impl`、trait 对象等不导入（见[类型对应与不导入的项](interop/types.md)）。
 
 ## 编译器

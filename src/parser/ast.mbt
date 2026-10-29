@@ -73,7 +73,8 @@ pub(all) enum Expr {
   ETuple(Pos, Array[Expr])
   EArray(Pos, Array[Expr])
   EStruct(Pos, Array[(String, Expr)])
-  ETry(Pos, Expr, Array[Arm])
+  /// `try e catch { arms } noraise { arms }` (also `e catch { arms }`).
+  ETry(Pos, Expr, Array[Arm], Array[Arm]?)
   ETryQ(Pos, Expr)
   ERaise(Pos, Expr)
   EMonad(Pos, Expr)
@@ -87,6 +88,12 @@ pub(all) enum Expr {
   ERange(Pos, Expr, Expr, Bool)
   /// A tagged call argument `label=e` (`label?=e` when the flag is set).
   ETagged(Pos, String, Expr, Bool)
+  /// `e is p`: whether `e` matches `p`. In the condition of an `if`,
+  /// `while` or `guard`, the variables of `p` are bound in the rest of a
+  /// `&&` chain and in the branch taken on success.
+  EIs(Pos, Expr, Pat)
+  /// `T raise E` as the result type of a lambda.
+  EEff(Pos, Expr, Expr)
 } derive(Show)
 
 ///|
@@ -100,6 +107,8 @@ pub(all) struct MatchRet {
 pub(all) struct Arm {
   pos : Pos
   pat : Pat
+  /// `p if cond => ...`
+  cond : Expr?
   rhs : Expr?
 } derive(Show)
 
@@ -111,6 +120,10 @@ pub(all) enum Pat {
   PCon(Pos, String, Array[Pat]?, Array[Pat])
   PLit(Pos, Lit)
   PTuple(Pos, Array[Pat])
+  /// `p | q`
+  POr(Pos, Pat, Pat)
+  /// `p as x`
+  PAs(Pos, Pat, String)
 } derive(Show)
 
 ///|
@@ -126,6 +139,8 @@ pub(all) enum Stmt {
   SFor(Pos, Array[(String, Expr)], Expr?, Array[(String, Expr)], Expr)
   SForIn(Pos, String, Expr, Expr)
   SExpr(Pos, Expr)
+  /// `guard cond else { e }` (without `else`: a panic).
+  SGuard(Pos, Expr, Expr?)
 } derive(Show)
 
 ///|
@@ -276,7 +291,7 @@ pub fn Expr::pos(self : Expr) -> Pos {
     | ETuple(p, _)
     | EArray(p, _)
     | EStruct(p, _)
-    | ETry(p, _, _)
+    | ETry(p, _, _, _)
     | ETryQ(p, _)
     | ERaise(p, _)
     | EMonad(p, _)
@@ -286,13 +301,21 @@ pub fn Expr::pos(self : Expr) -> Pos {
     | EBreak(p)
     | EContinue(p)
     | ERange(p, _, _, _)
-    | ETagged(p, _, _, _) => p
+    | ETagged(p, _, _, _)
+    | EIs(p, _, _)
+    | EEff(p, _, _) => p
   }
 }
 
 ///|
 pub fn Pat::pos(self : Pat) -> Pos {
   match self {
-    PVar(p, _) | PWild(p) | PCon(p, _, _, _) | PLit(p, _) | PTuple(p, _) => p
+    PVar(p, _)
+    | PWild(p)
+    | PCon(p, _, _, _)
+    | PLit(p, _)
+    | PTuple(p, _)
+    | POr(p, _, _)
+    | PAs(p, _, _) => p
   }
 }

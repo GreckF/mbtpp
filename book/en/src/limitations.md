@@ -11,7 +11,7 @@
 ## Imports
 
 - The interpreter cannot run imported MoonBit functions; they can only be called after compilation.
-- MoonBit's `async` (`async fn`, `async` function types) is not supported.
+- The interpreter runs async functions synchronously, without concurrency; async functions are only compiled to native code (see [async Functions](lang/async.md)).
 - Generic `impl`s, trait objects, and similar items in imported packages are not imported (see [Type mapping and items not imported](interop/types.md)).
 
 ## Compiler

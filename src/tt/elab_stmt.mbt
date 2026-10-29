@@ -58,7 +58,7 @@ fn check_block(
             None => e
           }
           let m : @parser.Expr = EMatch(p, scr, None, [
-            { pos: p, pat, rhs: Some(EBlock(p, rest)), },
+            { pos: p, pat, cond: None, rhs: Some(EBlock(p, rest)), },
           ])
           match goal {
             Some(g) => (check(c, m, g), g)
@@ -87,11 +87,16 @@ fn check_block(
         BodyExpr(b) => b
         BodyExtern(_) => cxt.at(p).fail("local functions cannot be external")
       }
+      // the effect of a local function is part of its result type
+      let ret = match d.raises {
+        Some(eff) => Some(@parser.EEff(p, d.ret.unwrap_or(EHole(p)), eff))
+        None => d.ret
+      }
       let lam : @parser.Expr = ELam(
         p,
         d.impl_params,
         d.params.unwrap_or([]),
-        d.ret,
+        ret,
         body,
       )
       check_block(cxt, [SLet(p, PVar(p, d.name), None, lam), ..rest], goal)
@@ -116,6 +121,22 @@ fn check_block(
       }
       let (r, rty) = check_block(cxt, rest, goal)
       (Seq(t, r), rty)
+    }
+    // `while x is Some(y) { .. }`: the test is the first statement
+    SWhile(p, cond, body) if has_is(cond) => {
+      let body2 = cond_expr(cond, body, EBreak(p))
+      check_block(cxt, [SWhile(p, ELit(p, LBool(true)), body2), ..rest], goal)
+    }
+    // `guard c else { e }; rest` is `if c { rest } else { e }`
+    SGuard(p, cond, el) => {
+      let el = el.unwrap_or(
+        EApp(p, EVar(p, "abort"), None, Some([ELit(p, LStr("guard failed"))])),
+      )
+      check_block(
+        cxt,
+        [SExpr(p, EIf(p, cond, EBlock(p, rest), Some(el)))],
+        goal,
+      )
     }
     SWhile(p, cond, body) => {
       let c = cxt.at(p)
@@ -239,7 +260,9 @@ fn pat_lam(p : Pos, pat : @parser.Pat, body : @parser.Expr) -> @parser.Expr {
         [],
         [{ pos: p, name: x, ty: None, kind: Positional, }],
         None,
-        EMatch(p, EVar(p, x), None, [{ pos: p, pat, rhs: Some(body), }]),
+        EMatch(p, EVar(p, x), None, [
+          { pos: p, pat, cond: None, rhs: Some(body), },
+        ]),
       )
     }
   }
@@ -329,7 +352,7 @@ fn desugar_stmts(stmts : Array[@parser.Stmt]) -> @parser.Expr {
         | SFn(p, _)
         | SAssign(p, _, _, _) => p
         SWhile(p, _, _) | SFor(p, _, _, _, _) | SForIn(p, _, _, _) => p
-        SExpr(p, _) | SLetBind(p, _, _) => p
+        SExpr(p, _) | SLetBind(p, _, _) | SGuard(p, _, _) => p
       }
       EBlock(p, [other, SExpr(p, desugar_stmts(rest))])
     }

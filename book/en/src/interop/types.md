@@ -61,11 +61,13 @@ The types and functions of `pub using @q {type T as U}` can be used under the pa
 The traits of `@builtin` (`pub using @builtin {trait Show}`) are the Prelude's; other trait
 re-exports are not imported.
 
+`async` functions are imported as MoonBit++ async functions, and so are `async` function types in
+parameters (see [async Functions](../lang/async.md)); the `nocancel` mark is ignored.
+
 ## Skipped items
 
 The following items are skipped; `moonpp check --verbose` lists them:
 
-- `async` functions, and `async` function types in parameters;
 - `impl`s of traits that are neither Prelude traits nor imported traits (e.g. `@debug.Debug`
   when `moonbitlang/core/debug` is not imported);
 - `#deprecated` items;

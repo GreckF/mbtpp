@@ -1,0 +1,105 @@
+// Patterns and conditions: or-patterns, `as`, guards, `is`, `guard` and
+// `catch` without `try`.
+
+enum Shape {
+  Circle(Int)
+  Rect(Int, Int)
+  Square(Int)
+}
+
+fn kind(s : Shape) -> String {
+  match s {
+    Rect(_, _) | Square(_) => "polygon"
+    Circle(r) if r > 10 => "big circle"
+    Circle(_) => "circle"
+  }
+}
+
+// `as` names the whole value; the alternatives of an or-pattern bind the
+// same variables
+fn widest(s : Shape) -> Shape {
+  match s {
+    Rect(w, _) | Square(w) as big if w > 100 => big
+    Rect(w, h) => Rect(w, h)
+    other => other
+  }
+}
+
+fn small(n : Int) -> Bool {
+  n is (1 | 2 | 3)
+}
+
+// the variables of `x is p` are bound in the rest of the `&&` chain and in
+// the branch taken
+fn get(o : Option[Int]) -> Int {
+  if o is Some(x) && x > 5 {
+    x
+  } else {
+    0
+  }
+}
+
+fn length(xs : List[Int]) -> Int {
+  let mut cur = xs
+  let mut n = 0
+  while cur is Cons(_, rest) {
+    n = n + 1
+    cur = rest
+  }
+  n
+}
+
+fn head_or(xs : List[Int], d : Int) -> Int {
+  guard xs is Cons(h, _) else { return d }
+  h
+}
+
+// guards work with dependent matching too
+fn classify(n : Nat) -> String {
+  match n {
+    0 | 1 => "tiny"
+    S(S(k)) if k == 5 => "seven"
+    _ => "other"
+  }
+}
+
+suberror Oops {
+  Oops(Int)
+}
+
+fn risky(n : Int) -> Int raise Oops {
+  if n < 0 {
+    raise Oops(n)
+  } else {
+    n * 2
+  }
+}
+
+fn safe(n : Int) -> Int {
+  risky(n) catch {
+    Oops(k) => k
+  }
+}
+
+fn describe(n : Int) -> String {
+  try risky(n) catch {
+    Oops(k) if k < -5 => "very bad"
+    _ => "bad"
+  } noraise {
+    v => "ok " + v.to_string()
+  }
+}
+
+fn main {
+  println(kind(Square(1)) + ", " + kind(Circle(11)) + ", " + kind(Circle(1)))
+  println(widest(Square(200)) is Square(_))
+  println("\{small(2)} \{small(5)}")
+  println("\{get(Some(9))} \{get(Some(1))} \{get(None)}")
+  println(length(Cons(1, Cons(2, Cons(3, Nil)))))
+  println("\{head_or(Nil, 42)} \{head_or(Cons(5, Nil), 42)}")
+  println(classify(1) + " " + classify(7) + " " + classify(9))
+  println("\{safe(3)} \{safe(-3)}")
+  println(describe(4) + ", " + describe(-1) + ", " + describe(-9))
+  let (a, _) as pair = (1, 2)
+  println(a + pair.1)
+}

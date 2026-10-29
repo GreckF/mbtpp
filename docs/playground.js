@@ -83,6 +83,7 @@ const common = [
   "fn", "let", "mut", "if", "else", "match", "enum", "struct", "trait", "impl",
   "for", "in", "with", "while", "return", "break", "continue", "raise", "try",
   "catch", "suberror", "derive", "pub", "priv", "noraise", "loop", "as", "is",
+  "guard", "async",
 ];
 const words = (ws) => new RegExp("(?:" + ws.join("|") + ")\\b");
 

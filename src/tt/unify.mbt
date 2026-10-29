@@ -110,9 +110,15 @@ fn rename(p : PRen, v : Val) -> Tm raise UnifyError {
       let scr = vs.map(x => rename(p, x))
       let cls2 = cls.map(cl => {
         let k = pats_slots(cl.pats)
+        let p2 = lift_pren_n(p, k)
+        let cond = match clause_guard_val(env, p.cod, cl) {
+          Some(g) => Some(rename(p2, g))
+          None => None
+        }
         {
           pats: cl.pats,
-          body: rename(lift_pren_n(p, k), clause_body_val(env, p.cod, cl)),
+          cond,
+          body: rename(p2, clause_body_val(env, p.cod, cl)),
         }
       })
       rename_sp(p, Match(scr, cls2), sp)
@@ -297,12 +303,21 @@ fn unify_struct(ts : LTypes, t0 : Val, u0 : Val) -> Unit raise UnifyError {
       }
       for k = 0; k < cls1.length(); k = k + 1 {
         let n = pats_slots(cls1[k].pats)
-        if n != pats_slots(cls2[k].pats) {
+        if n != pats_slots(cls2[k].pats) ||
+          (cls1[k].cond is Some(_)) != (cls2[k].cond is Some(_)) {
           raise UnifyError("different matches")
         }
         let mut ts2 = ts
         for _ in 0..<n {
           ts2 = types_push(ts2, None)
+        }
+        match
+          (
+            clause_guard_val(env1, lvl, cls1[k]),
+            clause_guard_val(env2, lvl, cls2[k]),
+          ) {
+          (Some(g1), Some(g2)) => unify(ts2, g1, g2)
+          _ => ()
         }
         unify(
           ts2,

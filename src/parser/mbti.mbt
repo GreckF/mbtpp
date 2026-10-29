@@ -162,6 +162,9 @@ fn collect_names(
 ) -> Unit {
   let go = (x : Expr) => collect_names(x, bound, out)
   match e {
+    // the effects of async functions (`%Async[E]`)
+    EVar(_, n) if n.has_prefix("%") => ()
+    EApp(_, EVar(_, n), Some(args), _) if n.has_prefix("%") => args.each(go)
     EVar(_, n) => if !bound.contains(n) && !out.contains(n) { out.set(n, 0) }
     EApp(_, EVar(_, n), Some(args), x) => {
       if !bound.contains(n) {
@@ -531,8 +534,9 @@ fn mbti_item(p : Parser, pkg_path : String) -> Array[Decl] raise ParseError {
     FnBody::BodyExtern("@mbt:" + pkg_path + "." + name)
   }
   let out : Array[Decl] = match p.peek().tok {
-    TSym("fn") => {
-      ignore(p.advance())
+    TSym("fn" | "async") => {
+      let is_async = p.accept("async")
+      p.expect("fn")
       let impl_bs = p.impl_binders()
       let mut name = p.ident()
       while p.accept("::") {
@@ -555,7 +559,12 @@ fn mbti_item(p : Parser, pkg_path : String) -> Array[Decl] raise ParseError {
           ))
         })
       let ret = if p.accept("->") { p.expr() } else { EVar(pos, "Unit") }
-      let raises = p.raises_opt()
+      let raises = p.effect_opt(is_async)
+      // `nocancel` (an async function that cannot be cancelled) does not
+      // change how it is called
+      if p.peek().tok is TIdent("nocancel") {
+        ignore(p.advance())
+      }
       [
         DFn({
           pos,

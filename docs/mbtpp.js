@@ -449,10 +449,11 @@ function _M0DTP38username5mbtpp6parser4Expr7EStruct(param0, param1) {
   this._1 = param1;
 }
 _M0DTP38username5mbtpp6parser4Expr7EStruct.prototype.$tag = 19;
-function _M0DTP38username5mbtpp6parser4Expr4ETry(param0, param1, param2) {
+function _M0DTP38username5mbtpp6parser4Expr4ETry(param0, param1, param2, param3) {
   this._0 = param0;
   this._1 = param1;
   this._2 = param2;
+  this._3 = param3;
 }
 _M0DTP38username5mbtpp6parser4Expr4ETry.prototype.$tag = 20;
 function _M0DTP38username5mbtpp6parser4Expr5ETryQ(param0, param1) {
@@ -507,6 +508,18 @@ function _M0DTP38username5mbtpp6parser4Expr7ETagged(param0, param1, param2, para
   this._3 = param3;
 }
 _M0DTP38username5mbtpp6parser4Expr7ETagged.prototype.$tag = 30;
+function _M0DTP38username5mbtpp6parser4Expr3EIs(param0, param1, param2) {
+  this._0 = param0;
+  this._1 = param1;
+  this._2 = param2;
+}
+_M0DTP38username5mbtpp6parser4Expr3EIs.prototype.$tag = 31;
+function _M0DTP38username5mbtpp6parser4Expr4EEff(param0, param1, param2) {
+  this._0 = param0;
+  this._1 = param1;
+  this._2 = param2;
+}
+_M0DTP38username5mbtpp6parser4Expr4EEff.prototype.$tag = 32;
 function _M0DTP38username5mbtpp6parser4Decl3DFn(param0) {
   this._0 = param0;
 }
@@ -594,11 +607,16 @@ function _M0DTP38username5mbtpp7codegen3NTy4NFun(param0, param1) {
   this._1 = param1;
 }
 _M0DTP38username5mbtpp7codegen3NTy4NFun.prototype.$tag = 9;
+function _M0DTP38username5mbtpp7codegen3NTy9NAsyncFun(param0, param1) {
+  this._0 = param0;
+  this._1 = param1;
+}
+_M0DTP38username5mbtpp7codegen3NTy9NAsyncFun.prototype.$tag = 10;
 function _M0DTP38username5mbtpp7codegen3NTy4NAny() {}
-_M0DTP38username5mbtpp7codegen3NTy4NAny.prototype.$tag = 10;
+_M0DTP38username5mbtpp7codegen3NTy4NAny.prototype.$tag = 11;
 const _M0DTP38username5mbtpp7codegen3NTy4NAny__ = new _M0DTP38username5mbtpp7codegen3NTy4NAny();
 function _M0DTP38username5mbtpp7codegen3NTy5NSelf() {}
-_M0DTP38username5mbtpp7codegen3NTy5NSelf.prototype.$tag = 11;
+_M0DTP38username5mbtpp7codegen3NTy5NSelf.prototype.$tag = 12;
 const _M0DTP38username5mbtpp7codegen3NTy5NSelf__ = new _M0DTP38username5mbtpp7codegen3NTy5NSelf();
 function _M0TPB9ArrayViewGUsUsRPB5ArrayGRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen3NTyEEE(param0, param1, param2) {
   this.buf = param0;
@@ -730,6 +748,14 @@ function _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4Som
   this._0 = param0;
 }
 _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4Some.prototype.$tag = 1;
+function _M0DTPC16result6ResultGORP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE3Err(param0) {
+  this._0 = param0;
+}
+_M0DTPC16result6ResultGORP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE3Err.prototype.$tag = 0;
+function _M0DTPC16result6ResultGORP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(param0) {
+  this._0 = param0;
+}
+_M0DTPC16result6ResultGORP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok.prototype.$tag = 1;
 function _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None() {}
 _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None.prototype.$tag = 0;
 const _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__ = new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None();
@@ -737,6 +763,13 @@ function _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4Some(
   this._0 = param0;
 }
 _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4Some.prototype.$tag = 1;
+function _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4None() {}
+_M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4None.prototype.$tag = 0;
+const _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4None__ = new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4None();
+function _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4Some(param0) {
+  this._0 = param0;
+}
+_M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4Some.prototype.$tag = 1;
 function _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp2tt3ArgEE4None() {}
 _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp2tt3ArgEE4None.prototype.$tag = 0;
 const _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp2tt3ArgEE4None__ = new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp2tt3ArgEE4None();
@@ -994,6 +1027,11 @@ const _M0MPB7JSArray11set__length = (arr, len) => { arr.length = len; };
 const _M0MPB7JSArray3pop = (arr) => arr.pop();
 const _M0MPB7JSArray6splice = (arr, idx, cnt) => arr.splice(idx, cnt);
 const _M0MPB7JSArray7splice1 = (arr, idx, cnt, val) => arr.splice(idx, cnt, val);
+function _M0TPB12MutArrayViewGsE(param0, param1, param2) {
+  this.buf = param0;
+  this.start = param1;
+  this.end = param2;
+}
 function _M0TPB9ArrayViewGsE(param0, param1, param2) {
   this.buf = param0;
   this.start = param1;
@@ -1084,6 +1122,52 @@ function _M0DTPC16result6ResultGsRP38username5mbtpp6parser10ParseErrorE2Ok(param
   this._0 = param0;
 }
 _M0DTPC16result6ResultGsRP38username5mbtpp6parser10ParseErrorE2Ok.prototype.$tag = 1;
+function _M0DTP38username5mbtpp6parser3Pat4PVar(param0, param1) {
+  this._0 = param0;
+  this._1 = param1;
+}
+_M0DTP38username5mbtpp6parser3Pat4PVar.prototype.$tag = 0;
+function _M0DTP38username5mbtpp6parser3Pat5PWild(param0) {
+  this._0 = param0;
+}
+_M0DTP38username5mbtpp6parser3Pat5PWild.prototype.$tag = 1;
+function _M0DTP38username5mbtpp6parser3Pat4PCon(param0, param1, param2, param3) {
+  this._0 = param0;
+  this._1 = param1;
+  this._2 = param2;
+  this._3 = param3;
+}
+_M0DTP38username5mbtpp6parser3Pat4PCon.prototype.$tag = 2;
+function _M0DTP38username5mbtpp6parser3Pat4PLit(param0, param1) {
+  this._0 = param0;
+  this._1 = param1;
+}
+_M0DTP38username5mbtpp6parser3Pat4PLit.prototype.$tag = 3;
+function _M0DTP38username5mbtpp6parser3Pat6PTuple(param0, param1) {
+  this._0 = param0;
+  this._1 = param1;
+}
+_M0DTP38username5mbtpp6parser3Pat6PTuple.prototype.$tag = 4;
+function _M0DTP38username5mbtpp6parser3Pat3POr(param0, param1, param2) {
+  this._0 = param0;
+  this._1 = param1;
+  this._2 = param2;
+}
+_M0DTP38username5mbtpp6parser3Pat3POr.prototype.$tag = 5;
+function _M0DTP38username5mbtpp6parser3Pat3PAs(param0, param1, param2) {
+  this._0 = param0;
+  this._1 = param1;
+  this._2 = param2;
+}
+_M0DTP38username5mbtpp6parser3Pat3PAs.prototype.$tag = 6;
+function _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE3Err(param0) {
+  this._0 = param0;
+}
+_M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE3Err.prototype.$tag = 0;
+function _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(param0) {
+  this._0 = param0;
+}
+_M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok.prototype.$tag = 1;
 function _M0TP38username5mbtpp6parser6Binder(param0, param1, param2, param3) {
   this.pos = param0;
   this.name = param1;
@@ -1147,71 +1231,11 @@ function _M0DTP38username5mbtpp6parser7StrPart6SPExpr(param0, param1, param2) {
   this._2 = param2;
 }
 _M0DTP38username5mbtpp6parser7StrPart6SPExpr.prototype.$tag = 1;
-function _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE3Err(param0) {
-  this._0 = param0;
-}
-_M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE3Err.prototype.$tag = 0;
-function _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(param0) {
-  this._0 = param0;
-}
-_M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok.prototype.$tag = 1;
-function _M0DTP38username5mbtpp6parser3Pat4PVar(param0, param1) {
-  this._0 = param0;
-  this._1 = param1;
-}
-_M0DTP38username5mbtpp6parser3Pat4PVar.prototype.$tag = 0;
-function _M0DTP38username5mbtpp6parser3Pat5PWild(param0) {
-  this._0 = param0;
-}
-_M0DTP38username5mbtpp6parser3Pat5PWild.prototype.$tag = 1;
-function _M0DTP38username5mbtpp6parser3Pat4PCon(param0, param1, param2, param3) {
-  this._0 = param0;
-  this._1 = param1;
-  this._2 = param2;
-  this._3 = param3;
-}
-_M0DTP38username5mbtpp6parser3Pat4PCon.prototype.$tag = 2;
-function _M0DTP38username5mbtpp6parser3Pat4PLit(param0, param1) {
-  this._0 = param0;
-  this._1 = param1;
-}
-_M0DTP38username5mbtpp6parser3Pat4PLit.prototype.$tag = 3;
-function _M0DTP38username5mbtpp6parser3Pat6PTuple(param0, param1) {
-  this._0 = param0;
-  this._1 = param1;
-}
-_M0DTP38username5mbtpp6parser3Pat6PTuple.prototype.$tag = 4;
-function _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4None() {}
-_M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4None.prototype.$tag = 0;
-const _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4None__ = new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4None();
-function _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4Some(param0) {
-  this._0 = param0;
-}
-_M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4Some.prototype.$tag = 1;
-function _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser4ExprERP38username5mbtpp6parser10ParseErrorE3Err(param0) {
-  this._0 = param0;
-}
-_M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser4ExprERP38username5mbtpp6parser10ParseErrorE3Err.prototype.$tag = 0;
-function _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser4ExprERP38username5mbtpp6parser10ParseErrorE2Ok(param0) {
-  this._0 = param0;
-}
-_M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser4ExprERP38username5mbtpp6parser10ParseErrorE2Ok.prototype.$tag = 1;
-function _M0DTP38username5mbtpp6parser10InterpPart4IStr(param0) {
-  this._0 = param0;
-}
-_M0DTP38username5mbtpp6parser10InterpPart4IStr.prototype.$tag = 0;
-function _M0DTP38username5mbtpp6parser10InterpPart5IExpr(param0) {
-  this._0 = param0;
-}
-_M0DTP38username5mbtpp6parser10InterpPart5IExpr.prototype.$tag = 1;
-function _M0TP38username5mbtpp6parser6Parser(param0, param1) {
-  this.toks = param0;
-  this.i = param1;
-}
-function _M0TP38username5mbtpp6parser3Arm(param0, param1, param2) {
+function _M0TP38username5mbtpp6parser3Arm(param0, param1, param2, param3) {
   this.pos = param0;
   this.pat = param1;
-  this.rhs = param2;
+  this.cond = param2;
+  this.rhs = param3;
 }
 function _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser3ArmERP38username5mbtpp6parser10ParseErrorE3Err(param0) {
   this._0 = param0;
@@ -1287,6 +1311,12 @@ function _M0DTP38username5mbtpp6parser4Stmt5SExpr(param0, param1) {
   this._1 = param1;
 }
 _M0DTP38username5mbtpp6parser4Stmt5SExpr.prototype.$tag = 8;
+function _M0DTP38username5mbtpp6parser4Stmt6SGuard(param0, param1, param2) {
+  this._0 = param0;
+  this._1 = param1;
+  this._2 = param2;
+}
+_M0DTP38username5mbtpp6parser4Stmt6SGuard.prototype.$tag = 9;
 function _M0DTP38username5mbtpp6parser6FnBody8BodyExpr(param0) {
   this._0 = param0;
 }
@@ -1321,11 +1351,46 @@ function _M0DTPC16result6ResultGORP38username5mbtpp6parser4ExprRP38username5mbtp
   this._0 = param0;
 }
 _M0DTPC16result6ResultGORP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok.prototype.$tag = 1;
+function _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser4ExprERP38username5mbtpp6parser10ParseErrorE3Err(param0) {
+  this._0 = param0;
+}
+_M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser4ExprERP38username5mbtpp6parser10ParseErrorE3Err.prototype.$tag = 0;
+function _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser4ExprERP38username5mbtpp6parser10ParseErrorE2Ok(param0) {
+  this._0 = param0;
+}
+_M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser4ExprERP38username5mbtpp6parser10ParseErrorE2Ok.prototype.$tag = 1;
+function _M0DTP38username5mbtpp6parser10InterpPart4IStr(param0) {
+  this._0 = param0;
+}
+_M0DTP38username5mbtpp6parser10InterpPart4IStr.prototype.$tag = 0;
+function _M0DTP38username5mbtpp6parser10InterpPart5IExpr(param0) {
+  this._0 = param0;
+}
+_M0DTP38username5mbtpp6parser10InterpPart5IExpr.prototype.$tag = 1;
+function _M0TP38username5mbtpp6parser6Parser(param0, param1) {
+  this.toks = param0;
+  this.i = param1;
+}
 function _M0TP38username5mbtpp6parser8MatchRet(param0, param1, param2) {
   this.as_name = param0;
   this.in_ty = param1;
   this.ret = param2;
 }
+function _M0DTPC16result6ResultGORPB5ArrayGRP38username5mbtpp6parser3ArmERP38username5mbtpp6parser10ParseErrorE3Err(param0) {
+  this._0 = param0;
+}
+_M0DTPC16result6ResultGORPB5ArrayGRP38username5mbtpp6parser3ArmERP38username5mbtpp6parser10ParseErrorE3Err.prototype.$tag = 0;
+function _M0DTPC16result6ResultGORPB5ArrayGRP38username5mbtpp6parser3ArmERP38username5mbtpp6parser10ParseErrorE2Ok(param0) {
+  this._0 = param0;
+}
+_M0DTPC16result6ResultGORPB5ArrayGRP38username5mbtpp6parser3ArmERP38username5mbtpp6parser10ParseErrorE2Ok.prototype.$tag = 1;
+function _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3ArmEE4None() {}
+_M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3ArmEE4None.prototype.$tag = 0;
+const _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3ArmEE4None__ = new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3ArmEE4None();
+function _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3ArmEE4Some(param0) {
+  this._0 = param0;
+}
+_M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3ArmEE4Some.prototype.$tag = 1;
 function _M0DTP38username5mbtpp6parser6Tactic7TIntros(param0, param1) {
   this._0 = param0;
   this._1 = param1;
@@ -1520,9 +1585,10 @@ function _M0DTPC16result6ResultGRP38username5mbtpp2tt6ClauseRP38username5mbtpp2t
   this._0 = param0;
 }
 _M0DTPC16result6ResultGRP38username5mbtpp2tt6ClauseRP38username5mbtpp2tt10UnifyErrorE2Ok.prototype.$tag = 1;
-function _M0TP38username5mbtpp2tt6Clause(param0, param1) {
+function _M0TP38username5mbtpp2tt6Clause(param0, param1, param2) {
   this.pats = param0;
-  this.body = param1;
+  this.cond = param1;
+  this.body = param2;
 }
 function _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp2tt6ClauseERP38username5mbtpp2tt10UnifyErrorE3Err(param0) {
   this._0 = param0;
@@ -1599,14 +1665,6 @@ function _M0DTPC16result6ResultGRP38username5mbtpp2tt6GEntryRP38username5mbtpp2t
   this._0 = param0;
 }
 _M0DTPC16result6ResultGRP38username5mbtpp2tt6GEntryRP38username5mbtpp2tt9ElabErrorE2Ok.prototype.$tag = 1;
-function _M0DTPC16result6ResultGORP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE3Err(param0) {
-  this._0 = param0;
-}
-_M0DTPC16result6ResultGORP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE3Err.prototype.$tag = 0;
-function _M0DTPC16result6ResultGORP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(param0) {
-  this._0 = param0;
-}
-_M0DTPC16result6ResultGORP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok.prototype.$tag = 1;
 function _M0TP38username5mbtpp2tt11PendingInst(param0, param1, param2) {
   this.cxt = param0;
   this.meta = param1;
@@ -1620,7 +1678,7 @@ function _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3V
   this._0 = param0;
 }
 _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok.prototype.$tag = 1;
-function _M0TP38username5mbtpp2tt3Cxt(param0, param1, param2, param3, param4, param5, param6, param7, param8, param9) {
+function _M0TP38username5mbtpp2tt3Cxt(param0, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10) {
   this.env = param0;
   this.names = param1;
   this.types = param2;
@@ -1629,8 +1687,9 @@ function _M0TP38username5mbtpp2tt3Cxt(param0, param1, param2, param3, param4, pa
   this.lvl = param5;
   this.pos = param6;
   this.can_raise = param7;
-  this.ret_ty = param8;
-  this.in_loop = param9;
+  this.can_async = param8;
+  this.ret_ty = param9;
+  this.in_loop = param10;
 }
 function _M0DTP38username5mbtpp2tt3Arg2AE(param0) {
   this._0 = param0;
@@ -1718,6 +1777,30 @@ function _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp2tt3CxtEE4Some(param
   this._0 = param0;
 }
 _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp2tt3CxtEE4Some.prototype.$tag = 1;
+function _M0DTPC16result6ResultGRPB5ArrayGURP38username5mbtpp6parser3PatRPB5ArrayGUssEEEERP38username5mbtpp2tt9ElabErrorE3Err(param0) {
+  this._0 = param0;
+}
+_M0DTPC16result6ResultGRPB5ArrayGURP38username5mbtpp6parser3PatRPB5ArrayGUssEEEERP38username5mbtpp2tt9ElabErrorE3Err.prototype.$tag = 0;
+function _M0DTPC16result6ResultGRPB5ArrayGURP38username5mbtpp6parser3PatRPB5ArrayGUssEEEERP38username5mbtpp2tt9ElabErrorE2Ok(param0) {
+  this._0 = param0;
+}
+_M0DTPC16result6ResultGRPB5ArrayGURP38username5mbtpp6parser3PatRPB5ArrayGUssEEEERP38username5mbtpp2tt9ElabErrorE2Ok.prototype.$tag = 1;
+function _M0DTPC16result6ResultGRPB5ArrayGURPB5ArrayGRP38username5mbtpp6parser3PatERPB5ArrayGUssEEEERP38username5mbtpp2tt9ElabErrorE3Err(param0) {
+  this._0 = param0;
+}
+_M0DTPC16result6ResultGRPB5ArrayGURPB5ArrayGRP38username5mbtpp6parser3PatERPB5ArrayGUssEEEERP38username5mbtpp2tt9ElabErrorE3Err.prototype.$tag = 0;
+function _M0DTPC16result6ResultGRPB5ArrayGURPB5ArrayGRP38username5mbtpp6parser3PatERPB5ArrayGUssEEEERP38username5mbtpp2tt9ElabErrorE2Ok(param0) {
+  this._0 = param0;
+}
+_M0DTPC16result6ResultGRPB5ArrayGURPB5ArrayGRP38username5mbtpp6parser3PatERPB5ArrayGUssEEEERP38username5mbtpp2tt9ElabErrorE2Ok.prototype.$tag = 1;
+function _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser3ArmERP38username5mbtpp2tt9ElabErrorE3Err(param0) {
+  this._0 = param0;
+}
+_M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser3ArmERP38username5mbtpp2tt9ElabErrorE3Err.prototype.$tag = 0;
+function _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser3ArmERP38username5mbtpp2tt9ElabErrorE2Ok(param0) {
+  this._0 = param0;
+}
+_M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser3ArmERP38username5mbtpp2tt9ElabErrorE2Ok.prototype.$tag = 1;
 function _M0TP38username5mbtpp2tt6GEntry(param0, param1, param2, param3) {
   this.name = param0;
   this.ty = param1;
@@ -1815,6 +1898,9 @@ function _M0DTPC16result6ResultGRPB5ArrayGURP38username5mbtpp2tt2TmRP38username5
   this._0 = param0;
 }
 _M0DTPC16result6ResultGRPB5ArrayGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValEERP38username5mbtpp2tt9ElabErrorE2Ok.prototype.$tag = 1;
+function _M0TPB8MutLocalGRP38username5mbtpp2tt3CxtE(param0) {
+  this.val = param0;
+}
 function _M0TP38username5mbtpp2tt7ConInfo(param0, param1, param2, param3, param4) {
   this.name = param0;
   this.data = param1;
@@ -2044,7 +2130,7 @@ function _M0TPB9ArrayViewGUsRPB5ArrayGbEEE(param0, param1, param2) {
   this.start = param1;
   this.end = param2;
 }
-function _M0TP38username5mbtpp7codegen3Gen(param0, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12, param13, param14, param15, param16, param17, param18, param19, param20, param21, param22, param23) {
+function _M0TP38username5mbtpp7codegen3Gen(param0, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12, param13, param14, param15, param16, param17, param18, param19, param20, param21, param22, param23, param24, param25) {
   this.ids = param0;
   this.todo = param1;
   this.files = param2;
@@ -2069,6 +2155,8 @@ function _M0TP38username5mbtpp7codegen3Gen(param0, param1, param2, param3, param
   this.culprit = param21;
   this.ctors = param22;
   this.ctor_order = param23;
+  this.cur_global = param24;
+  this.async_misuse = param25;
 }
 function _M0TPB9ArrayViewGUsRPB13StringBuilderEE(param0, param1, param2) {
   this.buf = param0;
@@ -2195,22 +2283,22 @@ function _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp2tt6ImportEE4Some(pa
 }
 _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp2tt6ImportEE4Some.prototype.$tag = 1;
 const _M0FP092moonbitlang_2fcore_2fbuiltin_2fStringBuilder_24as_24_40moonbitlang_2fcore_2fbuiltin_2eLogger = { method_0: _M0IPB13StringBuilderPB6Logger13write__string, method_1: _M0IP016_24default__implPB6Logger16write__substringGRPB13StringBuilderE, method_2: _M0IPB13StringBuilderPB6Logger11write__view, method_3: _M0IPB13StringBuilderPB6Logger11write__char, method_4: _M0IP016_24default__implPB6Logger28write__string__interpolationGRPB13StringBuilderE, method_5: _M0IP016_24default__implPB6Logger5writeGRPB13StringBuilderE };
-const _M0MPB4Iter4nextN6constrS247GRP38username5mbtpp2tt2TmE = 0;
-const _M0MPB4Iter4nextN6constrS248GRP38username5mbtpp2tt2TmE = 0;
-const _M0MPB4Iter4nextN6constrS343GcE = 0;
-const _M0MPB4Iter4nextN6constrS344GcE = 0;
-const _M0MPB4Iter4nextN6constrS375GORP38username5mbtpp7codegen3NTyE = 0;
-const _M0MPB4Iter4nextN6constrS376GORP38username5mbtpp7codegen3NTyE = 0;
-const _M0MPB4Iter4nextN6constrS383GRP38username5mbtpp7codegen6BinderE = 0;
-const _M0MPB4Iter4nextN6constrS384GRP38username5mbtpp7codegen6BinderE = 0;
-const _M0MPB4Iter4nextN6constrS415GbE = 0;
-const _M0MPB4Iter4nextN6constrS416GbE = 0;
-const _M0MPB4Iter3newN6constrS481GRP38username5mbtpp2tt2TmE = 0;
-const _M0MPB4Iter3newN6constrS553GcE = 0;
-const _M0MPB4Iter3newN6constrS577GORP38username5mbtpp7codegen3NTyE = 0;
-const _M0MPB4Iter3newN6constrS583GRP38username5mbtpp7codegen6BinderE = 0;
-const _M0MPB4Iter3newN6constrS607GbE = 0;
-const _M0FP38username5mbtpp6parser8keywords = ["fn", "let", "mut", "if", "else", "match", "enum", "struct", "trait", "impl", "for", "in", "with", "while", "return", "break", "continue", "raise", "try", "catch", "true", "false", "Type", "Prop", "forall", "lemma", "proof", "monad", "as", "suberror", "derive", "pub", "priv", "noraise", "loop"];
+const _M0MPB4Iter4nextN6constrS300GRP38username5mbtpp2tt2TmE = 0;
+const _M0MPB4Iter4nextN6constrS301GRP38username5mbtpp2tt2TmE = 0;
+const _M0MPB4Iter4nextN6constrS396GcE = 0;
+const _M0MPB4Iter4nextN6constrS397GcE = 0;
+const _M0MPB4Iter4nextN6constrS428GORP38username5mbtpp7codegen3NTyE = 0;
+const _M0MPB4Iter4nextN6constrS429GORP38username5mbtpp7codegen3NTyE = 0;
+const _M0MPB4Iter4nextN6constrS436GRP38username5mbtpp7codegen6BinderE = 0;
+const _M0MPB4Iter4nextN6constrS437GRP38username5mbtpp7codegen6BinderE = 0;
+const _M0MPB4Iter4nextN6constrS468GbE = 0;
+const _M0MPB4Iter4nextN6constrS469GbE = 0;
+const _M0MPB4Iter3newN6constrS534GRP38username5mbtpp2tt2TmE = 0;
+const _M0MPB4Iter3newN6constrS606GcE = 0;
+const _M0MPB4Iter3newN6constrS630GORP38username5mbtpp7codegen3NTyE = 0;
+const _M0MPB4Iter3newN6constrS636GRP38username5mbtpp7codegen6BinderE = 0;
+const _M0MPB4Iter3newN6constrS660GbE = 0;
+const _M0FP38username5mbtpp6parser8keywords = ["fn", "let", "mut", "if", "else", "match", "enum", "struct", "trait", "impl", "for", "in", "with", "while", "return", "break", "continue", "raise", "try", "catch", "true", "false", "Type", "Prop", "forall", "lemma", "proof", "monad", "as", "suberror", "derive", "pub", "priv", "noraise", "loop", "is", "guard", "async"];
 const _M0FP38username5mbtpp6parser7symbols = ["===", "..<", "..=", "::", "->", "=>", "==", "!=", "<=", ">=", "&&", "||", "|>", "<<", ">>", "<-", "+=", "-=", "*=", "/=", "..", "#", "(", ")", "[", "]", "{", "}", ",", ";", ":", ".", "=", "<", ">", "+", "-", "*", "/", "%", "!", "|", "_", "~", "?", "@", "&", "^"];
 const _M0FP38username5mbtpp2tt5metas = [];
 const _M0FP38username5mbtpp2tt20unfolded__too__early = [];
@@ -2227,68 +2315,68 @@ const _M0FP38username5mbtpp2tt14mbt__derivable = ["ToJson", "FromJson", "Debug"]
 const _M0FP38username5mbtpp2tt19external__instances = [];
 const _M0FP38username5mbtpp2tt15import__skipped = [];
 const _M0FP38username5mbtpp2tt11last__error = [];
-const _M0FP38username5mbtpp2tt6if__tmN6constrS8880 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
-const _M0FP38username5mbtpp2tt6if__tmN6constrS8881 = new _M0DTP38username5mbtpp2tt4CPat5CPLit(_M0FP38username5mbtpp2tt6if__tmN6constrS8880);
-const _M0FP38username5mbtpp2tt7nat__tmN6constrS9052 = new _M0DTP38username5mbtpp2tt2Tm6Global("Nat::Z");
-const _M0FP38username5mbtpp2tt7nat__tmN6constrS9053 = new _M0DTP38username5mbtpp2tt2Tm6Global("Nat::S");
+const _M0FP38username5mbtpp2tt6if__tmN6constrS9424 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
+const _M0FP38username5mbtpp2tt6if__tmN6constrS9425 = new _M0DTP38username5mbtpp2tt4CPat5CPLit(_M0FP38username5mbtpp2tt6if__tmN6constrS9424);
+const _M0FP38username5mbtpp2tt7nat__tmN6constrS9689 = new _M0DTP38username5mbtpp2tt2Tm6Global("Nat::Z");
+const _M0FP38username5mbtpp2tt7nat__tmN6constrS9690 = new _M0DTP38username5mbtpp2tt2Tm6Global("Nat::S");
 const _M0FP38username5mbtpp7codegen13imports__file = "mbtpp_imports.mbt";
 const _M0FP38username5mbtpp7codegen13prelude__file = "mbtpp_prelude.mbt";
-const _M0FP38username5mbtpp7codegen12runtime__src = "// ---- MoonBit++ runtime -------------------------------------------------\n\n/// Values. Each generated file adds the constructors of its datatypes\n/// (`extenum Value += { K_Exp_Add(Value, Value) }`) and registers a\n/// decoder for them in `con_decoders`.\nextenum Value {\n  VInt(Int)\n  VDouble(Double)\n  VStr(String)\n  VChar(Char)\n  VBool(Bool)\n  VUnit\n  VFun((Value) -> Value raise)\n  VArr(Array[Value])\n  VType\n  VForeign(Foreign)\n  /// A constructor that is not of the program (e.g. a MoonBit error).\n  VDyn(String, Array[Value])\n}\n\n/// Values of foreign MoonBit types (extended by mbtpp_imports.mbt).\nextenum Foreign {\n  FNone\n}\n\n/// The name and fields of a constructor value, by generated file.\nlet con_decoders : Array[(Value) -> (String, Array[Value])?] = []\n\nfn con_decode(v : Value) -> (String, Array[Value])? {\n  match v {\n    VDyn(c, xs) => return Some((c, xs))\n    _ => ()\n  }\n  for d in con_decoders {\n    match d(v) {\n      Some(x) => return Some(x)\n      None => ()\n    }\n  }\n  None\n}\n\n/// The constructor of a value, if it is one.\nfn con_name(v : Value) -> String? {\n  con_decode(v).map(x => x.0)\n}\n\n/// The fields of a constructor value.\nfn con_fields(v : Value) -> Array[Value] {\n  match con_decode(v) {\n    Some((_, xs)) => xs\n    None => []\n  }\n}\n\nsuberror Ctl {\n  CRaise(Value)\n  CReturn(Value)\n  CBreak\n  CContinue\n  CAbort(String)\n}\n\nenum Pat {\n  PAny\n  PCon(String, Array[Pat])\n  PLit(Value)\n}\n\nfn[T] rt_fail(msg : String) -> T raise {\n  raise CAbort(msg)\n}\n\nfn rt_break() -> Value raise {\n  raise CBreak\n}\n\nfn rt_continue() -> Value raise {\n  raise CContinue\n}\n\nfn rt_return(v : Value) -> Value raise {\n  raise CReturn(v)\n}\n\nfn rt_raise(v : Value) -> Value raise {\n  raise CRaise(v)\n}\n\nfn int_div(a : Int, b : Int) -> Int raise {\n  if b == 0 {\n    rt_fail(\"division by zero\")\n  } else {\n    a / b\n  }\n}\n\nfn int_mod(a : Int, b : Int) -> Int raise {\n  if b == 0 {\n    rt_fail(\"division by zero\")\n  } else {\n    a % b\n  }\n}\n\nfn apply(f : Value, a : Value) -> Value raise {\n  match f {\n    VFun(g) => g(a)\n    VType => VType\n    _ => rt_fail(\"cannot apply \" + show_value(f))\n  }\n}\n\nfn truthy(v : Value) -> Bool raise {\n  match v {\n    VBool(b) => b\n    _ => rt_fail(\"expected a boolean\")\n  }\n}\n\nfn value_eq(a : Value, b : Value) -> Bool {\n  match (a, b) {\n    (VInt(x), VInt(y)) => x == y\n    (VDouble(x), VDouble(y)) => x == y\n    (VStr(x), VStr(y)) => x == y\n    (VChar(x), VChar(y)) => x == y\n    (VBool(x), VBool(y)) => x == y\n    (VUnit, VUnit) => true\n    (VArr(xs), VArr(ys)) => {\n      if xs.length() != ys.length() {\n        return false\n      }\n      for k = 0; k < xs.length(); k = k + 1 {\n        if !value_eq(xs[k], ys[k]) {\n          return false\n        }\n      }\n      true\n    }\n    _ =>\n      match (con_name(a), con_name(b)) {\n        (Some(c), Some(d)) if c == d => {\n          let xs = con_fields(a)\n          let ys = con_fields(b)\n          if xs.length() != ys.length() {\n            return false\n          }\n          for k = 0; k < xs.length(); k = k + 1 {\n            if !value_eq(xs[k], ys[k]) {\n              return false\n            }\n          }\n          true\n        }\n        _ => false\n      }\n  }\n}\n\nfn match_pat(p : Pat, v : Value, out : Array[Value]) -> Bool {\n  out.push(v)\n  match p {\n    PAny => true\n    PCon(c, ps) =>\n      match con_name(v) {\n        Some(c2) if c2 == c && con_fields(v).length() == ps.length() => {\n          let args = con_fields(v)\n          for k = 0; k < ps.length(); k = k + 1 {\n            if !match_pat(ps[k], args[k], out) {\n              return false\n            }\n          }\n          true\n        }\n        _ => false\n      }\n    PLit(l) => value_eq(l, v)\n  }\n}\n\nfn match_pats(ps : Array[Pat], vs : Array[Value], out : Array[Value]) -> Bool {\n  out.clear()\n  for k = 0; k < ps.length(); k = k + 1 {\n    if !match_pat(ps[k], vs[k], out) {\n      return false\n    }\n  }\n  true\n}\n\nfn short_name(c : String) -> String {\n  match c.rev_find(\"::\") {\n    Some(i) => c.unsafe_substring(start=i + 2, end=c.length())\n    None => c\n  }\n}\n\nfn value_id(v : Value) -> Value {\n  v\n}\n\nfn value_id_raise(v : Value) -> Value raise {\n  v\n}\n\nfn show_value(v : Value) -> String {\n  match v {\n    VInt(n) => n.to_string()\n    VDouble(d) => d.to_string()\n    VStr(s) => s.escape()\n    VChar(c) => c.to_string().escape()\n    VBool(b) => b.to_string()\n    VUnit => \"()\"\n    VArr(xs) => \"[\" + xs.map(show_value).join(\", \") + \"]\"\n    VFun(_) => \"<function>\"\n    VType => \"<type>\"\n    VForeign(_) => \"<foreign>\"\n    _ =>\n      match (con_name(v), con_fields(v)) {\n        (Some(c), []) => short_name(c)\n        (Some(c), args) =>\n          short_name(c) + \"(\" + args.map(show_value).join(\", \") + \")\"\n        (None, _) => \"<value>\"\n      }\n  }\n}\n\nimpl Show for Value with output(self, logger) {\n  logger.write_string(show_value(self))\n}\n\nimpl Eq for Value with equal(self, other) {\n  value_eq(self, other)\n}\n\nimpl Compare for Value with compare(self, other) {\n  match (self, other) {\n    (VInt(x), VInt(y)) => x.compare(y)\n    (VDouble(x), VDouble(y)) => x.compare(y)\n    (VStr(x), VStr(y)) => x.compare(y)\n    (VChar(x), VChar(y)) => x.compare(y)\n    (VBool(x), VBool(y)) => x.compare(y)\n    _ => show_value(self).compare(show_value(other))\n  }\n}\n\nimpl Hash for Value with hash_combine(self, hasher) {\n  hasher.combine_string(show_value(self))\n}\n\nlet out_buf : StringBuilder = StringBuilder::new()\n\nfn rt_write(s : String) -> Unit {\n  for c in s {\n    if c == '\\n' {\n      println(out_buf.to_string())\n      out_buf.reset()\n    } else {\n      out_buf.write_char(c)\n    }\n  }\n}\n\nfn rt_flush() -> Unit {\n  if out_buf.to_string() != \"\" {\n    println(out_buf.to_string())\n    out_buf.reset()\n  }\n}\n\nfn as_int(v : Value) -> Int raise {\n  match v {\n    VInt(n) => n\n    _ => rt_fail(\"expected an Int, got \" + show_value(v))\n  }\n}\n\nfn as_double(v : Value) -> Double raise {\n  match v {\n    VDouble(d) => d\n    _ => rt_fail(\"expected a Double, got \" + show_value(v))\n  }\n}\n\nfn as_str(v : Value) -> String raise {\n  match v {\n    VStr(s) => s\n    _ => rt_fail(\"expected a String, got \" + show_value(v))\n  }\n}\n\nfn as_char(v : Value) -> Char raise {\n  match v {\n    VChar(c) => c\n    _ => rt_fail(\"expected a Char, got \" + show_value(v))\n  }\n}\n\nfn as_bool(v : Value) -> Bool raise {\n  match v {\n    VBool(b) => b\n    _ => rt_fail(\"expected a Bool, got \" + show_value(v))\n  }\n}\n\nfn as_arr(v : Value) -> Array[Value] raise {\n  match v {\n    VArr(xs) => xs\n    _ => rt_fail(\"expected an Array, got \" + show_value(v))\n  }\n}\n\nfn as_unit(v : Value) -> Unit raise {\n  match v {\n    VUnit => ()\n    _ => rt_fail(\"expected (), got \" + show_value(v))\n  }\n}\n\nfn prim(name : String, args : Array[Value]) -> Value raise {\n  match (name, args) {\n    (\"%int_add\", [VInt(a), VInt(b)]) => VInt(a + b)\n    (\"%int_sub\", [VInt(a), VInt(b)]) => VInt(a - b)\n    (\"%int_mul\", [VInt(a), VInt(b)]) => VInt(a * b)\n    (\"%int_land\", [VInt(a), VInt(b)]) => VInt(a & b)\n    (\"%int_lor\", [VInt(a), VInt(b)]) => VInt(a | b)\n    (\"%int_lxor\", [VInt(a), VInt(b)]) => VInt(a ^ b)\n    (\"%int_shl\", [VInt(a), VInt(b)]) => VInt(a << b)\n    (\"%int_shr\", [VInt(a), VInt(b)]) => VInt(a >> b)\n    (\"%int_div\", [VInt(_), VInt(0)]) | (\"%int_mod\", [VInt(_), VInt(0)]) =>\n      rt_fail(\"division by zero\")\n    (\"%int_div\", [VInt(a), VInt(b)]) => VInt(a / b)\n    (\"%int_mod\", [VInt(a), VInt(b)]) => VInt(a % b)\n    (\"%int_neg\", [VInt(a)]) => VInt(-a)\n    (\"%int_eq\", [VInt(a), VInt(b)]) => VBool(a == b)\n    (\"%int_lt\", [VInt(a), VInt(b)]) => VBool(a < b)\n    (\"%int_le\", [VInt(a), VInt(b)]) => VBool(a <= b)\n    (\"%int_gt\", [VInt(a), VInt(b)]) => VBool(a > b)\n    (\"%int_ge\", [VInt(a), VInt(b)]) => VBool(a >= b)\n    (\"%int_compare\", [VInt(a), VInt(b)]) => VInt(a.compare(b))\n    (\"%int_to_string\", [VInt(a)]) => VStr(a.to_string())\n    (\"%int_to_char\", [VInt(a)]) =>\n      match a.to_char() {\n        Some(c) => VChar(c)\n        None => rt_fail(\"invalid character code\")\n      }\n    (\"%int_to_double\", [VInt(a)]) => VDouble(a.to_double())\n    (\"%str_add\", [VStr(a), VStr(b)]) => VStr(a + b)\n    (\"%str_eq\", [VStr(a), VStr(b)]) => VBool(a == b)\n    (\"%str_compare\", [VStr(a), VStr(b)]) => VInt(a.compare(b))\n    (\"%str_length\", [VStr(a)]) => VInt(a.length())\n    (\"%str_get\", [VStr(a), VInt(i)]) =>\n      match a.get_char(i) {\n        Some(c) => VChar(c)\n        None => rt_fail(\"index out of bounds\")\n      }\n    (\"%str_substring\", [VStr(a), VInt(i), VInt(j)]) =>\n      if i >= 0 && i <= j && j <= a.length() {\n        VStr(a.unsafe_substring(start=i, end=j))\n      } else {\n        rt_fail(\"index out of bounds\")\n      }\n    (\"%bool_eq\", [VBool(a), VBool(b)]) => VBool(a == b)\n    (\"%bool_not\", [VBool(a)]) => VBool(!a)\n    (\"%bool_to_string\", [VBool(a)]) => VStr(a.to_string())\n    (\"%char_eq\", [VChar(a), VChar(b)]) => VBool(a == b)\n    (\"%char_compare\", [VChar(a), VChar(b)]) => VInt(a.compare(b))\n    (\"%char_to_int\", [VChar(a)]) => VInt(a.to_int())\n    (\"%char_to_string\", [VChar(a)]) => VStr(a.to_string())\n    (\"%unit_to_string\", [VUnit]) => VStr(\"()\")\n    (\"%double_add\", [VDouble(a), VDouble(b)]) => VDouble(a + b)\n    (\"%double_sub\", [VDouble(a), VDouble(b)]) => VDouble(a - b)\n    (\"%double_mul\", [VDouble(a), VDouble(b)]) => VDouble(a * b)\n    (\"%double_div\", [VDouble(a), VDouble(b)]) => VDouble(a / b)\n    (\"%double_neg\", [VDouble(a)]) => VDouble(-a)\n    (\"%double_eq\", [VDouble(a), VDouble(b)]) => VBool(a == b)\n    (\"%double_lt\", [VDouble(a), VDouble(b)]) => VBool(a < b)\n    (\"%double_le\", [VDouble(a), VDouble(b)]) => VBool(a <= b)\n    (\"%double_gt\", [VDouble(a), VDouble(b)]) => VBool(a > b)\n    (\"%double_ge\", [VDouble(a), VDouble(b)]) => VBool(a >= b)\n    (\"%double_compare\", [VDouble(a), VDouble(b)]) => VInt(a.compare(b))\n    (\"%double_to_string\", [VDouble(a)]) => VStr(a.to_string())\n    (\"%double_to_int\", [VDouble(a)]) => VInt(a.to_int())\n    (\"%print\", [VStr(s)]) => {\n      rt_write(s)\n      VUnit\n    }\n    (\"%panic\", _) => rt_fail(\"panic\")\n    (\"%abort\", [VStr(s)]) => rt_fail(s)\n    (\"%error_to_string\", [e]) => VStr(show_value(e))\n    (\"%array_make\", [VInt(n), x]) => VArr(Array::make(n, x))\n    (\"%array_new\", _) => VArr([])\n    (\"%array_length\", [VArr(xs)]) => VInt(xs.length())\n    (\"%array_get\", [VArr(xs), VInt(i)]) =>\n      if i >= 0 && i < xs.length() {\n        xs[i]\n      } else {\n        rt_fail(\"index out of bounds: \" + i.to_string())\n      }\n    (\"%array_set\", [VArr(xs), VInt(i), x]) =>\n      if i >= 0 && i < xs.length() {\n        xs[i] = x\n        VUnit\n      } else {\n        rt_fail(\"index out of bounds: \" + i.to_string())\n      }\n    (\"%array_push\", [VArr(xs), x]) => {\n      xs.push(x)\n      VUnit\n    }\n    _ => rt_fail(\"primitive \" + name + \" failed\")\n  }\n}\n\n/// A foreign MoonBit error, as a MoonBit++ value.\nfn foreign_error(e : Error) -> Value {\n  VDyn(\"MoonBitError\", [VStr(e.to_string())])\n}\n\nfn run_main(f : () -> Value raise) -> Unit {\n  try {\n    ignore(f())\n  } catch {\n    CReturn(_) => ()\n    CRaise(e) => {\n      rt_flush()\n      println(\"uncaught error: \" + show_value(e))\n    }\n    CAbort(m) => {\n      rt_flush()\n      println(\"runtime error: \" + m)\n    }\n    e => {\n      rt_flush()\n      println(\"runtime error: \" + e.to_string())\n    }\n  }\n  rt_flush()\n}\n";
+const _M0FP38username5mbtpp7codegen12runtime__src = "// ---- MoonBit++ runtime -------------------------------------------------\n\n/// Values. Each generated file adds the constructors of its datatypes\n/// (`extenum Value += { K_Exp_Add(Value, Value) }`) and registers a\n/// decoder for them in `con_decoders`.\nextenum Value {\n  VInt(Int)\n  VDouble(Double)\n  VStr(String)\n  VChar(Char)\n  VBool(Bool)\n  VUnit\n  VFun((Value) -> Value raise)\n  VArr(Array[Value])\n  VType\n  VForeign(Foreign)\n  /// A constructor that is not of the program (e.g. a MoonBit error).\n  VDyn(String, Array[Value])\n}\n\n/// Values of foreign MoonBit types (extended by mbtpp_imports.mbt).\nextenum Foreign {\n  FNone\n}\n\n/// The name and fields of a constructor value, by generated file.\nlet con_decoders : Array[(Value) -> (String, Array[Value])?] = []\n\nfn con_decode(v : Value) -> (String, Array[Value])? {\n  match v {\n    VDyn(c, xs) => return Some((c, xs))\n    _ => ()\n  }\n  for d in con_decoders {\n    match d(v) {\n      Some(x) => return Some(x)\n      None => ()\n    }\n  }\n  None\n}\n\n/// The constructor of a value, if it is one.\nfn con_name(v : Value) -> String? {\n  con_decode(v).map(x => x.0)\n}\n\n/// The fields of a constructor value.\nfn con_fields(v : Value) -> Array[Value] {\n  match con_decode(v) {\n    Some((_, xs)) => xs\n    None => []\n  }\n}\n\nsuberror Ctl {\n  CRaise(Value)\n  CReturn(Value)\n  CBreak\n  CContinue\n  CAbort(String)\n}\n\nenum Pat {\n  PAny\n  PCon(String, Array[Pat])\n  PLit(Value)\n}\n\nfn[T] rt_fail(msg : String) -> T raise {\n  raise CAbort(msg)\n}\n\nfn rt_break() -> Value raise {\n  raise CBreak\n}\n\nfn rt_continue() -> Value raise {\n  raise CContinue\n}\n\nfn rt_return(v : Value) -> Value raise {\n  raise CReturn(v)\n}\n\nfn rt_raise(v : Value) -> Value raise {\n  raise CRaise(v)\n}\n\nfn int_div(a : Int, b : Int) -> Int raise {\n  if b == 0 {\n    rt_fail(\"division by zero\")\n  } else {\n    a / b\n  }\n}\n\nfn int_mod(a : Int, b : Int) -> Int raise {\n  if b == 0 {\n    rt_fail(\"division by zero\")\n  } else {\n    a % b\n  }\n}\n\nfn apply(f : Value, a : Value) -> Value raise {\n  match f {\n    VFun(g) => g(a)\n    VType => VType\n    _ => rt_fail(\"cannot apply \" + show_value(f))\n  }\n}\n\nfn truthy(v : Value) -> Bool raise {\n  match v {\n    VBool(b) => b\n    _ => rt_fail(\"expected a boolean\")\n  }\n}\n\nfn value_eq(a : Value, b : Value) -> Bool {\n  match (a, b) {\n    (VInt(x), VInt(y)) => x == y\n    (VDouble(x), VDouble(y)) => x == y\n    (VStr(x), VStr(y)) => x == y\n    (VChar(x), VChar(y)) => x == y\n    (VBool(x), VBool(y)) => x == y\n    (VUnit, VUnit) => true\n    (VArr(xs), VArr(ys)) => {\n      if xs.length() != ys.length() {\n        return false\n      }\n      for k = 0; k < xs.length(); k = k + 1 {\n        if !value_eq(xs[k], ys[k]) {\n          return false\n        }\n      }\n      true\n    }\n    _ =>\n      match (con_name(a), con_name(b)) {\n        (Some(c), Some(d)) if c == d => {\n          let xs = con_fields(a)\n          let ys = con_fields(b)\n          if xs.length() != ys.length() {\n            return false\n          }\n          for k = 0; k < xs.length(); k = k + 1 {\n            if !value_eq(xs[k], ys[k]) {\n              return false\n            }\n          }\n          true\n        }\n        _ => false\n      }\n  }\n}\n\nfn match_pat(p : Pat, v : Value, out : Array[Value]) -> Bool {\n  out.push(v)\n  match p {\n    PAny => true\n    PCon(c, ps) =>\n      match con_name(v) {\n        Some(c2) if c2 == c && con_fields(v).length() == ps.length() => {\n          let args = con_fields(v)\n          for k = 0; k < ps.length(); k = k + 1 {\n            if !match_pat(ps[k], args[k], out) {\n              return false\n            }\n          }\n          true\n        }\n        _ => false\n      }\n    PLit(l) => value_eq(l, v)\n  }\n}\n\nfn match_pats(ps : Array[Pat], vs : Array[Value], out : Array[Value]) -> Bool {\n  out.clear()\n  for k = 0; k < ps.length(); k = k + 1 {\n    if !match_pat(ps[k], vs[k], out) {\n      return false\n    }\n  }\n  true\n}\n\nfn short_name(c : String) -> String {\n  match c.rev_find(\"::\") {\n    Some(i) => c.unsafe_substring(start=i + 2, end=c.length())\n    None => c\n  }\n}\n\nfn value_id(v : Value) -> Value {\n  v\n}\n\nfn value_id_raise(v : Value) -> Value raise {\n  v\n}\n\nfn show_value(v : Value) -> String {\n  match v {\n    VInt(n) => n.to_string()\n    VDouble(d) => d.to_string()\n    VStr(s) => s.escape()\n    VChar(c) => c.to_string().escape()\n    VBool(b) => b.to_string()\n    VUnit => \"()\"\n    VArr(xs) => \"[\" + xs.map(show_value).join(\", \") + \"]\"\n    VFun(_) => \"<function>\"\n    VType => \"<type>\"\n    VForeign(_) => \"<foreign>\"\n    _ =>\n      match (con_name(v), con_fields(v)) {\n        (Some(c), []) => short_name(c)\n        (Some(c), args) =>\n          short_name(c) + \"(\" + args.map(show_value).join(\", \") + \")\"\n        (None, _) => \"<value>\"\n      }\n  }\n}\n\nimpl Show for Value with output(self, logger) {\n  logger.write_string(show_value(self))\n}\n\nimpl Eq for Value with equal(self, other) {\n  value_eq(self, other)\n}\n\nimpl Compare for Value with compare(self, other) {\n  match (self, other) {\n    (VInt(x), VInt(y)) => x.compare(y)\n    (VDouble(x), VDouble(y)) => x.compare(y)\n    (VStr(x), VStr(y)) => x.compare(y)\n    (VChar(x), VChar(y)) => x.compare(y)\n    (VBool(x), VBool(y)) => x.compare(y)\n    _ => show_value(self).compare(show_value(other))\n  }\n}\n\nimpl Hash for Value with hash_combine(self, hasher) {\n  hasher.combine_string(show_value(self))\n}\n\nlet out_buf : StringBuilder = StringBuilder::new()\n\nfn rt_write(s : String) -> Unit {\n  for c in s {\n    if c == '\\n' {\n      println(out_buf.to_string())\n      out_buf.reset()\n    } else {\n      out_buf.write_char(c)\n    }\n  }\n}\n\nfn rt_flush() -> Unit {\n  if out_buf.to_string() != \"\" {\n    println(out_buf.to_string())\n    out_buf.reset()\n  }\n}\n\nfn as_int(v : Value) -> Int raise {\n  match v {\n    VInt(n) => n\n    _ => rt_fail(\"expected an Int, got \" + show_value(v))\n  }\n}\n\nfn as_double(v : Value) -> Double raise {\n  match v {\n    VDouble(d) => d\n    _ => rt_fail(\"expected a Double, got \" + show_value(v))\n  }\n}\n\nfn as_str(v : Value) -> String raise {\n  match v {\n    VStr(s) => s\n    _ => rt_fail(\"expected a String, got \" + show_value(v))\n  }\n}\n\nfn as_char(v : Value) -> Char raise {\n  match v {\n    VChar(c) => c\n    _ => rt_fail(\"expected a Char, got \" + show_value(v))\n  }\n}\n\nfn as_bool(v : Value) -> Bool raise {\n  match v {\n    VBool(b) => b\n    _ => rt_fail(\"expected a Bool, got \" + show_value(v))\n  }\n}\n\nfn as_arr(v : Value) -> Array[Value] raise {\n  match v {\n    VArr(xs) => xs\n    _ => rt_fail(\"expected an Array, got \" + show_value(v))\n  }\n}\n\nfn as_unit(v : Value) -> Unit raise {\n  match v {\n    VUnit => ()\n    _ => rt_fail(\"expected (), got \" + show_value(v))\n  }\n}\n\nfn prim(name : String, args : Array[Value]) -> Value raise {\n  match (name, args) {\n    (\"%int_add\", [VInt(a), VInt(b)]) => VInt(a + b)\n    (\"%int_sub\", [VInt(a), VInt(b)]) => VInt(a - b)\n    (\"%int_mul\", [VInt(a), VInt(b)]) => VInt(a * b)\n    (\"%int_land\", [VInt(a), VInt(b)]) => VInt(a & b)\n    (\"%int_lor\", [VInt(a), VInt(b)]) => VInt(a | b)\n    (\"%int_lxor\", [VInt(a), VInt(b)]) => VInt(a ^ b)\n    (\"%int_shl\", [VInt(a), VInt(b)]) => VInt(a << b)\n    (\"%int_shr\", [VInt(a), VInt(b)]) => VInt(a >> b)\n    (\"%int_div\", [VInt(_), VInt(0)]) | (\"%int_mod\", [VInt(_), VInt(0)]) =>\n      rt_fail(\"division by zero\")\n    (\"%int_div\", [VInt(a), VInt(b)]) => VInt(a / b)\n    (\"%int_mod\", [VInt(a), VInt(b)]) => VInt(a % b)\n    (\"%int_neg\", [VInt(a)]) => VInt(-a)\n    (\"%int_eq\", [VInt(a), VInt(b)]) => VBool(a == b)\n    (\"%int_lt\", [VInt(a), VInt(b)]) => VBool(a < b)\n    (\"%int_le\", [VInt(a), VInt(b)]) => VBool(a <= b)\n    (\"%int_gt\", [VInt(a), VInt(b)]) => VBool(a > b)\n    (\"%int_ge\", [VInt(a), VInt(b)]) => VBool(a >= b)\n    (\"%int_compare\", [VInt(a), VInt(b)]) => VInt(a.compare(b))\n    (\"%int_to_string\", [VInt(a)]) => VStr(a.to_string())\n    (\"%int_to_char\", [VInt(a)]) =>\n      match a.to_char() {\n        Some(c) => VChar(c)\n        None => rt_fail(\"invalid character code\")\n      }\n    (\"%int_to_double\", [VInt(a)]) => VDouble(a.to_double())\n    (\"%str_add\", [VStr(a), VStr(b)]) => VStr(a + b)\n    (\"%str_eq\", [VStr(a), VStr(b)]) => VBool(a == b)\n    (\"%str_compare\", [VStr(a), VStr(b)]) => VInt(a.compare(b))\n    (\"%str_length\", [VStr(a)]) => VInt(a.length())\n    (\"%str_get\", [VStr(a), VInt(i)]) =>\n      match a.get_char(i) {\n        Some(c) => VChar(c)\n        None => rt_fail(\"index out of bounds\")\n      }\n    (\"%str_substring\", [VStr(a), VInt(i), VInt(j)]) =>\n      if i >= 0 && i <= j && j <= a.length() {\n        VStr(a.unsafe_substring(start=i, end=j))\n      } else {\n        rt_fail(\"index out of bounds\")\n      }\n    (\"%bool_eq\", [VBool(a), VBool(b)]) => VBool(a == b)\n    (\"%bool_not\", [VBool(a)]) => VBool(!a)\n    (\"%bool_to_string\", [VBool(a)]) => VStr(a.to_string())\n    (\"%char_eq\", [VChar(a), VChar(b)]) => VBool(a == b)\n    (\"%char_compare\", [VChar(a), VChar(b)]) => VInt(a.compare(b))\n    (\"%char_to_int\", [VChar(a)]) => VInt(a.to_int())\n    (\"%char_to_string\", [VChar(a)]) => VStr(a.to_string())\n    (\"%unit_to_string\", [VUnit]) => VStr(\"()\")\n    (\"%double_add\", [VDouble(a), VDouble(b)]) => VDouble(a + b)\n    (\"%double_sub\", [VDouble(a), VDouble(b)]) => VDouble(a - b)\n    (\"%double_mul\", [VDouble(a), VDouble(b)]) => VDouble(a * b)\n    (\"%double_div\", [VDouble(a), VDouble(b)]) => VDouble(a / b)\n    (\"%double_neg\", [VDouble(a)]) => VDouble(-a)\n    (\"%double_eq\", [VDouble(a), VDouble(b)]) => VBool(a == b)\n    (\"%double_lt\", [VDouble(a), VDouble(b)]) => VBool(a < b)\n    (\"%double_le\", [VDouble(a), VDouble(b)]) => VBool(a <= b)\n    (\"%double_gt\", [VDouble(a), VDouble(b)]) => VBool(a > b)\n    (\"%double_ge\", [VDouble(a), VDouble(b)]) => VBool(a >= b)\n    (\"%double_compare\", [VDouble(a), VDouble(b)]) => VInt(a.compare(b))\n    (\"%double_to_string\", [VDouble(a)]) => VStr(a.to_string())\n    (\"%double_to_int\", [VDouble(a)]) => VInt(a.to_int())\n    (\"%print\", [VStr(s)]) => {\n      rt_write(s)\n      VUnit\n    }\n    (\"%panic\", _) => rt_fail(\"panic\")\n    (\"%abort\", [VStr(s)]) => rt_fail(s)\n    (\"%error_to_string\", [e]) => VStr(show_value(e))\n    (\"%array_make\", [VInt(n), x]) => VArr(Array::make(n, x))\n    (\"%array_new\", _) => VArr([])\n    (\"%array_length\", [VArr(xs)]) => VInt(xs.length())\n    (\"%array_get\", [VArr(xs), VInt(i)]) =>\n      if i >= 0 && i < xs.length() {\n        xs[i]\n      } else {\n        rt_fail(\"index out of bounds: \" + i.to_string())\n      }\n    (\"%array_set\", [VArr(xs), VInt(i), x]) =>\n      if i >= 0 && i < xs.length() {\n        xs[i] = x\n        VUnit\n      } else {\n        rt_fail(\"index out of bounds: \" + i.to_string())\n      }\n    (\"%array_push\", [VArr(xs), x]) => {\n      xs.push(x)\n      VUnit\n    }\n    _ => rt_fail(\"primitive \" + name + \" failed\")\n  }\n}\n\n/// A foreign MoonBit error, as a MoonBit++ value.\nfn foreign_error(e : Error) -> Value {\n  VDyn(\"MoonBitError\", [VStr(e.to_string())])\n}\n\nfn run_main(f : () -> Value raise) -> Unit {\n  try {\n    ignore(f())\n  } catch {\n    e => report_error(e)\n  }\n  rt_flush()\n}\n\n/// Report an error that escaped `main`.\nfn report_error(e : Error) -> Unit {\n  match e {\n    CReturn(_) => ()\n    CRaise(e) => {\n      rt_flush()\n      println(\"uncaught error: \" + show_value(e))\n    }\n    CAbort(m) => {\n      rt_flush()\n      println(\"runtime error: \" + m)\n    }\n    e => {\n      rt_flush()\n      println(\"runtime error: \" + e.to_string())\n    }\n  }\n  rt_flush()\n}\n";
 const _M0FP38username5mbtpp7codegen13runtime__file = "mbtpp_runtime.mbt";
-const _M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12027 = { _0: "Int", _1: "as_int", _2: "VInt" };
-const _M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12028 = { _0: "Double", _1: "as_double", _2: "VDouble" };
-const _M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12029 = { _0: "Bool", _1: "as_bool", _2: "VBool" };
-const _M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12030 = { _0: "Char", _1: "as_char", _2: "VChar" };
-const _M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12031 = { _0: "String", _1: "as_str", _2: "VStr" };
-const _M0FP38username5mbtpp7codegen13scalar__types = [_M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12027, _M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12028, _M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12029, _M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12030, _M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12031];
+const _M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12741 = { _0: "Int", _1: "as_int", _2: "VInt" };
+const _M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12742 = { _0: "Double", _1: "as_double", _2: "VDouble" };
+const _M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12743 = { _0: "Bool", _1: "as_bool", _2: "VBool" };
+const _M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12744 = { _0: "Char", _1: "as_char", _2: "VChar" };
+const _M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12745 = { _0: "String", _1: "as_str", _2: "VStr" };
+const _M0FP38username5mbtpp7codegen13scalar__types = [_M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12741, _M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12742, _M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12743, _M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12744, _M0FP38username5mbtpp7codegen13scalar__typesN5tupleS12745];
 const _M0FP38username5mbtpp7codegen13value__traits = ["Show", "Eq", "Compare", "Hash"];
 const _M0FP38username5mbtpp7codegen13mbt__keywords = ["as", "break", "catch", "const", "continue", "else", "enum", "extern", "false", "fn", "for", "guard", "if", "impl", "in", "is", "let", "loop", "match", "mut", "pub", "priv", "raise", "return", "struct", "test", "trait", "true", "try", "type", "typealias", "while", "with", "async", "defer", "readonly", "local"];
 const _M0FP38username5mbtpp3web4file = "main.mbtpp";
 const _M0FPB4seed = _M0FPB12random__seed();
 const _bind = [];
 const _M0FP38username5mbtpp2tt13global__files = _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_bind, 0, 0), undefined);
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6360 = { _0: "to_string", _1: "to_string" };
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6361 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6360];
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6362 = { _0: "op_equal", _1: "equal" };
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6363 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6362];
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6364 = { _0: "compare", _1: "compare" };
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6365 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6364];
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6366 = { _0: "op_add", _1: "add" };
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6367 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6366];
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6368 = { _0: "op_sub", _1: "sub" };
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6369 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6368];
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6370 = { _0: "op_mul", _1: "mul" };
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6371 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6370];
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6372 = { _0: "op_div", _1: "div" };
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6373 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6372];
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6374 = { _0: "op_mod", _1: "mod" };
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6375 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6374];
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6376 = { _0: "op_neg", _1: "neg" };
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6377 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6376];
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6378 = { _0: "default", _1: "default" };
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6379 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6378];
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6380 = { _0: "op_land", _1: "land" };
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6381 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6380];
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6382 = { _0: "op_lor", _1: "lor" };
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6383 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6382];
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6384 = { _0: "op_lxor", _1: "lxor" };
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6385 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6384];
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6386 = { _0: "op_shl", _1: "shl" };
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6387 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6386];
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6388 = { _0: "op_shr", _1: "shr" };
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6389 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6388];
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6390 = { _0: "hash", _1: "hash" };
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6391 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6390];
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6392 = { _0: "to_json", _1: "to_json" };
-const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6393 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6392];
-const _bind$2 = [{ _0: "Show", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6361, 0, 1), undefined) }, { _0: "Eq", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6363, 0, 1), undefined) }, { _0: "Compare", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6365, 0, 1), undefined) }, { _0: "Add", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6367, 0, 1), undefined) }, { _0: "Sub", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6369, 0, 1), undefined) }, { _0: "Mul", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6371, 0, 1), undefined) }, { _0: "Div", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6373, 0, 1), undefined) }, { _0: "Mod", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6375, 0, 1), undefined) }, { _0: "Neg", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6377, 0, 1), undefined) }, { _0: "Default", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6379, 0, 1), undefined) }, { _0: "BitAnd", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6381, 0, 1), undefined) }, { _0: "BitOr", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6383, 0, 1), undefined) }, { _0: "BitXOr", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6385, 0, 1), undefined) }, { _0: "Shl", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6387, 0, 1), undefined) }, { _0: "Shr", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6389, 0, 1), undefined) }, { _0: "Hash", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6391, 0, 1), undefined) }, { _0: "ToJson", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6393, 0, 1), undefined) }];
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6706 = { _0: "to_string", _1: "to_string" };
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6707 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6706];
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6708 = { _0: "op_equal", _1: "equal" };
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6709 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6708];
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6710 = { _0: "compare", _1: "compare" };
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6711 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6710];
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6712 = { _0: "op_add", _1: "add" };
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6713 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6712];
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6714 = { _0: "op_sub", _1: "sub" };
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6715 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6714];
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6716 = { _0: "op_mul", _1: "mul" };
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6717 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6716];
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6718 = { _0: "op_div", _1: "div" };
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6719 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6718];
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6720 = { _0: "op_mod", _1: "mod" };
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6721 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6720];
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6722 = { _0: "op_neg", _1: "neg" };
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6723 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6722];
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6724 = { _0: "default", _1: "default" };
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6725 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6724];
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6726 = { _0: "op_land", _1: "land" };
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6727 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6726];
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6728 = { _0: "op_lor", _1: "lor" };
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6729 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6728];
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6730 = { _0: "op_lxor", _1: "lxor" };
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6731 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6730];
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6732 = { _0: "op_shl", _1: "shl" };
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6733 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6732];
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6734 = { _0: "op_shr", _1: "shr" };
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6735 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6734];
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6736 = { _0: "hash", _1: "hash" };
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6737 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6736];
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6738 = { _0: "to_json", _1: "to_json" };
+const _M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6739 = [_M0FP38username5mbtpp2tt20mbt__builtin__traitsN5tupleS6738];
+const _bind$2 = [{ _0: "Show", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6707, 0, 1), undefined) }, { _0: "Eq", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6709, 0, 1), undefined) }, { _0: "Compare", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6711, 0, 1), undefined) }, { _0: "Add", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6713, 0, 1), undefined) }, { _0: "Sub", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6715, 0, 1), undefined) }, { _0: "Mul", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6717, 0, 1), undefined) }, { _0: "Div", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6719, 0, 1), undefined) }, { _0: "Mod", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6721, 0, 1), undefined) }, { _0: "Neg", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6723, 0, 1), undefined) }, { _0: "Default", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6725, 0, 1), undefined) }, { _0: "BitAnd", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6727, 0, 1), undefined) }, { _0: "BitOr", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6729, 0, 1), undefined) }, { _0: "BitXOr", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6731, 0, 1), undefined) }, { _0: "Shl", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6733, 0, 1), undefined) }, { _0: "Shr", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6735, 0, 1), undefined) }, { _0: "Hash", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6737, 0, 1), undefined) }, { _0: "ToJson", _1: _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traitsN7_2abindS6739, 0, 1), undefined) }];
 const _M0FP38username5mbtpp2tt20mbt__builtin__traits = _M0MPB3Map3MapGsRPB3MapGssEE(new _M0TPB9ArrayViewGUsRPB3MapGssEEE(_bind$2, 0, 17), undefined);
 const _bind$3 = [];
 const _M0FP38username5mbtpp2tt7globals = _M0MPB3Map3MapGsRP38username5mbtpp2tt6GEntryE(new _M0TPB9ArrayViewGUsRP38username5mbtpp2tt6GEntryEE(_bind$3, 0, 0), undefined);
-const _M0MPC16string10StringView4findN6constrS808 = 0;
-const _M0FP38username5mbtpp2tt14is__type__likeN6recordS11719 = new _M0TPC16string10StringView(".", 0, 1);
-const _M0FP38username5mbtpp2tt14is__type__likeN6recordS11720 = new _M0TPC16string10StringView("@", 0, 1);
-const _M0FP38username5mbtpp2tt14is__type__likeN6recordS11721 = new _M0TPC16string10StringView("::", 0, 2);
+const _M0MPC16string10StringView4findN6constrS861 = 0;
+const _M0FP38username5mbtpp2tt14is__type__likeN6recordS12401 = new _M0TPC16string10StringView(".", 0, 1);
+const _M0FP38username5mbtpp2tt14is__type__likeN6recordS12402 = new _M0TPC16string10StringView("@", 0, 1);
+const _M0FP38username5mbtpp2tt14is__type__likeN6recordS12403 = new _M0TPC16string10StringView("::", 0, 2);
 const _bind$4 = [];
 const _tmp = _M0MPB3Map3MapGsRPB5ArrayGsEE(new _M0TPB9ArrayViewGUsRPB5ArrayGsEEE(_bind$4, 0, 0), undefined);
 const _bind$5 = [];
@@ -2306,449 +2394,460 @@ const _bind$10 = [];
 const _tmp$8 = _M0MPB3Map3MapGsRPB5ArrayGsEE(new _M0TPB9ArrayViewGUsRPB5ArrayGsEEE(_bind$10, 0, 0), undefined);
 const _bind$11 = [];
 const _M0FP38username5mbtpp2tt2st = new _M0TP38username5mbtpp2tt9ElabState(_tmp, _tmp$2, _tmp$3, _tmp$4, _tmp$5, _tmp$6, _tmp$7, _tmp$8, _M0MPB3Map3MapGsRPB5ArrayGRP38username5mbtpp2tt9LabelInfoEE(new _M0TPB9ArrayViewGUsRPB5ArrayGRP38username5mbtpp2tt9LabelInfoEEE(_bind$11, 0, 0), undefined), [], [], [], 0);
-const _M0MP38username5mbtpp6parser6Parser7patternN6constrS5353 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
-const _M0MP38username5mbtpp6parser6Parser7patternN6constrS5354 = new _M0DTP38username5mbtpp6parser3Lit5LBool(false);
-const _M0MP38username5mbtpp6parser6Parser7patternN6recordS5355 = new _M0TPC16string10StringView("::", 0, 2);
-const _M0FP38username5mbtpp6parser16tokenize_2einnerN6constrS5288 = new _M0DTP38username5mbtpp6parser3Tok4TSym(".");
-const _M0MP38username5mbtpp6parser6Parser7primaryN6constrS5488 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
-const _M0MP38username5mbtpp6parser6Parser7primaryN6constrS5489 = new _M0DTP38username5mbtpp6parser3Lit5LBool(false);
-const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5758 = new _M0TPC16string10StringView("\n", 0, 1);
-const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5759 = new _M0TPC16string10StringView("\r", 0, 1);
-const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5760 = new _M0TPC16string10StringView(" \t", 0, 2);
-const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5761 = new _M0TPC16string10StringView("//", 0, 2);
-const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5762 = new _M0TPC16string10StringView("package ", 0, 8);
-const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5763 = new _M0TPC16string10StringView("#", 0, 1);
-const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5764 = new _M0TPC16string10StringView("import(", 0, 7);
-const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5765 = new _M0TPC16string10StringView("import {", 0, 8);
-const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5766 = new _M0TPC16string10StringView("import(", 0, 7);
-const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5767 = new _M0TPC16string10StringView(" \t", 0, 2);
-const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5768 = new _M0TPC16string10StringView(" \t\",", 0, 4);
-const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5769 = new _M0TPC16string10StringView("\"", 0, 1);
-const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5770 = new _M0TPC16string10StringView(" ", 0, 1);
-const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5771 = new _M0TPC16string10StringView("\t", 0, 1);
-const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5772 = new _M0TPC16string10StringView("}", 0, 1);
-const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5773 = new _M0TPC16string10StringView(" \t", 0, 2);
-const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5774 = new _M0TPC16string10StringView("#", 0, 1);
-const _M0FP38username5mbtpp6parser13last__segmentN6recordS5796 = new _M0TPC16string10StringView("/", 0, 1);
-const _M0FP38username5mbtpp6parser10mbti__itemN6constrS5996 = new _M0DTP38username5mbtpp6parser3Tok4TSym("pub");
-const _M0FP38username5mbtpp6parser10mbti__itemN6constrS5997 = new _M0DTP38username5mbtpp6parser3Tok4TSym("(");
-const _M0FP38username5mbtpp6parser10mbti__itemN6constrS5998 = new _M0DTP38username5mbtpp6parser3Tok4TSym("suberror");
-const _M0FP38username5mbtpp6parser12using__itemsN6recordS6039 = new _M0TPC16string10StringView(" \t\n", 0, 3);
-const _M0FP38username5mbtpp6parser12using__itemsN6recordS6040 = new _M0TPC16string10StringView("@", 0, 1);
-const _M0FP38username5mbtpp6parser12using__itemsN6recordS6041 = new _M0TPC16string10StringView("{", 0, 1);
-const _M0FP38username5mbtpp6parser12using__itemsN6recordS6042 = new _M0TPC16string10StringView("}", 0, 1);
-const _M0FP38username5mbtpp6parser12using__itemsN6recordS6043 = new _M0TPC16string10StringView(" ", 0, 1);
-const _M0FP38username5mbtpp6parser12using__itemsN6recordS6044 = new _M0TPC16string10StringView(",", 0, 1);
-const _M0FP38username5mbtpp6parser12using__itemsN6recordS6045 = new _M0TPC16string10StringView(" \t\n", 0, 3);
-const _M0FP38username5mbtpp6parser12using__itemsN6recordS6046 = new _M0TPC16string10StringView(" ", 0, 1);
-const _M0FP38username5mbtpp6parser12using__itemsN6recordS6047 = new _M0TPC16string10StringView("", 0, 0);
-const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6105 = new _M0TPC16string10StringView("#deprecated", 0, 11);
-const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6106 = new _M0TPC16string10StringView("\n", 0, 1);
-const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6107 = new _M0TPC16string10StringView("pub using ", 0, 10);
-const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6108 = new _M0TPC16string10StringView("using ", 0, 6);
-const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6109 = new _M0TPC16string10StringView("@builtin.", 0, 9);
-const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6110 = new _M0TPC16string10StringView("@", 0, 1);
-const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6111 = new _M0TPC16string10StringView(".", 0, 1);
-const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6112 = new _M0TPC16string10StringView("#as_free_fn", 0, 11);
-const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6113 = new _M0TPC16string10StringView("deprecated", 0, 10);
-const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6114 = new _M0TPC16string10StringView("::", 0, 2);
-const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6115 = new _M0TPC16string10StringView("#as_free_fn(", 0, 12);
-const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6116 = new _M0TPC16string10StringView(",", 0, 1);
-const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6117 = new _M0TPC16string10StringView(" ", 0, 1);
-const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6118 = new _M0TPC16string10StringView("::", 0, 2);
-const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6119 = new _M0TP38username5mbtpp6parser3Pos(0, 0);
-const _M0FP38username5mbtpp2tt10prim__pureN6constrS6425 = new _M0DTP38username5mbtpp6parser3Lit4LStr("()");
-const _M0FP38username5mbtpp2tt10prim__pureN6constrS6426 = _M0FP38username5mbtpp2tt10prim__pureN6constrS6425;
-const _M0FP38username5mbtpp2tt15instance__pathsN6constrS7901 = new _M0DTP38username5mbtpp2tt2Tm6Global("?self");
-const _M0FP38username5mbtpp2tt11short__nameN6recordS7623 = new _M0TPC16string10StringView("::", 0, 2);
-const _M0FP38username5mbtpp2tt10op__symbolN6recordS7596 = new _M0TPC16string10StringView("::", 0, 2);
-const _M0FP38username5mbtpp2tt10op__symbolN6constrS7597 = "+";
-const _M0FP38username5mbtpp2tt10op__symbolN6constrS7598 = "-";
-const _M0FP38username5mbtpp2tt10op__symbolN6constrS7599 = "*";
-const _M0FP38username5mbtpp2tt10op__symbolN6constrS7600 = "/";
-const _M0FP38username5mbtpp2tt10op__symbolN6constrS7601 = "%";
-const _M0FP38username5mbtpp2tt10op__symbolN6constrS7602 = "==";
-const _M0FP38username5mbtpp2tt10op__symbolN6constrS7603 = "<";
-const _M0FP38username5mbtpp2tt10op__symbolN6constrS7604 = "<=";
-const _M0FP38username5mbtpp2tt10op__symbolN6constrS7605 = ">";
-const _M0FP38username5mbtpp2tt10op__symbolN6constrS7606 = ">=";
-const _M0FP38username5mbtpp2tt8nat__litN6constrS7581 = 0;
-const _M0FP38username5mbtpp2tt9show__patN6recordS7640 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp2tt10show__precN6recordS7666 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp2tt10show__precN6recordS7667 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp2tt10show__precN6recordS7668 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp2tt10show__precN6recordS7669 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp2tt10show__precN6recordS7670 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp2tt10show__precN6recordS7671 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp2tt10show__precN6recordS7672 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp2tt10show__precN6recordS7673 = new _M0TPC16string10StringView("; ", 0, 2);
-const _M0FP38username5mbtpp2tt10show__precN6recordS7674 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp6parser6Parser13pattern__atomN6constrS5486 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
+const _M0MP38username5mbtpp6parser6Parser13pattern__atomN6constrS5487 = new _M0DTP38username5mbtpp6parser3Lit5LBool(false);
+const _M0MP38username5mbtpp6parser6Parser13pattern__atomN6recordS5488 = new _M0TPC16string10StringView("::", 0, 2);
+const _M0FP38username5mbtpp6parser16tokenize_2einnerN6constrS5646 = new _M0DTP38username5mbtpp6parser3Tok4TSym(".");
+const _M0MP38username5mbtpp6parser6Parser7primaryN6constrS5857 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
+const _M0MP38username5mbtpp6parser6Parser7primaryN6constrS5858 = new _M0DTP38username5mbtpp6parser3Lit5LBool(false);
+const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6093 = new _M0TPC16string10StringView("\n", 0, 1);
+const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6094 = new _M0TPC16string10StringView("\r", 0, 1);
+const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6095 = new _M0TPC16string10StringView(" \t", 0, 2);
+const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6096 = new _M0TPC16string10StringView("//", 0, 2);
+const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6097 = new _M0TPC16string10StringView("package ", 0, 8);
+const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6098 = new _M0TPC16string10StringView("#", 0, 1);
+const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6099 = new _M0TPC16string10StringView("import(", 0, 7);
+const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6100 = new _M0TPC16string10StringView("import {", 0, 8);
+const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6101 = new _M0TPC16string10StringView("import(", 0, 7);
+const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6102 = new _M0TPC16string10StringView(" \t", 0, 2);
+const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6103 = new _M0TPC16string10StringView(" \t\",", 0, 4);
+const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6104 = new _M0TPC16string10StringView("\"", 0, 1);
+const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6105 = new _M0TPC16string10StringView(" ", 0, 1);
+const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6106 = new _M0TPC16string10StringView("\t", 0, 1);
+const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6107 = new _M0TPC16string10StringView("}", 0, 1);
+const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6108 = new _M0TPC16string10StringView(" \t", 0, 2);
+const _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6109 = new _M0TPC16string10StringView("#", 0, 1);
+const _M0FP38username5mbtpp6parser13last__segmentN6recordS6131 = new _M0TPC16string10StringView("/", 0, 1);
+const _M0FP38username5mbtpp6parser10mbti__itemN6constrS6333 = new _M0DTP38username5mbtpp6parser3Tok4TSym("pub");
+const _M0FP38username5mbtpp6parser10mbti__itemN6constrS6334 = new _M0DTP38username5mbtpp6parser3Tok4TSym("(");
+const _M0FP38username5mbtpp6parser10mbti__itemN6constrS6335 = new _M0DTP38username5mbtpp6parser3Tok4TSym("suberror");
+const _M0FP38username5mbtpp6parser12using__itemsN6recordS6381 = new _M0TPC16string10StringView(" \t\n", 0, 3);
+const _M0FP38username5mbtpp6parser12using__itemsN6recordS6382 = new _M0TPC16string10StringView("@", 0, 1);
+const _M0FP38username5mbtpp6parser12using__itemsN6recordS6383 = new _M0TPC16string10StringView("{", 0, 1);
+const _M0FP38username5mbtpp6parser12using__itemsN6recordS6384 = new _M0TPC16string10StringView("}", 0, 1);
+const _M0FP38username5mbtpp6parser12using__itemsN6recordS6385 = new _M0TPC16string10StringView(" ", 0, 1);
+const _M0FP38username5mbtpp6parser12using__itemsN6recordS6386 = new _M0TPC16string10StringView(",", 0, 1);
+const _M0FP38username5mbtpp6parser12using__itemsN6recordS6387 = new _M0TPC16string10StringView(" \t\n", 0, 3);
+const _M0FP38username5mbtpp6parser12using__itemsN6recordS6388 = new _M0TPC16string10StringView(" ", 0, 1);
+const _M0FP38username5mbtpp6parser12using__itemsN6recordS6389 = new _M0TPC16string10StringView("", 0, 0);
+const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6447 = new _M0TPC16string10StringView("#deprecated", 0, 11);
+const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6448 = new _M0TPC16string10StringView("\n", 0, 1);
+const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6449 = new _M0TPC16string10StringView("pub using ", 0, 10);
+const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6450 = new _M0TPC16string10StringView("using ", 0, 6);
+const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6451 = new _M0TPC16string10StringView("@builtin.", 0, 9);
+const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6452 = new _M0TPC16string10StringView("@", 0, 1);
+const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6453 = new _M0TPC16string10StringView(".", 0, 1);
+const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6454 = new _M0TPC16string10StringView("#as_free_fn", 0, 11);
+const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6455 = new _M0TPC16string10StringView("deprecated", 0, 10);
+const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6456 = new _M0TPC16string10StringView("::", 0, 2);
+const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6457 = new _M0TPC16string10StringView("#as_free_fn(", 0, 12);
+const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6458 = new _M0TPC16string10StringView(",", 0, 1);
+const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6459 = new _M0TPC16string10StringView(" ", 0, 1);
+const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6460 = new _M0TPC16string10StringView("::", 0, 2);
+const _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6461 = new _M0TP38username5mbtpp6parser3Pos(0, 0);
+const _M0FP38username5mbtpp2tt10prim__pureN6constrS6771 = new _M0DTP38username5mbtpp6parser3Lit4LStr("()");
+const _M0FP38username5mbtpp2tt10prim__pureN6constrS6772 = _M0FP38username5mbtpp2tt10prim__pureN6constrS6771;
+const _M0FP38username5mbtpp2tt15instance__pathsN6constrS8297 = new _M0DTP38username5mbtpp2tt2Tm6Global("?self");
+const _M0FP38username5mbtpp2tt11short__nameN6recordS7999 = new _M0TPC16string10StringView("::", 0, 2);
+const _M0FP38username5mbtpp2tt10op__symbolN6recordS7972 = new _M0TPC16string10StringView("::", 0, 2);
+const _M0FP38username5mbtpp2tt10op__symbolN6constrS7973 = "+";
+const _M0FP38username5mbtpp2tt10op__symbolN6constrS7974 = "-";
+const _M0FP38username5mbtpp2tt10op__symbolN6constrS7975 = "*";
+const _M0FP38username5mbtpp2tt10op__symbolN6constrS7976 = "/";
+const _M0FP38username5mbtpp2tt10op__symbolN6constrS7977 = "%";
+const _M0FP38username5mbtpp2tt10op__symbolN6constrS7978 = "==";
+const _M0FP38username5mbtpp2tt10op__symbolN6constrS7979 = "<";
+const _M0FP38username5mbtpp2tt10op__symbolN6constrS7980 = "<=";
+const _M0FP38username5mbtpp2tt10op__symbolN6constrS7981 = ">";
+const _M0FP38username5mbtpp2tt10op__symbolN6constrS7982 = ">=";
+const _M0FP38username5mbtpp2tt8nat__litN6constrS7957 = 0;
+const _M0FP38username5mbtpp2tt9show__patN6recordS8016 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp2tt10show__precN6recordS8042 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp2tt10show__precN6recordS8043 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp2tt10show__precN6recordS8044 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp2tt10show__precN6recordS8045 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp2tt10show__precN6recordS8046 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp2tt10show__precN6recordS8047 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp2tt10show__precN6recordS8048 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp2tt10show__precN6recordS8049 = new _M0TPC16string10StringView("; ", 0, 2);
+const _M0FP38username5mbtpp2tt10show__precN6recordS8050 = new _M0TPC16string10StringView(", ", 0, 2);
 const _bind$12 = [];
 const _M0FP38username5mbtpp2tt10mbt__types = _M0MPB3Map3MapGsRP38username5mbtpp2tt7MbtInfoE(new _M0TPB9ArrayViewGUsRP38username5mbtpp2tt7MbtInfoEE(_bind$12, 0, 0), undefined);
-const _M0MP38username5mbtpp2tt3Cxt6refineN6constrS8219 = new _M0DTP38username5mbtpp2tt7Refined6RStuck("cyclic equation");
-const _M0MP38username5mbtpp2tt3Cxt6refineN6constrS8220 = new _M0DTP38username5mbtpp2tt7Refined6RStuck("constructor arity");
-const _M0FP38username5mbtpp2tt13resolve__nameN6recordS8137 = new _M0TPC16string10StringView("@", 0, 1);
-const _M0FP38username5mbtpp2tt13resolve__nameN6recordS8138 = new _M0TPC16string10StringView("::", 0, 2);
-const _M0FP38username5mbtpp2tt13resolve__nameN6recordS8139 = new _M0TPC16string10StringView(".", 0, 1);
-const _M0FP38username5mbtpp2tt13resolve__nameN6recordS8140 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp2tt10check__patN6constrS8261 = "Nat";
-const _M0FP38username5mbtpp2tt10split__varN6constrS8423 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
-const _M0FP38username5mbtpp2tt10split__varN6constrS8424 = new _M0DTP38username5mbtpp2tt3Val4VLit(_M0FP38username5mbtpp2tt10split__varN6constrS8423);
-const _M0FP38username5mbtpp2tt10split__varN6constrS8425 = new _M0DTP38username5mbtpp6parser3Lit5LBool(false);
-const _M0FP38username5mbtpp2tt10split__varN6constrS8426 = new _M0DTP38username5mbtpp2tt3Val4VLit(_M0FP38username5mbtpp2tt10split__varN6constrS8425);
-const _M0FP38username5mbtpp2tt5coverN6recordS8478 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp2tt8coverageN6recordS8508 = new _M0TPC16string10StringView("\n  ", 0, 3);
-const _M0FP38username5mbtpp2tt9pack__dynN6recordS9058 = new _M0TPC16string10StringView("&", 0, 1);
-const _M0FP38username5mbtpp2tt10goal__infoN6recordS9080 = new _M0TPC16string10StringView("$", 0, 1);
-const _M0FP38username5mbtpp2tt14desugar__stmtsN6recordS8986 = new _M0TP38username5mbtpp6parser3Pos(0, 0);
-const _M0FP38username5mbtpp2tt20trait__method__namesN6recordS8841 = new _M0TPC16string10StringView("super$", 0, 6);
-const _M0FP38username5mbtpp2tt13trait__supersN6recordS8589 = new _M0TPC16string10StringView("super$", 0, 6);
-const _M0FP38username5mbtpp2tt23object__safety__problemN6constrS8851 = "its Self is not a type";
-const _M0FP38username5mbtpp2tt9dyn__dictN6recordS8554 = new _M0TPC16string10StringView("super$", 0, 6);
-const _M0FP38username5mbtpp2tt19elab__expl__bindersN6constrS10396 = new _M0DTP38username5mbtpp2tt2Tm6Global("Unit");
-const _M0FP38username5mbtpp2tt19elab__expl__bindersN5tupleS10397 = { _0: "_", _1: 0, _2: _M0FP38username5mbtpp2tt19elab__expl__bindersN6constrS10396 };
-const _M0FP38username5mbtpp2tt19elab__expl__bindersN6constrS10398 = new _M0DTP38username5mbtpp2tt2Tm6Global("Option");
-const _M0FP38username5mbtpp2tt5inferN6constrS9875 = new _M0DTP38username5mbtpp6parser3Lit5LBool(false);
-const _M0FP38username5mbtpp2tt5inferN6constrS9876 = new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0FP38username5mbtpp2tt5inferN6constrS9875);
-const _M0FP38username5mbtpp2tt5inferN6constrS9877 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
-const _M0FP38username5mbtpp2tt5inferN6constrS9878 = new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0FP38username5mbtpp2tt5inferN6constrS9877);
-const _M0FP38username5mbtpp2tt5inferN6constrS9879 = new _M0DTP38username5mbtpp6parser3Lit4LStr("");
-const _M0FP38username5mbtpp2tt5inferN6constrS9880 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
-const _M0FP38username5mbtpp2tt5inferN6constrS9881 = new _M0DTP38username5mbtpp2tt3Val4VLit(_M0FP38username5mbtpp2tt5inferN6constrS9880);
-const _M0FP38username5mbtpp2tt5inferN6constrS9882 = new _M0DTP38username5mbtpp6parser3Lit5LBool(false);
-const _M0FP38username5mbtpp2tt5inferN6constrS9883 = new _M0DTP38username5mbtpp2tt3Val4VLit(_M0FP38username5mbtpp2tt5inferN6constrS9882);
-const _M0FP38username5mbtpp2tt5inferN6constrS9884 = new _M0DTP38username5mbtpp2tt2Tm6Global("Result::Ok");
-const _M0FP38username5mbtpp2tt5inferN6constrS9885 = new _M0DTP38username5mbtpp2tt2Tm6Global("Error");
-const _M0FP38username5mbtpp2tt5inferN5tupleS9886 = { _0: _M0FP38username5mbtpp2tt5inferN6constrS9885, _1: 1 };
-const _M0FP38username5mbtpp2tt5inferN6constrS9887 = new _M0DTP38username5mbtpp2tt2Tm6Global("Result::Err");
-const _M0FP38username5mbtpp2tt5inferN6constrS9888 = new _M0DTP38username5mbtpp2tt2Tm6Global("Error");
-const _M0FP38username5mbtpp2tt5inferN5tupleS9889 = { _0: _M0FP38username5mbtpp2tt5inferN6constrS9888, _1: 1 };
-const _M0FP38username5mbtpp2tt5inferN6constrS9890 = new _M0DTP38username5mbtpp2tt2Tm3Var(0);
-const _M0FP38username5mbtpp2tt5inferN5tupleS9891 = { _0: _M0FP38username5mbtpp2tt5inferN6constrS9890, _1: 0 };
-const _M0FP38username5mbtpp2tt5inferN6constrS9892 = new _M0DTP38username5mbtpp2tt4CPat5CPVar("e");
-const _M0FP38username5mbtpp2tt9app__coreN6constrS9747 = new _M0DTP38username5mbtpp2tt2Tm6Global("Unit");
-const _M0FP38username5mbtpp2tt9app__coreN5tupleS9748 = { _0: "_", _1: 0, _2: _M0FP38username5mbtpp2tt9app__coreN6constrS9747 };
-const _M0FP38username5mbtpp2tt5checkN6recordS9248 = new _M0TPC16string10StringView("&", 0, 1);
-const _M0FP38username5mbtpp2tt5checkN6constrS9249 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
-const _M0FP38username5mbtpp2tt5checkN6constrS9250 = new _M0DTP38username5mbtpp2tt3Val4VLit(_M0FP38username5mbtpp2tt5checkN6constrS9249);
-const _M0FP38username5mbtpp2tt5checkN6constrS9251 = new _M0DTP38username5mbtpp6parser3Lit5LBool(false);
-const _M0FP38username5mbtpp2tt5checkN6constrS9252 = new _M0DTP38username5mbtpp2tt3Val4VLit(_M0FP38username5mbtpp2tt5checkN6constrS9251);
-const _M0FP38username5mbtpp2tt5checkN6constrS9253 = new _M0DTP38username5mbtpp2tt2Tm6Global("?");
-const _M0FP38username5mbtpp2tt12elab__structN6recordS10190 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp2tt12check__blockN6constrS9515 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
-const _M0FP38username5mbtpp2tt12check__blockN6constrS9516 = new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0FP38username5mbtpp2tt12check__blockN6constrS9515);
-const _M0FP38username5mbtpp2tt12check__blockN6constrS9517 = new _M0DTP38username5mbtpp6parser3Lit4LInt(1);
-const _M0FP38username5mbtpp2tt12check__blockN6constrS9518 = new _M0DTP38username5mbtpp6parser3Lit4LInt(0);
-const _M0FP38username5mbtpp2tt12run__tacticsN6constrS9090 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
-const _M0FP38username5mbtpp2tt12run__tacticsN6constrS9091 = new _M0DTP38username5mbtpp6parser3Lit5LBool(false);
-const _M0FP38username5mbtpp2tt12run__tacticsN6constrS9092 = new _M0DTP38username5mbtpp2tt2Tm6Global("Id::sym");
-const _M0FP38username5mbtpp2tt12run__tacticsN6recordS9093 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp2tt10check__lamN6constrS10509 = new _M0DTP38username5mbtpp2tt2Tm6Global("?");
-const _M0FP38username5mbtpp2tt10check__lamN6constrS10510 = new _M0DTP38username5mbtpp2tt2Tm6Global("?");
-const _M0FP38username5mbtpp2tt11infer__headN6recordS9849 = new _M0TPC16string10StringView("::", 0, 2);
-const _M0FP38username5mbtpp2tt9elab__appN6recordS9710 = new _M0TPC16string10StringView("::", 0, 2);
-const _M0FP38username5mbtpp2tt9elab__appN6recordS9711 = new _M0TPC16string10StringView("\n  ", 0, 3);
-const _M0FP38username5mbtpp2tt10infer__binN6constrS10435 = new _M0DTP38username5mbtpp6parser3Lit4LInt(0);
-const _M0FP38username5mbtpp2tt10infer__binN6constrS10436 = new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0FP38username5mbtpp2tt10infer__binN6constrS10435);
-const _M0FP38username5mbtpp2tt10infer__binN6constrS10437 = new _M0DTP38username5mbtpp6parser3Lit5LBool(false);
-const _M0FP38username5mbtpp2tt10infer__binN6constrS10438 = new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0FP38username5mbtpp2tt10infer__binN6constrS10437);
-const _M0FP38username5mbtpp2tt10infer__binN6constrS10439 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
-const _M0FP38username5mbtpp2tt10infer__binN6constrS10440 = new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0FP38username5mbtpp2tt10infer__binN6constrS10439);
-const _M0FP38username5mbtpp2tt10infer__binN6constrS10441 = new _M0DTP38username5mbtpp2tt2Tm6Global("Id");
-const _M0FP38username5mbtpp2tt10infer__binN6constrS10442 = new _M0DTP38username5mbtpp6parser3Lit5LBool(false);
-const _M0FP38username5mbtpp2tt10infer__binN6constrS10443 = new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0FP38username5mbtpp2tt10infer__binN6constrS10442);
-const _M0FP38username5mbtpp2tt10infer__binN6constrS10444 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
-const _M0FP38username5mbtpp2tt10infer__binN6constrS10445 = new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0FP38username5mbtpp2tt10infer__binN6constrS10444);
-const _M0FP38username5mbtpp2tt18elab__struct__declN6constrS10314 = new _M0DTP38username5mbtpp2tt2Tm3Var(0);
-const _M0FP38username5mbtpp2tt11elab__traitN6constrS11086 = new _M0DTP38username5mbtpp2tt2Tm3Var(0);
-const _M0FP38username5mbtpp2tt11elab__traitN6constrS11087 = new _M0DTP38username5mbtpp2tt2Tm3Var(0);
-const _M0FP38username5mbtpp2tt11elab__traitN6constrS11088 = new _M0DTP38username5mbtpp2tt2Tm3Var(0);
-const _M0FP38username5mbtpp2tt11elab__traitN6constrS11089 = new _M0DTP38username5mbtpp2tt2Tm3Var(0);
+const _M0MP38username5mbtpp2tt3Cxt6refineN6constrS8645 = new _M0DTP38username5mbtpp2tt7Refined6RStuck("cyclic equation");
+const _M0MP38username5mbtpp2tt3Cxt6refineN6constrS8646 = new _M0DTP38username5mbtpp2tt7Refined6RStuck("constructor arity");
+const _M0FP38username5mbtpp2tt13resolve__nameN6recordS8563 = new _M0TPC16string10StringView("@", 0, 1);
+const _M0FP38username5mbtpp2tt13resolve__nameN6recordS8564 = new _M0TPC16string10StringView("::", 0, 2);
+const _M0FP38username5mbtpp2tt13resolve__nameN6recordS8565 = new _M0TPC16string10StringView(".", 0, 1);
+const _M0FP38username5mbtpp2tt13resolve__nameN6recordS8566 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp2tt18check__pat_2einnerN6constrS8687 = "Nat";
+const _M0FP38username5mbtpp2tt10split__varN6constrS8869 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
+const _M0FP38username5mbtpp2tt10split__varN6constrS8870 = new _M0DTP38username5mbtpp2tt3Val4VLit(_M0FP38username5mbtpp2tt10split__varN6constrS8869);
+const _M0FP38username5mbtpp2tt10split__varN6constrS8871 = new _M0DTP38username5mbtpp6parser3Lit5LBool(false);
+const _M0FP38username5mbtpp2tt10split__varN6constrS8872 = new _M0DTP38username5mbtpp2tt3Val4VLit(_M0FP38username5mbtpp2tt10split__varN6constrS8871);
+const _M0FP38username5mbtpp2tt5coverN6recordS8924 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp2tt8coverageN6recordS8955 = new _M0TPC16string10StringView("\n  ", 0, 3);
+const _M0FP38username5mbtpp2tt9pack__dynN6recordS9695 = new _M0TPC16string10StringView("&", 0, 1);
+const _M0FP38username5mbtpp2tt10goal__infoN6recordS9717 = new _M0TPC16string10StringView("$", 0, 1);
+const _M0FP38username5mbtpp2tt14desugar__stmtsN6recordS9621 = new _M0TP38username5mbtpp6parser3Pos(0, 0);
+const _M0FP38username5mbtpp2tt5sugarN6constrS9498 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
+const _M0FP38username5mbtpp2tt5sugarN6constrS9499 = new _M0DTP38username5mbtpp6parser3Lit5LBool(false);
+const _M0FP38username5mbtpp2tt20trait__method__namesN6recordS9385 = new _M0TPC16string10StringView("super$", 0, 6);
+const _M0FP38username5mbtpp2tt13trait__supersN6recordS9149 = new _M0TPC16string10StringView("super$", 0, 6);
+const _M0FP38username5mbtpp2tt23object__safety__problemN6constrS9395 = "its Self is not a type";
+const _M0FP38username5mbtpp2tt9dyn__dictN6recordS9114 = new _M0TPC16string10StringView("super$", 0, 6);
+const _M0FP38username5mbtpp2tt19elab__expl__bindersN6constrS11078 = new _M0DTP38username5mbtpp2tt2Tm6Global("Unit");
+const _M0FP38username5mbtpp2tt19elab__expl__bindersN5tupleS11079 = { _0: "_", _1: 0, _2: _M0FP38username5mbtpp2tt19elab__expl__bindersN6constrS11078 };
+const _M0FP38username5mbtpp2tt19elab__expl__bindersN6constrS11080 = new _M0DTP38username5mbtpp2tt2Tm6Global("Option");
+const _M0FP38username5mbtpp2tt5inferN6constrS10536 = new _M0DTP38username5mbtpp6parser3Lit5LBool(false);
+const _M0FP38username5mbtpp2tt5inferN6constrS10537 = new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0FP38username5mbtpp2tt5inferN6constrS10536);
+const _M0FP38username5mbtpp2tt5inferN6constrS10538 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
+const _M0FP38username5mbtpp2tt5inferN6constrS10539 = new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0FP38username5mbtpp2tt5inferN6constrS10538);
+const _M0FP38username5mbtpp2tt5inferN6constrS10540 = new _M0DTP38username5mbtpp6parser3Lit4LStr("");
+const _M0FP38username5mbtpp2tt5inferN6constrS10541 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
+const _M0FP38username5mbtpp2tt5inferN6constrS10542 = new _M0DTP38username5mbtpp2tt3Val4VLit(_M0FP38username5mbtpp2tt5inferN6constrS10541);
+const _M0FP38username5mbtpp2tt5inferN6constrS10543 = new _M0DTP38username5mbtpp6parser3Lit5LBool(false);
+const _M0FP38username5mbtpp2tt5inferN6constrS10544 = new _M0DTP38username5mbtpp2tt3Val4VLit(_M0FP38username5mbtpp2tt5inferN6constrS10543);
+const _M0FP38username5mbtpp2tt5inferN6constrS10545 = new _M0DTP38username5mbtpp2tt2Tm6Global("Result::Ok");
+const _M0FP38username5mbtpp2tt5inferN6constrS10546 = new _M0DTP38username5mbtpp2tt2Tm6Global("Error");
+const _M0FP38username5mbtpp2tt5inferN5tupleS10547 = { _0: _M0FP38username5mbtpp2tt5inferN6constrS10546, _1: 1 };
+const _M0FP38username5mbtpp2tt5inferN6constrS10548 = new _M0DTP38username5mbtpp2tt2Tm6Global("Result::Err");
+const _M0FP38username5mbtpp2tt5inferN6constrS10549 = new _M0DTP38username5mbtpp2tt2Tm6Global("Error");
+const _M0FP38username5mbtpp2tt5inferN5tupleS10550 = { _0: _M0FP38username5mbtpp2tt5inferN6constrS10549, _1: 1 };
+const _M0FP38username5mbtpp2tt5inferN6constrS10551 = new _M0DTP38username5mbtpp2tt2Tm3Var(0);
+const _M0FP38username5mbtpp2tt5inferN5tupleS10552 = { _0: _M0FP38username5mbtpp2tt5inferN6constrS10551, _1: 0 };
+const _M0FP38username5mbtpp2tt5inferN6constrS10553 = new _M0DTP38username5mbtpp2tt4CPat5CPVar("e");
+const _M0FP38username5mbtpp2tt9app__coreN6constrS10400 = new _M0DTP38username5mbtpp2tt2Tm6Global("Unit");
+const _M0FP38username5mbtpp2tt9app__coreN5tupleS10401 = { _0: "_", _1: 0, _2: _M0FP38username5mbtpp2tt9app__coreN6constrS10400 };
+const _M0FP38username5mbtpp2tt5checkN6recordS9885 = new _M0TPC16string10StringView("&", 0, 1);
+const _M0FP38username5mbtpp2tt5checkN6constrS9886 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
+const _M0FP38username5mbtpp2tt5checkN6constrS9887 = new _M0DTP38username5mbtpp2tt3Val4VLit(_M0FP38username5mbtpp2tt5checkN6constrS9886);
+const _M0FP38username5mbtpp2tt5checkN6constrS9888 = new _M0DTP38username5mbtpp6parser3Lit5LBool(false);
+const _M0FP38username5mbtpp2tt5checkN6constrS9889 = new _M0DTP38username5mbtpp2tt3Val4VLit(_M0FP38username5mbtpp2tt5checkN6constrS9888);
+const _M0FP38username5mbtpp2tt5checkN6constrS9890 = new _M0DTP38username5mbtpp2tt2Tm6Global("?");
+const _M0FP38username5mbtpp2tt12elab__structN6recordS10864 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp2tt12check__blockN6constrS10155 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
+const _M0FP38username5mbtpp2tt12check__blockN6constrS10156 = new _M0DTP38username5mbtpp6parser3Lit4LStr("guard failed");
+const _M0FP38username5mbtpp2tt12check__blockN6constrS10157 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
+const _M0FP38username5mbtpp2tt12check__blockN6constrS10158 = new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0FP38username5mbtpp2tt12check__blockN6constrS10157);
+const _M0FP38username5mbtpp2tt12check__blockN6constrS10159 = new _M0DTP38username5mbtpp6parser3Lit4LInt(1);
+const _M0FP38username5mbtpp2tt12check__blockN6constrS10160 = new _M0DTP38username5mbtpp6parser3Lit4LInt(0);
+const _M0FP38username5mbtpp2tt12run__tacticsN6constrS9727 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
+const _M0FP38username5mbtpp2tt12run__tacticsN6constrS9728 = new _M0DTP38username5mbtpp6parser3Lit5LBool(false);
+const _M0FP38username5mbtpp2tt12run__tacticsN6constrS9729 = new _M0DTP38username5mbtpp2tt2Tm6Global("Id::sym");
+const _M0FP38username5mbtpp2tt12run__tacticsN6recordS9730 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp2tt10check__lamN6constrS11191 = new _M0DTP38username5mbtpp2tt2Tm6Global("?");
+const _M0FP38username5mbtpp2tt10check__lamN6constrS11192 = new _M0DTP38username5mbtpp2tt2Tm6Global("?");
+const _M0FP38username5mbtpp2tt11infer__headN6recordS10510 = new _M0TPC16string10StringView("::", 0, 2);
+const _M0FP38username5mbtpp2tt9elab__appN6recordS10363 = new _M0TPC16string10StringView("::", 0, 2);
+const _M0FP38username5mbtpp2tt9elab__appN6recordS10364 = new _M0TPC16string10StringView("\n  ", 0, 3);
+const _M0FP38username5mbtpp2tt10infer__binN6constrS11117 = new _M0DTP38username5mbtpp6parser3Lit4LInt(0);
+const _M0FP38username5mbtpp2tt10infer__binN6constrS11118 = new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0FP38username5mbtpp2tt10infer__binN6constrS11117);
+const _M0FP38username5mbtpp2tt10infer__binN6constrS11119 = new _M0DTP38username5mbtpp6parser3Lit5LBool(false);
+const _M0FP38username5mbtpp2tt10infer__binN6constrS11120 = new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0FP38username5mbtpp2tt10infer__binN6constrS11119);
+const _M0FP38username5mbtpp2tt10infer__binN6constrS11121 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
+const _M0FP38username5mbtpp2tt10infer__binN6constrS11122 = new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0FP38username5mbtpp2tt10infer__binN6constrS11121);
+const _M0FP38username5mbtpp2tt10infer__binN6constrS11123 = new _M0DTP38username5mbtpp2tt2Tm6Global("Id");
+const _M0FP38username5mbtpp2tt10infer__binN6constrS11124 = new _M0DTP38username5mbtpp6parser3Lit5LBool(false);
+const _M0FP38username5mbtpp2tt10infer__binN6constrS11125 = new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0FP38username5mbtpp2tt10infer__binN6constrS11124);
+const _M0FP38username5mbtpp2tt10infer__binN6constrS11126 = new _M0DTP38username5mbtpp6parser3Lit5LBool(true);
+const _M0FP38username5mbtpp2tt10infer__binN6constrS11127 = new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0FP38username5mbtpp2tt10infer__binN6constrS11126);
+const _M0FP38username5mbtpp2tt18elab__struct__declN6constrS10996 = new _M0DTP38username5mbtpp2tt2Tm3Var(0);
+const _M0FP38username5mbtpp2tt11elab__traitN6constrS11764 = new _M0DTP38username5mbtpp2tt2Tm3Var(0);
+const _M0FP38username5mbtpp2tt11elab__traitN6constrS11765 = new _M0DTP38username5mbtpp2tt2Tm3Var(0);
+const _M0FP38username5mbtpp2tt11elab__traitN6constrS11766 = new _M0DTP38username5mbtpp2tt2Tm3Var(0);
+const _M0FP38username5mbtpp2tt11elab__traitN6constrS11767 = new _M0DTP38username5mbtpp2tt2Tm3Var(0);
 const _bind$13 = [];
 const _M0FP38username5mbtpp2tt9decl__pos = _M0MPB3Map3MapGsRP38username5mbtpp6parser3PosE(new _M0TPB9ArrayViewGUsRP38username5mbtpp6parser3PosEE(_bind$13, 0, 0), undefined);
 const _bind$14 = [];
 const _M0FP38username5mbtpp2tt11decl__kinds = _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_bind$14, 0, 0), undefined);
-const _M0FP38username5mbtpp2tt19no__mbt__type__noteN6recordS10682 = new _M0TPC16string10StringView("Array[", 0, 6);
+const _M0FP38username5mbtpp2tt19no__mbt__type__noteN6recordS11362 = new _M0TPC16string10StringView("Array[", 0, 6);
 const _bind$15 = [];
 const _M0FP38username5mbtpp2tt8mbt__fns = _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_bind$15, 0, 0), undefined);
-const _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS10833 = "unknown function";
-const _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS10834 = "only functions with a body can be #mbt";
-const _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS10835 = "main cannot be #mbt";
-const _M0FP38username5mbtpp2tt16mbt__fn__problemN6recordS10836 = new _M0TPC16string10StringView("::", 0, 2);
-const _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS10837 = "a method must belong to a type generated by this program (a #mbt type without a name)";
-const _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS10838 = "default arguments are not supported";
-const _M0FP38username5mbtpp2tt20elab__tagged__paramsN6constrS10944 = new _M0DTP38username5mbtpp2tt2Tm6Global("Unit");
-const _M0FP38username5mbtpp2tt20elab__tagged__paramsN5tupleS10945 = { _0: "_", _1: 0, _2: _M0FP38username5mbtpp2tt20elab__tagged__paramsN6constrS10944 };
-const _M0FP38username5mbtpp2tt13elab__fn__sigN6constrS10968 = new _M0DTP38username5mbtpp2tt2Tm6Global("Unit");
-const _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS10688 = "unknown type";
-const _M0FP38username5mbtpp2tt18mbt__data__problemN6recordS10689 = new _M0TPC16string10StringView(".", 0, 1);
-const _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS10690 = "error types are not supported";
-const _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS10691 = "propositions have no MoonBit type";
-const _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS10692 = "indexed types have no MoonBit type";
-const _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS10693 = "only type parameters are allowed";
-const _M0FP38username5mbtpp2tt19mbt__trait__problemN6recordS10733 = new _M0TPC16string10StringView(".", 0, 1);
-const _M0FP38username5mbtpp2tt19mbt__trait__problemN6constrS10734 = "Self must be a type";
-const _M0FP38username5mbtpp2tt16elab__impl__bodyN6recordS11150 = new _M0TPC16string10StringView("super$", 0, 6);
+const _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS11513 = "unknown function";
+const _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS11514 = "only functions with a body can be #mbt";
+const _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS11515 = "main cannot be #mbt";
+const _M0FP38username5mbtpp2tt16mbt__fn__problemN6recordS11516 = new _M0TPC16string10StringView("::", 0, 2);
+const _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS11517 = "a method must belong to a type generated by this program (a #mbt type without a name)";
+const _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS11518 = "default arguments are not supported";
+const _M0FP38username5mbtpp2tt20elab__tagged__paramsN6constrS11624 = new _M0DTP38username5mbtpp2tt2Tm6Global("Unit");
+const _M0FP38username5mbtpp2tt20elab__tagged__paramsN5tupleS11625 = { _0: "_", _1: 0, _2: _M0FP38username5mbtpp2tt20elab__tagged__paramsN6constrS11624 };
+const _M0FP38username5mbtpp2tt13elab__fn__sigN6constrS11648 = new _M0DTP38username5mbtpp2tt2Tm6Global("Unit");
+const _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS11368 = "unknown type";
+const _M0FP38username5mbtpp2tt18mbt__data__problemN6recordS11369 = new _M0TPC16string10StringView(".", 0, 1);
+const _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS11370 = "error types are not supported";
+const _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS11371 = "propositions have no MoonBit type";
+const _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS11372 = "indexed types have no MoonBit type";
+const _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS11373 = "only type parameters are allowed";
+const _M0FP38username5mbtpp2tt19mbt__trait__problemN6recordS11413 = new _M0TPC16string10StringView(".", 0, 1);
+const _M0FP38username5mbtpp2tt19mbt__trait__problemN6constrS11414 = "Self must be a type";
+const _M0FP38username5mbtpp2tt16elab__impl__bodyN6recordS11828 = new _M0TPC16string10StringView("super$", 0, 6);
 const _bind$16 = [];
 const _M0FP38username5mbtpp2tt12mbt__derives = _M0MPB3Map3MapGsRPB5ArrayGsEE(new _M0TPB9ArrayViewGUsRPB5ArrayGsEEE(_bind$16, 0, 0), undefined);
-const _M0FP38username5mbtpp2tt15imported__traitN6recordS11277 = new _M0TPC16string10StringView("@", 0, 1);
-const _M0FP38username5mbtpp2tt12mbt__derivedN6recordS11336 = new _M0TPC16string10StringView(".", 0, 1);
-const _M0FP38username5mbtpp2tt12mbt__derivedN6recordS11337 = new _M0TPC16string10StringView("_", 0, 1);
-const _M0FP38username5mbtpp2tt12mbt__derivedN6recordS11338 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp2tt12mbt__derivedN6recordS11339 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp2tt12struct__bodyN6recordS11381 = new _M0TPC16string10StringView(" + ", 0, 3);
-const _M0FP38username5mbtpp2tt12struct__bodyN6recordS11382 = new _M0TPC16string10StringView(" && ", 0, 4);
-const _M0FP38username5mbtpp2tt8con__patN6recordS11214 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp2tt10enum__bodyN6recordS11233 = new _M0TPC16string10StringView("; ", 0, 2);
-const _M0FP38username5mbtpp2tt10enum__bodyN6recordS11234 = new _M0TPC16string10StringView(" + \", \" + ", 0, 10);
-const _M0FP38username5mbtpp2tt10enum__bodyN6recordS11235 = new _M0TPC16string10StringView("; ", 0, 2);
-const _M0FP38username5mbtpp2tt10enum__bodyN6recordS11236 = new _M0TPC16string10StringView(" && ", 0, 4);
-const _M0FP38username5mbtpp2tt10enum__bodyN6recordS11237 = new _M0TPC16string10StringView("; ", 0, 2);
-const _M0FP38username5mbtpp2tt10enum__bodyN6recordS11238 = new _M0TPC16string10StringView("; ", 0, 2);
-const _M0FP38username5mbtpp2tt10enum__bodyN6recordS11239 = new _M0TPC16string10StringView("; ", 0, 2);
-const _M0FP38username5mbtpp2tt14derived__implsN6recordS11395 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp2tt14derived__implsN6recordS11396 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp2tt14derived__implsN6recordS11397 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp2tt18mbt__impl__problemN6constrS10760 = "an impl of a #mbt trait may only have type parameters with #mbt bounds";
-const _M0FP38username5mbtpp2tt18mbt__impl__problemN6constrS10761 = "bad instance type";
-const _M0FP38username5mbtpp2tt20check__decls_2einnerN6recordS11536 = new _M0TP38username5mbtpp6parser3Pos(0, 0);
-const _M0FP38username5mbtpp2tt13load__importsN2p0S11795 = new _M0TP38username5mbtpp6parser3Pos(0, 0);
-const _M0FP38username5mbtpp2tt13load__importsN6constrS11796 = new _M0DTP38username5mbtpp6parser4Expr5EType(_M0FP38username5mbtpp2tt13load__importsN2p0S11795);
-const _M0FP38username5mbtpp2tt13load__importsN6constrS11797 = _M0FP38username5mbtpp2tt13load__importsN6constrS11796;
-const _M0FP38username5mbtpp2tt13load__importsN6constrS11798 = new _M0DTP38username5mbtpp6parser4Expr4EVar(_M0FP38username5mbtpp2tt13load__importsN2p0S11795, "String");
-const _M0FP38username5mbtpp2tt13load__importsN6constrS11799 = new _M0DTP38username5mbtpp6parser4Expr5EType(_M0FP38username5mbtpp2tt13load__importsN2p0S11795);
-const _M0FP38username5mbtpp2tt13load__importsN6constrS11800 = _M0FP38username5mbtpp2tt13load__importsN6constrS11799;
-const _M0FP38username5mbtpp2tt13load__importsN6constrS11801 = new _M0DTP38username5mbtpp6parser4Expr4EVar(_M0FP38username5mbtpp2tt13load__importsN2p0S11795, "Array");
-const _M0FP38username5mbtpp2tt13load__importsN6constrS11802 = new _M0DTP38username5mbtpp6parser4Expr4EVar(_M0FP38username5mbtpp2tt13load__importsN2p0S11795, "T");
-const _M0FP38username5mbtpp2tt13load__importsN6recordS11803 = new _M0TPC16string10StringView("@", 0, 1);
-const _M0FP38username5mbtpp2tt13load__importsN6recordS11804 = new _M0TP38username5mbtpp6parser3Pos(0, 0);
-const _M0FP38username5mbtpp2tt13load__importsN6recordS11805 = new _M0TP38username5mbtpp6parser3Pos(0, 0);
-const _M0FP38username5mbtpp2tt10check__srcN6recordS11702 = new _M0TP38username5mbtpp6parser3Pos(0, 0);
-const _M0FP38username5mbtpp2tt10check__srcN6constrS11703 = new _M0DTP38username5mbtpp6parser4Decl7DOpaque(_M0FP38username5mbtpp2tt10check__srcN6recordS11702, "Json", 0);
-const _M0FP38username5mbtpp6interp10show__rvalN6recordS14917 = new _M0TPC16string10StringView("::", 0, 2);
-const _M0FP38username5mbtpp6interp10show__rvalN6recordS14918 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp6interp10show__rvalN6recordS14919 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp6interp7Machine4primN6recordS14948 = new _M0TPC16string10StringView("@mbt:", 0, 5);
-const _M0MP38username5mbtpp6interp7Machine4primN6recordS14949 = new _M0TPC16string10StringView("@mbt:", 0, 5);
-const _M0MP38username5mbtpp6interp7Machine4primN6recordS14950 = new _M0TPC16string10StringView("@mbt:", 0, 5);
-const _M0MP38username5mbtpp6interp7Machine4primN6recordS14951 = new _M0TPC16string10StringView("@mbt:", 0, 5);
-const _M0MP38username5mbtpp6interp7Machine4primN6recordS14952 = new _M0TPC16string10StringView("@mbt:", 0, 5);
-const _M0MP38username5mbtpp6interp7Machine4evalN6recordS15052 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp7codegen9out__fileN6recordS12407 = new _M0TPC16string10StringView(".mbtpp", 0, 6);
-const _M0MP38username5mbtpp7codegen3Gen8file__ofN6recordS12418 = new _M0TPC16string10StringView("$default$", 0, 9);
-const _M0MP38username5mbtpp7codegen3Gen10value__extN6recordS13811 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10value__extN6recordS13812 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10value__extN6recordS13813 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp7codegen11double__litN6recordS12745 = new _M0TPC16string10StringView(".", 0, 1);
-const _M0FP38username5mbtpp7codegen11double__litN6recordS12746 = new _M0TPC16string10StringView("e", 0, 1);
-const _M0FP38username5mbtpp7codegen9char__litN6digitsS12740 = "0123456789abcdef";
-const _M0MP38username5mbtpp7codegen3Gen4ctorN6recordS12328 = new _M0TPC16string10StringView("_", 0, 1);
-const _M0MP38username5mbtpp7codegen3Gen9con__codeN6recordS12357 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen8enum__okN6recordS12171 = new _M0TPC16string10StringView("@", 0, 1);
-const _M0FP38username5mbtpp7codegen10short__conN6recordS12289 = new _M0TPC16string10StringView("::", 0, 2);
-const _M0FP38username5mbtpp7codegen9con__exprN6recordS12311 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp7codegen9con__exprN6recordS12312 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp7codegen8con__patN6recordS12320 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen4nameN6recordS12431 = new _M0TPC16string10StringView("_", 0, 1);
-const _M0MP38username5mbtpp7codegen3Gen9to__valueN6recordS12564 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen9to__valueN6recordS12565 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen9of__valueN6recordS12535 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen9of__valueN6recordS12536 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS12472 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS12473 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS12474 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS12475 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS12476 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS12477 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen7mbt__tyN6recordS12453 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen7mbt__tyN6recordS12454 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen7mbt__tyN6recordS12455 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12874 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12875 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12876 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12877 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12878 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12879 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12880 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12881 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12882 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12883 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12884 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12885 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12886 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12887 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12888 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12889 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12890 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12891 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12892 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12893 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12894 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12895 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12896 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12897 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12898 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12899 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12900 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12901 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12902 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12903 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12904 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12905 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12906 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12907 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12908 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12909 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12910 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12911 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12912 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12913 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12914 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12915 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12916 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12917 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12918 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12919 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12920 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12921 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12922 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12923 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12924 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12925 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12926 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12927 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12928 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12929 = new _M0TPC16string10StringView(".Debug", 0, 6);
-const _M0MP38username5mbtpp7codegen3Gen3gidN6recordS12855 = new _M0TPC16string10StringView("::", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen3gidN6recordS12856 = new _M0TPC16string10StringView("_", 0, 1);
-const _M0FP38username5mbtpp7codegen10method__ofN6recordS12839 = new _M0TPC16string10StringView("::", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen11need__traitN6recordS13030 = new _M0TPC16string10StringView(" + ", 0, 3);
-const _M0MP38username5mbtpp7codegen3Gen11need__traitN6recordS13031 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp2tt15imported__traitN6recordS11955 = new _M0TPC16string10StringView("@", 0, 1);
+const _M0FP38username5mbtpp2tt12mbt__derivedN6recordS12014 = new _M0TPC16string10StringView(".", 0, 1);
+const _M0FP38username5mbtpp2tt12mbt__derivedN6recordS12015 = new _M0TPC16string10StringView("_", 0, 1);
+const _M0FP38username5mbtpp2tt12mbt__derivedN6recordS12016 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp2tt12mbt__derivedN6recordS12017 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp2tt12struct__bodyN6recordS12059 = new _M0TPC16string10StringView(" + ", 0, 3);
+const _M0FP38username5mbtpp2tt12struct__bodyN6recordS12060 = new _M0TPC16string10StringView(" && ", 0, 4);
+const _M0FP38username5mbtpp2tt8con__patN6recordS11892 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp2tt10enum__bodyN6recordS11911 = new _M0TPC16string10StringView("; ", 0, 2);
+const _M0FP38username5mbtpp2tt10enum__bodyN6recordS11912 = new _M0TPC16string10StringView(" + \", \" + ", 0, 10);
+const _M0FP38username5mbtpp2tt10enum__bodyN6recordS11913 = new _M0TPC16string10StringView("; ", 0, 2);
+const _M0FP38username5mbtpp2tt10enum__bodyN6recordS11914 = new _M0TPC16string10StringView(" && ", 0, 4);
+const _M0FP38username5mbtpp2tt10enum__bodyN6recordS11915 = new _M0TPC16string10StringView("; ", 0, 2);
+const _M0FP38username5mbtpp2tt10enum__bodyN6recordS11916 = new _M0TPC16string10StringView("; ", 0, 2);
+const _M0FP38username5mbtpp2tt10enum__bodyN6recordS11917 = new _M0TPC16string10StringView("; ", 0, 2);
+const _M0FP38username5mbtpp2tt14derived__implsN6recordS12073 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp2tt14derived__implsN6recordS12074 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp2tt14derived__implsN6recordS12075 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp2tt18mbt__impl__problemN6constrS11440 = "an impl of a #mbt trait may only have type parameters with #mbt bounds";
+const _M0FP38username5mbtpp2tt18mbt__impl__problemN6constrS11441 = "bad instance type";
+const _M0FP38username5mbtpp2tt20check__decls_2einnerN6recordS12214 = new _M0TP38username5mbtpp6parser3Pos(0, 0);
+const _M0FP38username5mbtpp6parser14collect__namesN6recordS6177 = new _M0TPC16string10StringView("%", 0, 1);
+const _M0FP38username5mbtpp6parser14collect__namesN6recordS6178 = new _M0TPC16string10StringView("%", 0, 1);
+const _M0FP38username5mbtpp2tt13load__importsN2p0S12477 = new _M0TP38username5mbtpp6parser3Pos(0, 0);
+const _M0FP38username5mbtpp2tt13load__importsN6constrS12478 = new _M0DTP38username5mbtpp6parser4Expr5EType(_M0FP38username5mbtpp2tt13load__importsN2p0S12477);
+const _M0FP38username5mbtpp2tt13load__importsN6constrS12479 = _M0FP38username5mbtpp2tt13load__importsN6constrS12478;
+const _M0FP38username5mbtpp2tt13load__importsN6constrS12480 = new _M0DTP38username5mbtpp6parser4Expr4EVar(_M0FP38username5mbtpp2tt13load__importsN2p0S12477, "String");
+const _M0FP38username5mbtpp2tt13load__importsN6constrS12481 = new _M0DTP38username5mbtpp6parser4Expr5EType(_M0FP38username5mbtpp2tt13load__importsN2p0S12477);
+const _M0FP38username5mbtpp2tt13load__importsN6constrS12482 = _M0FP38username5mbtpp2tt13load__importsN6constrS12481;
+const _M0FP38username5mbtpp2tt13load__importsN6constrS12483 = new _M0DTP38username5mbtpp6parser4Expr4EVar(_M0FP38username5mbtpp2tt13load__importsN2p0S12477, "Array");
+const _M0FP38username5mbtpp2tt13load__importsN6constrS12484 = new _M0DTP38username5mbtpp6parser4Expr4EVar(_M0FP38username5mbtpp2tt13load__importsN2p0S12477, "T");
+const _M0FP38username5mbtpp2tt13load__importsN6recordS12485 = new _M0TPC16string10StringView("@", 0, 1);
+const _M0FP38username5mbtpp2tt13load__importsN6recordS12486 = new _M0TP38username5mbtpp6parser3Pos(0, 0);
+const _M0FP38username5mbtpp2tt13load__importsN6recordS12487 = new _M0TP38username5mbtpp6parser3Pos(0, 0);
+const _M0FP38username5mbtpp2tt10check__srcN6recordS12380 = new _M0TP38username5mbtpp6parser3Pos(0, 0);
+const _M0FP38username5mbtpp2tt10check__srcN6constrS12381 = new _M0DTP38username5mbtpp6parser4Decl7DOpaque(_M0FP38username5mbtpp2tt10check__srcN6recordS12380, "Json", 0);
+const _M0FP38username5mbtpp2tt10check__srcN6recordS12382 = new _M0TP38username5mbtpp6parser3Pos(0, 0);
+const _M0FP38username5mbtpp2tt10check__srcN6constrS12383 = new _M0DTP38username5mbtpp6parser4Decl7DOpaque(_M0FP38username5mbtpp2tt10check__srcN6recordS12382, "%Async", 1);
+const _M0FP38username5mbtpp2tt10check__srcN6recordS12384 = new _M0TP38username5mbtpp6parser3Pos(0, 0);
+const _M0FP38username5mbtpp2tt10check__srcN6constrS12385 = new _M0DTP38username5mbtpp6parser4Decl7DOpaque(_M0FP38username5mbtpp2tt10check__srcN6recordS12384, "%NoRaise", 0);
+const _M0FP38username5mbtpp6interp10show__rvalN6recordS15826 = new _M0TPC16string10StringView("::", 0, 2);
+const _M0FP38username5mbtpp6interp10show__rvalN6recordS15827 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp6interp10show__rvalN6recordS15828 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp6interp7Machine4primN6recordS15857 = new _M0TPC16string10StringView("@mbt:", 0, 5);
+const _M0MP38username5mbtpp6interp7Machine4primN6recordS15858 = new _M0TPC16string10StringView("@mbt:", 0, 5);
+const _M0MP38username5mbtpp6interp7Machine4primN6recordS15859 = new _M0TPC16string10StringView("@mbt:", 0, 5);
+const _M0MP38username5mbtpp6interp7Machine4primN6recordS15860 = new _M0TPC16string10StringView("@mbt:", 0, 5);
+const _M0MP38username5mbtpp6interp7Machine4primN6recordS15861 = new _M0TPC16string10StringView("@mbt:", 0, 5);
+const _M0MP38username5mbtpp6interp7Machine4evalN6recordS15961 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp7codegen9out__fileN6recordS13161 = new _M0TPC16string10StringView(".mbtpp", 0, 6);
+const _M0MP38username5mbtpp7codegen3Gen8file__ofN6recordS13172 = new _M0TPC16string10StringView("$default$", 0, 9);
+const _M0MP38username5mbtpp7codegen3Gen10value__extN6recordS14644 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10value__extN6recordS14645 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10value__extN6recordS14646 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen4nameN6recordS13185 = new _M0TPC16string10StringView("_", 0, 1);
+const _M0MP38username5mbtpp7codegen3Gen4ctorN6recordS13082 = new _M0TPC16string10StringView("_", 0, 1);
+const _M0MP38username5mbtpp7codegen3Gen9con__codeN6recordS13111 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen8enum__okN6recordS12919 = new _M0TPC16string10StringView("@", 0, 1);
+const _M0FP38username5mbtpp7codegen10short__conN6recordS13041 = new _M0TPC16string10StringView("::", 0, 2);
+const _M0FP38username5mbtpp7codegen9con__exprN6recordS13065 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp7codegen9con__exprN6recordS13066 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp7codegen8con__patN6recordS13074 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen7mbt__tyN6recordS13207 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen7mbt__tyN6recordS13208 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS13231 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS13232 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS13233 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS13234 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS13235 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS13236 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen9to__valueN6recordS13323 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen9to__valueN6recordS13324 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen9of__valueN6recordS13294 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen9of__valueN6recordS13295 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen11mbt__paramsN6recordS13227 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp7codegen11double__litN6recordS13504 = new _M0TPC16string10StringView(".", 0, 1);
+const _M0FP38username5mbtpp7codegen11double__litN6recordS13505 = new _M0TPC16string10StringView("e", 0, 1);
+const _M0FP38username5mbtpp7codegen9char__litN6digitsS13499 = "0123456789abcdef";
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13636 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13637 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13638 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13639 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13640 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13641 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13642 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13643 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13644 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13645 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13646 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13647 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13648 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13649 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13650 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13651 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13652 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13653 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13654 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13655 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13656 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13657 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13658 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13659 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13660 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13661 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13662 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13663 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13664 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13665 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13666 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13667 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13668 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13669 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13670 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13671 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13672 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13673 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13674 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13675 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13676 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13677 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13678 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13679 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13680 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13681 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13682 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13683 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13684 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13685 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13686 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13687 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13688 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13689 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13690 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13691 = new _M0TPC16string10StringView(".Debug", 0, 6);
+const _M0MP38username5mbtpp7codegen3Gen3gidN6recordS13617 = new _M0TPC16string10StringView("::", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen3gidN6recordS13618 = new _M0TPC16string10StringView("_", 0, 1);
+const _M0FP38username5mbtpp7codegen10method__ofN6recordS13601 = new _M0TPC16string10StringView("::", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen11need__traitN6recordS13792 = new _M0TPC16string10StringView(" + ", 0, 3);
+const _M0MP38username5mbtpp7codegen3Gen11need__traitN6recordS13793 = new _M0TPC16string10StringView(", ", 0, 2);
 const _bind$17 = [{ _0: "%int_add", _1: { _0: "($0 + $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy4NInt__, _M0DTP38username5mbtpp7codegen3NTy4NInt__], _2: _M0DTP38username5mbtpp7codegen3NTy4NInt__ } }, { _0: "%int_sub", _1: { _0: "($0 - $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy4NInt__, _M0DTP38username5mbtpp7codegen3NTy4NInt__], _2: _M0DTP38username5mbtpp7codegen3NTy4NInt__ } }, { _0: "%int_mul", _1: { _0: "($0 * $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy4NInt__, _M0DTP38username5mbtpp7codegen3NTy4NInt__], _2: _M0DTP38username5mbtpp7codegen3NTy4NInt__ } }, { _0: "%int_land", _1: { _0: "($0 & $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy4NInt__, _M0DTP38username5mbtpp7codegen3NTy4NInt__], _2: _M0DTP38username5mbtpp7codegen3NTy4NInt__ } }, { _0: "%int_lor", _1: { _0: "($0 | $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy4NInt__, _M0DTP38username5mbtpp7codegen3NTy4NInt__], _2: _M0DTP38username5mbtpp7codegen3NTy4NInt__ } }, { _0: "%int_lxor", _1: { _0: "($0 ^ $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy4NInt__, _M0DTP38username5mbtpp7codegen3NTy4NInt__], _2: _M0DTP38username5mbtpp7codegen3NTy4NInt__ } }, { _0: "%int_shl", _1: { _0: "($0 << $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy4NInt__, _M0DTP38username5mbtpp7codegen3NTy4NInt__], _2: _M0DTP38username5mbtpp7codegen3NTy4NInt__ } }, { _0: "%int_shr", _1: { _0: "($0 >> $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy4NInt__, _M0DTP38username5mbtpp7codegen3NTy4NInt__], _2: _M0DTP38username5mbtpp7codegen3NTy4NInt__ } }, { _0: "%int_div", _1: { _0: "int_div($0, $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy4NInt__, _M0DTP38username5mbtpp7codegen3NTy4NInt__], _2: _M0DTP38username5mbtpp7codegen3NTy4NInt__ } }, { _0: "%int_mod", _1: { _0: "int_mod($0, $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy4NInt__, _M0DTP38username5mbtpp7codegen3NTy4NInt__], _2: _M0DTP38username5mbtpp7codegen3NTy4NInt__ } }, { _0: "%int_neg", _1: { _0: "(-$0)", _1: [_M0DTP38username5mbtpp7codegen3NTy4NInt__], _2: _M0DTP38username5mbtpp7codegen3NTy4NInt__ } }, { _0: "%int_eq", _1: { _0: "($0 == $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy4NInt__, _M0DTP38username5mbtpp7codegen3NTy4NInt__], _2: _M0DTP38username5mbtpp7codegen3NTy5NBool__ } }, { _0: "%int_lt", _1: { _0: "($0 < $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy4NInt__, _M0DTP38username5mbtpp7codegen3NTy4NInt__], _2: _M0DTP38username5mbtpp7codegen3NTy5NBool__ } }, { _0: "%int_le", _1: { _0: "($0 <= $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy4NInt__, _M0DTP38username5mbtpp7codegen3NTy4NInt__], _2: _M0DTP38username5mbtpp7codegen3NTy5NBool__ } }, { _0: "%int_gt", _1: { _0: "($0 > $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy4NInt__, _M0DTP38username5mbtpp7codegen3NTy4NInt__], _2: _M0DTP38username5mbtpp7codegen3NTy5NBool__ } }, { _0: "%int_ge", _1: { _0: "($0 >= $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy4NInt__, _M0DTP38username5mbtpp7codegen3NTy4NInt__], _2: _M0DTP38username5mbtpp7codegen3NTy5NBool__ } }, { _0: "%int_compare", _1: { _0: "$0.compare($1)", _1: [_M0DTP38username5mbtpp7codegen3NTy4NInt__, _M0DTP38username5mbtpp7codegen3NTy4NInt__], _2: _M0DTP38username5mbtpp7codegen3NTy4NInt__ } }, { _0: "%int_to_string", _1: { _0: "$0.to_string()", _1: [_M0DTP38username5mbtpp7codegen3NTy4NInt__], _2: _M0DTP38username5mbtpp7codegen3NTy7NString__ } }, { _0: "%int_to_double", _1: { _0: "$0.to_double()", _1: [_M0DTP38username5mbtpp7codegen3NTy4NInt__], _2: _M0DTP38username5mbtpp7codegen3NTy7NDouble__ } }, { _0: "%double_add", _1: { _0: "($0 + $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy7NDouble__, _M0DTP38username5mbtpp7codegen3NTy7NDouble__], _2: _M0DTP38username5mbtpp7codegen3NTy7NDouble__ } }, { _0: "%double_sub", _1: { _0: "($0 - $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy7NDouble__, _M0DTP38username5mbtpp7codegen3NTy7NDouble__], _2: _M0DTP38username5mbtpp7codegen3NTy7NDouble__ } }, { _0: "%double_mul", _1: { _0: "($0 * $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy7NDouble__, _M0DTP38username5mbtpp7codegen3NTy7NDouble__], _2: _M0DTP38username5mbtpp7codegen3NTy7NDouble__ } }, { _0: "%double_div", _1: { _0: "($0 / $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy7NDouble__, _M0DTP38username5mbtpp7codegen3NTy7NDouble__], _2: _M0DTP38username5mbtpp7codegen3NTy7NDouble__ } }, { _0: "%double_neg", _1: { _0: "(-$0)", _1: [_M0DTP38username5mbtpp7codegen3NTy7NDouble__], _2: _M0DTP38username5mbtpp7codegen3NTy7NDouble__ } }, { _0: "%double_eq", _1: { _0: "($0 == $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy7NDouble__, _M0DTP38username5mbtpp7codegen3NTy7NDouble__], _2: _M0DTP38username5mbtpp7codegen3NTy5NBool__ } }, { _0: "%double_lt", _1: { _0: "($0 < $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy7NDouble__, _M0DTP38username5mbtpp7codegen3NTy7NDouble__], _2: _M0DTP38username5mbtpp7codegen3NTy5NBool__ } }, { _0: "%double_le", _1: { _0: "($0 <= $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy7NDouble__, _M0DTP38username5mbtpp7codegen3NTy7NDouble__], _2: _M0DTP38username5mbtpp7codegen3NTy5NBool__ } }, { _0: "%double_gt", _1: { _0: "($0 > $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy7NDouble__, _M0DTP38username5mbtpp7codegen3NTy7NDouble__], _2: _M0DTP38username5mbtpp7codegen3NTy5NBool__ } }, { _0: "%double_ge", _1: { _0: "($0 >= $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy7NDouble__, _M0DTP38username5mbtpp7codegen3NTy7NDouble__], _2: _M0DTP38username5mbtpp7codegen3NTy5NBool__ } }, { _0: "%double_compare", _1: { _0: "$0.compare($1)", _1: [_M0DTP38username5mbtpp7codegen3NTy7NDouble__, _M0DTP38username5mbtpp7codegen3NTy7NDouble__], _2: _M0DTP38username5mbtpp7codegen3NTy4NInt__ } }, { _0: "%double_to_string", _1: { _0: "$0.to_string()", _1: [_M0DTP38username5mbtpp7codegen3NTy7NDouble__], _2: _M0DTP38username5mbtpp7codegen3NTy7NString__ } }, { _0: "%double_to_int", _1: { _0: "$0.to_int()", _1: [_M0DTP38username5mbtpp7codegen3NTy7NDouble__], _2: _M0DTP38username5mbtpp7codegen3NTy4NInt__ } }, { _0: "%str_add", _1: { _0: "($0 + $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy7NString__, _M0DTP38username5mbtpp7codegen3NTy7NString__], _2: _M0DTP38username5mbtpp7codegen3NTy7NString__ } }, { _0: "%str_eq", _1: { _0: "($0 == $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy7NString__, _M0DTP38username5mbtpp7codegen3NTy7NString__], _2: _M0DTP38username5mbtpp7codegen3NTy5NBool__ } }, { _0: "%str_compare", _1: { _0: "$0.compare($1)", _1: [_M0DTP38username5mbtpp7codegen3NTy7NString__, _M0DTP38username5mbtpp7codegen3NTy7NString__], _2: _M0DTP38username5mbtpp7codegen3NTy4NInt__ } }, { _0: "%str_length", _1: { _0: "$0.length()", _1: [_M0DTP38username5mbtpp7codegen3NTy7NString__], _2: _M0DTP38username5mbtpp7codegen3NTy4NInt__ } }, { _0: "%bool_eq", _1: { _0: "($0 == $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy5NBool__, _M0DTP38username5mbtpp7codegen3NTy5NBool__], _2: _M0DTP38username5mbtpp7codegen3NTy5NBool__ } }, { _0: "%bool_not", _1: { _0: "(!$0)", _1: [_M0DTP38username5mbtpp7codegen3NTy5NBool__], _2: _M0DTP38username5mbtpp7codegen3NTy5NBool__ } }, { _0: "%bool_to_string", _1: { _0: "$0.to_string()", _1: [_M0DTP38username5mbtpp7codegen3NTy5NBool__], _2: _M0DTP38username5mbtpp7codegen3NTy7NString__ } }, { _0: "%char_eq", _1: { _0: "($0 == $1)", _1: [_M0DTP38username5mbtpp7codegen3NTy5NChar__, _M0DTP38username5mbtpp7codegen3NTy5NChar__], _2: _M0DTP38username5mbtpp7codegen3NTy5NBool__ } }, { _0: "%char_compare", _1: { _0: "$0.compare($1)", _1: [_M0DTP38username5mbtpp7codegen3NTy5NChar__, _M0DTP38username5mbtpp7codegen3NTy5NChar__], _2: _M0DTP38username5mbtpp7codegen3NTy4NInt__ } }, { _0: "%char_to_int", _1: { _0: "$0.to_int()", _1: [_M0DTP38username5mbtpp7codegen3NTy5NChar__], _2: _M0DTP38username5mbtpp7codegen3NTy4NInt__ } }, { _0: "%char_to_string", _1: { _0: "$0.to_string()", _1: [_M0DTP38username5mbtpp7codegen3NTy5NChar__], _2: _M0DTP38username5mbtpp7codegen3NTy7NString__ } }, { _0: "%print", _1: { _0: "rt_write($0)", _1: [_M0DTP38username5mbtpp7codegen3NTy7NString__], _2: _M0DTP38username5mbtpp7codegen3NTy5NUnit__ } }];
 const _M0FP38username5mbtpp7codegen13native__prims = _M0MPB3Map3MapGsUsRPB5ArrayGRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen3NTyEE(new _M0TPB9ArrayViewGUsUsRPB5ArrayGRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen3NTyEEE(_bind$17, 0, 44), undefined);
-const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13072 = new _M0TPC16string10StringView("trait:", 0, 6);
-const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13073 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13074 = new _M0TPC16string10StringView("@", 0, 1);
-const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13075 = new _M0TPC16string10StringView(".", 0, 1);
-const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6constrS13076 = new _M0DTPB6ResultGssE3Err("unsupported method");
-const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13077 = new _M0TPC16string10StringView("::", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13078 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13079 = new _M0TPC16string10StringView(".", 0, 1);
-const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13080 = new _M0TPC16string10StringView("::", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13081 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13082 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6constrS13083 = new _M0DTPB6ResultGssE3Err("unsupported method");
-const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13084 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13840 = new _M0TPC16string10StringView("trait:", 0, 6);
+const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13841 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13842 = new _M0TPC16string10StringView("@", 0, 1);
+const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13843 = new _M0TPC16string10StringView(".", 0, 1);
+const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6constrS13844 = new _M0DTPB6ResultGssE3Err("unsupported method");
+const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13845 = new _M0TPC16string10StringView("::", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13846 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13847 = new _M0TPC16string10StringView(".", 0, 1);
+const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13848 = new _M0TPC16string10StringView("::", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13849 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13850 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6constrS13851 = new _M0DTPB6ResultGssE3Err("unsupported method");
+const _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13852 = new _M0TPC16string10StringView(", ", 0, 2);
 const _M0FP38username5mbtpp7codegen11end__marker = _M0IPC14char4CharPB4Show10to__string(2);
 const _M0FP38username5mbtpp7codegen10as__marker = _M0IPC14char4CharPB4Show10to__string(3);
 const _M0FP38username5mbtpp7codegen11var__marker = _M0IPC14char4CharPB4Show10to__string(1);
-const _M0MP38username5mbtpp7codegen3Gen10typed__patN6recordS13110 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp7codegen12source__nameN6recordS12693 = new _M0TPC16string10StringView("_", 0, 1);
-const _M0MP38username5mbtpp7codegen3Gen7explainN6recordS12699 = new _M0TPC16string10StringView("::", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen7explainN6recordS12700 = new _M0TPC16string10StringView("@mbt:", 0, 5);
-const _M0MP38username5mbtpp7codegen3Gen19tvars__with__boundsN6recordS13050 = new _M0TPC16string10StringView(" + ", 0, 3);
-const _M0MP38username5mbtpp7codegen3Gen19tvars__with__boundsN6recordS13051 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10impl__codeN6recordS13505 = new _M0TPC16string10StringView("super$", 0, 6);
-const _M0MP38username5mbtpp7codegen3Gen10impl__codeN6recordS13506 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10impl__codeN6recordS13507 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen12typed__checkN6recordS13156 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13199 = new _M0TPC16string10StringView(" else ", 0, 6);
-const _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13200 = new _M0TPC16string10StringView("if ", 0, 3);
-const _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13201 = new _M0TPC16string10StringView("match ", 0, 6);
-const _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13202 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13203 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS13380 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS13381 = new _M0TPC16string10StringView("@mbt:", 0, 5);
-const _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS13382 = new _M0TPC16string10StringView("if ", 0, 3);
-const _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS13383 = new _M0TPC16string10StringView("match ", 0, 6);
-const _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS13384 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS13385 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS13386 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen13typed__methodN6recordS13668 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen9typed__fnN6recordS13685 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12032 = { _0: "%int_add", _1: "VInt(as_int($0) + as_int($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12033 = { _0: "%int_sub", _1: "VInt(as_int($0) - as_int($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12034 = { _0: "%int_mul", _1: "VInt(as_int($0) * as_int($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12035 = { _0: "%int_neg", _1: "VInt(-as_int($0))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12036 = { _0: "%int_land", _1: "VInt(as_int($0) & as_int($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12037 = { _0: "%int_lor", _1: "VInt(as_int($0) | as_int($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12038 = { _0: "%int_lxor", _1: "VInt(as_int($0) ^ as_int($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12039 = { _0: "%int_shl", _1: "VInt(as_int($0) << as_int($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12040 = { _0: "%int_shr", _1: "VInt(as_int($0) >> as_int($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12041 = { _0: "%int_eq", _1: "VBool(as_int($0) == as_int($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12042 = { _0: "%int_lt", _1: "VBool(as_int($0) < as_int($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12043 = { _0: "%int_le", _1: "VBool(as_int($0) <= as_int($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12044 = { _0: "%int_gt", _1: "VBool(as_int($0) > as_int($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12045 = { _0: "%int_ge", _1: "VBool(as_int($0) >= as_int($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12046 = { _0: "%int_compare", _1: "VInt(as_int($0).compare(as_int($1)))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12047 = { _0: "%int_to_string", _1: "VStr(as_int($0).to_string())" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12048 = { _0: "%int_to_double", _1: "VDouble(as_int($0).to_double())" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12049 = { _0: "%double_add", _1: "VDouble(as_double($0) + as_double($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12050 = { _0: "%double_sub", _1: "VDouble(as_double($0) - as_double($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12051 = { _0: "%double_mul", _1: "VDouble(as_double($0) * as_double($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12052 = { _0: "%double_div", _1: "VDouble(as_double($0) / as_double($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12053 = { _0: "%double_neg", _1: "VDouble(-as_double($0))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12054 = { _0: "%double_lt", _1: "VBool(as_double($0) < as_double($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12055 = { _0: "%double_le", _1: "VBool(as_double($0) <= as_double($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12056 = { _0: "%double_gt", _1: "VBool(as_double($0) > as_double($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12057 = { _0: "%double_ge", _1: "VBool(as_double($0) >= as_double($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12058 = { _0: "%double_eq", _1: "VBool(as_double($0) == as_double($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12059 = { _0: "%double_to_string", _1: "VStr(as_double($0).to_string())" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12060 = { _0: "%str_add", _1: "VStr(as_str($0) + as_str($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12061 = { _0: "%str_eq", _1: "VBool(as_str($0) == as_str($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12062 = { _0: "%str_length", _1: "VInt(as_str($0).length())" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12063 = { _0: "%bool_eq", _1: "VBool(as_bool($0) == as_bool($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12064 = { _0: "%bool_not", _1: "VBool(!as_bool($0))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12065 = { _0: "%bool_to_string", _1: "VStr(as_bool($0).to_string())" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12066 = { _0: "%char_eq", _1: "VBool(as_char($0) == as_char($1))" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12067 = { _0: "%char_to_string", _1: "VStr(as_char($0).to_string())" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12068 = { _0: "%array_length", _1: "VInt(as_arr($0).length())" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12069 = { _0: "%array_push", _1: "{ as_arr($0).push($1); VUnit }" };
-const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12070 = { _0: "%print", _1: "{ rt_write(as_str($0)); VUnit }" };
-const _M0FP38username5mbtpp7codegen13inline__primsN7_2abindS12071 = [_M0FP38username5mbtpp7codegen13inline__primsN5tupleS12032, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12033, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12034, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12035, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12036, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12037, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12038, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12039, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12040, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12041, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12042, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12043, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12044, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12045, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12046, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12047, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12048, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12049, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12050, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12051, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12052, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12053, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12054, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12055, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12056, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12057, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12058, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12059, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12060, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12061, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12062, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12063, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12064, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12065, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12066, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12067, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12068, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12069, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12070];
-const _M0FP38username5mbtpp7codegen13inline__prims = _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp7codegen13inline__primsN7_2abindS12071, 0, 39), undefined);
-const _M0MP38username5mbtpp7codegen3Gen10prim__callN6recordS14018 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10prim__callN6recordS14019 = new _M0TPC16string10StringView("$", 0, 1);
-const _M0FP38username5mbtpp7codegen9pat__codeN6recordS14052 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen2tmN6recordS14085 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen11match__codeN6recordS14198 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen11match__codeN6recordS14199 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen11match__codeN6recordS14200 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen16clauses__dynamicN6recordS14238 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen3appN6recordS14158 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen3appN6recordS14159 = new _M0TPC16string10StringView("@mbt:", 0, 5);
-const _M0MP38username5mbtpp7codegen3Gen11uniform__fnN6recordS14797 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen11uniform__fnN6recordS14798 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10export__fnN6recordS14517 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10export__fnN6recordS14518 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10typed__defN6recordS13731 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10typed__defN6recordS13732 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen10typed__defN6recordS13733 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen14ffi__mbt__typeN6constrS13876 = new _M0DTP38username5mbtpp7codegen3NTy4NVar(0);
-const _M0MP38username5mbtpp7codegen3Gen14ffi__mbt__typeN6constrS13877 = new _M0DTP38username5mbtpp7codegen5TyCtx4TyIs(_M0MP38username5mbtpp7codegen3Gen14ffi__mbt__typeN6constrS13876);
-const _M0MP38username5mbtpp7codegen3Gen13foreign__typeN6recordS13889 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen9from__mbtN6constrS13918 = new _M0DTP38username5mbtpp2tt2Tm6Global("Array");
-const _M0MP38username5mbtpp7codegen3Gen7to__mbtN6recordS14255 = new _M0TPC16string10StringView("&", 0, 1);
-const _M0MP38username5mbtpp7codegen3Gen7to__mbtN6constrS14256 = new _M0DTP38username5mbtpp2tt2Tm6Global("Array");
-const _M0MP38username5mbtpp7codegen3Gen7to__mbtN6recordS14257 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen12dyn__wrapperN6constrS14332 = new _M0DTP38username5mbtpp7codegen5Local4LVar("self.v");
-const _M0MP38username5mbtpp7codegen3Gen12dyn__wrapperN6recordS14333 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0MP38username5mbtpp7codegen3Gen9ffi__bodyN6constrS14408 = new _M0DTPB6ResultGssE3Err("unsupported bound");
-const _M0MP38username5mbtpp7codegen3Gen9ffi__bodyN6constrS14409 = new _M0DTPB6ResultGssE3Err("bad type");
-const _M0MP38username5mbtpp7codegen3Gen11global__defN6recordS14824 = new _M0TPC16string10StringView("@mbt:", 0, 5);
-const _M0MP38username5mbtpp7codegen3Gen11global__defN6recordS14825 = new _M0TPC16string10StringView(", ", 0, 2);
-const _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS14474 = new _M0TPC16string10StringView("\n", 0, 1);
-const _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS14475 = new _M0TPC16string10StringView("fn[", 0, 3);
-const _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS14476 = new _M0TPC16string10StringView("] ", 0, 2);
-const _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS14477 = new _M0TPC16string10StringView("fn ", 0, 3);
-const _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS14478 = new _M0TPC16string10StringView("(", 0, 1);
-const _M0FP38username5mbtpp7codegen8generateN6recordS14905 = new _M0TPC16string10StringView("\n", 0, 1);
+const _M0MP38username5mbtpp7codegen3Gen10typed__patN6recordS13878 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp7codegen12source__nameN6recordS13452 = new _M0TPC16string10StringView("_", 0, 1);
+const _M0MP38username5mbtpp7codegen3Gen7explainN6recordS13458 = new _M0TPC16string10StringView("::", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen7explainN6recordS13459 = new _M0TPC16string10StringView("@mbt:", 0, 5);
+const _M0MP38username5mbtpp7codegen3Gen19tvars__with__boundsN6recordS13812 = new _M0TPC16string10StringView(" + ", 0, 3);
+const _M0MP38username5mbtpp7codegen3Gen19tvars__with__boundsN6recordS13813 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10impl__codeN6recordS14336 = new _M0TPC16string10StringView("super$", 0, 6);
+const _M0MP38username5mbtpp7codegen3Gen10impl__codeN6recordS14337 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10impl__codeN6recordS14338 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen12typed__checkN6recordS13924 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen12typed__checkN6recordS13925 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13982 = new _M0TPC16string10StringView(" else ", 0, 6);
+const _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13983 = new _M0TPC16string10StringView("if ", 0, 3);
+const _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13984 = new _M0TPC16string10StringView("match ", 0, 6);
+const _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13985 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13986 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS14205 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS14206 = new _M0TPC16string10StringView("@mbt:", 0, 5);
+const _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS14207 = new _M0TPC16string10StringView("if ", 0, 3);
+const _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS14208 = new _M0TPC16string10StringView("match ", 0, 6);
+const _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS14209 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS14210 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS14211 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen13typed__methodN6recordS14501 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen9typed__fnN6recordS14518 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12746 = { _0: "%int_add", _1: "VInt(as_int($0) + as_int($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12747 = { _0: "%int_sub", _1: "VInt(as_int($0) - as_int($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12748 = { _0: "%int_mul", _1: "VInt(as_int($0) * as_int($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12749 = { _0: "%int_neg", _1: "VInt(-as_int($0))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12750 = { _0: "%int_land", _1: "VInt(as_int($0) & as_int($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12751 = { _0: "%int_lor", _1: "VInt(as_int($0) | as_int($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12752 = { _0: "%int_lxor", _1: "VInt(as_int($0) ^ as_int($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12753 = { _0: "%int_shl", _1: "VInt(as_int($0) << as_int($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12754 = { _0: "%int_shr", _1: "VInt(as_int($0) >> as_int($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12755 = { _0: "%int_eq", _1: "VBool(as_int($0) == as_int($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12756 = { _0: "%int_lt", _1: "VBool(as_int($0) < as_int($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12757 = { _0: "%int_le", _1: "VBool(as_int($0) <= as_int($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12758 = { _0: "%int_gt", _1: "VBool(as_int($0) > as_int($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12759 = { _0: "%int_ge", _1: "VBool(as_int($0) >= as_int($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12760 = { _0: "%int_compare", _1: "VInt(as_int($0).compare(as_int($1)))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12761 = { _0: "%int_to_string", _1: "VStr(as_int($0).to_string())" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12762 = { _0: "%int_to_double", _1: "VDouble(as_int($0).to_double())" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12763 = { _0: "%double_add", _1: "VDouble(as_double($0) + as_double($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12764 = { _0: "%double_sub", _1: "VDouble(as_double($0) - as_double($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12765 = { _0: "%double_mul", _1: "VDouble(as_double($0) * as_double($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12766 = { _0: "%double_div", _1: "VDouble(as_double($0) / as_double($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12767 = { _0: "%double_neg", _1: "VDouble(-as_double($0))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12768 = { _0: "%double_lt", _1: "VBool(as_double($0) < as_double($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12769 = { _0: "%double_le", _1: "VBool(as_double($0) <= as_double($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12770 = { _0: "%double_gt", _1: "VBool(as_double($0) > as_double($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12771 = { _0: "%double_ge", _1: "VBool(as_double($0) >= as_double($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12772 = { _0: "%double_eq", _1: "VBool(as_double($0) == as_double($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12773 = { _0: "%double_to_string", _1: "VStr(as_double($0).to_string())" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12774 = { _0: "%str_add", _1: "VStr(as_str($0) + as_str($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12775 = { _0: "%str_eq", _1: "VBool(as_str($0) == as_str($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12776 = { _0: "%str_length", _1: "VInt(as_str($0).length())" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12777 = { _0: "%bool_eq", _1: "VBool(as_bool($0) == as_bool($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12778 = { _0: "%bool_not", _1: "VBool(!as_bool($0))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12779 = { _0: "%bool_to_string", _1: "VStr(as_bool($0).to_string())" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12780 = { _0: "%char_eq", _1: "VBool(as_char($0) == as_char($1))" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12781 = { _0: "%char_to_string", _1: "VStr(as_char($0).to_string())" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12782 = { _0: "%array_length", _1: "VInt(as_arr($0).length())" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12783 = { _0: "%array_push", _1: "{ as_arr($0).push($1); VUnit }" };
+const _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12784 = { _0: "%print", _1: "{ rt_write(as_str($0)); VUnit }" };
+const _M0FP38username5mbtpp7codegen13inline__primsN7_2abindS12785 = [_M0FP38username5mbtpp7codegen13inline__primsN5tupleS12746, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12747, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12748, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12749, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12750, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12751, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12752, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12753, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12754, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12755, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12756, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12757, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12758, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12759, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12760, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12761, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12762, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12763, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12764, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12765, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12766, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12767, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12768, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12769, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12770, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12771, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12772, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12773, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12774, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12775, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12776, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12777, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12778, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12779, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12780, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12781, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12782, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12783, _M0FP38username5mbtpp7codegen13inline__primsN5tupleS12784];
+const _M0FP38username5mbtpp7codegen13inline__prims = _M0MPB3Map3MapGssE(new _M0TPB9ArrayViewGUssEE(_M0FP38username5mbtpp7codegen13inline__primsN7_2abindS12785, 0, 39), undefined);
+const _M0MP38username5mbtpp7codegen3Gen10prim__callN6recordS14853 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10prim__callN6recordS14854 = new _M0TPC16string10StringView("$", 0, 1);
+const _M0FP38username5mbtpp7codegen9pat__codeN6recordS14887 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen2tmN6recordS14920 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen11match__codeN6recordS15035 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen11match__codeN6recordS15036 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen11match__codeN6recordS15037 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen16clauses__dynamicN6recordS15087 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen3appN6recordS14993 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen3appN6recordS14994 = new _M0TPC16string10StringView("@mbt:", 0, 5);
+const _M0MP38username5mbtpp7codegen3Gen11uniform__fnN6recordS15697 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen11uniform__fnN6recordS15698 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10export__fnN6recordS15373 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10export__fnN6recordS15374 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10typed__defN6recordS14564 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10typed__defN6recordS14565 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen10typed__defN6recordS14566 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen14ffi__mbt__typeN6constrS14709 = new _M0DTP38username5mbtpp7codegen3NTy4NVar(0);
+const _M0MP38username5mbtpp7codegen3Gen14ffi__mbt__typeN6constrS14710 = new _M0DTP38username5mbtpp7codegen5TyCtx4TyIs(_M0MP38username5mbtpp7codegen3Gen14ffi__mbt__typeN6constrS14709);
+const _M0MP38username5mbtpp7codegen3Gen13foreign__typeN6recordS14722 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen9from__mbtN6constrS14751 = new _M0DTP38username5mbtpp2tt2Tm6Global("Array");
+const _M0MP38username5mbtpp7codegen3Gen7to__mbtN6recordS15108 = new _M0TPC16string10StringView("&", 0, 1);
+const _M0MP38username5mbtpp7codegen3Gen7to__mbtN6constrS15109 = new _M0DTP38username5mbtpp2tt2Tm6Global("Array");
+const _M0MP38username5mbtpp7codegen3Gen7to__mbtN6recordS15110 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen12dyn__wrapperN6constrS15185 = new _M0DTP38username5mbtpp7codegen5Local4LVar("self.v");
+const _M0MP38username5mbtpp7codegen3Gen12dyn__wrapperN6recordS15186 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0MP38username5mbtpp7codegen3Gen9ffi__bodyN6constrS15261 = new _M0DTPB6ResultGssE3Err("unsupported bound");
+const _M0MP38username5mbtpp7codegen3Gen9ffi__bodyN6constrS15262 = new _M0DTPB6ResultGssE3Err("bad type");
+const _M0MP38username5mbtpp7codegen3Gen11global__defN6recordS15724 = new _M0TPC16string10StringView("@mbt:", 0, 5);
+const _M0MP38username5mbtpp7codegen3Gen11global__defN6recordS15725 = new _M0TPC16string10StringView(", ", 0, 2);
+const _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS15327 = new _M0TPC16string10StringView("\n", 0, 1);
+const _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS15328 = new _M0TPC16string10StringView("fn[", 0, 3);
+const _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS15329 = new _M0TPC16string10StringView("] ", 0, 2);
+const _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS15330 = new _M0TPC16string10StringView("fn ", 0, 3);
+const _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS15331 = new _M0TPC16string10StringView("(", 0, 1);
+const _M0FP38username5mbtpp7codegen8generateN6recordS15814 = new _M0TPC16string10StringView("\n", 0, 1);
 function _M0FPB13consume4__acc(acc, input) {
   const _p = (acc >>> 0) + ((Math.imul(input, -1028477379) | 0) >>> 0) | 0;
   const _p$2 = 17;
   return Math.imul(_p << _p$2 | (_p >>> (32 - _p$2 | 0) | 0), 668265263) | 0;
 }
-function _M0MPC15array10FixedArray12unsafe__blitGRPB17UnsafeMaybeUninitGsEE(dst, dst_offset, src, src_offset, len) {
+function _M0MPC15array10FixedArray12unsafe__blitGRPB17UnsafeMaybeUninitGURP38username5mbtpp6parser3PatRPB5ArrayGUssEEEEE(dst, dst_offset, src, src_offset, len) {
   if (dst === src && dst_offset < src_offset) {
     let _tmp$9 = 0;
     while (true) {
@@ -2833,7 +2932,7 @@ function _M0MPC15array10FixedArray12unsafe__blitGRPB17UnsafeMaybeUninitGbEE(dst,
   }
 }
 function _M0MPB18UninitializedArray12unsafe__blitGRP38username5mbtpp2tt2TmE(dst, dst_offset, src, src_offset, len) {
-  _M0MPC15array10FixedArray12unsafe__blitGRPB17UnsafeMaybeUninitGsEE(dst, dst_offset, src, src_offset, len);
+  _M0MPC15array10FixedArray12unsafe__blitGRPB17UnsafeMaybeUninitGURP38username5mbtpp6parser3PatRPB5ArrayGUssEEEEE(dst, dst_offset, src, src_offset, len);
 }
 function _M0MPB18UninitializedArray12unsafe__blitGbE(dst, dst_offset, src, src_offset, len) {
   _M0MPC15array10FixedArray12unsafe__blitGRPB17UnsafeMaybeUninitGbEE(dst, dst_offset, src, src_offset, len);
@@ -2870,7 +2969,7 @@ function _M0MPC16string6String16unsafe__char__at(self, index) {
     return c1;
   }
 }
-function _M0MPC14byte4Byte7to__hexN14to__hex__digitS173(i) {
+function _M0MPC14byte4Byte7to__hexN14to__hex__digitS218(i) {
   if (i < 10) {
     const _p = 48;
     const _p$2 = (i + _p | 0) & 255;
@@ -2886,9 +2985,9 @@ function _M0MPC14byte4Byte7to__hexN14to__hex__digitS173(i) {
 function _M0MPC14byte4Byte7to__hex(b) {
   const _self = _M0MPB13StringBuilder21StringBuilder_2einner(8);
   const _p = 16;
-  _M0IPB13StringBuilderPB6Logger11write__char(_self, _M0MPC14byte4Byte7to__hexN14to__hex__digitS173((b / _p | 0) & 255));
+  _M0IPB13StringBuilderPB6Logger11write__char(_self, _M0MPC14byte4Byte7to__hexN14to__hex__digitS218((b / _p | 0) & 255));
   const _p$2 = 16;
-  _M0IPB13StringBuilderPB6Logger11write__char(_self, _M0MPC14byte4Byte7to__hexN14to__hex__digitS173((b % _p$2 | 0) & 255));
+  _M0IPB13StringBuilderPB6Logger11write__char(_self, _M0MPC14byte4Byte7to__hexN14to__hex__digitS218((b % _p$2 | 0) & 255));
   const _p$3 = _self;
   return _p$3.val;
 }
@@ -2953,7 +3052,7 @@ function _M0MPC16string10StringView21clamped__view_2einner(self, start, end) {
   }
   return lo >= hi ? new _M0TPC16string10StringView(str, base + lo | 0, base + lo | 0) : new _M0TPC16string10StringView(str, base + lo | 0, base + hi | 0);
 }
-function _M0MPC16string10StringView18escape__to_2einnerN14flush__segmentS187(_env, seg, i) {
+function _M0MPC16string10StringView18escape__to_2einnerN14flush__segmentS232(_env, seg, i) {
   const self = _env._1;
   const logger = _env._0;
   if (i > seg) {
@@ -2975,7 +3074,7 @@ function _M0MPC16string10StringView18escape__to_2einner(self, logger, quote) {
     const i = _tmp$9;
     const seg = _tmp$10;
     if (i >= len) {
-      _M0MPC16string10StringView18escape__to_2einnerN14flush__segmentS187(_env, seg, i);
+      _M0MPC16string10StringView18escape__to_2einnerN14flush__segmentS232(_env, seg, i);
       break;
     }
     const code = self.str.charCodeAt(self.start + i | 0);
@@ -2991,28 +3090,28 @@ function _M0MPC16string10StringView18escape__to_2einner(self, logger, quote) {
           break _L$2;
         }
         case 10: {
-          _M0MPC16string10StringView18escape__to_2einnerN14flush__segmentS187(_env, seg, i);
+          _M0MPC16string10StringView18escape__to_2einnerN14flush__segmentS232(_env, seg, i);
           logger.method_table.method_0(logger.self, "\\n");
           _tmp$9 = i + 1 | 0;
           _tmp$10 = i + 1 | 0;
           continue _L;
         }
         case 13: {
-          _M0MPC16string10StringView18escape__to_2einnerN14flush__segmentS187(_env, seg, i);
+          _M0MPC16string10StringView18escape__to_2einnerN14flush__segmentS232(_env, seg, i);
           logger.method_table.method_0(logger.self, "\\r");
           _tmp$9 = i + 1 | 0;
           _tmp$10 = i + 1 | 0;
           continue _L;
         }
         case 8: {
-          _M0MPC16string10StringView18escape__to_2einnerN14flush__segmentS187(_env, seg, i);
+          _M0MPC16string10StringView18escape__to_2einnerN14flush__segmentS232(_env, seg, i);
           logger.method_table.method_0(logger.self, "\\b");
           _tmp$9 = i + 1 | 0;
           _tmp$10 = i + 1 | 0;
           continue _L;
         }
         case 9: {
-          _M0MPC16string10StringView18escape__to_2einnerN14flush__segmentS187(_env, seg, i);
+          _M0MPC16string10StringView18escape__to_2einnerN14flush__segmentS232(_env, seg, i);
           logger.method_table.method_0(logger.self, "\\t");
           _tmp$9 = i + 1 | 0;
           _tmp$10 = i + 1 | 0;
@@ -3020,7 +3119,7 @@ function _M0MPC16string10StringView18escape__to_2einner(self, logger, quote) {
         }
         default: {
           if (code < 32) {
-            _M0MPC16string10StringView18escape__to_2einnerN14flush__segmentS187(_env, seg, i);
+            _M0MPC16string10StringView18escape__to_2einnerN14flush__segmentS232(_env, seg, i);
             logger.method_table.method_0(logger.self, "\\u{");
             logger.method_table.method_0(logger.self, _M0MPC14byte4Byte7to__hex(code & 255));
             logger.method_table.method_0(logger.self, "}");
@@ -3034,7 +3133,7 @@ function _M0MPC16string10StringView18escape__to_2einner(self, logger, quote) {
         }
       }
     }
-    _M0MPC16string10StringView18escape__to_2einnerN14flush__segmentS187(_env, seg, i);
+    _M0MPC16string10StringView18escape__to_2einnerN14flush__segmentS232(_env, seg, i);
     logger.method_table.method_3(logger.self, 92);
     logger.method_table.method_3(logger.self, c);
     _tmp$9 = i + 1 | 0;
@@ -3065,8 +3164,20 @@ function _M0IP016_24default__implPB2Eq10not__equalGRP38username5mbtpp6parser3Tok
 function _M0IP016_24default__implPB2Eq10not__equalGRPC16string10StringViewE(x, y) {
   return !_M0IPC16string10StringViewPB2Eq5equal(x, y);
 }
+function _M0IP016_24default__implPB2Eq10not__equalGRPB5ArrayGsEE(x, y) {
+  return !_M0IPC15array5ArrayPB2Eq5equalGsE(x, y);
+}
 function _M0IP016_24default__implPB2Eq10not__equalGRP38username5mbtpp2tt4IcitE(x, y) {
   return !_M0IP38username5mbtpp2tt4IcitPB2Eq5equal(x, y);
+}
+function _M0IP016_24default__implPB7Compare6op__ltGsE(x, y) {
+  return _M0IPC16string6StringPB7Compare7compare(x, y) < 0;
+}
+function _M0IP016_24default__implPB7Compare6op__gtGsE(x, y) {
+  return _M0IPC16string6StringPB7Compare7compare(x, y) > 0;
+}
+function _M0IP016_24default__implPB7Compare6op__geGsE(x, y) {
+  return _M0IPC16string6StringPB7Compare7compare(x, y) >= 0;
 }
 function _M0FPB14avalanche__acc(acc) {
   let acc$2 = acc;
@@ -3159,13 +3270,13 @@ function _M0MPB4Iter4nextGRP38username5mbtpp2tt2TmE(self) {
   const result = _func();
   const _bind$18 = self.size_hint;
   if (result === undefined) {
-    self.size_hint = _M0MPB4Iter4nextN6constrS248GRP38username5mbtpp2tt2TmE;
+    self.size_hint = _M0MPB4Iter4nextN6constrS301GRP38username5mbtpp2tt2TmE;
   } else {
     if (_bind$18 === undefined) {
     } else {
       const _Some = _bind$18;
       const _n = _Some;
-      self.size_hint = _n > 0 ? _n - 1 | 0 : _M0MPB4Iter4nextN6constrS247GRP38username5mbtpp2tt2TmE;
+      self.size_hint = _n > 0 ? _n - 1 | 0 : _M0MPB4Iter4nextN6constrS300GRP38username5mbtpp2tt2TmE;
     }
   }
   return result;
@@ -3175,13 +3286,13 @@ function _M0MPB4Iter4nextGcE(self) {
   const result = _func();
   const _bind$18 = self.size_hint;
   if (result === -1) {
-    self.size_hint = _M0MPB4Iter4nextN6constrS344GcE;
+    self.size_hint = _M0MPB4Iter4nextN6constrS397GcE;
   } else {
     if (_bind$18 === undefined) {
     } else {
       const _Some = _bind$18;
       const _n = _Some;
-      self.size_hint = _n > 0 ? _n - 1 | 0 : _M0MPB4Iter4nextN6constrS343GcE;
+      self.size_hint = _n > 0 ? _n - 1 | 0 : _M0MPB4Iter4nextN6constrS396GcE;
     }
   }
   return result;
@@ -3195,10 +3306,10 @@ function _M0MPB4Iter4nextGORP38username5mbtpp7codegen3NTyE(self) {
     } else {
       const _Some = _bind$18;
       const _n = _Some;
-      self.size_hint = _n > 0 ? _n - 1 | 0 : _M0MPB4Iter4nextN6constrS375GORP38username5mbtpp7codegen3NTyE;
+      self.size_hint = _n > 0 ? _n - 1 | 0 : _M0MPB4Iter4nextN6constrS428GORP38username5mbtpp7codegen3NTyE;
     }
   } else {
-    self.size_hint = _M0MPB4Iter4nextN6constrS376GORP38username5mbtpp7codegen3NTyE;
+    self.size_hint = _M0MPB4Iter4nextN6constrS429GORP38username5mbtpp7codegen3NTyE;
   }
   return result;
 }
@@ -3207,13 +3318,13 @@ function _M0MPB4Iter4nextGRP38username5mbtpp7codegen6BinderE(self) {
   const result = _func();
   const _bind$18 = self.size_hint;
   if (result === undefined) {
-    self.size_hint = _M0MPB4Iter4nextN6constrS384GRP38username5mbtpp7codegen6BinderE;
+    self.size_hint = _M0MPB4Iter4nextN6constrS437GRP38username5mbtpp7codegen6BinderE;
   } else {
     if (_bind$18 === undefined) {
     } else {
       const _Some = _bind$18;
       const _n = _Some;
-      self.size_hint = _n > 0 ? _n - 1 | 0 : _M0MPB4Iter4nextN6constrS383GRP38username5mbtpp7codegen6BinderE;
+      self.size_hint = _n > 0 ? _n - 1 | 0 : _M0MPB4Iter4nextN6constrS436GRP38username5mbtpp7codegen6BinderE;
     }
   }
   return result;
@@ -3223,13 +3334,13 @@ function _M0MPB4Iter4nextGbE(self) {
   const result = _func();
   const _bind$18 = self.size_hint;
   if (result === -1) {
-    self.size_hint = _M0MPB4Iter4nextN6constrS416GbE;
+    self.size_hint = _M0MPB4Iter4nextN6constrS469GbE;
   } else {
     if (_bind$18 === undefined) {
     } else {
       const _Some = _bind$18;
       const _n = _Some;
-      self.size_hint = _n > 0 ? _n - 1 | 0 : _M0MPB4Iter4nextN6constrS415GbE;
+      self.size_hint = _n > 0 ? _n - 1 | 0 : _M0MPB4Iter4nextN6constrS468GbE;
     }
   }
   return result;
@@ -3244,7 +3355,7 @@ function _M0MPB4Iter3newGRP38username5mbtpp2tt2TmE(f, size_hint) {
   } else {
     const _Some = size_hint;
     const _n = _Some;
-    size_hint$2 = _n > 0 ? _n : _M0MPB4Iter3newN6constrS481GRP38username5mbtpp2tt2TmE;
+    size_hint$2 = _n > 0 ? _n : _M0MPB4Iter3newN6constrS534GRP38username5mbtpp2tt2TmE;
   }
   return new _M0TPB4IterGRP38username5mbtpp2tt2TmE(f, size_hint$2);
 }
@@ -3255,7 +3366,7 @@ function _M0MPB4Iter3newGcE(f, size_hint) {
   } else {
     const _Some = size_hint;
     const _n = _Some;
-    size_hint$2 = _n > 0 ? _n : _M0MPB4Iter3newN6constrS553GcE;
+    size_hint$2 = _n > 0 ? _n : _M0MPB4Iter3newN6constrS606GcE;
   }
   return new _M0TPB4IterGcE(f, size_hint$2);
 }
@@ -3266,7 +3377,7 @@ function _M0MPB4Iter3newGORP38username5mbtpp7codegen3NTyE(f, size_hint) {
   } else {
     const _Some = size_hint;
     const _n = _Some;
-    size_hint$2 = _n > 0 ? _n : _M0MPB4Iter3newN6constrS577GORP38username5mbtpp7codegen3NTyE;
+    size_hint$2 = _n > 0 ? _n : _M0MPB4Iter3newN6constrS630GORP38username5mbtpp7codegen3NTyE;
   }
   return new _M0TPB4IterGORP38username5mbtpp7codegen3NTyE(f, size_hint$2);
 }
@@ -3277,7 +3388,7 @@ function _M0MPB4Iter3newGRP38username5mbtpp7codegen6BinderE(f, size_hint) {
   } else {
     const _Some = size_hint;
     const _n = _Some;
-    size_hint$2 = _n > 0 ? _n : _M0MPB4Iter3newN6constrS583GRP38username5mbtpp7codegen6BinderE;
+    size_hint$2 = _n > 0 ? _n : _M0MPB4Iter3newN6constrS636GRP38username5mbtpp7codegen6BinderE;
   }
   return new _M0TPB4IterGRP38username5mbtpp7codegen6BinderE(f, size_hint$2);
 }
@@ -3288,7 +3399,7 @@ function _M0MPB4Iter3newGbE(f, size_hint) {
   } else {
     const _Some = size_hint;
     const _n = _Some;
-    size_hint$2 = _n > 0 ? _n : _M0MPB4Iter3newN6constrS607GbE;
+    size_hint$2 = _n > 0 ? _n : _M0MPB4Iter3newN6constrS660GbE;
   }
   return new _M0TPB4IterGbE(f, size_hint$2);
 }
@@ -3603,7 +3714,7 @@ function _M0MPC16string10StringView4find(self, str) {
   const pattern_len = str.end - str.start | 0;
   switch (pattern_len) {
     case 0: {
-      return _M0MPC16string10StringView4findN6constrS808;
+      return _M0MPC16string10StringView4findN6constrS861;
     }
     case 1: {
       const found = _M0FPB28find__code__unit__from__view(self, 0, self.end - self.start | 0, str.str.charCodeAt(str.start));
@@ -4489,6 +4600,15 @@ function _M0MPC16option6Option10unwrap__orGRPB5ArrayGRP38username5mbtpp6parser6B
     return default_;
   }
 }
+function _M0MPC16option6Option10unwrap__orGRP38username5mbtpp6parser4ExprE(self, default_) {
+  if (self === undefined) {
+    return default_;
+  } else {
+    const _Some = self;
+    const _t = _Some;
+    return _t;
+  }
+}
 function _M0MPC16option6Option10unwrap__orGiE(self, default_) {
   if (self === undefined) {
     return default_;
@@ -4498,13 +4618,13 @@ function _M0MPC16option6Option10unwrap__orGiE(self, default_) {
     return _t;
   }
 }
-function _M0MPC16option6Option10unwrap__orGsE(self, default_) {
+function _M0MPC16option6Option3mapGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt2TmE(self, f) {
   if (self === undefined) {
-    return default_;
+    return undefined;
   } else {
     const _Some = self;
     const _t = _Some;
-    return _t;
+    return f(_t);
   }
 }
 function _M0MPC16option6Option3mapGRPB5ArrayGRP38username5mbtpp6parser6BinderERPB5ArrayGRP38username5mbtpp6parser6BinderEE(self, f) {
@@ -4525,6 +4645,15 @@ function _M0MPC16option6Option3mapGRP38username5mbtpp6parser4ExprRP38username5mb
     return f(_t);
   }
 }
+function _M0MPC16option6Option3mapGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValE(self, f) {
+  if (self === undefined) {
+    return undefined;
+  } else {
+    const _Some = self;
+    const _t = _Some;
+    return f(_t);
+  }
+}
 function _M0MPC16option6Option3mapGRP38username5mbtpp6parser4ExpruE(self, f) {
   if (self === undefined) {
     return -1;
@@ -4532,6 +4661,15 @@ function _M0MPC16option6Option3mapGRP38username5mbtpp6parser4ExpruE(self, f) {
     const _Some = self;
     const _t = _Some;
     return f(_t);
+  }
+}
+function _M0MPC16option6Option3mapGRPB5ArrayGRP38username5mbtpp6parser3PatEiE(self, f) {
+  if (self.$tag === 1) {
+    const _Some = self;
+    const _t = _Some._0;
+    return f(_t);
+  } else {
+    return undefined;
   }
 }
 function _M0MPC16option6Option3mapGRPB13StringBuildersE(self, f) {
@@ -4543,6 +4681,23 @@ function _M0MPC16option6Option3mapGRPB13StringBuildersE(self, f) {
     return f(_t);
   }
 }
+function _M0MPC16option6Option3mapGRP38username5mbtpp6parser4ExprRP38username5mbtpp2tt2TmEHRP38username5mbtpp2tt9ElabError(self, f) {
+  if (self === undefined) {
+    return new _M0DTPC16result6ResultGORP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(undefined);
+  } else {
+    const _Some = self;
+    const _t = _Some;
+    const _bind$18 = f(_t);
+    let _tmp$9;
+    if (_bind$18.$tag === 1) {
+      const _ok = _bind$18;
+      _tmp$9 = _ok._0;
+    } else {
+      return _bind$18;
+    }
+    return new _M0DTPC16result6ResultGORP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_tmp$9);
+  }
+}
 function _M0MPC16option6Option3mapGRPB5ArrayGRP38username5mbtpp6parser4ExprERPB5ArrayGRP38username5mbtpp6parser4ExprEE(self, f) {
   if (self.$tag === 1) {
     const _Some = self;
@@ -4552,6 +4707,15 @@ function _M0MPC16option6Option3mapGRPB5ArrayGRP38username5mbtpp6parser4ExprERPB5
     return _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__;
   }
 }
+function _M0MPC16option6Option3mapGRP38username5mbtpp2tt3ValRP38username5mbtpp2tt2TmE(self, f) {
+  if (self === undefined) {
+    return undefined;
+  } else {
+    const _Some = self;
+    const _t = _Some;
+    return f(_t);
+  }
+}
 function _M0MPC16option6Option3mapGRPB5ArrayGRP38username5mbtpp6parser4ExprEuE(self, f) {
   if (self.$tag === 1) {
     const _Some = self;
@@ -4559,6 +4723,15 @@ function _M0MPC16option6Option3mapGRPB5ArrayGRP38username5mbtpp6parser4ExprEuE(s
     return f(_t);
   } else {
     return -1;
+  }
+}
+function _M0MPC16option6Option3mapGRPB5ArrayGRP38username5mbtpp6parser3PatERPB5ArrayGRP38username5mbtpp6parser3PatEE(self, f) {
+  if (self.$tag === 1) {
+    const _Some = self;
+    const _t = _Some._0;
+    return new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4Some(f(_t));
+  } else {
+    return _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4None__;
   }
 }
 function _M0MPC16option6Option3mapGRPB5ArrayGRP38username5mbtpp6parser4ExprERPB5ArrayGRP38username5mbtpp2tt3ArgEE(self, f) {
@@ -7155,31 +7328,6 @@ function _M0MPB3Map3getGsWEuQRP38username5mbtpp2tt9ElabErrorE(self, key) {
     }
   }
 }
-function _M0MPB3Map3getGsUsRPB5ArrayGRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen3NTyEE(self, key) {
-  const hash = _M0IPC16string6StringPB4Hash4hash(key);
-  let _tmp$9 = 0;
-  let _tmp$10 = hash & self.capacity_mask;
-  while (true) {
-    const i = _tmp$9;
-    const idx = _tmp$10;
-    const _bind$18 = self.entries[idx];
-    if (_bind$18 === undefined) {
-      return undefined;
-    } else {
-      const _Some = _bind$18;
-      const _entry = _Some;
-      if (_entry.hash === hash && _entry.key === key) {
-        return _entry.value;
-      }
-      if (i > _entry.psl) {
-        return undefined;
-      }
-      _tmp$9 = i + 1 | 0;
-      _tmp$10 = idx + 1 & self.capacity_mask;
-      continue;
-    }
-  }
-}
 function _M0MPB3Map3getGsRPB5ArrayGRP38username5mbtpp2tt9LabelInfoEE(self, key) {
   const hash = _M0IPC16string6StringPB4Hash4hash(key);
   let _tmp$9 = 0;
@@ -7198,6 +7346,31 @@ function _M0MPB3Map3getGsRPB5ArrayGRP38username5mbtpp2tt9LabelInfoEE(self, key) 
       }
       if (i > _entry.psl) {
         return _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp2tt9LabelInfoEE4None__;
+      }
+      _tmp$9 = i + 1 | 0;
+      _tmp$10 = idx + 1 & self.capacity_mask;
+      continue;
+    }
+  }
+}
+function _M0MPB3Map3getGsUsRPB5ArrayGRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen3NTyEE(self, key) {
+  const hash = _M0IPC16string6StringPB4Hash4hash(key);
+  let _tmp$9 = 0;
+  let _tmp$10 = hash & self.capacity_mask;
+  while (true) {
+    const i = _tmp$9;
+    const idx = _tmp$10;
+    const _bind$18 = self.entries[idx];
+    if (_bind$18 === undefined) {
+      return undefined;
+    } else {
+      const _Some = _bind$18;
+      const _entry = _Some;
+      if (_entry.hash === hash && _entry.key === key) {
+        return _entry.value;
+      }
+      if (i > _entry.psl) {
+        return undefined;
       }
       _tmp$9 = i + 1 | 0;
       _tmp$10 = idx + 1 & self.capacity_mask;
@@ -8045,6 +8218,9 @@ function _M0IPC13int3IntPB4Hash4hash(self) {
 function _M0MPC16double6Double7to__int(self) {
   return self !== self ? 0 : self >= 2147483647 ? 2147483647 : self <= -2147483648 ? -2147483648 : self | 0;
 }
+function _M0MPC14char4Char21is__ascii__alphabetic(self) {
+  return self >= 65 && self <= 90 ? true : self >= 97 && self <= 122;
+}
 function _M0MPC15array5Array21clamped__view_2einnerGRP38username5mbtpp2tt2TmE(self, start, end) {
   const len = self.length;
   const lo = start < 0 ? 0 : start > len ? len : start;
@@ -8082,7 +8258,7 @@ function _M0MPC15array5Array28unsafe__truncate__to__lengthGiE(self, new_len) {
   _M0MPB7JSArray11set__length(self, new_len);
 }
 function _M0MPC15array5Array12unsafe__blitGRP38username5mbtpp6parser6BinderE(dst, dst_offset, src, src_offset, len) {
-  _M0MPC15array10FixedArray12unsafe__blitGRPB17UnsafeMaybeUninitGsEE(dst, dst_offset, src, src_offset, len);
+  _M0MPC15array10FixedArray12unsafe__blitGRPB17UnsafeMaybeUninitGURP38username5mbtpp6parser3PatRPB5ArrayGUssEEEEE(dst, dst_offset, src, src_offset, len);
 }
 function _M0MPC15array5Array11unsafe__popGRP38username5mbtpp2tt11PendingInstE(self) {
   return _M0MPB7JSArray3pop(self);
@@ -8162,7 +8338,19 @@ function _M0MPC15array5Array2atGbE(self, index) {
   const len = self.length;
   return index >= 0 && index < len ? self[index] : $panic();
 }
-function _M0MPC15array5Array3setGURP38username5mbtpp6parser3PosORPB5ArrayGRP38username5mbtpp2tt8GoalInfoEEE(self, index, value) {
+function _M0MPC15array12MutArrayView4swapGsE(arr, i, j) {
+  const temp = arr.buf[arr.start + i | 0];
+  arr.buf[arr.start + i | 0] = arr.buf[arr.start + j | 0];
+  arr.buf[arr.start + j | 0] = temp;
+}
+function _M0MPC15array12MutArrayView5sliceGsE(arr, start, end) {
+  const _bind$18 = arr.end - arr.start | 0;
+  if (start < 0 || (start > end || end > _bind$18)) {
+    $panic();
+  }
+  return new _M0TPB12MutArrayViewGsE(arr.buf, start + arr.start | 0, end + arr.start | 0);
+}
+function _M0MPC15array5Array3setGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt4IcitEE(self, index, value) {
   const len = self.length;
   if (index >= 0 && index < len) {
     self[index] = value;
@@ -8191,6 +8379,318 @@ function _M0MPC15array5Array3setGbE(self, index, value) {
     $panic();
     return;
   }
+}
+function _M0MPC15array12MutArrayView14rev__in__placeGsE(arr) {
+  const len = arr.end - arr.start | 0;
+  const mid_len = len / 2 | 0;
+  let _tmp$9 = 0;
+  while (true) {
+    const i = _tmp$9;
+    if (i < mid_len) {
+      const j = (len - i | 0) - 1 | 0;
+      const temp = arr.buf[arr.start + i | 0];
+      arr.buf[arr.start + i | 0] = arr.buf[arr.start + j | 0];
+      arr.buf[arr.start + j | 0] = temp;
+      _tmp$9 = i + 1 | 0;
+      continue;
+    } else {
+      return;
+    }
+  }
+}
+function _M0FPB17fixed__get__limit(len) {
+  let _tmp$9 = len;
+  let _tmp$10 = 0;
+  while (true) {
+    const len$2 = _tmp$9;
+    const limit = _tmp$10;
+    if (len$2 > 0) {
+      _tmp$9 = len$2 / 2 | 0;
+      _tmp$10 = limit + 1 | 0;
+      continue;
+    } else {
+      return limit;
+    }
+  }
+}
+function _M0FPB19fixed__bubble__sortGsE(arr) {
+  const _bind$18 = arr.end - arr.start | 0;
+  let _tmp$9 = 1;
+  while (true) {
+    const i = _tmp$9;
+    if (i < _bind$18) {
+      let _tmp$10 = i;
+      while (true) {
+        const j = _tmp$10;
+        if (j > 0 && _M0IP016_24default__implPB7Compare6op__gtGsE(arr.buf[arr.start + (j - 1 | 0) | 0], arr.buf[arr.start + j | 0])) {
+          _M0MPC15array12MutArrayView4swapGsE(arr, j, j - 1 | 0);
+          _tmp$10 = j - 1 | 0;
+          continue;
+        } else {
+          break;
+        }
+      }
+      _tmp$9 = i + 1 | 0;
+      continue;
+    } else {
+      return;
+    }
+  }
+}
+function _M0FPB20fixed__choose__pivotN7sort__2S4946GsE(_env, a, b) {
+  const arr = _env._1;
+  const swaps = _env._0;
+  if (_M0IP016_24default__implPB7Compare6op__gtGsE(arr.buf[arr.start + a | 0], arr.buf[arr.start + b | 0])) {
+    _M0MPC15array12MutArrayView4swapGsE(arr, a, b);
+    swaps.val = swaps.val + 1 | 0;
+    return;
+  } else {
+    return;
+  }
+}
+function _M0FPB20fixed__choose__pivotN7sort__3S4947GsE(_env, a, b, c) {
+  _M0FPB20fixed__choose__pivotN7sort__2S4946GsE(_env, a, b);
+  _M0FPB20fixed__choose__pivotN7sort__2S4946GsE(_env, b, c);
+  _M0FPB20fixed__choose__pivotN7sort__2S4946GsE(_env, a, b);
+}
+function _M0FPB20fixed__choose__pivotGsE(arr) {
+  const len = arr.end - arr.start | 0;
+  const swaps = new _M0TPB8MutLocalGiE(0);
+  const b = Math.imul(len / 4 | 0, 2) | 0;
+  if (len >= 8) {
+    const a = Math.imul(len / 4 | 0, 1) | 0;
+    const c = Math.imul(len / 4 | 0, 3) | 0;
+    const _env = { _0: swaps, _1: arr };
+    if (len > 50) {
+      _M0FPB20fixed__choose__pivotN7sort__3S4947GsE(_env, a - 1 | 0, a, a + 1 | 0);
+      _M0FPB20fixed__choose__pivotN7sort__3S4947GsE(_env, b - 1 | 0, b, b + 1 | 0);
+      _M0FPB20fixed__choose__pivotN7sort__3S4947GsE(_env, c - 1 | 0, c, c + 1 | 0);
+    }
+    _M0FPB20fixed__choose__pivotN7sort__3S4947GsE(_env, a, b, c);
+  }
+  if (swaps.val === 12) {
+    _M0MPC15array12MutArrayView14rev__in__placeGsE(arr);
+    return { _0: (len - b | 0) - 1 | 0, _1: true };
+  } else {
+    return { _0: b, _1: swaps.val === 0 };
+  }
+}
+function _M0FPB17fixed__sift__downGsE(arr, index) {
+  const len = arr.end - arr.start | 0;
+  let _tmp$9 = index;
+  let _tmp$10 = (Math.imul(index, 2) | 0) + 1 | 0;
+  while (true) {
+    const index$2 = _tmp$9;
+    const child = _tmp$10;
+    if (child < len) {
+      const child$2 = (child + 1 | 0) < len && _M0IP016_24default__implPB7Compare6op__ltGsE(arr.buf[arr.start + child | 0], arr.buf[arr.start + (child + 1 | 0) | 0]) ? child + 1 | 0 : child;
+      if (_M0IP016_24default__implPB7Compare6op__geGsE(arr.buf[arr.start + index$2 | 0], arr.buf[arr.start + child$2 | 0])) {
+        return undefined;
+      }
+      _M0MPC15array12MutArrayView4swapGsE(arr, index$2, child$2);
+      _tmp$9 = child$2;
+      _tmp$10 = (Math.imul(child$2, 2) | 0) + 1 | 0;
+      continue;
+    } else {
+      return;
+    }
+  }
+}
+function _M0FPB17fixed__heap__sortGsE(arr) {
+  const len = arr.end - arr.start | 0;
+  const _bind$18 = len / 2 | 0;
+  let _tmp$9 = _bind$18 - 1 | 0;
+  let _tmp$10 = _bind$18 > 0;
+  while (true) {
+    const i = _tmp$9;
+    const _more = _tmp$10;
+    if (_more) {
+      _M0FPB17fixed__sift__downGsE(arr, i);
+      _tmp$9 = i - 1 | 0;
+      _tmp$10 = i > 0;
+      continue;
+    } else {
+      break;
+    }
+  }
+  let _tmp$11 = len - 1 | 0;
+  let _tmp$12 = len > 1;
+  while (true) {
+    const i = _tmp$11;
+    const _more = _tmp$12;
+    if (_more) {
+      _M0MPC15array12MutArrayView4swapGsE(arr, 0, i);
+      _M0FPB17fixed__sift__downGsE(_M0MPC15array12MutArrayView5sliceGsE(arr, 0, i), 0);
+      _tmp$11 = i - 1 | 0;
+      _tmp$12 = i > 1;
+      continue;
+    } else {
+      return;
+    }
+  }
+}
+function _M0FPB16fixed__partitionGsE(arr, pivot_index) {
+  _M0MPC15array12MutArrayView4swapGsE(arr, pivot_index, (arr.end - arr.start | 0) - 1 | 0);
+  const pivot = arr.buf[arr.start + ((arr.end - arr.start | 0) - 1 | 0) | 0];
+  const _bind$18 = (arr.end - arr.start | 0) - 1 | 0;
+  let _tmp$9 = 0;
+  let _tmp$10 = 0;
+  let _tmp$11 = true;
+  while (true) {
+    const j = _tmp$9;
+    const i = _tmp$10;
+    const partitioned = _tmp$11;
+    if (j < _bind$18) {
+      if (_M0IP016_24default__implPB7Compare6op__ltGsE(arr.buf[arr.start + j | 0], pivot)) {
+        if (i !== j) {
+          _M0MPC15array12MutArrayView4swapGsE(arr, i, j);
+          _tmp$9 = j + 1 | 0;
+          _tmp$10 = i + 1 | 0;
+          _tmp$11 = false;
+          continue;
+        } else {
+          _tmp$9 = j + 1 | 0;
+          _tmp$10 = i + 1 | 0;
+          continue;
+        }
+      } else {
+        _tmp$9 = j + 1 | 0;
+        continue;
+      }
+    } else {
+      _M0MPC15array12MutArrayView4swapGsE(arr, i, (arr.end - arr.start | 0) - 1 | 0);
+      return { _0: i, _1: partitioned };
+    }
+  }
+}
+function _M0FPB24fixed__try__bubble__sortGsE(arr) {
+  const _bind$18 = arr.end - arr.start | 0;
+  let _tmp$9 = 1;
+  let _tmp$10 = 0;
+  while (true) {
+    const i = _tmp$9;
+    const tries = _tmp$10;
+    if (i < _bind$18) {
+      let sorted;
+      let _tmp$11 = i;
+      let _tmp$12 = true;
+      while (true) {
+        const j = _tmp$11;
+        const sorted$2 = _tmp$12;
+        if (j > 0 && _M0IP016_24default__implPB7Compare6op__gtGsE(arr.buf[arr.start + (j - 1 | 0) | 0], arr.buf[arr.start + j | 0])) {
+          _M0MPC15array12MutArrayView4swapGsE(arr, j, j - 1 | 0);
+          _tmp$11 = j - 1 | 0;
+          _tmp$12 = false;
+          continue;
+        } else {
+          sorted = sorted$2;
+          break;
+        }
+      }
+      if (!sorted) {
+        const tries$2 = tries + 1 | 0;
+        if (tries$2 > 8) {
+          return false;
+        }
+        _tmp$9 = i + 1 | 0;
+        _tmp$10 = tries$2;
+        continue;
+      } else {
+        _tmp$9 = i + 1 | 0;
+        continue;
+      }
+    } else {
+      return true;
+    }
+  }
+}
+function _M0FPB18fixed__quick__sortGsE(arr, pred, limit) {
+  let _tmp$9 = limit;
+  let _tmp$10 = arr;
+  let _tmp$11 = pred;
+  let _tmp$12 = true;
+  let _tmp$13 = true;
+  while (true) {
+    const limit$2 = _tmp$9;
+    const arr$2 = _tmp$10;
+    const pred$2 = _tmp$11;
+    const was_partitioned = _tmp$12;
+    const balanced = _tmp$13;
+    const len = arr$2.end - arr$2.start | 0;
+    if (len <= 16) {
+      if (len >= 2) {
+        _M0FPB19fixed__bubble__sortGsE(arr$2);
+      }
+      return undefined;
+    }
+    if (limit$2 === 0) {
+      _M0FPB17fixed__heap__sortGsE(arr$2);
+      return undefined;
+    }
+    const _bind$18 = _M0FPB20fixed__choose__pivotGsE(arr$2);
+    const _pivot_index = _bind$18._0;
+    const _likely_sorted = _bind$18._1;
+    if (was_partitioned && (balanced && _likely_sorted)) {
+      if (_M0FPB24fixed__try__bubble__sortGsE(arr$2)) {
+        return undefined;
+      }
+    }
+    const _bind$19 = _M0FPB16fixed__partitionGsE(arr$2, _pivot_index);
+    const _pivot = _bind$19._0;
+    const _partitioned = _bind$19._1;
+    const _p = len - _pivot | 0;
+    const balanced$2 = (_pivot > _p ? _p : _pivot) >= (len / 8 | 0);
+    const limit$3 = !balanced$2 ? limit$2 - 1 | 0 : limit$2;
+    if (pred$2 === undefined) {
+    } else {
+      const _Some = pred$2;
+      const _p$2 = _Some;
+      if (_p$2 === arr$2.buf[arr$2.start + _pivot | 0]) {
+        let i;
+        let _tmp$14 = _pivot;
+        while (true) {
+          const i$2 = _tmp$14;
+          if (i$2 < len && _p$2 === arr$2.buf[arr$2.start + i$2 | 0]) {
+            _tmp$14 = i$2 + 1 | 0;
+            continue;
+          } else {
+            i = i$2;
+            break;
+          }
+        }
+        _tmp$9 = limit$3;
+        _tmp$10 = _M0MPC15array12MutArrayView5sliceGsE(arr$2, i, len);
+        _tmp$12 = _partitioned;
+        _tmp$13 = balanced$2;
+        continue;
+      }
+    }
+    const left = _M0MPC15array12MutArrayView5sliceGsE(arr$2, 0, _pivot);
+    const right = _M0MPC15array12MutArrayView5sliceGsE(arr$2, _pivot + 1 | 0, len);
+    if ((left.end - left.start | 0) < (right.end - right.start | 0)) {
+      _M0FPB18fixed__quick__sortGsE(left, pred$2, limit$3);
+      _tmp$9 = limit$3;
+      _tmp$10 = right;
+      _tmp$11 = arr$2.buf[arr$2.start + _pivot | 0];
+      _tmp$12 = _partitioned;
+      _tmp$13 = balanced$2;
+      continue;
+    } else {
+      _M0FPB18fixed__quick__sortGsE(right, arr$2.buf[arr$2.start + _pivot | 0], limit$3);
+      _tmp$9 = limit$3;
+      _tmp$10 = left;
+      _tmp$12 = _partitioned;
+      _tmp$13 = balanced$2;
+      continue;
+    }
+  }
+}
+function _M0MPC15array12MutArrayView4sortGsE(self) {
+  _M0FPB18fixed__quick__sortGsE(self, undefined, _M0FPB17fixed__get__limit(self.end - self.start | 0));
+}
+function _M0MPC15array5Array4sortGsE(self) {
+  const _bind$18 = self.length;
+  _M0MPC15array12MutArrayView4sortGsE(new _M0TPB12MutArrayViewGsE(self, 0, _bind$18));
 }
 function _M0MPC15array5Array4makeGsE(len, elem) {
   const arr = new Array(len);
@@ -8237,6 +8737,28 @@ function _M0MPC15array5Array4makeGbE(len, elem) {
   }
   return arr;
 }
+function _M0IPC15array5ArrayPB2Eq5equalGsE(self, other) {
+  const self_len = self.length;
+  const other_len = other.length;
+  if (self_len === other_len) {
+    let _tmp$9 = 0;
+    while (true) {
+      const i = _tmp$9;
+      if (i < self_len) {
+        if (self[i] === other[i]) {
+        } else {
+          return false;
+        }
+        _tmp$9 = i + 1 | 0;
+        continue;
+      } else {
+        return true;
+      }
+    }
+  } else {
+    return false;
+  }
+}
 function _M0IPC15array5ArrayPB2Eq5equalGRP38username5mbtpp6parser7StrPartE(self, other) {
   const self_len = self.length;
   const other_len = other.length;
@@ -8281,7 +8803,7 @@ function _M0IPC15array5ArrayPB2Eq5equalGRP38username5mbtpp7codegen3NTyE(self, ot
     return false;
   }
 }
-function _M0IPC15array5ArrayPB3Add3addGsE(self, other) {
+function _M0IPC15array5ArrayPB3Add3addGUssEE(self, other) {
   const len_self = self.length;
   const len_other = other.length;
   if (len_self === 0) {
@@ -8552,142 +9074,142 @@ function _M0MPC13ref3Ref3RefGRP38username5mbtpp6interp4RValE(x) {
 function _M0MPC13ref3Ref3RefGbE(x) {
   return new _M0TPC13ref3RefGbE(x);
 }
-function _M0IP38username5mbtpp6parser3LitPB2Eq5equal(_x_1002, _x_1003) {
-  switch (_x_1002.$tag) {
+function _M0IP38username5mbtpp6parser3LitPB2Eq5equal(_x_1056, _x_1057) {
+  switch (_x_1056.$tag) {
     case 0: {
-      const _LInt = _x_1002;
-      const _$42$x0_1004 = _LInt._0;
-      if (_x_1003.$tag === 0) {
-        const _LInt$2 = _x_1003;
-        const _$42$y0_1005 = _LInt$2._0;
-        return _$42$x0_1004 === _$42$y0_1005;
+      const _LInt = _x_1056;
+      const _$42$x0_1058 = _LInt._0;
+      if (_x_1057.$tag === 0) {
+        const _LInt$2 = _x_1057;
+        const _$42$y0_1059 = _LInt$2._0;
+        return _$42$x0_1058 === _$42$y0_1059;
       } else {
         return false;
       }
     }
     case 1: {
-      const _LStr = _x_1002;
-      const _$42$x0_1006 = _LStr._0;
-      if (_x_1003.$tag === 1) {
-        const _LStr$2 = _x_1003;
-        const _$42$y0_1007 = _LStr$2._0;
-        return _$42$x0_1006 === _$42$y0_1007;
+      const _LStr = _x_1056;
+      const _$42$x0_1060 = _LStr._0;
+      if (_x_1057.$tag === 1) {
+        const _LStr$2 = _x_1057;
+        const _$42$y0_1061 = _LStr$2._0;
+        return _$42$x0_1060 === _$42$y0_1061;
       } else {
         return false;
       }
     }
     case 2: {
-      const _LChar = _x_1002;
-      const _$42$x0_1008 = _LChar._0;
-      if (_x_1003.$tag === 2) {
-        const _LChar$2 = _x_1003;
-        const _$42$y0_1009 = _LChar$2._0;
-        return _$42$x0_1008 === _$42$y0_1009;
+      const _LChar = _x_1056;
+      const _$42$x0_1062 = _LChar._0;
+      if (_x_1057.$tag === 2) {
+        const _LChar$2 = _x_1057;
+        const _$42$y0_1063 = _LChar$2._0;
+        return _$42$x0_1062 === _$42$y0_1063;
       } else {
         return false;
       }
     }
     case 3: {
-      const _LBool = _x_1002;
-      const _$42$x0_1010 = _LBool._0;
-      if (_x_1003.$tag === 3) {
-        const _LBool$2 = _x_1003;
-        const _$42$y0_1011 = _LBool$2._0;
-        return _$42$x0_1010 === _$42$y0_1011;
+      const _LBool = _x_1056;
+      const _$42$x0_1064 = _LBool._0;
+      if (_x_1057.$tag === 3) {
+        const _LBool$2 = _x_1057;
+        const _$42$y0_1065 = _LBool$2._0;
+        return _$42$x0_1064 === _$42$y0_1065;
       } else {
         return false;
       }
     }
     case 4: {
-      if (_x_1003.$tag === 4) {
+      if (_x_1057.$tag === 4) {
         return true;
       } else {
         return false;
       }
     }
     default: {
-      const _LDouble = _x_1002;
-      const _$42$x0_1012 = _LDouble._0;
-      if (_x_1003.$tag === 5) {
-        const _LDouble$2 = _x_1003;
-        const _$42$y0_1013 = _LDouble$2._0;
-        return _$42$x0_1012 === _$42$y0_1013;
+      const _LDouble = _x_1056;
+      const _$42$x0_1066 = _LDouble._0;
+      if (_x_1057.$tag === 5) {
+        const _LDouble$2 = _x_1057;
+        const _$42$y0_1067 = _LDouble$2._0;
+        return _$42$x0_1066 === _$42$y0_1067;
       } else {
         return false;
       }
     }
   }
 }
-function _M0IP38username5mbtpp6parser3TokPB2Eq5equal(_x_932, _x_933) {
-  switch (_x_932.$tag) {
+function _M0IP38username5mbtpp6parser3TokPB2Eq5equal(_x_974, _x_975) {
+  switch (_x_974.$tag) {
     case 0: {
-      const _TIdent = _x_932;
-      const _$42$x0_934 = _TIdent._0;
-      if (_x_933.$tag === 0) {
-        const _TIdent$2 = _x_933;
-        const _$42$y0_935 = _TIdent$2._0;
-        return _$42$x0_934 === _$42$y0_935;
+      const _TIdent = _x_974;
+      const _$42$x0_976 = _TIdent._0;
+      if (_x_975.$tag === 0) {
+        const _TIdent$2 = _x_975;
+        const _$42$y0_977 = _TIdent$2._0;
+        return _$42$x0_976 === _$42$y0_977;
       } else {
         return false;
       }
     }
     case 1: {
-      const _TInt = _x_932;
-      const _$42$x0_936 = _TInt._0;
-      if (_x_933.$tag === 1) {
-        const _TInt$2 = _x_933;
-        const _$42$y0_937 = _TInt$2._0;
-        return _$42$x0_936 === _$42$y0_937;
+      const _TInt = _x_974;
+      const _$42$x0_978 = _TInt._0;
+      if (_x_975.$tag === 1) {
+        const _TInt$2 = _x_975;
+        const _$42$y0_979 = _TInt$2._0;
+        return _$42$x0_978 === _$42$y0_979;
       } else {
         return false;
       }
     }
     case 2: {
-      const _TDouble = _x_932;
-      const _$42$x0_938 = _TDouble._0;
-      if (_x_933.$tag === 2) {
-        const _TDouble$2 = _x_933;
-        const _$42$y0_939 = _TDouble$2._0;
-        return _$42$x0_938 === _$42$y0_939;
+      const _TDouble = _x_974;
+      const _$42$x0_980 = _TDouble._0;
+      if (_x_975.$tag === 2) {
+        const _TDouble$2 = _x_975;
+        const _$42$y0_981 = _TDouble$2._0;
+        return _$42$x0_980 === _$42$y0_981;
       } else {
         return false;
       }
     }
     case 3: {
-      const _TStr = _x_932;
-      const _$42$x0_940 = _TStr._0;
-      if (_x_933.$tag === 3) {
-        const _TStr$2 = _x_933;
-        const _$42$y0_941 = _TStr$2._0;
-        return _M0IPC15array5ArrayPB2Eq5equalGRP38username5mbtpp6parser7StrPartE(_$42$x0_940, _$42$y0_941);
+      const _TStr = _x_974;
+      const _$42$x0_982 = _TStr._0;
+      if (_x_975.$tag === 3) {
+        const _TStr$2 = _x_975;
+        const _$42$y0_983 = _TStr$2._0;
+        return _M0IPC15array5ArrayPB2Eq5equalGRP38username5mbtpp6parser7StrPartE(_$42$x0_982, _$42$y0_983);
       } else {
         return false;
       }
     }
     case 4: {
-      const _TChar = _x_932;
-      const _$42$x0_942 = _TChar._0;
-      if (_x_933.$tag === 4) {
-        const _TChar$2 = _x_933;
-        const _$42$y0_943 = _TChar$2._0;
-        return _$42$x0_942 === _$42$y0_943;
+      const _TChar = _x_974;
+      const _$42$x0_984 = _TChar._0;
+      if (_x_975.$tag === 4) {
+        const _TChar$2 = _x_975;
+        const _$42$y0_985 = _TChar$2._0;
+        return _$42$x0_984 === _$42$y0_985;
       } else {
         return false;
       }
     }
     case 5: {
-      const _TSym = _x_932;
-      const _$42$x0_944 = _TSym._0;
-      if (_x_933.$tag === 5) {
-        const _TSym$2 = _x_933;
-        const _$42$y0_945 = _TSym$2._0;
-        return _$42$x0_944 === _$42$y0_945;
+      const _TSym = _x_974;
+      const _$42$x0_986 = _TSym._0;
+      if (_x_975.$tag === 5) {
+        const _TSym$2 = _x_975;
+        const _$42$y0_987 = _TSym$2._0;
+        return _$42$x0_986 === _$42$y0_987;
       } else {
         return false;
       }
     }
     default: {
-      if (_x_933.$tag === 6) {
+      if (_x_975.$tag === 6) {
         return true;
       } else {
         return false;
@@ -8695,28 +9217,28 @@ function _M0IP38username5mbtpp6parser3TokPB2Eq5equal(_x_932, _x_933) {
     }
   }
 }
-function _M0IP38username5mbtpp6parser7StrPartPB2Eq5equal(_x_888, _x_889) {
-  if (_x_888.$tag === 0) {
-    const _SPStr = _x_888;
-    const _$42$x0_890 = _SPStr._0;
-    if (_x_889.$tag === 0) {
-      const _SPStr$2 = _x_889;
-      const _$42$y0_891 = _SPStr$2._0;
-      return _$42$x0_890 === _$42$y0_891;
+function _M0IP38username5mbtpp6parser7StrPartPB2Eq5equal(_x_930, _x_931) {
+  if (_x_930.$tag === 0) {
+    const _SPStr = _x_930;
+    const _$42$x0_932 = _SPStr._0;
+    if (_x_931.$tag === 0) {
+      const _SPStr$2 = _x_931;
+      const _$42$y0_933 = _SPStr$2._0;
+      return _$42$x0_932 === _$42$y0_933;
     } else {
       return false;
     }
   } else {
-    const _SPExpr = _x_888;
-    const _$42$x0_892 = _SPExpr._0;
-    const _$42$x1_893 = _SPExpr._1;
-    const _$42$x2_894 = _SPExpr._2;
-    if (_x_889.$tag === 1) {
-      const _SPExpr$2 = _x_889;
-      const _$42$y0_895 = _SPExpr$2._0;
-      const _$42$y1_896 = _SPExpr$2._1;
-      const _$42$y2_897 = _SPExpr$2._2;
-      return _$42$x0_892 === _$42$y0_895 && (_$42$x1_893 === _$42$y1_896 && _$42$x2_894 === _$42$y2_897);
+    const _SPExpr = _x_930;
+    const _$42$x0_934 = _SPExpr._0;
+    const _$42$x1_935 = _SPExpr._1;
+    const _$42$x2_936 = _SPExpr._2;
+    if (_x_931.$tag === 1) {
+      const _SPExpr$2 = _x_931;
+      const _$42$y0_937 = _SPExpr$2._0;
+      const _$42$y1_938 = _SPExpr$2._1;
+      const _$42$y2_939 = _SPExpr$2._2;
+      return _$42$x0_934 === _$42$y0_937 && (_$42$x1_935 === _$42$y1_938 && _$42$x2_936 === _$42$y2_939);
     } else {
       return false;
     }
@@ -8809,9 +9331,34 @@ function _M0MP38username5mbtpp6parser6Parser5ident(self) {
     return _M0MP38username5mbtpp6parser6Parser4failGRP38username5mbtpp6parser4ExprE(self, "expected an identifier");
   }
 }
+function _M0MP38username5mbtpp6parser6Parser9pkg__name(self) {
+  _L: {
+    const _bind$18 = _M0MP38username5mbtpp6parser6Parser4peek(self).tok;
+    if (_bind$18.$tag === 5) {
+      const _TSym = _bind$18;
+      const _s = _TSym._0;
+      let _tmp$9;
+      if (_s.length > 0) {
+        const _p = _M0MPC16string6String9get__char(_s, 0);
+        _tmp$9 = _M0MPC14char4Char21is__ascii__alphabetic(_p === -1 ? $panic() : _p);
+      } else {
+        _tmp$9 = false;
+      }
+      if (_tmp$9) {
+        _M0MP38username5mbtpp6parser6Parser7advance(self);
+        return new _M0DTPC16result6ResultGsRP38username5mbtpp6parser10ParseErrorE2Ok(_s);
+      } else {
+        break _L;
+      }
+    } else {
+      break _L;
+    }
+  }
+  return _M0MP38username5mbtpp6parser6Parser5ident(self);
+}
 function _M0MP38username5mbtpp6parser6Parser11qual__ident(self) {
   if (_M0MP38username5mbtpp6parser6Parser6accept(self, "@")) {
-    const _bind$18 = _M0MP38username5mbtpp6parser6Parser5ident(self);
+    const _bind$18 = _M0MP38username5mbtpp6parser6Parser9pkg__name(self);
     let pkg;
     if (_bind$18.$tag === 1) {
       const _ok = _bind$18;
@@ -8903,6 +9450,386 @@ function _M0MP38username5mbtpp6parser6Parser12skip__derive(self) {
   } else {
     return new _M0DTPC16result6ResultGuRP38username5mbtpp6parser10ParseErrorE2Ok(undefined);
   }
+}
+function _M0FP38username5mbtpp6parser9bin__prec(op) {
+  switch (op) {
+    case "||": {
+      return 1;
+    }
+    case "&&": {
+      return 2;
+    }
+    case "==": {
+      return 3;
+    }
+    case "!=": {
+      return 3;
+    }
+    case "===": {
+      return 3;
+    }
+    case "<": {
+      return 3;
+    }
+    case ">": {
+      return 3;
+    }
+    case "<=": {
+      return 3;
+    }
+    case ">=": {
+      return 3;
+    }
+    case "is": {
+      return 3;
+    }
+    case "..<": {
+      return 4;
+    }
+    case "..=": {
+      return 4;
+    }
+    case "|": {
+      return 5;
+    }
+    case "^": {
+      return 6;
+    }
+    case "&": {
+      return 7;
+    }
+    case "<<": {
+      return 8;
+    }
+    case ">>": {
+      return 8;
+    }
+    case "+": {
+      return 9;
+    }
+    case "-": {
+      return 9;
+    }
+    case "*": {
+      return 10;
+    }
+    case "/": {
+      return 10;
+    }
+    case "%": {
+      return 10;
+    }
+    default: {
+      return -1;
+    }
+  }
+}
+function _M0FP38username5mbtpp6parser9is__upper(s) {
+  const _bind$18 = _M0MPC16string6String9get__char(s, 0);
+  if (_bind$18 === -1) {
+    return false;
+  } else {
+    const _Some = _bind$18;
+    const _c = _Some;
+    return _c >= 65 && _c <= 90;
+  }
+}
+function _M0MP38username5mbtpp6parser6Parser7pattern(self) {
+  const _bind$18 = _M0MP38username5mbtpp6parser6Parser13pattern__atom(self);
+  let p;
+  if (_bind$18.$tag === 1) {
+    const _ok = _bind$18;
+    p = _ok._0;
+  } else {
+    return _bind$18;
+  }
+  while (true) {
+    if (_M0MP38username5mbtpp6parser6Parser2at(self, "|")) {
+      const pos = _M0MP38username5mbtpp6parser6Parser4peek(self).pos;
+      _M0MP38username5mbtpp6parser6Parser7advance(self);
+      const _bind$19 = _M0MP38username5mbtpp6parser6Parser13pattern__atom(self);
+      let _tmp$9;
+      if (_bind$19.$tag === 1) {
+        const _ok = _bind$19;
+        _tmp$9 = _ok._0;
+      } else {
+        return _bind$19;
+      }
+      p = new _M0DTP38username5mbtpp6parser3Pat3POr(pos, p, _tmp$9);
+      continue;
+    } else {
+      break;
+    }
+  }
+  while (true) {
+    if (_M0MP38username5mbtpp6parser6Parser2at(self, "as")) {
+      const pos = _M0MP38username5mbtpp6parser6Parser4peek(self).pos;
+      _M0MP38username5mbtpp6parser6Parser7advance(self);
+      const _bind$19 = _M0MP38username5mbtpp6parser6Parser5ident(self);
+      let _tmp$9;
+      if (_bind$19.$tag === 1) {
+        const _ok = _bind$19;
+        _tmp$9 = _ok._0;
+      } else {
+        return _bind$19;
+      }
+      p = new _M0DTP38username5mbtpp6parser3Pat3PAs(pos, p, _tmp$9);
+      continue;
+    } else {
+      break;
+    }
+  }
+  return new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(p);
+}
+function _M0MP38username5mbtpp6parser6Parser13pattern__atom(self) {
+  const t = _M0MP38username5mbtpp6parser6Parser4peek(self);
+  const pos = t.pos;
+  _L: {
+    const _bind$18 = t.tok;
+    switch (_bind$18.$tag) {
+      case 5: {
+        const _TSym = _bind$18;
+        const _x = _TSym._0;
+        switch (_x) {
+          case "_": {
+            _M0MP38username5mbtpp6parser6Parser7advance(self);
+            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat5PWild(pos));
+          }
+          case "-": {
+            _M0MP38username5mbtpp6parser6Parser7advance(self);
+            const _bind$19 = _M0MP38username5mbtpp6parser6Parser4peek(self).tok;
+            if (_bind$19.$tag === 1) {
+              const _TInt = _bind$19;
+              const _n = _TInt._0;
+              _M0MP38username5mbtpp6parser6Parser7advance(self);
+              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat4PLit(pos, new _M0DTP38username5mbtpp6parser3Lit4LInt(-_n | 0)));
+            } else {
+              return _M0MP38username5mbtpp6parser6Parser4failGRP38username5mbtpp6parser4ExprE(self, "expected a number");
+            }
+          }
+          case "true": {
+            _M0MP38username5mbtpp6parser6Parser7advance(self);
+            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat4PLit(pos, _M0MP38username5mbtpp6parser6Parser13pattern__atomN6constrS5486));
+          }
+          case "false": {
+            _M0MP38username5mbtpp6parser6Parser7advance(self);
+            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat4PLit(pos, _M0MP38username5mbtpp6parser6Parser13pattern__atomN6constrS5487));
+          }
+          case "@": {
+            _M0MP38username5mbtpp6parser6Parser7advance(self);
+            const _bind$20 = _M0MP38username5mbtpp6parser6Parser9pkg__name(self);
+            let pkg;
+            if (_bind$20.$tag === 1) {
+              const _ok = _bind$20;
+              pkg = _ok._0;
+            } else {
+              return _bind$20;
+            }
+            const _bind$21 = _M0MP38username5mbtpp6parser6Parser6expect(self, ".");
+            if (_bind$21.$tag === 1) {
+              const _ok = _bind$21;
+              _ok._0;
+            } else {
+              return _bind$21;
+            }
+            const _bind$22 = _M0MP38username5mbtpp6parser6Parser5ident(self);
+            let _tmp$9;
+            if (_bind$22.$tag === 1) {
+              const _ok = _bind$22;
+              _tmp$9 = _ok._0;
+            } else {
+              return _bind$22;
+            }
+            let name = `@${pkg}.${_tmp$9}`;
+            while (true) {
+              if (_M0MP38username5mbtpp6parser6Parser2at(self, "::")) {
+                _M0MP38username5mbtpp6parser6Parser7advance(self);
+                const _tmp$10 = name;
+                const _bind$23 = _M0MP38username5mbtpp6parser6Parser5ident(self);
+                let _tmp$11;
+                if (_bind$23.$tag === 1) {
+                  const _ok = _bind$23;
+                  _tmp$11 = _ok._0;
+                } else {
+                  return _bind$23;
+                }
+                name = `${_tmp$10}::${_tmp$11}`;
+                continue;
+              } else {
+                break;
+              }
+            }
+            return _M0MP38username5mbtpp6parser6Parser18con__pattern__args(self, pos, name);
+          }
+          case "(": {
+            _M0MP38username5mbtpp6parser6Parser7advance(self);
+            const ps = [];
+            let trailing = false;
+            while (true) {
+              if (!_M0MP38username5mbtpp6parser6Parser2at(self, ")")) {
+                const _bind$23 = _M0MP38username5mbtpp6parser6Parser7pattern(self);
+                let _tmp$10;
+                if (_bind$23.$tag === 1) {
+                  const _ok = _bind$23;
+                  _tmp$10 = _ok._0;
+                } else {
+                  return _bind$23;
+                }
+                _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(ps, _tmp$10);
+                trailing = false;
+                if (!_M0MP38username5mbtpp6parser6Parser6accept(self, ",")) {
+                  break;
+                }
+                trailing = true;
+                continue;
+              } else {
+                break;
+              }
+            }
+            const _bind$23 = _M0MP38username5mbtpp6parser6Parser6expect(self, ")");
+            if (_bind$23.$tag === 1) {
+              const _ok = _bind$23;
+              _ok._0;
+            } else {
+              return _bind$23;
+            }
+            return ps.length === 0 ? new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat4PLit(pos, _M0DTP38username5mbtpp6parser3Lit5LUnit__)) : ps.length === 1 && !trailing ? new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(ps, 0)) : new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat6PTuple(pos, ps));
+          }
+          default: {
+            break _L;
+          }
+        }
+      }
+      case 1: {
+        const _TInt = _bind$18;
+        const _n = _TInt._0;
+        _M0MP38username5mbtpp6parser6Parser7advance(self);
+        return new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat4PLit(pos, new _M0DTP38username5mbtpp6parser3Lit4LInt(_n)));
+      }
+      case 3: {
+        const _TStr = _bind$18;
+        const _x$2 = _TStr._0;
+        if (_x$2.length === 1) {
+          const _x$3 = _x$2[0];
+          if (_x$3.$tag === 0) {
+            const _SPStr = _x$3;
+            const _s = _SPStr._0;
+            _M0MP38username5mbtpp6parser6Parser7advance(self);
+            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat4PLit(pos, new _M0DTP38username5mbtpp6parser3Lit4LStr(_s)));
+          } else {
+            break _L;
+          }
+        } else {
+          break _L;
+        }
+      }
+      case 4: {
+        const _TChar = _bind$18;
+        const _c = _TChar._0;
+        _M0MP38username5mbtpp6parser6Parser7advance(self);
+        return new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat4PLit(pos, new _M0DTP38username5mbtpp6parser3Lit5LChar(_c)));
+      }
+      case 0: {
+        const _TIdent = _bind$18;
+        const _x$3 = _TIdent._0;
+        _M0MP38username5mbtpp6parser6Parser7advance(self);
+        let name$2 = _x$3;
+        while (true) {
+          if (_M0MP38username5mbtpp6parser6Parser2at(self, "::")) {
+            _M0MP38username5mbtpp6parser6Parser7advance(self);
+            const _tmp$10 = name$2;
+            const _bind$24 = _M0MP38username5mbtpp6parser6Parser5ident(self);
+            let _tmp$11;
+            if (_bind$24.$tag === 1) {
+              const _ok = _bind$24;
+              _tmp$11 = _ok._0;
+            } else {
+              return _bind$24;
+            }
+            name$2 = `${_tmp$10}::${_tmp$11}`;
+            continue;
+          } else {
+            break;
+          }
+        }
+        if (!_M0FP38username5mbtpp6parser9is__upper(_x$3) && !_M0MPC16string6String8contains(name$2, _M0MP38username5mbtpp6parser6Parser13pattern__atomN6recordS5488)) {
+          return new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat4PVar(pos, name$2));
+        }
+        return _M0MP38username5mbtpp6parser6Parser18con__pattern__args(self, pos, name$2);
+      }
+      default: {
+        break _L;
+      }
+    }
+  }
+  return _M0MP38username5mbtpp6parser6Parser4failGRP38username5mbtpp6parser4ExprE(self, "expected a pattern");
+}
+function _M0MP38username5mbtpp6parser6Parser18con__pattern__args(self, pos, name) {
+  let impl_ps;
+  if (_M0MP38username5mbtpp6parser6Parser14is__same__line(self, "[")) {
+    _M0MP38username5mbtpp6parser6Parser7advance(self);
+    const ps = [];
+    while (true) {
+      if (!_M0MP38username5mbtpp6parser6Parser2at(self, "]")) {
+        const _bind$18 = _M0MP38username5mbtpp6parser6Parser7pattern(self);
+        let _tmp$9;
+        if (_bind$18.$tag === 1) {
+          const _ok = _bind$18;
+          _tmp$9 = _ok._0;
+        } else {
+          return _bind$18;
+        }
+        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(ps, _tmp$9);
+        if (!_M0MP38username5mbtpp6parser6Parser6accept(self, ",")) {
+          break;
+        }
+        continue;
+      } else {
+        break;
+      }
+    }
+    const _bind$18 = _M0MP38username5mbtpp6parser6Parser6expect(self, "]");
+    if (_bind$18.$tag === 1) {
+      const _ok = _bind$18;
+      _ok._0;
+    } else {
+      return _bind$18;
+    }
+    impl_ps = new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4Some(ps);
+  } else {
+    impl_ps = _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4None__;
+  }
+  const ps = [];
+  if (_M0MP38username5mbtpp6parser6Parser14is__same__line(self, "(")) {
+    _M0MP38username5mbtpp6parser6Parser7advance(self);
+    while (true) {
+      if (!_M0MP38username5mbtpp6parser6Parser2at(self, ")")) {
+        const _bind$18 = _M0MP38username5mbtpp6parser6Parser7pattern(self);
+        let _tmp$9;
+        if (_bind$18.$tag === 1) {
+          const _ok = _bind$18;
+          _tmp$9 = _ok._0;
+        } else {
+          return _bind$18;
+        }
+        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(ps, _tmp$9);
+        if (!_M0MP38username5mbtpp6parser6Parser6accept(self, ",")) {
+          break;
+        }
+        continue;
+      } else {
+        break;
+      }
+    }
+    const _bind$18 = _M0MP38username5mbtpp6parser6Parser6expect(self, ")");
+    if (_bind$18.$tag === 1) {
+      const _ok = _bind$18;
+      _ok._0;
+    } else {
+      return _bind$18;
+    }
+  }
+  return new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat4PCon(pos, name, impl_ps, ps));
 }
 function _M0MP38username5mbtpp6parser4Expr3pos(self) {
   switch (self.$tag) {
@@ -9056,10 +9983,20 @@ function _M0MP38username5mbtpp6parser4Expr3pos(self) {
       const _p$30 = _ERange._0;
       return _p$30;
     }
-    default: {
+    case 30: {
       const _ETagged = self;
       const _p$31 = _ETagged._0;
       return _p$31;
+    }
+    case 31: {
+      const _EIs = self;
+      const _p$32 = _EIs._0;
+      return _p$32;
+    }
+    default: {
+      const _EEff = self;
+      const _p$33 = _EEff._0;
+      return _p$33;
     }
   }
 }
@@ -9110,76 +10047,6 @@ function _M0FP38username5mbtpp6parser18exprs__to__binders(es) {
     }
   }
   return _p;
-}
-function _M0FP38username5mbtpp6parser9bin__prec(op) {
-  switch (op) {
-    case "||": {
-      return 1;
-    }
-    case "&&": {
-      return 2;
-    }
-    case "==": {
-      return 3;
-    }
-    case "!=": {
-      return 3;
-    }
-    case "===": {
-      return 3;
-    }
-    case "<": {
-      return 3;
-    }
-    case ">": {
-      return 3;
-    }
-    case "<=": {
-      return 3;
-    }
-    case ">=": {
-      return 3;
-    }
-    case "..<": {
-      return 4;
-    }
-    case "..=": {
-      return 4;
-    }
-    case "|": {
-      return 5;
-    }
-    case "^": {
-      return 6;
-    }
-    case "&": {
-      return 7;
-    }
-    case "<<": {
-      return 8;
-    }
-    case ">>": {
-      return 8;
-    }
-    case "+": {
-      return 9;
-    }
-    case "-": {
-      return 9;
-    }
-    case "*": {
-      return 10;
-    }
-    case "/": {
-      return 10;
-    }
-    case "%": {
-      return 10;
-    }
-    default: {
-      return -1;
-    }
-  }
 }
 function _M0FP38username5mbtpp6parser24exprs__to__impl__binders(es) {
   let _p;
@@ -9353,6 +10220,15 @@ function _M0FP38username5mbtpp6parser17exprs__to__params(es) {
   }
   return new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser6BinderERP38username5mbtpp6parser10ParseErrorE3Err(_p);
 }
+function _M0FP38username5mbtpp6parser8lam__ret(pos, ret, eff) {
+  if (eff === undefined) {
+    return ret;
+  } else {
+    const _Some = eff;
+    const _e = _Some;
+    return new _M0DTP38username5mbtpp6parser4Expr4EEff(pos, _M0MPC16option6Option10unwrap__orGRP38username5mbtpp6parser4ExprE(ret, new _M0DTP38username5mbtpp6parser4Expr5EHole(pos)), _e);
+  }
+}
 function _M0FP38username5mbtpp6parser12escape__char(pos, e) {
   switch (e) {
     case 110: {
@@ -9387,17 +10263,17 @@ function _M0FP38username5mbtpp6parser16is__ident__start(c) {
 function _M0FP38username5mbtpp6parser15is__ident__char(c) {
   return _M0FP38username5mbtpp6parser16is__ident__start(c) || c >= 48 && c <= 57;
 }
-function _M0FP38username5mbtpp6parser16tokenize_2einnerN4peekS5286(_env, k) {
-  const cs = _env._2;
+function _M0FP38username5mbtpp6parser16tokenize_2einnerN4peekS5644(_env, k) {
+  const n = _env._2;
   const i = _env._1;
-  const n = _env._0;
+  const cs = _env._0;
   return (i.val + k | 0) < n ? _M0MPC15array5Array2atGcE(cs, i.val + k | 0) : 0;
 }
-function _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env) {
-  const col = _env._3;
-  const cs = _env._2;
-  const i = _env._1;
-  const line = _env._0;
+function _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env) {
+  const line = _env._3;
+  const i = _env._2;
+  const cs = _env._1;
+  const col = _env._0;
   if (_M0MPC15array5Array2atGcE(cs, i.val) === 10) {
     line.val = line.val + 1 | 0;
     col.val = 1;
@@ -9414,24 +10290,24 @@ function _M0FP38username5mbtpp6parser16tokenize_2einner(src, line0, col0) {
   const line = new _M0TPB8MutLocalGiE(line0);
   const col = new _M0TPB8MutLocalGiE(col0);
   let nl = true;
-  const _env = { _0: n, _1: i, _2: cs };
-  const _env$2 = { _0: line, _1: i, _2: cs, _3: col };
+  const _env = { _0: cs, _1: i, _2: n };
+  const _env$2 = { _0: col, _1: cs, _2: i, _3: line };
   while (true) {
     if (i.val < n) {
       const c = _M0MPC15array5Array2atGcE(cs, i.val);
       if (c === 10) {
         nl = true;
-        _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+        _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
         continue;
       }
       if (c === 32 || (c === 9 || c === 13)) {
-        _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+        _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
         continue;
       }
-      if (c === 47 && _M0FP38username5mbtpp6parser16tokenize_2einnerN4peekS5286(_env, 1) === 47) {
+      if (c === 47 && _M0FP38username5mbtpp6parser16tokenize_2einnerN4peekS5644(_env, 1) === 47) {
         while (true) {
           if (i.val < n && _M0MPC15array5Array2atGcE(cs, i.val) !== 10) {
-            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
             continue;
           } else {
             break;
@@ -9447,15 +10323,15 @@ function _M0FP38username5mbtpp6parser16tokenize_2einner(src, line0, col0) {
             if (_M0MPC15array5Array2atGcE(cs, i.val) !== 95) {
               v = (Math.imul(v, 10) | 0) + (_M0MPC15array5Array2atGcE(cs, i.val) - 48 | 0) | 0;
             }
-            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
             continue;
           } else {
             break;
           }
         }
-        const after_dot = toks.length > 0 && _M0IP38username5mbtpp6parser3TokPB2Eq5equal(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(toks, toks.length - 1 | 0).tok, _M0FP38username5mbtpp6parser16tokenize_2einnerN6constrS5288);
+        const after_dot = toks.length > 0 && _M0IP38username5mbtpp6parser3TokPB2Eq5equal(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(toks, toks.length - 1 | 0).tok, _M0FP38username5mbtpp6parser16tokenize_2einnerN6constrS5646);
         if (!after_dot && ((i.val + 1 | 0) < n && (_M0MPC15array5Array2atGcE(cs, i.val) === 46 && (_M0MPC15array5Array2atGcE(cs, i.val + 1 | 0) >= 48 && _M0MPC15array5Array2atGcE(cs, i.val + 1 | 0) <= 57)))) {
-          _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+          _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
           let d = v + 0;
           let scale = 0.1;
           while (true) {
@@ -9464,7 +10340,7 @@ function _M0FP38username5mbtpp6parser16tokenize_2einner(src, line0, col0) {
                 d = d + ((_M0MPC15array5Array2atGcE(cs, i.val) - 48 | 0) + 0) * scale;
                 scale = scale / 10;
               }
-              _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+              _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
               continue;
             } else {
               break;
@@ -9478,12 +10354,12 @@ function _M0FP38username5mbtpp6parser16tokenize_2einner(src, line0, col0) {
         nl = false;
         continue;
       }
-      if (_M0FP38username5mbtpp6parser16is__ident__start(c) && !(c === 95 && !_M0FP38username5mbtpp6parser15is__ident__char(_M0FP38username5mbtpp6parser16tokenize_2einnerN4peekS5286(_env, 1)))) {
+      if (_M0FP38username5mbtpp6parser16is__ident__start(c) && !(c === 95 && !_M0FP38username5mbtpp6parser15is__ident__char(_M0FP38username5mbtpp6parser16tokenize_2einnerN4peekS5644(_env, 1)))) {
         const buf = _M0MPB13StringBuilder21StringBuilder_2einner(8);
         while (true) {
           if (i.val < n && _M0FP38username5mbtpp6parser15is__ident__char(_M0MPC15array5Array2atGcE(cs, i.val))) {
             _M0IPB13StringBuilderPB6Logger11write__char(buf, _M0MPC15array5Array2atGcE(cs, i.val));
-            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
             continue;
           } else {
             break;
@@ -9496,12 +10372,12 @@ function _M0FP38username5mbtpp6parser16tokenize_2einner(src, line0, col0) {
         continue;
       }
       if (c === 39) {
-        _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+        _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
         let ch;
         if (i.val < n && _M0MPC15array5Array2atGcE(cs, i.val) === 92) {
-          _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+          _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
           const e = _M0MPC15array5Array2atGcE(cs, i.val);
-          _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+          _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
           const _bind$18 = _M0FP38username5mbtpp6parser12escape__char(pos, e);
           if (_bind$18.$tag === 1) {
             const _ok = _bind$18;
@@ -9512,7 +10388,7 @@ function _M0FP38username5mbtpp6parser16tokenize_2einner(src, line0, col0) {
         } else {
           if (i.val < n) {
             const ch$2 = _M0MPC15array5Array2atGcE(cs, i.val);
-            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
             ch = ch$2;
           } else {
             return new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser5TokenERP38username5mbtpp6parser10ParseErrorE3Err(new _M0DTPC15error5Error51username_2fmbtpp_2fparser_2eParseError_2eParseError(pos, "unterminated character literal"));
@@ -9521,13 +10397,13 @@ function _M0FP38username5mbtpp6parser16tokenize_2einner(src, line0, col0) {
         if (i.val >= n || _M0MPC15array5Array2atGcE(cs, i.val) !== 39) {
           return new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser5TokenERP38username5mbtpp6parser10ParseErrorE3Err(new _M0DTPC15error5Error51username_2fmbtpp_2fparser_2eParseError_2eParseError(pos, "unterminated character literal"));
         }
-        _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+        _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
         _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(toks, new _M0TP38username5mbtpp6parser5Token(new _M0DTP38username5mbtpp6parser3Tok5TChar(ch), pos, nl));
         nl = false;
         continue;
       }
       if (c === 34) {
-        _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+        _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
         const parts = [];
         const buf = _M0MPB13StringBuilder21StringBuilder_2einner(8);
         while (true) {
@@ -9536,12 +10412,12 @@ function _M0FP38username5mbtpp6parser16tokenize_2einner(src, line0, col0) {
           }
           const d = _M0MPC15array5Array2atGcE(cs, i.val);
           if (d === 34) {
-            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
             break;
           }
-          if (d === 92 && _M0FP38username5mbtpp6parser16tokenize_2einnerN4peekS5286(_env, 1) === 123) {
-            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
-            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+          if (d === 92 && _M0FP38username5mbtpp6parser16tokenize_2einnerN4peekS5644(_env, 1) === 123) {
+            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
+            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
             const _p = buf.val;
             const _p$2 = "";
             if (!(_p === _p$2)) {
@@ -9562,7 +10438,7 @@ function _M0FP38username5mbtpp6parser16tokenize_2einner(src, line0, col0) {
                   }
                 }
                 _M0IPB13StringBuilderPB6Logger11write__char(ebuf, _M0MPC15array5Array2atGcE(cs, i.val));
-                _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+                _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
                 continue;
               } else {
                 break;
@@ -9571,14 +10447,14 @@ function _M0FP38username5mbtpp6parser16tokenize_2einner(src, line0, col0) {
             if (i.val >= n) {
               return new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser5TokenERP38username5mbtpp6parser10ParseErrorE3Err(new _M0DTPC15error5Error51username_2fmbtpp_2fparser_2eParseError_2eParseError(pos, "unterminated interpolation"));
             }
-            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
             _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(parts, new _M0DTP38username5mbtpp6parser7StrPart6SPExpr(ebuf.val, eline, ecol));
             continue;
           }
           if (d === 92) {
-            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
             const e = _M0MPC15array5Array2atGcE(cs, i.val);
-            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+            _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
             const _bind$18 = _M0FP38username5mbtpp6parser12escape__char(pos, e);
             let _tmp$9;
             if (_bind$18.$tag === 1) {
@@ -9591,7 +10467,7 @@ function _M0FP38username5mbtpp6parser16tokenize_2einner(src, line0, col0) {
             continue;
           }
           _M0IPB13StringBuilderPB6Logger11write__char(buf, d);
-          _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+          _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
           continue;
         }
         let _tmp$9;
@@ -9640,7 +10516,7 @@ function _M0FP38username5mbtpp6parser16tokenize_2einner(src, line0, col0) {
               while (true) {
                 const k = _tmp$11;
                 if (k < len) {
-                  _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5287(_env$2);
+                  _M0FP38username5mbtpp6parser16tokenize_2einnerN3advS5645(_env$2);
                   _tmp$11 = k + 1 | 0;
                   continue;
                 } else {
@@ -9669,266 +10545,6 @@ function _M0FP38username5mbtpp6parser16tokenize_2einner(src, line0, col0) {
   }
   _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(toks, new _M0TP38username5mbtpp6parser5Token(_M0DTP38username5mbtpp6parser3Tok4TEOF__, new _M0TP38username5mbtpp6parser3Pos(line.val, col.val), true));
   return new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser5TokenERP38username5mbtpp6parser10ParseErrorE2Ok(toks);
-}
-function _M0FP38username5mbtpp6parser9is__upper(s) {
-  const _bind$18 = _M0MPC16string6String9get__char(s, 0);
-  if (_bind$18 === -1) {
-    return false;
-  } else {
-    const _Some = _bind$18;
-    const _c = _Some;
-    return _c >= 65 && _c <= 90;
-  }
-}
-function _M0MP38username5mbtpp6parser6Parser7pattern(self) {
-  const t = _M0MP38username5mbtpp6parser6Parser4peek(self);
-  const pos = t.pos;
-  _L: {
-    const _bind$18 = t.tok;
-    switch (_bind$18.$tag) {
-      case 5: {
-        const _TSym = _bind$18;
-        const _x = _TSym._0;
-        switch (_x) {
-          case "_": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat5PWild(pos));
-          }
-          case "-": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            const _bind$19 = _M0MP38username5mbtpp6parser6Parser4peek(self).tok;
-            if (_bind$19.$tag === 1) {
-              const _TInt = _bind$19;
-              const _n = _TInt._0;
-              _M0MP38username5mbtpp6parser6Parser7advance(self);
-              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat4PLit(pos, new _M0DTP38username5mbtpp6parser3Lit4LInt(-_n | 0)));
-            } else {
-              return _M0MP38username5mbtpp6parser6Parser4failGRP38username5mbtpp6parser4ExprE(self, "expected a number");
-            }
-          }
-          case "true": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat4PLit(pos, _M0MP38username5mbtpp6parser6Parser7patternN6constrS5353));
-          }
-          case "false": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat4PLit(pos, _M0MP38username5mbtpp6parser6Parser7patternN6constrS5354));
-          }
-          case "@": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            const _bind$20 = _M0MP38username5mbtpp6parser6Parser5ident(self);
-            let pkg;
-            if (_bind$20.$tag === 1) {
-              const _ok = _bind$20;
-              pkg = _ok._0;
-            } else {
-              return _bind$20;
-            }
-            const _bind$21 = _M0MP38username5mbtpp6parser6Parser6expect(self, ".");
-            if (_bind$21.$tag === 1) {
-              const _ok = _bind$21;
-              _ok._0;
-            } else {
-              return _bind$21;
-            }
-            const _bind$22 = _M0MP38username5mbtpp6parser6Parser5ident(self);
-            let _tmp$9;
-            if (_bind$22.$tag === 1) {
-              const _ok = _bind$22;
-              _tmp$9 = _ok._0;
-            } else {
-              return _bind$22;
-            }
-            let name = `@${pkg}.${_tmp$9}`;
-            while (true) {
-              if (_M0MP38username5mbtpp6parser6Parser2at(self, "::")) {
-                _M0MP38username5mbtpp6parser6Parser7advance(self);
-                const _tmp$10 = name;
-                const _bind$23 = _M0MP38username5mbtpp6parser6Parser5ident(self);
-                let _tmp$11;
-                if (_bind$23.$tag === 1) {
-                  const _ok = _bind$23;
-                  _tmp$11 = _ok._0;
-                } else {
-                  return _bind$23;
-                }
-                name = `${_tmp$10}::${_tmp$11}`;
-                continue;
-              } else {
-                break;
-              }
-            }
-            return _M0MP38username5mbtpp6parser6Parser18con__pattern__args(self, pos, name);
-          }
-          case "(": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            const ps = [];
-            let trailing = false;
-            while (true) {
-              if (!_M0MP38username5mbtpp6parser6Parser2at(self, ")")) {
-                const _bind$23 = _M0MP38username5mbtpp6parser6Parser7pattern(self);
-                let _tmp$10;
-                if (_bind$23.$tag === 1) {
-                  const _ok = _bind$23;
-                  _tmp$10 = _ok._0;
-                } else {
-                  return _bind$23;
-                }
-                _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(ps, _tmp$10);
-                trailing = false;
-                if (!_M0MP38username5mbtpp6parser6Parser6accept(self, ",")) {
-                  break;
-                }
-                trailing = true;
-                continue;
-              } else {
-                break;
-              }
-            }
-            const _bind$23 = _M0MP38username5mbtpp6parser6Parser6expect(self, ")");
-            if (_bind$23.$tag === 1) {
-              const _ok = _bind$23;
-              _ok._0;
-            } else {
-              return _bind$23;
-            }
-            return ps.length === 0 ? new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat4PLit(pos, _M0DTP38username5mbtpp6parser3Lit5LUnit__)) : ps.length === 1 && !trailing ? new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(ps, 0)) : new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat6PTuple(pos, ps));
-          }
-          default: {
-            break _L;
-          }
-        }
-      }
-      case 1: {
-        const _TInt = _bind$18;
-        const _n = _TInt._0;
-        _M0MP38username5mbtpp6parser6Parser7advance(self);
-        return new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat4PLit(pos, new _M0DTP38username5mbtpp6parser3Lit4LInt(_n)));
-      }
-      case 3: {
-        const _TStr = _bind$18;
-        const _x$2 = _TStr._0;
-        if (_x$2.length === 1) {
-          const _x$3 = _x$2[0];
-          if (_x$3.$tag === 0) {
-            const _SPStr = _x$3;
-            const _s = _SPStr._0;
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat4PLit(pos, new _M0DTP38username5mbtpp6parser3Lit4LStr(_s)));
-          } else {
-            break _L;
-          }
-        } else {
-          break _L;
-        }
-      }
-      case 4: {
-        const _TChar = _bind$18;
-        const _c = _TChar._0;
-        _M0MP38username5mbtpp6parser6Parser7advance(self);
-        return new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat4PLit(pos, new _M0DTP38username5mbtpp6parser3Lit5LChar(_c)));
-      }
-      case 0: {
-        const _TIdent = _bind$18;
-        const _x$3 = _TIdent._0;
-        _M0MP38username5mbtpp6parser6Parser7advance(self);
-        let name$2 = _x$3;
-        while (true) {
-          if (_M0MP38username5mbtpp6parser6Parser2at(self, "::")) {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            const _tmp$10 = name$2;
-            const _bind$24 = _M0MP38username5mbtpp6parser6Parser5ident(self);
-            let _tmp$11;
-            if (_bind$24.$tag === 1) {
-              const _ok = _bind$24;
-              _tmp$11 = _ok._0;
-            } else {
-              return _bind$24;
-            }
-            name$2 = `${_tmp$10}::${_tmp$11}`;
-            continue;
-          } else {
-            break;
-          }
-        }
-        if (!_M0FP38username5mbtpp6parser9is__upper(_x$3) && !_M0MPC16string6String8contains(name$2, _M0MP38username5mbtpp6parser6Parser7patternN6recordS5355)) {
-          return new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat4PVar(pos, name$2));
-        }
-        return _M0MP38username5mbtpp6parser6Parser18con__pattern__args(self, pos, name$2);
-      }
-      default: {
-        break _L;
-      }
-    }
-  }
-  return _M0MP38username5mbtpp6parser6Parser4failGRP38username5mbtpp6parser4ExprE(self, "expected a pattern");
-}
-function _M0MP38username5mbtpp6parser6Parser18con__pattern__args(self, pos, name) {
-  let impl_ps;
-  if (_M0MP38username5mbtpp6parser6Parser14is__same__line(self, "[")) {
-    _M0MP38username5mbtpp6parser6Parser7advance(self);
-    const ps = [];
-    while (true) {
-      if (!_M0MP38username5mbtpp6parser6Parser2at(self, "]")) {
-        const _bind$18 = _M0MP38username5mbtpp6parser6Parser7pattern(self);
-        let _tmp$9;
-        if (_bind$18.$tag === 1) {
-          const _ok = _bind$18;
-          _tmp$9 = _ok._0;
-        } else {
-          return _bind$18;
-        }
-        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(ps, _tmp$9);
-        if (!_M0MP38username5mbtpp6parser6Parser6accept(self, ",")) {
-          break;
-        }
-        continue;
-      } else {
-        break;
-      }
-    }
-    const _bind$18 = _M0MP38username5mbtpp6parser6Parser6expect(self, "]");
-    if (_bind$18.$tag === 1) {
-      const _ok = _bind$18;
-      _ok._0;
-    } else {
-      return _bind$18;
-    }
-    impl_ps = new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4Some(ps);
-  } else {
-    impl_ps = _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4None__;
-  }
-  const ps = [];
-  if (_M0MP38username5mbtpp6parser6Parser14is__same__line(self, "(")) {
-    _M0MP38username5mbtpp6parser6Parser7advance(self);
-    while (true) {
-      if (!_M0MP38username5mbtpp6parser6Parser2at(self, ")")) {
-        const _bind$18 = _M0MP38username5mbtpp6parser6Parser7pattern(self);
-        let _tmp$9;
-        if (_bind$18.$tag === 1) {
-          const _ok = _bind$18;
-          _tmp$9 = _ok._0;
-        } else {
-          return _bind$18;
-        }
-        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(ps, _tmp$9);
-        if (!_M0MP38username5mbtpp6parser6Parser6accept(self, ",")) {
-          break;
-        }
-        continue;
-      } else {
-        break;
-      }
-    }
-    const _bind$18 = _M0MP38username5mbtpp6parser6Parser6expect(self, ")");
-    if (_bind$18.$tag === 1) {
-      const _ok = _bind$18;
-      _ok._0;
-    } else {
-      return _bind$18;
-    }
-  }
-  return new _M0DTPC16result6ResultGRP38username5mbtpp6parser3PatRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser3Pat4PCon(pos, name, impl_ps, ps));
 }
 function _M0MP38username5mbtpp6parser6Parser19is__struct__literal(self) {
   if (!_M0MP38username5mbtpp6parser6Parser2at(self, "{")) {
@@ -9992,32 +10608,598 @@ function _M0MP38username5mbtpp6parser6Parser13impl__binders(self) {
   return new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser6BinderERP38username5mbtpp6parser10ParseErrorE2Ok(bs);
 }
 function _M0MP38username5mbtpp6parser6Parser4expr(self) {
-  return _M0MP38username5mbtpp6parser6Parser5arrow(self);
-}
-function _M0MP38username5mbtpp6parser6Parser5arrow(self) {
-  const pos = _M0MP38username5mbtpp6parser6Parser4peek(self).pos;
-  const parenthesised = _M0MP38username5mbtpp6parser6Parser2at(self, "(");
-  const _bind$18 = _M0MP38username5mbtpp6parser6Parser4pipe(self);
-  let lhs;
+  const _bind$18 = _M0MP38username5mbtpp6parser6Parser5arrow(self);
+  let e;
   if (_bind$18.$tag === 1) {
     const _ok = _bind$18;
-    lhs = _ok._0;
+    e = _ok._0;
   } else {
     return _bind$18;
   }
-  if (!_M0MP38username5mbtpp6parser6Parser2at(self, "->")) {
-    return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(lhs);
+  if (_M0MP38username5mbtpp6parser6Parser14is__same__line(self, "catch")) {
+    const pos = _M0MP38username5mbtpp6parser6Parser4peek(self).pos;
+    _M0MP38username5mbtpp6parser6Parser7advance(self);
+    const _bind$19 = _M0MP38username5mbtpp6parser6Parser4arms(self);
+    let arms;
+    if (_bind$19.$tag === 1) {
+      const _ok = _bind$19;
+      arms = _ok._0;
+    } else {
+      return _bind$19;
+    }
+    const _bind$20 = _M0MP38username5mbtpp6parser6Parser12noraise__opt(self);
+    let _tmp$9;
+    if (_bind$20.$tag === 1) {
+      const _ok = _bind$20;
+      _tmp$9 = _ok._0;
+    } else {
+      return _bind$20;
+    }
+    return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ETry(pos, e, arms, _tmp$9));
   }
-  _M0MP38username5mbtpp6parser6Parser7advance(self);
-  const _bind$19 = _M0MP38username5mbtpp6parser6Parser5arrow(self);
-  let cod;
+  return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(e);
+}
+function _M0MP38username5mbtpp6parser6Parser4arms(self) {
+  const _bind$18 = _M0MP38username5mbtpp6parser6Parser6expect(self, "{");
+  if (_bind$18.$tag === 1) {
+    const _ok = _bind$18;
+    _ok._0;
+  } else {
+    return _bind$18;
+  }
+  const arms = [];
+  while (true) {
+    if (!_M0MP38username5mbtpp6parser6Parser2at(self, "}")) {
+      if (_M0MP38username5mbtpp6parser6Parser6accept(self, ";")) {
+        continue;
+      }
+      const pos = _M0MP38username5mbtpp6parser6Parser4peek(self).pos;
+      const _bind$19 = _M0MP38username5mbtpp6parser6Parser7pattern(self);
+      let pat;
+      if (_bind$19.$tag === 1) {
+        const _ok = _bind$19;
+        pat = _ok._0;
+      } else {
+        return _bind$19;
+      }
+      let cond;
+      if (_M0MP38username5mbtpp6parser6Parser6accept(self, "if")) {
+        const _bind$20 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+        if (_bind$20.$tag === 1) {
+          const _ok = _bind$20;
+          cond = _ok._0;
+        } else {
+          return _bind$20;
+        }
+      } else {
+        cond = undefined;
+      }
+      let rhs;
+      if (_M0MP38username5mbtpp6parser6Parser6accept(self, "=>")) {
+        if (_M0MP38username5mbtpp6parser6Parser2at(self, "{") && !_M0MP38username5mbtpp6parser6Parser19is__struct__literal(self)) {
+          const _bind$20 = _M0MP38username5mbtpp6parser6Parser5block(self);
+          if (_bind$20.$tag === 1) {
+            const _ok = _bind$20;
+            rhs = _ok._0;
+          } else {
+            return _bind$20;
+          }
+        } else {
+          const _bind$20 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+          if (_bind$20.$tag === 1) {
+            const _ok = _bind$20;
+            rhs = _ok._0;
+          } else {
+            return _bind$20;
+          }
+        }
+      } else {
+        rhs = undefined;
+      }
+      _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(arms, new _M0TP38username5mbtpp6parser3Arm(pos, pat, cond, rhs));
+      if (!_M0MP38username5mbtpp6parser6Parser2at(self, "}")) {
+        const _bind$20 = _M0MP38username5mbtpp6parser6Parser9end__stmt(self);
+        if (_bind$20.$tag === 1) {
+          const _ok = _bind$20;
+          _ok._0;
+        } else {
+          return _bind$20;
+        }
+      }
+      continue;
+    } else {
+      break;
+    }
+  }
+  const _bind$19 = _M0MP38username5mbtpp6parser6Parser6expect(self, "}");
   if (_bind$19.$tag === 1) {
     const _ok = _bind$19;
-    cod = _ok._0;
+    _ok._0;
   } else {
     return _bind$19;
   }
-  const _bind$20 = _M0MP38username5mbtpp6parser6Parser11raises__opt(self);
+  return new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser3ArmERP38username5mbtpp6parser10ParseErrorE2Ok(arms);
+}
+function _M0MP38username5mbtpp6parser6Parser5block(self) {
+  const pos = _M0MP38username5mbtpp6parser6Parser4peek(self).pos;
+  const _bind$18 = _M0MP38username5mbtpp6parser6Parser6expect(self, "{");
+  if (_bind$18.$tag === 1) {
+    const _ok = _bind$18;
+    _ok._0;
+  } else {
+    return _bind$18;
+  }
+  const stmts = [];
+  while (true) {
+    if (!_M0MP38username5mbtpp6parser6Parser2at(self, "}")) {
+      if (_M0MP38username5mbtpp6parser6Parser6accept(self, ";")) {
+        continue;
+      }
+      const _bind$19 = _M0MP38username5mbtpp6parser6Parser4stmt(self);
+      let _tmp$9;
+      if (_bind$19.$tag === 1) {
+        const _ok = _bind$19;
+        _tmp$9 = _ok._0;
+      } else {
+        return _bind$19;
+      }
+      _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(stmts, _tmp$9);
+      if (!_M0MP38username5mbtpp6parser6Parser2at(self, "}")) {
+        const _bind$20 = _M0MP38username5mbtpp6parser6Parser9end__stmt(self);
+        if (_bind$20.$tag === 1) {
+          const _ok = _bind$20;
+          _ok._0;
+        } else {
+          return _bind$20;
+        }
+      }
+      continue;
+    } else {
+      break;
+    }
+  }
+  const _bind$19 = _M0MP38username5mbtpp6parser6Parser6expect(self, "}");
+  if (_bind$19.$tag === 1) {
+    const _ok = _bind$19;
+    _ok._0;
+  } else {
+    return _bind$19;
+  }
+  return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr6EBlock(pos, stmts));
+}
+function _M0MP38username5mbtpp6parser6Parser4stmt(self) {
+  const pos = _M0MP38username5mbtpp6parser6Parser4peek(self).pos;
+  if (_M0MP38username5mbtpp6parser6Parser6accept(self, "let")) {
+    if (_M0MP38username5mbtpp6parser6Parser6accept(self, "mut")) {
+      const _bind$18 = _M0MP38username5mbtpp6parser6Parser5ident(self);
+      let name;
+      if (_bind$18.$tag === 1) {
+        const _ok = _bind$18;
+        name = _ok._0;
+      } else {
+        return _bind$18;
+      }
+      let ty;
+      if (_M0MP38username5mbtpp6parser6Parser6accept(self, ":")) {
+        const _bind$19 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+        if (_bind$19.$tag === 1) {
+          const _ok = _bind$19;
+          ty = _ok._0;
+        } else {
+          return _bind$19;
+        }
+      } else {
+        ty = undefined;
+      }
+      const _bind$19 = _M0MP38username5mbtpp6parser6Parser6expect(self, "=");
+      if (_bind$19.$tag === 1) {
+        const _ok = _bind$19;
+        _ok._0;
+      } else {
+        return _bind$19;
+      }
+      const _bind$20 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+      let _tmp$9;
+      if (_bind$20.$tag === 1) {
+        const _ok = _bind$20;
+        _tmp$9 = _ok._0;
+      } else {
+        return _bind$20;
+      }
+      return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt7SLetMut(pos, name, ty, _tmp$9));
+    }
+    const _bind$18 = _M0MP38username5mbtpp6parser6Parser7pattern(self);
+    let pat;
+    if (_bind$18.$tag === 1) {
+      const _ok = _bind$18;
+      pat = _ok._0;
+    } else {
+      return _bind$18;
+    }
+    if (_M0MP38username5mbtpp6parser6Parser6accept(self, "<-")) {
+      const _bind$19 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+      let _tmp$9;
+      if (_bind$19.$tag === 1) {
+        const _ok = _bind$19;
+        _tmp$9 = _ok._0;
+      } else {
+        return _bind$19;
+      }
+      return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt8SLetBind(pos, pat, _tmp$9));
+    }
+    let ty;
+    if (_M0MP38username5mbtpp6parser6Parser6accept(self, ":")) {
+      const _bind$19 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+      if (_bind$19.$tag === 1) {
+        const _ok = _bind$19;
+        ty = _ok._0;
+      } else {
+        return _bind$19;
+      }
+    } else {
+      ty = undefined;
+    }
+    const _bind$19 = _M0MP38username5mbtpp6parser6Parser6expect(self, "=");
+    if (_bind$19.$tag === 1) {
+      const _ok = _bind$19;
+      _ok._0;
+    } else {
+      return _bind$19;
+    }
+    const _bind$20 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+    let _tmp$9;
+    if (_bind$20.$tag === 1) {
+      const _ok = _bind$20;
+      _tmp$9 = _ok._0;
+    } else {
+      return _bind$20;
+    }
+    return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt4SLet(pos, pat, ty, _tmp$9));
+  }
+  if (_M0MP38username5mbtpp6parser6Parser2at(self, "fn")) {
+    _L: {
+      _L$2: {
+        const _bind$18 = _M0MP38username5mbtpp6parser6Parser8peek__at(self, 1).tok;
+        if (_bind$18.$tag === 0) {
+          break _L$2;
+        } else {
+          if (_M0MP38username5mbtpp6parser6Parser5at__k(self, 1, "[")) {
+            break _L$2;
+          }
+        }
+        break _L;
+      }
+      _M0MP38username5mbtpp6parser6Parser7advance(self);
+      const _bind$18 = _M0MP38username5mbtpp6parser6Parser16fn__rest_2einner(self, pos, false, false);
+      let _tmp$9;
+      if (_bind$18.$tag === 1) {
+        const _ok = _bind$18;
+        _tmp$9 = _ok._0;
+      } else {
+        return _bind$18;
+      }
+      return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt3SFn(pos, _tmp$9));
+    }
+  }
+  if (_M0MP38username5mbtpp6parser6Parser2at(self, "async")) {
+    if (_M0MP38username5mbtpp6parser6Parser5at__k(self, 1, "fn")) {
+      _L: {
+        _L$2: {
+          const _bind$18 = _M0MP38username5mbtpp6parser6Parser8peek__at(self, 2).tok;
+          if (_bind$18.$tag === 0) {
+            break _L$2;
+          } else {
+            if (_M0MP38username5mbtpp6parser6Parser5at__k(self, 2, "[")) {
+              break _L$2;
+            }
+          }
+          break _L;
+        }
+        _M0MP38username5mbtpp6parser6Parser7advance(self);
+        _M0MP38username5mbtpp6parser6Parser7advance(self);
+        const _bind$18 = _M0MP38username5mbtpp6parser6Parser16fn__rest_2einner(self, pos, false, true);
+        let _tmp$9;
+        if (_bind$18.$tag === 1) {
+          const _ok = _bind$18;
+          _tmp$9 = _ok._0;
+        } else {
+          return _bind$18;
+        }
+        return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt3SFn(pos, _tmp$9));
+      }
+    }
+  }
+  if (_M0MP38username5mbtpp6parser6Parser6accept(self, "guard")) {
+    const _bind$18 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+    let c;
+    if (_bind$18.$tag === 1) {
+      const _ok = _bind$18;
+      c = _ok._0;
+    } else {
+      return _bind$18;
+    }
+    let e;
+    if (_M0MP38username5mbtpp6parser6Parser6accept(self, "else")) {
+      const _bind$19 = _M0MP38username5mbtpp6parser6Parser5block(self);
+      if (_bind$19.$tag === 1) {
+        const _ok = _bind$19;
+        e = _ok._0;
+      } else {
+        return _bind$19;
+      }
+    } else {
+      e = undefined;
+    }
+    return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt6SGuard(pos, c, e));
+  }
+  if (_M0MP38username5mbtpp6parser6Parser6accept(self, "while")) {
+    const _bind$18 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+    let c;
+    if (_bind$18.$tag === 1) {
+      const _ok = _bind$18;
+      c = _ok._0;
+    } else {
+      return _bind$18;
+    }
+    const _bind$19 = _M0MP38username5mbtpp6parser6Parser5block(self);
+    let _tmp$9;
+    if (_bind$19.$tag === 1) {
+      const _ok = _bind$19;
+      _tmp$9 = _ok._0;
+    } else {
+      return _bind$19;
+    }
+    return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt6SWhile(pos, c, _tmp$9));
+  }
+  if (_M0MP38username5mbtpp6parser6Parser6accept(self, "for")) {
+    if (_M0MP38username5mbtpp6parser6Parser9is__ident(self) && _M0MP38username5mbtpp6parser6Parser5at__k(self, 1, "in")) {
+      const _bind$18 = _M0MP38username5mbtpp6parser6Parser5ident(self);
+      let x;
+      if (_bind$18.$tag === 1) {
+        const _ok = _bind$18;
+        x = _ok._0;
+      } else {
+        return _bind$18;
+      }
+      const _bind$19 = _M0MP38username5mbtpp6parser6Parser6expect(self, "in");
+      if (_bind$19.$tag === 1) {
+        const _ok = _bind$19;
+        _ok._0;
+      } else {
+        return _bind$19;
+      }
+      const _bind$20 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+      let e;
+      if (_bind$20.$tag === 1) {
+        const _ok = _bind$20;
+        e = _ok._0;
+      } else {
+        return _bind$20;
+      }
+      const _bind$21 = _M0MP38username5mbtpp6parser6Parser5block(self);
+      let _tmp$9;
+      if (_bind$21.$tag === 1) {
+        const _ok = _bind$21;
+        _tmp$9 = _ok._0;
+      } else {
+        return _bind$21;
+      }
+      return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt6SForIn(pos, x, e, _tmp$9));
+    }
+    const inits = [];
+    while (true) {
+      if (!_M0MP38username5mbtpp6parser6Parser2at(self, ";")) {
+        const _bind$18 = _M0MP38username5mbtpp6parser6Parser5ident(self);
+        let x;
+        if (_bind$18.$tag === 1) {
+          const _ok = _bind$18;
+          x = _ok._0;
+        } else {
+          return _bind$18;
+        }
+        const _bind$19 = _M0MP38username5mbtpp6parser6Parser6expect(self, "=");
+        if (_bind$19.$tag === 1) {
+          const _ok = _bind$19;
+          _ok._0;
+        } else {
+          return _bind$19;
+        }
+        const _bind$20 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+        let _tmp$9;
+        if (_bind$20.$tag === 1) {
+          const _ok = _bind$20;
+          _tmp$9 = _ok._0;
+        } else {
+          return _bind$20;
+        }
+        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(inits, { _0: x, _1: _tmp$9 });
+        if (!_M0MP38username5mbtpp6parser6Parser6accept(self, ",")) {
+          break;
+        }
+        continue;
+      } else {
+        break;
+      }
+    }
+    const _bind$18 = _M0MP38username5mbtpp6parser6Parser6expect(self, ";");
+    if (_bind$18.$tag === 1) {
+      const _ok = _bind$18;
+      _ok._0;
+    } else {
+      return _bind$18;
+    }
+    let cond;
+    if (_M0MP38username5mbtpp6parser6Parser2at(self, ";")) {
+      cond = undefined;
+    } else {
+      const _bind$19 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+      if (_bind$19.$tag === 1) {
+        const _ok = _bind$19;
+        cond = _ok._0;
+      } else {
+        return _bind$19;
+      }
+    }
+    const _bind$19 = _M0MP38username5mbtpp6parser6Parser6expect(self, ";");
+    if (_bind$19.$tag === 1) {
+      const _ok = _bind$19;
+      _ok._0;
+    } else {
+      return _bind$19;
+    }
+    const updates = [];
+    while (true) {
+      if (!_M0MP38username5mbtpp6parser6Parser2at(self, "{")) {
+        const _bind$20 = _M0MP38username5mbtpp6parser6Parser5ident(self);
+        let x;
+        if (_bind$20.$tag === 1) {
+          const _ok = _bind$20;
+          x = _ok._0;
+        } else {
+          return _bind$20;
+        }
+        const _bind$21 = _M0MP38username5mbtpp6parser6Parser6expect(self, "=");
+        if (_bind$21.$tag === 1) {
+          const _ok = _bind$21;
+          _ok._0;
+        } else {
+          return _bind$21;
+        }
+        const _bind$22 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+        let _tmp$9;
+        if (_bind$22.$tag === 1) {
+          const _ok = _bind$22;
+          _tmp$9 = _ok._0;
+        } else {
+          return _bind$22;
+        }
+        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(updates, { _0: x, _1: _tmp$9 });
+        if (!_M0MP38username5mbtpp6parser6Parser6accept(self, ",")) {
+          break;
+        }
+        continue;
+      } else {
+        break;
+      }
+    }
+    const _bind$20 = _M0MP38username5mbtpp6parser6Parser5block(self);
+    let _tmp$9;
+    if (_bind$20.$tag === 1) {
+      const _ok = _bind$20;
+      _tmp$9 = _ok._0;
+    } else {
+      return _bind$20;
+    }
+    return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt4SFor(pos, inits, cond, updates, _tmp$9));
+  }
+  const _bind$18 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+  let e;
+  if (_bind$18.$tag === 1) {
+    const _ok = _bind$18;
+    e = _ok._0;
+  } else {
+    return _bind$18;
+  }
+  const _bind$19 = ["=", "+=", "-=", "*=", "/="];
+  const _bind$20 = _bind$19.length;
+  let _tmp$9 = 0;
+  while (true) {
+    const _ = _tmp$9;
+    if (_ < _bind$20) {
+      const op = _bind$19[_];
+      if (_M0MP38username5mbtpp6parser6Parser2at(self, op)) {
+        _M0MP38username5mbtpp6parser6Parser7advance(self);
+        const _bind$21 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+        let _tmp$10;
+        if (_bind$21.$tag === 1) {
+          const _ok = _bind$21;
+          _tmp$10 = _ok._0;
+        } else {
+          return _bind$21;
+        }
+        return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt7SAssign(pos, e, op, _tmp$10));
+      }
+      _tmp$9 = _ + 1 | 0;
+      continue;
+    } else {
+      break;
+    }
+  }
+  return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt5SExpr(pos, e));
+}
+function _M0MP38username5mbtpp6parser6Parser16fn__rest_2einner(self, pos, is_lemma, is_async) {
+  const _bind$18 = _M0MP38username5mbtpp6parser6Parser13impl__binders(self);
+  let impl_bs;
+  if (_bind$18.$tag === 1) {
+    const _ok = _bind$18;
+    impl_bs = _ok._0;
+  } else {
+    return _bind$18;
+  }
+  const _bind$19 = _M0MP38username5mbtpp6parser6Parser5ident(self);
+  let name;
+  if (_bind$19.$tag === 1) {
+    const _ok = _bind$19;
+    name = _ok._0;
+  } else {
+    return _bind$19;
+  }
+  while (true) {
+    if (_M0MP38username5mbtpp6parser6Parser6accept(self, "::")) {
+      const _tmp$9 = name;
+      const _bind$20 = _M0MP38username5mbtpp6parser6Parser5ident(self);
+      let _tmp$10;
+      if (_bind$20.$tag === 1) {
+        const _ok = _bind$20;
+        _tmp$10 = _ok._0;
+      } else {
+        return _bind$20;
+      }
+      name = `${_tmp$9}::${_tmp$10}`;
+      continue;
+    } else {
+      break;
+    }
+  }
+  if (is_lemma && _M0MP38username5mbtpp6parser6Parser2at(self, "[")) {
+    const _tmp$9 = impl_bs;
+    const _bind$20 = _M0MP38username5mbtpp6parser6Parser13impl__binders(self);
+    let _tmp$10;
+    if (_bind$20.$tag === 1) {
+      const _ok = _bind$20;
+      _tmp$10 = _ok._0;
+    } else {
+      return _bind$20;
+    }
+    impl_bs = _M0IPC15array5ArrayPB3Add3addGUssEE(_tmp$9, _tmp$10);
+  }
+  let params;
+  if (_M0MP38username5mbtpp6parser6Parser2at(self, "(")) {
+    const _bind$20 = _M0MP38username5mbtpp6parser6Parser6params(self, false);
+    let _tmp$9;
+    if (_bind$20.$tag === 1) {
+      const _ok = _bind$20;
+      _tmp$9 = _ok._0;
+    } else {
+      return _bind$20;
+    }
+    params = new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4Some(_tmp$9);
+  } else {
+    params = _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4None__;
+  }
+  let ret;
+  if (_M0MP38username5mbtpp6parser6Parser6accept(self, "->")) {
+    const _bind$20 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+    if (_bind$20.$tag === 1) {
+      const _ok = _bind$20;
+      ret = _ok._0;
+    } else {
+      return _bind$20;
+    }
+  } else {
+    ret = undefined;
+  }
+  const _bind$20 = _M0MP38username5mbtpp6parser6Parser11effect__opt(self, is_async);
   let raises;
   if (_bind$20.$tag === 1) {
     const _ok = _bind$20;
@@ -10025,43 +11207,101 @@ function _M0MP38username5mbtpp6parser6Parser5arrow(self) {
   } else {
     return _bind$20;
   }
-  let binders;
-  _L: {
-    _L$2: {
-      switch (lhs.$tag) {
-        case 17: {
-          const _ETuple = lhs;
-          const _es = _ETuple._1;
-          if (parenthesised) {
-            binders = _M0FP38username5mbtpp6parser18exprs__to__binders(_es);
-          } else {
-            break _L$2;
-          }
-          break;
-        }
-        case 4: {
-          const _ELit = lhs;
-          const _x = _ELit._1;
-          if (_x.$tag === 4) {
-            if (parenthesised) {
-              binders = [];
+  let body;
+  if (_M0MP38username5mbtpp6parser6Parser6accept(self, "=")) {
+    _L: {
+      _L$2: {
+        const _bind$21 = _M0MP38username5mbtpp6parser6Parser4peek(self).tok;
+        if (_bind$21.$tag === 3) {
+          const _TStr = _bind$21;
+          const _x = _TStr._0;
+          if (_x.length === 1) {
+            const _x$2 = _x[0];
+            if (_x$2.$tag === 0) {
+              const _SPStr = _x$2;
+              const _s = _SPStr._0;
+              _M0MP38username5mbtpp6parser6Parser7advance(self);
+              body = new _M0DTP38username5mbtpp6parser6FnBody10BodyExtern(_s);
             } else {
               break _L$2;
             }
           } else {
             break _L$2;
           }
-          break;
-        }
-        default: {
+        } else {
           break _L$2;
         }
+        break _L;
       }
-      break _L;
+      const _bind$21 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+      let _tmp$9;
+      if (_bind$21.$tag === 1) {
+        const _ok = _bind$21;
+        _tmp$9 = _ok._0;
+      } else {
+        return _bind$21;
+      }
+      body = new _M0DTP38username5mbtpp6parser6FnBody8BodyExpr(_tmp$9);
     }
-    binders = _M0FP38username5mbtpp6parser18exprs__to__binders([lhs]);
+  } else {
+    const _bind$21 = _M0MP38username5mbtpp6parser6Parser5block(self);
+    let _tmp$9;
+    if (_bind$21.$tag === 1) {
+      const _ok = _bind$21;
+      _tmp$9 = _ok._0;
+    } else {
+      return _bind$21;
+    }
+    body = new _M0DTP38username5mbtpp6parser6FnBody8BodyExpr(_tmp$9);
   }
-  return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr3EPi(pos, [], new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4Some(binders), cod, raises));
+  return new _M0DTPC16result6ResultGRP38username5mbtpp6parser6FnDeclRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0TP38username5mbtpp6parser6FnDecl(pos, name, impl_bs, params, ret, raises, body, is_lemma));
+}
+function _M0MP38username5mbtpp6parser6Parser11effect__opt(self, is_async) {
+  const pos = _M0MP38username5mbtpp6parser6Parser4peek(self).pos;
+  const no_raise = _M0MP38username5mbtpp6parser6Parser14is__same__line(self, "noraise");
+  if (no_raise) {
+    _M0MP38username5mbtpp6parser6Parser7advance(self);
+  }
+  let r;
+  if (no_raise) {
+    r = undefined;
+  } else {
+    const _bind$18 = _M0MP38username5mbtpp6parser6Parser11raises__opt(self);
+    if (_bind$18.$tag === 1) {
+      const _ok = _bind$18;
+      r = _ok._0;
+    } else {
+      return _bind$18;
+    }
+  }
+  if (!is_async) {
+    return new _M0DTPC16result6ResultGORP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(r);
+  }
+  const err = no_raise ? new _M0DTP38username5mbtpp6parser4Expr4EVar(pos, "%NoRaise") : _M0MPC16option6Option10unwrap__orGRP38username5mbtpp6parser4ExprE(r, new _M0DTP38username5mbtpp6parser4Expr4EVar(pos, "Error"));
+  return new _M0DTPC16result6ResultGORP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4EApp(pos, new _M0DTP38username5mbtpp6parser4Expr4EVar(pos, "%Async"), new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4Some([err]), _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__));
+}
+function _M0MP38username5mbtpp6parser6Parser11raises__opt(self) {
+  let _tmp$9;
+  if (_M0MP38username5mbtpp6parser6Parser14is__same__line(self, "raise")) {
+    _M0MP38username5mbtpp6parser6Parser7advance(self);
+    if (_M0MP38username5mbtpp6parser6Parser6accept(self, "?")) {
+      return new _M0DTPC16result6ResultGORP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(undefined);
+    }
+    if (_M0MP38username5mbtpp6parser6Parser2at(self, "{") || (_M0MP38username5mbtpp6parser6Parser2at(self, "=") || (_M0MP38username5mbtpp6parser6Parser13at__stmt__end(self) || (_M0MP38username5mbtpp6parser6Parser2at(self, ",") || _M0MP38username5mbtpp6parser6Parser2at(self, ")"))))) {
+      _tmp$9 = new _M0DTP38username5mbtpp6parser4Expr4EVar(_M0MP38username5mbtpp6parser6Parser4peek(self).pos, "Error");
+    } else {
+      const _bind$18 = _M0MP38username5mbtpp6parser6Parser4pipe(self);
+      if (_bind$18.$tag === 1) {
+        const _ok = _bind$18;
+        _tmp$9 = _ok._0;
+      } else {
+        return _bind$18;
+      }
+    }
+  } else {
+    _tmp$9 = undefined;
+  }
+  return new _M0DTPC16result6ResultGORP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(_tmp$9);
 }
 function _M0MP38username5mbtpp6parser6Parser4pipe(self) {
   const _bind$18 = _M0MP38username5mbtpp6parser6Parser6binary(self, 0);
@@ -10162,6 +11402,18 @@ function _M0MP38username5mbtpp6parser6Parser6binary(self, min_prec) {
       break;
     }
     _M0MP38username5mbtpp6parser6Parser7advance(self);
+    if (op === "is") {
+      const _bind$20 = _M0MP38username5mbtpp6parser6Parser7pattern(self);
+      let _tmp$9;
+      if (_bind$20.$tag === 1) {
+        const _ok = _bind$20;
+        _tmp$9 = _ok._0;
+      } else {
+        return _bind$20;
+      }
+      lhs = new _M0DTP38username5mbtpp6parser4Expr3EIs(t.pos, lhs, _tmp$9);
+      continue;
+    }
     const _bind$20 = _M0MP38username5mbtpp6parser6Parser6binary(self, prec + 1 | 0);
     let rhs;
     if (_bind$20.$tag === 1) {
@@ -10491,114 +11743,81 @@ function _M0MP38username5mbtpp6parser6Parser7primary(self) {
   const t = _M0MP38username5mbtpp6parser6Parser4peek(self);
   const pos = t.pos;
   _L: {
-    const _bind$18 = t.tok;
-    switch (_bind$18.$tag) {
-      case 1: {
-        const _TInt = _bind$18;
-        const _n = _TInt._0;
-        _M0MP38username5mbtpp6parser6Parser7advance(self);
-        return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELit(pos, new _M0DTP38username5mbtpp6parser3Lit4LInt(_n)));
-      }
-      case 4: {
-        const _TChar = _bind$18;
-        const _c = _TChar._0;
-        _M0MP38username5mbtpp6parser6Parser7advance(self);
-        return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELit(pos, new _M0DTP38username5mbtpp6parser3Lit5LChar(_c)));
-      }
-      case 2: {
-        const _TDouble = _bind$18;
-        const _d = _TDouble._0;
-        _M0MP38username5mbtpp6parser6Parser7advance(self);
-        return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELit(pos, new _M0DTP38username5mbtpp6parser3Lit7LDouble(_d)));
-      }
-      case 5: {
-        const _TSym = _bind$18;
-        const _x = _TSym._0;
-        switch (_x) {
-          case "@": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            const _bind$19 = _M0MP38username5mbtpp6parser6Parser5ident(self);
-            let pkg;
-            if (_bind$19.$tag === 1) {
-              const _ok = _bind$19;
-              pkg = _ok._0;
-            } else {
-              return _bind$19;
-            }
-            const _bind$20 = _M0MP38username5mbtpp6parser6Parser6expect(self, ".");
-            if (_bind$20.$tag === 1) {
-              const _ok = _bind$20;
-              _ok._0;
-            } else {
-              return _bind$20;
-            }
-            const _bind$21 = _M0MP38username5mbtpp6parser6Parser5ident(self);
-            let _tmp$9;
-            if (_bind$21.$tag === 1) {
-              const _ok = _bind$21;
-              _tmp$9 = _ok._0;
-            } else {
-              return _bind$21;
-            }
-            let name = `@${pkg}.${_tmp$9}`;
-            while (true) {
-              if (_M0MP38username5mbtpp6parser6Parser2at(self, "::")) {
-                _M0MP38username5mbtpp6parser6Parser7advance(self);
-                const _tmp$10 = name;
-                const _bind$22 = _M0MP38username5mbtpp6parser6Parser5ident(self);
-                let _tmp$11;
-                if (_bind$22.$tag === 1) {
-                  const _ok = _bind$22;
-                  _tmp$11 = _ok._0;
+    _L$2: {
+      const _bind$18 = t.tok;
+      switch (_bind$18.$tag) {
+        case 1: {
+          const _TInt = _bind$18;
+          const _n = _TInt._0;
+          _M0MP38username5mbtpp6parser6Parser7advance(self);
+          return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELit(pos, new _M0DTP38username5mbtpp6parser3Lit4LInt(_n)));
+        }
+        case 4: {
+          const _TChar = _bind$18;
+          const _c = _TChar._0;
+          _M0MP38username5mbtpp6parser6Parser7advance(self);
+          return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELit(pos, new _M0DTP38username5mbtpp6parser3Lit5LChar(_c)));
+        }
+        case 2: {
+          const _TDouble = _bind$18;
+          const _d = _TDouble._0;
+          _M0MP38username5mbtpp6parser6Parser7advance(self);
+          return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELit(pos, new _M0DTP38username5mbtpp6parser3Lit7LDouble(_d)));
+        }
+        case 5: {
+          const _TSym = _bind$18;
+          const _x = _TSym._0;
+          switch (_x) {
+            case "@": {
+              _M0MP38username5mbtpp6parser6Parser7advance(self);
+              const _bind$19 = _M0MP38username5mbtpp6parser6Parser9pkg__name(self);
+              let pkg;
+              if (_bind$19.$tag === 1) {
+                const _ok = _bind$19;
+                pkg = _ok._0;
+              } else {
+                return _bind$19;
+              }
+              const _bind$20 = _M0MP38username5mbtpp6parser6Parser6expect(self, ".");
+              if (_bind$20.$tag === 1) {
+                const _ok = _bind$20;
+                _ok._0;
+              } else {
+                return _bind$20;
+              }
+              const _bind$21 = _M0MP38username5mbtpp6parser6Parser5ident(self);
+              let _tmp$9;
+              if (_bind$21.$tag === 1) {
+                const _ok = _bind$21;
+                _tmp$9 = _ok._0;
+              } else {
+                return _bind$21;
+              }
+              let name = `@${pkg}.${_tmp$9}`;
+              while (true) {
+                if (_M0MP38username5mbtpp6parser6Parser2at(self, "::")) {
+                  _M0MP38username5mbtpp6parser6Parser7advance(self);
+                  const _tmp$10 = name;
+                  const _bind$22 = _M0MP38username5mbtpp6parser6Parser5ident(self);
+                  let _tmp$11;
+                  if (_bind$22.$tag === 1) {
+                    const _ok = _bind$22;
+                    _tmp$11 = _ok._0;
+                  } else {
+                    return _bind$22;
+                  }
+                  name = `${_tmp$10}::${_tmp$11}`;
+                  continue;
                 } else {
-                  return _bind$22;
+                  break;
                 }
-                name = `${_tmp$10}::${_tmp$11}`;
-                continue;
-              } else {
-                break;
               }
+              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4EVar(pos, name));
             }
-            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4EVar(pos, name));
-          }
-          case "_": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            if (_M0MP38username5mbtpp6parser6Parser6accept(self, "=>")) {
-              const _bind$22 = _M0MP38username5mbtpp6parser6Parser12lambda__body(self);
-              let _tmp$10;
-              if (_bind$22.$tag === 1) {
-                const _ok = _bind$22;
-                _tmp$10 = _ok._0;
-              } else {
-                return _bind$22;
-              }
-              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELam(pos, [], [new _M0TP38username5mbtpp6parser6Binder(pos, "_", undefined, _M0DTP38username5mbtpp6parser9ParamKind10Positional__)], undefined, _tmp$10));
-            }
-            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr5EHole(pos));
-          }
-          case "true": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELit(pos, _M0MP38username5mbtpp6parser6Parser7primaryN6constrS5488));
-          }
-          case "false": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELit(pos, _M0MP38username5mbtpp6parser6Parser7primaryN6constrS5489));
-          }
-          case "Type": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr5EType(pos));
-          }
-          case "Prop": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr5EProp(pos));
-          }
-          case "(": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            const es = [];
-            let trailing = false;
-            while (true) {
-              if (!_M0MP38username5mbtpp6parser6Parser2at(self, ")")) {
-                const _bind$22 = _M0MP38username5mbtpp6parser6Parser9ann__elem(self);
+            case "_": {
+              _M0MP38username5mbtpp6parser6Parser7advance(self);
+              if (_M0MP38username5mbtpp6parser6Parser6accept(self, "=>")) {
+                const _bind$22 = _M0MP38username5mbtpp6parser6Parser12lambda__body(self);
                 let _tmp$10;
                 if (_bind$22.$tag === 1) {
                   const _ok = _bind$22;
@@ -10606,52 +11825,61 @@ function _M0MP38username5mbtpp6parser6Parser7primary(self) {
                 } else {
                   return _bind$22;
                 }
-                _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(es, _tmp$10);
-                trailing = false;
-                if (!_M0MP38username5mbtpp6parser6Parser6accept(self, ",")) {
+                return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELam(pos, [], [new _M0TP38username5mbtpp6parser6Binder(pos, "_", undefined, _M0DTP38username5mbtpp6parser9ParamKind10Positional__)], undefined, _tmp$10));
+              }
+              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr5EHole(pos));
+            }
+            case "true": {
+              _M0MP38username5mbtpp6parser6Parser7advance(self);
+              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELit(pos, _M0MP38username5mbtpp6parser6Parser7primaryN6constrS5857));
+            }
+            case "false": {
+              _M0MP38username5mbtpp6parser6Parser7advance(self);
+              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELit(pos, _M0MP38username5mbtpp6parser6Parser7primaryN6constrS5858));
+            }
+            case "Type": {
+              _M0MP38username5mbtpp6parser6Parser7advance(self);
+              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr5EType(pos));
+            }
+            case "Prop": {
+              _M0MP38username5mbtpp6parser6Parser7advance(self);
+              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr5EProp(pos));
+            }
+            case "(": {
+              _M0MP38username5mbtpp6parser6Parser7advance(self);
+              const es = [];
+              let trailing = false;
+              while (true) {
+                if (!_M0MP38username5mbtpp6parser6Parser2at(self, ")")) {
+                  const _bind$22 = _M0MP38username5mbtpp6parser6Parser9ann__elem(self);
+                  let _tmp$10;
+                  if (_bind$22.$tag === 1) {
+                    const _ok = _bind$22;
+                    _tmp$10 = _ok._0;
+                  } else {
+                    return _bind$22;
+                  }
+                  _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(es, _tmp$10);
+                  trailing = false;
+                  if (!_M0MP38username5mbtpp6parser6Parser6accept(self, ",")) {
+                    break;
+                  }
+                  trailing = true;
+                  continue;
+                } else {
                   break;
                 }
-                trailing = true;
-                continue;
-              } else {
-                break;
               }
-            }
-            const _bind$22 = _M0MP38username5mbtpp6parser6Parser6expect(self, ")");
-            if (_bind$22.$tag === 1) {
-              const _ok = _bind$22;
-              _ok._0;
-            } else {
-              return _bind$22;
-            }
-            if (_M0MP38username5mbtpp6parser6Parser2at(self, "=>")) {
-              _M0MP38username5mbtpp6parser6Parser7advance(self);
-              const _bind$23 = _M0FP38username5mbtpp6parser17exprs__to__params(es);
-              let _tmp$10;
-              if (_bind$23.$tag === 1) {
-                const _ok = _bind$23;
-                _tmp$10 = _ok._0;
+              const _bind$22 = _M0MP38username5mbtpp6parser6Parser6expect(self, ")");
+              if (_bind$22.$tag === 1) {
+                const _ok = _bind$22;
+                _ok._0;
               } else {
-                return _bind$23;
+                return _bind$22;
               }
-              const _bind$24 = _M0MP38username5mbtpp6parser6Parser12lambda__body(self);
-              let _tmp$11;
-              if (_bind$24.$tag === 1) {
-                const _ok = _bind$24;
-                _tmp$11 = _ok._0;
-              } else {
-                return _bind$24;
-              }
-              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELam(pos, [], _tmp$10, undefined, _tmp$11));
-            }
-            return es.length === 0 ? new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELit(pos, _M0DTP38username5mbtpp6parser3Lit5LUnit__)) : es.length === 1 && !trailing ? new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(es, 0)) : new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr6ETuple(pos, es));
-          }
-          case "[": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            const es$2 = [];
-            while (true) {
-              if (!_M0MP38username5mbtpp6parser6Parser2at(self, "]")) {
-                const _bind$23 = _M0MP38username5mbtpp6parser6Parser9ann__elem(self);
+              if (_M0MP38username5mbtpp6parser6Parser2at(self, "=>")) {
+                _M0MP38username5mbtpp6parser6Parser7advance(self);
+                const _bind$23 = _M0FP38username5mbtpp6parser17exprs__to__params(es);
                 let _tmp$10;
                 if (_bind$23.$tag === 1) {
                   const _ok = _bind$23;
@@ -10659,463 +11887,509 @@ function _M0MP38username5mbtpp6parser6Parser7primary(self) {
                 } else {
                   return _bind$23;
                 }
-                _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(es$2, _tmp$10);
-                if (!_M0MP38username5mbtpp6parser6Parser6accept(self, ",")) {
+                const _bind$24 = _M0MP38username5mbtpp6parser6Parser12lambda__body(self);
+                let _tmp$11;
+                if (_bind$24.$tag === 1) {
+                  const _ok = _bind$24;
+                  _tmp$11 = _ok._0;
+                } else {
+                  return _bind$24;
+                }
+                return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELam(pos, [], _tmp$10, undefined, _tmp$11));
+              }
+              return es.length === 0 ? new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELit(pos, _M0DTP38username5mbtpp6parser3Lit5LUnit__)) : es.length === 1 && !trailing ? new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(es, 0)) : new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr6ETuple(pos, es));
+            }
+            case "[": {
+              _M0MP38username5mbtpp6parser6Parser7advance(self);
+              const es$2 = [];
+              while (true) {
+                if (!_M0MP38username5mbtpp6parser6Parser2at(self, "]")) {
+                  const _bind$23 = _M0MP38username5mbtpp6parser6Parser9ann__elem(self);
+                  let _tmp$10;
+                  if (_bind$23.$tag === 1) {
+                    const _ok = _bind$23;
+                    _tmp$10 = _ok._0;
+                  } else {
+                    return _bind$23;
+                  }
+                  _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(es$2, _tmp$10);
+                  if (!_M0MP38username5mbtpp6parser6Parser6accept(self, ",")) {
+                    break;
+                  }
+                  continue;
+                } else {
                   break;
                 }
-                continue;
-              } else {
-                break;
               }
-            }
-            const _bind$23 = _M0MP38username5mbtpp6parser6Parser6expect(self, "]");
-            if (_bind$23.$tag === 1) {
-              const _ok = _bind$23;
-              _ok._0;
-            } else {
-              return _bind$23;
-            }
-            if (_M0MP38username5mbtpp6parser6Parser14is__same__line(self, "(") || _M0MP38username5mbtpp6parser6Parser2at(self, "->")) {
-              const _bind$24 = _M0FP38username5mbtpp6parser24exprs__to__impl__binders(es$2);
-              let impl_bs;
-              if (_bind$24.$tag === 1) {
-                const _ok = _bind$24;
-                impl_bs = _ok._0;
+              const _bind$23 = _M0MP38username5mbtpp6parser6Parser6expect(self, "]");
+              if (_bind$23.$tag === 1) {
+                const _ok = _bind$23;
+                _ok._0;
               } else {
-                return _bind$24;
+                return _bind$23;
               }
-              let expl;
-              if (_M0MP38username5mbtpp6parser6Parser2at(self, "(")) {
-                const _bind$25 = _M0MP38username5mbtpp6parser6Parser4pipe(self);
-                let ps;
+              if (_M0MP38username5mbtpp6parser6Parser14is__same__line(self, "(") || _M0MP38username5mbtpp6parser6Parser2at(self, "->")) {
+                const _bind$24 = _M0FP38username5mbtpp6parser24exprs__to__impl__binders(es$2);
+                let impl_bs;
+                if (_bind$24.$tag === 1) {
+                  const _ok = _bind$24;
+                  impl_bs = _ok._0;
+                } else {
+                  return _bind$24;
+                }
+                let expl;
+                if (_M0MP38username5mbtpp6parser6Parser2at(self, "(")) {
+                  const _bind$25 = _M0MP38username5mbtpp6parser6Parser4pipe(self);
+                  let ps;
+                  if (_bind$25.$tag === 1) {
+                    const _ok = _bind$25;
+                    ps = _ok._0;
+                  } else {
+                    return _bind$25;
+                  }
+                  _L$3: {
+                    _L$4: {
+                      switch (ps.$tag) {
+                        case 17: {
+                          const _ETuple = ps;
+                          const _xs = _ETuple._1;
+                          expl = new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4Some(_M0FP38username5mbtpp6parser18exprs__to__binders(_xs));
+                          break;
+                        }
+                        case 4: {
+                          const _ELit = ps;
+                          const _x$2 = _ELit._1;
+                          if (_x$2.$tag === 4) {
+                            expl = new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4Some([]);
+                          } else {
+                            break _L$4;
+                          }
+                          break;
+                        }
+                        default: {
+                          break _L$4;
+                        }
+                      }
+                      break _L$3;
+                    }
+                    expl = new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4Some(_M0FP38username5mbtpp6parser18exprs__to__binders([ps]));
+                  }
+                } else {
+                  expl = _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4None__;
+                }
+                const _bind$25 = _M0MP38username5mbtpp6parser6Parser6expect(self, "->");
                 if (_bind$25.$tag === 1) {
                   const _ok = _bind$25;
-                  ps = _ok._0;
+                  _ok._0;
                 } else {
                   return _bind$25;
                 }
-                _L$2: {
-                  _L$3: {
-                    switch (ps.$tag) {
-                      case 17: {
-                        const _ETuple = ps;
-                        const _xs = _ETuple._1;
-                        expl = new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4Some(_M0FP38username5mbtpp6parser18exprs__to__binders(_xs));
-                        break;
-                      }
-                      case 4: {
-                        const _ELit = ps;
-                        const _x$2 = _ELit._1;
-                        if (_x$2.$tag === 4) {
-                          expl = new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4Some([]);
-                        } else {
-                          break _L$3;
-                        }
-                        break;
-                      }
-                      default: {
-                        break _L$3;
-                      }
-                    }
-                    break _L$2;
+                const _bind$26 = _M0MP38username5mbtpp6parser6Parser5arrow(self);
+                let cod;
+                if (_bind$26.$tag === 1) {
+                  const _ok = _bind$26;
+                  cod = _ok._0;
+                } else {
+                  return _bind$26;
+                }
+                const _bind$27 = _M0MP38username5mbtpp6parser6Parser11raises__opt(self);
+                let raises;
+                if (_bind$27.$tag === 1) {
+                  const _ok = _bind$27;
+                  raises = _ok._0;
+                } else {
+                  return _bind$27;
+                }
+                return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr3EPi(pos, impl_bs, expl, cod, raises));
+              }
+              const _bind$24 = es$2.length;
+              let _tmp$10 = 0;
+              while (true) {
+                const _ = _tmp$10;
+                if (_ < _bind$24) {
+                  const e = es$2[_];
+                  if (e.$tag === 12) {
+                    const _EAnn = e;
+                    const _p = _EAnn._0;
+                    return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE3Err(new _M0DTPC15error5Error51username_2fmbtpp_2fparser_2eParseError_2eParseError(_p, "unexpected ':' in array literal"));
                   }
-                  expl = new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4Some(_M0FP38username5mbtpp6parser18exprs__to__binders([ps]));
+                  _tmp$10 = _ + 1 | 0;
+                  continue;
+                } else {
+                  break;
+                }
+              }
+              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr6EArray(pos, es$2));
+            }
+            case "{": {
+              return _M0MP38username5mbtpp6parser6Parser19is__struct__literal(self) ? _M0MP38username5mbtpp6parser6Parser15struct__literal(self) : _M0MP38username5mbtpp6parser6Parser5block(self);
+            }
+            case "fn": {
+              break _L$2;
+            }
+            case "async": {
+              break _L$2;
+            }
+            case "if": {
+              return _M0MP38username5mbtpp6parser6Parser8if__expr(self);
+            }
+            case "match": {
+              return _M0MP38username5mbtpp6parser6Parser11match__expr(self);
+            }
+            case "try": {
+              _M0MP38username5mbtpp6parser6Parser7advance(self);
+              if (_M0MP38username5mbtpp6parser6Parser6accept(self, "?")) {
+                const _bind$25 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+                let _tmp$11;
+                if (_bind$25.$tag === 1) {
+                  const _ok = _bind$25;
+                  _tmp$11 = _ok._0;
+                } else {
+                  return _bind$25;
+                }
+                return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr5ETryQ(pos, _tmp$11));
+              }
+              let body;
+              if (_M0MP38username5mbtpp6parser6Parser2at(self, "{")) {
+                const _bind$25 = _M0MP38username5mbtpp6parser6Parser5block(self);
+                if (_bind$25.$tag === 1) {
+                  const _ok = _bind$25;
+                  body = _ok._0;
+                } else {
+                  return _bind$25;
                 }
               } else {
-                expl = _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4None__;
+                const _bind$25 = _M0MP38username5mbtpp6parser6Parser5arrow(self);
+                if (_bind$25.$tag === 1) {
+                  const _ok = _bind$25;
+                  body = _ok._0;
+                } else {
+                  return _bind$25;
+                }
               }
-              const _bind$25 = _M0MP38username5mbtpp6parser6Parser6expect(self, "->");
+              const _bind$25 = _M0MP38username5mbtpp6parser6Parser6expect(self, "catch");
               if (_bind$25.$tag === 1) {
                 const _ok = _bind$25;
                 _ok._0;
               } else {
                 return _bind$25;
               }
-              const _bind$26 = _M0MP38username5mbtpp6parser6Parser5arrow(self);
-              let cod;
+              const _bind$26 = _M0MP38username5mbtpp6parser6Parser4arms(self);
+              let arms;
               if (_bind$26.$tag === 1) {
                 const _ok = _bind$26;
-                cod = _ok._0;
+                arms = _ok._0;
               } else {
                 return _bind$26;
               }
-              const _bind$27 = _M0MP38username5mbtpp6parser6Parser11raises__opt(self);
-              let raises;
+              const _bind$27 = _M0MP38username5mbtpp6parser6Parser12noraise__opt(self);
+              let _tmp$11;
               if (_bind$27.$tag === 1) {
                 const _ok = _bind$27;
-                raises = _ok._0;
+                _tmp$11 = _ok._0;
               } else {
                 return _bind$27;
               }
-              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr3EPi(pos, impl_bs, expl, cod, raises));
+              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ETry(pos, body, arms, _tmp$11));
             }
-            const _bind$24 = es$2.length;
-            let _tmp$10 = 0;
-            while (true) {
-              const _ = _tmp$10;
-              if (_ < _bind$24) {
-                const e = es$2[_];
-                if (e.$tag === 12) {
-                  const _EAnn = e;
-                  const _p = _EAnn._0;
-                  return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE3Err(new _M0DTPC15error5Error51username_2fmbtpp_2fparser_2eParseError_2eParseError(_p, "unexpected ':' in array literal"));
-                }
-                _tmp$10 = _ + 1 | 0;
-                continue;
-              } else {
-                break;
-              }
-            }
-            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr6EArray(pos, es$2));
-          }
-          case "{": {
-            return _M0MP38username5mbtpp6parser6Parser19is__struct__literal(self) ? _M0MP38username5mbtpp6parser6Parser15struct__literal(self) : _M0MP38username5mbtpp6parser6Parser5block(self);
-          }
-          case "fn": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            const _bind$25 = _M0MP38username5mbtpp6parser6Parser13impl__binders(self);
-            let impl_bs;
-            if (_bind$25.$tag === 1) {
-              const _ok = _bind$25;
-              impl_bs = _ok._0;
-            } else {
-              return _bind$25;
-            }
-            const _bind$26 = _M0MP38username5mbtpp6parser6Parser6params(self, true);
-            let ps;
-            if (_bind$26.$tag === 1) {
-              const _ok = _bind$26;
-              ps = _ok._0;
-            } else {
-              return _bind$26;
-            }
-            let ret;
-            if (_M0MP38username5mbtpp6parser6Parser6accept(self, "->")) {
-              const _bind$27 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-              if (_bind$27.$tag === 1) {
-                const _ok = _bind$27;
-                ret = _ok._0;
-              } else {
-                return _bind$27;
-              }
-            } else {
-              ret = undefined;
-            }
-            const _bind$27 = _M0MP38username5mbtpp6parser6Parser11raises__opt(self);
-            if (_bind$27.$tag === 1) {
-              const _ok = _bind$27;
-              _ok._0;
-            } else {
-              return _bind$27;
-            }
-            const _bind$28 = _M0MP38username5mbtpp6parser6Parser5block(self);
-            let _tmp$11;
-            if (_bind$28.$tag === 1) {
-              const _ok = _bind$28;
-              _tmp$11 = _ok._0;
-            } else {
-              return _bind$28;
-            }
-            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELam(pos, impl_bs, ps, ret, _tmp$11));
-          }
-          case "if": {
-            return _M0MP38username5mbtpp6parser6Parser8if__expr(self);
-          }
-          case "match": {
-            return _M0MP38username5mbtpp6parser6Parser11match__expr(self);
-          }
-          case "try": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            if (_M0MP38username5mbtpp6parser6Parser6accept(self, "?")) {
-              const _bind$29 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+            case "raise": {
+              _M0MP38username5mbtpp6parser6Parser7advance(self);
+              const _bind$28 = _M0MP38username5mbtpp6parser6Parser4expr(self);
               let _tmp$12;
-              if (_bind$29.$tag === 1) {
-                const _ok = _bind$29;
+              if (_bind$28.$tag === 1) {
+                const _ok = _bind$28;
                 _tmp$12 = _ok._0;
               } else {
-                return _bind$29;
+                return _bind$28;
               }
-              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr5ETryQ(pos, _tmp$12));
+              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr6ERaise(pos, _tmp$12));
             }
-            let body;
-            if (_M0MP38username5mbtpp6parser6Parser2at(self, "{")) {
+            case "return": {
+              _M0MP38username5mbtpp6parser6Parser7advance(self);
+              if (_M0MP38username5mbtpp6parser6Parser13at__stmt__end(self)) {
+                return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr7EReturn(pos, undefined));
+              } else {
+                const _bind$29 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+                let _tmp$13;
+                if (_bind$29.$tag === 1) {
+                  const _ok = _bind$29;
+                  _tmp$13 = _ok._0;
+                } else {
+                  return _bind$29;
+                }
+                return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr7EReturn(pos, _tmp$13));
+              }
+            }
+            case "break": {
+              _M0MP38username5mbtpp6parser6Parser7advance(self);
+              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr6EBreak(pos));
+            }
+            case "continue": {
+              _M0MP38username5mbtpp6parser6Parser7advance(self);
+              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr9EContinue(pos));
+            }
+            case "monad": {
+              _M0MP38username5mbtpp6parser6Parser7advance(self);
               const _bind$29 = _M0MP38username5mbtpp6parser6Parser5block(self);
+              let _tmp$13;
               if (_bind$29.$tag === 1) {
                 const _ok = _bind$29;
-                body = _ok._0;
+                _tmp$13 = _ok._0;
               } else {
                 return _bind$29;
               }
-            } else {
-              const _bind$29 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-              if (_bind$29.$tag === 1) {
-                const _ok = _bind$29;
-                body = _ok._0;
-              } else {
-                return _bind$29;
-              }
+              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr6EMonad(pos, _tmp$13));
             }
-            const _bind$29 = _M0MP38username5mbtpp6parser6Parser6expect(self, "catch");
-            if (_bind$29.$tag === 1) {
-              const _ok = _bind$29;
-              _ok._0;
-            } else {
-              return _bind$29;
-            }
-            const _bind$30 = _M0MP38username5mbtpp6parser6Parser4arms(self);
-            let _tmp$12;
-            if (_bind$30.$tag === 1) {
-              const _ok = _bind$30;
-              _tmp$12 = _ok._0;
-            } else {
-              return _bind$30;
-            }
-            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ETry(pos, body, _tmp$12));
-          }
-          case "raise": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            const _bind$31 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-            let _tmp$13;
-            if (_bind$31.$tag === 1) {
-              const _ok = _bind$31;
-              _tmp$13 = _ok._0;
-            } else {
-              return _bind$31;
-            }
-            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr6ERaise(pos, _tmp$13));
-          }
-          case "return": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            if (_M0MP38username5mbtpp6parser6Parser13at__stmt__end(self)) {
-              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr7EReturn(pos, undefined));
-            } else {
-              const _bind$32 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+            case "proof": {
+              _M0MP38username5mbtpp6parser6Parser7advance(self);
+              const _bind$30 = _M0MP38username5mbtpp6parser6Parser7tactics(self);
               let _tmp$14;
+              if (_bind$30.$tag === 1) {
+                const _ok = _bind$30;
+                _tmp$14 = _ok._0;
+              } else {
+                return _bind$30;
+              }
+              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr6EProof(pos, _tmp$14));
+            }
+            case "forall": {
+              _M0MP38username5mbtpp6parser6Parser7advance(self);
+              const names = [];
+              while (true) {
+                if (!_M0MP38username5mbtpp6parser6Parser2at(self, ":") && !_M0MP38username5mbtpp6parser6Parser2at(self, ",")) {
+                  const p = _M0MP38username5mbtpp6parser6Parser4peek(self).pos;
+                  let name$2;
+                  if (_M0MP38username5mbtpp6parser6Parser6accept(self, "_")) {
+                    name$2 = "_";
+                  } else {
+                    const _bind$31 = _M0MP38username5mbtpp6parser6Parser5ident(self);
+                    if (_bind$31.$tag === 1) {
+                      const _ok = _bind$31;
+                      name$2 = _ok._0;
+                    } else {
+                      return _bind$31;
+                    }
+                  }
+                  _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(names, { _0: p, _1: name$2 });
+                  continue;
+                } else {
+                  break;
+                }
+              }
+              let ty;
+              if (_M0MP38username5mbtpp6parser6Parser6accept(self, ":")) {
+                const _bind$31 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+                if (_bind$31.$tag === 1) {
+                  const _ok = _bind$31;
+                  ty = _ok._0;
+                } else {
+                  return _bind$31;
+                }
+              } else {
+                ty = undefined;
+              }
+              const _bind$31 = _M0MP38username5mbtpp6parser6Parser6expect(self, ",");
+              if (_bind$31.$tag === 1) {
+                const _ok = _bind$31;
+                _ok._0;
+              } else {
+                return _bind$31;
+              }
+              const _bind$32 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+              let body$2;
               if (_bind$32.$tag === 1) {
                 const _ok = _bind$32;
-                _tmp$14 = _ok._0;
+                body$2 = _ok._0;
               } else {
                 return _bind$32;
               }
-              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr7EReturn(pos, _tmp$14));
-            }
-          }
-          case "break": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr6EBreak(pos));
-          }
-          case "continue": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr9EContinue(pos));
-          }
-          case "monad": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            const _bind$32 = _M0MP38username5mbtpp6parser6Parser5block(self);
-            let _tmp$14;
-            if (_bind$32.$tag === 1) {
-              const _ok = _bind$32;
-              _tmp$14 = _ok._0;
-            } else {
-              return _bind$32;
-            }
-            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr6EMonad(pos, _tmp$14));
-          }
-          case "proof": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            const _bind$33 = _M0MP38username5mbtpp6parser6Parser7tactics(self);
-            let _tmp$15;
-            if (_bind$33.$tag === 1) {
-              const _ok = _bind$33;
-              _tmp$15 = _ok._0;
-            } else {
-              return _bind$33;
-            }
-            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr6EProof(pos, _tmp$15));
-          }
-          case "forall": {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            const names = [];
-            while (true) {
-              if (!_M0MP38username5mbtpp6parser6Parser2at(self, ":") && !_M0MP38username5mbtpp6parser6Parser2at(self, ",")) {
-                const p = _M0MP38username5mbtpp6parser6Parser4peek(self).pos;
-                let name$2;
-                if (_M0MP38username5mbtpp6parser6Parser6accept(self, "_")) {
-                  name$2 = "_";
+              const _p = new Array(names.length);
+              const _p$2 = names.length;
+              let _tmp$15 = 0;
+              while (true) {
+                const _p$3 = _tmp$15;
+                if (_p$3 < _p$2) {
+                  const _p$4 = names[_p$3];
+                  _p[_p$3] = new _M0TP38username5mbtpp6parser6Binder(_p$4._0, _p$4._1, ty, _M0DTP38username5mbtpp6parser9ParamKind10Positional__);
+                  _tmp$15 = _p$3 + 1 | 0;
+                  continue;
                 } else {
-                  const _bind$34 = _M0MP38username5mbtpp6parser6Parser5ident(self);
-                  if (_bind$34.$tag === 1) {
-                    const _ok = _bind$34;
-                    name$2 = _ok._0;
+                  break;
+                }
+              }
+              const bs = _p;
+              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr3EPi(pos, [], new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4Some(bs), body$2, undefined));
+            }
+            default: {
+              break _L;
+            }
+          }
+        }
+        case 3: {
+          const _TStr = _bind$18;
+          const _parts = _TStr._0;
+          _M0MP38username5mbtpp6parser6Parser7advance(self);
+          _L$3: {
+            if (_parts.length === 1) {
+              const _x$2 = _parts[0];
+              if (_x$2.$tag === 0) {
+                const _SPStr = _x$2;
+                const _s = _SPStr._0;
+                return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELit(pos, new _M0DTP38username5mbtpp6parser3Lit4LStr(_s)));
+              } else {
+                break _L$3;
+              }
+            } else {
+              break _L$3;
+            }
+          }
+          const out = [];
+          const _bind$33 = _parts.length;
+          let _tmp$16 = 0;
+          while (true) {
+            const _ = _tmp$16;
+            if (_ < _bind$33) {
+              const p = _parts[_];
+              if (p.$tag === 0) {
+                const _SPStr = p;
+                const _s = _SPStr._0;
+                _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(out, new _M0DTP38username5mbtpp6parser10InterpPart4IStr(_s));
+              } else {
+                const _SPExpr = p;
+                const _src = _SPExpr._0;
+                const _line = _SPExpr._1;
+                const _col = _SPExpr._2;
+                const _bind$34 = _M0FP38username5mbtpp6parser16tokenize_2einner(_src, _line, _col);
+                let _tmp$17;
+                if (_bind$34.$tag === 1) {
+                  const _ok = _bind$34;
+                  _tmp$17 = _ok._0;
+                } else {
+                  return _bind$34;
+                }
+                const sub = new _M0TP38username5mbtpp6parser6Parser(_tmp$17, 0);
+                const _bind$35 = _M0MP38username5mbtpp6parser6Parser4expr(sub);
+                let e;
+                if (_bind$35.$tag === 1) {
+                  const _ok = _bind$35;
+                  e = _ok._0;
+                } else {
+                  return _bind$35;
+                }
+                if (_M0IP016_24default__implPB2Eq10not__equalGRP38username5mbtpp6parser3TokE(_M0MP38username5mbtpp6parser6Parser4peek(sub).tok, _M0DTP38username5mbtpp6parser3Tok4TEOF__)) {
+                  const _bind$36 = _M0MP38username5mbtpp6parser6Parser4failGuE(sub, "unexpected token in interpolation");
+                  if (_bind$36.$tag === 1) {
+                    const _ok = _bind$36;
+                    _ok._0;
                   } else {
-                    return _bind$34;
+                    return _bind$36;
                   }
                 }
-                _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(names, { _0: p, _1: name$2 });
-                continue;
-              } else {
-                break;
+                _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(out, new _M0DTP38username5mbtpp6parser10InterpPart5IExpr(e));
               }
-            }
-            let ty;
-            if (_M0MP38username5mbtpp6parser6Parser6accept(self, ":")) {
-              const _bind$34 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-              if (_bind$34.$tag === 1) {
-                const _ok = _bind$34;
-                ty = _ok._0;
-              } else {
-                return _bind$34;
-              }
+              _tmp$16 = _ + 1 | 0;
+              continue;
             } else {
-              ty = undefined;
+              break;
             }
-            const _bind$34 = _M0MP38username5mbtpp6parser6Parser6expect(self, ",");
+          }
+          return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr7EInterp(pos, out));
+        }
+        case 0: {
+          const _TIdent = _bind$18;
+          const _x$2 = _TIdent._0;
+          _M0MP38username5mbtpp6parser6Parser7advance(self);
+          if (_M0MP38username5mbtpp6parser6Parser2at(self, "=>")) {
+            _M0MP38username5mbtpp6parser6Parser7advance(self);
+            const _bind$34 = _M0MP38username5mbtpp6parser6Parser12lambda__body(self);
+            let _tmp$17;
             if (_bind$34.$tag === 1) {
               const _ok = _bind$34;
-              _ok._0;
+              _tmp$17 = _ok._0;
             } else {
               return _bind$34;
             }
-            const _bind$35 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-            let body$2;
-            if (_bind$35.$tag === 1) {
-              const _ok = _bind$35;
-              body$2 = _ok._0;
-            } else {
-              return _bind$35;
-            }
-            const _p = new Array(names.length);
-            const _p$2 = names.length;
-            let _tmp$16 = 0;
-            while (true) {
-              const _p$3 = _tmp$16;
-              if (_p$3 < _p$2) {
-                const _p$4 = names[_p$3];
-                _p[_p$3] = new _M0TP38username5mbtpp6parser6Binder(_p$4._0, _p$4._1, ty, _M0DTP38username5mbtpp6parser9ParamKind10Positional__);
-                _tmp$16 = _p$3 + 1 | 0;
-                continue;
-              } else {
-                break;
-              }
-            }
-            const bs = _p;
-            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr3EPi(pos, [], new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4Some(bs), body$2, undefined));
+            return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELam(pos, [], [new _M0TP38username5mbtpp6parser6Binder(pos, _x$2, undefined, _M0DTP38username5mbtpp6parser9ParamKind10Positional__)], undefined, _tmp$17));
           }
-          default: {
-            break _L;
-          }
-        }
-      }
-      case 3: {
-        const _TStr = _bind$18;
-        const _parts = _TStr._0;
-        _M0MP38username5mbtpp6parser6Parser7advance(self);
-        _L$2: {
-          if (_parts.length === 1) {
-            const _x$2 = _parts[0];
-            if (_x$2.$tag === 0) {
-              const _SPStr = _x$2;
-              const _s = _SPStr._0;
-              return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELit(pos, new _M0DTP38username5mbtpp6parser3Lit4LStr(_s)));
-            } else {
-              break _L$2;
-            }
-          } else {
-            break _L$2;
-          }
-        }
-        const out = [];
-        const _bind$36 = _parts.length;
-        let _tmp$17 = 0;
-        while (true) {
-          const _ = _tmp$17;
-          if (_ < _bind$36) {
-            const p = _parts[_];
-            if (p.$tag === 0) {
-              const _SPStr = p;
-              const _s = _SPStr._0;
-              _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(out, new _M0DTP38username5mbtpp6parser10InterpPart4IStr(_s));
-            } else {
-              const _SPExpr = p;
-              const _src = _SPExpr._0;
-              const _line = _SPExpr._1;
-              const _col = _SPExpr._2;
-              const _bind$37 = _M0FP38username5mbtpp6parser16tokenize_2einner(_src, _line, _col);
+          let name$2 = _x$2;
+          while (true) {
+            if (_M0MP38username5mbtpp6parser6Parser2at(self, "::")) {
+              _M0MP38username5mbtpp6parser6Parser7advance(self);
+              const _tmp$17 = name$2;
+              const _bind$34 = _M0MP38username5mbtpp6parser6Parser5ident(self);
               let _tmp$18;
-              if (_bind$37.$tag === 1) {
-                const _ok = _bind$37;
+              if (_bind$34.$tag === 1) {
+                const _ok = _bind$34;
                 _tmp$18 = _ok._0;
               } else {
-                return _bind$37;
+                return _bind$34;
               }
-              const sub = new _M0TP38username5mbtpp6parser6Parser(_tmp$18, 0);
-              const _bind$38 = _M0MP38username5mbtpp6parser6Parser4expr(sub);
-              let e;
-              if (_bind$38.$tag === 1) {
-                const _ok = _bind$38;
-                e = _ok._0;
-              } else {
-                return _bind$38;
-              }
-              if (_M0IP016_24default__implPB2Eq10not__equalGRP38username5mbtpp6parser3TokE(_M0MP38username5mbtpp6parser6Parser4peek(sub).tok, _M0DTP38username5mbtpp6parser3Tok4TEOF__)) {
-                const _bind$39 = _M0MP38username5mbtpp6parser6Parser4failGuE(sub, "unexpected token in interpolation");
-                if (_bind$39.$tag === 1) {
-                  const _ok = _bind$39;
-                  _ok._0;
-                } else {
-                  return _bind$39;
-                }
-              }
-              _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(out, new _M0DTP38username5mbtpp6parser10InterpPart5IExpr(e));
-            }
-            _tmp$17 = _ + 1 | 0;
-            continue;
-          } else {
-            break;
-          }
-        }
-        return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr7EInterp(pos, out));
-      }
-      case 0: {
-        const _TIdent = _bind$18;
-        const _x$2 = _TIdent._0;
-        _M0MP38username5mbtpp6parser6Parser7advance(self);
-        if (_M0MP38username5mbtpp6parser6Parser2at(self, "=>")) {
-          _M0MP38username5mbtpp6parser6Parser7advance(self);
-          const _bind$37 = _M0MP38username5mbtpp6parser6Parser12lambda__body(self);
-          let _tmp$18;
-          if (_bind$37.$tag === 1) {
-            const _ok = _bind$37;
-            _tmp$18 = _ok._0;
-          } else {
-            return _bind$37;
-          }
-          return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELam(pos, [], [new _M0TP38username5mbtpp6parser6Binder(pos, _x$2, undefined, _M0DTP38username5mbtpp6parser9ParamKind10Positional__)], undefined, _tmp$18));
-        }
-        let name$2 = _x$2;
-        while (true) {
-          if (_M0MP38username5mbtpp6parser6Parser2at(self, "::")) {
-            _M0MP38username5mbtpp6parser6Parser7advance(self);
-            const _tmp$18 = name$2;
-            const _bind$37 = _M0MP38username5mbtpp6parser6Parser5ident(self);
-            let _tmp$19;
-            if (_bind$37.$tag === 1) {
-              const _ok = _bind$37;
-              _tmp$19 = _ok._0;
+              name$2 = `${_tmp$17}::${_tmp$18}`;
+              continue;
             } else {
-              return _bind$37;
+              break;
             }
-            name$2 = `${_tmp$18}::${_tmp$19}`;
-            continue;
-          } else {
-            break;
           }
+          return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4EVar(pos, name$2));
         }
-        return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4EVar(pos, name$2));
-      }
-      default: {
-        break _L;
+        default: {
+          break _L;
+        }
       }
     }
+    const is_async = _M0MP38username5mbtpp6parser6Parser6accept(self, "async");
+    const _bind$18 = _M0MP38username5mbtpp6parser6Parser6expect(self, "fn");
+    if (_bind$18.$tag === 1) {
+      const _ok = _bind$18;
+      _ok._0;
+    } else {
+      return _bind$18;
+    }
+    const _bind$19 = _M0MP38username5mbtpp6parser6Parser13impl__binders(self);
+    let impl_bs;
+    if (_bind$19.$tag === 1) {
+      const _ok = _bind$19;
+      impl_bs = _ok._0;
+    } else {
+      return _bind$19;
+    }
+    const _bind$20 = _M0MP38username5mbtpp6parser6Parser6params(self, true);
+    let ps;
+    if (_bind$20.$tag === 1) {
+      const _ok = _bind$20;
+      ps = _ok._0;
+    } else {
+      return _bind$20;
+    }
+    let ret;
+    if (_M0MP38username5mbtpp6parser6Parser6accept(self, "->")) {
+      const _bind$21 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+      if (_bind$21.$tag === 1) {
+        const _ok = _bind$21;
+        ret = _ok._0;
+      } else {
+        return _bind$21;
+      }
+    } else {
+      ret = undefined;
+    }
+    const _bind$21 = _M0MP38username5mbtpp6parser6Parser11effect__opt(self, is_async);
+    let eff;
+    if (_bind$21.$tag === 1) {
+      const _ok = _bind$21;
+      eff = _ok._0;
+    } else {
+      return _bind$21;
+    }
+    const _bind$22 = _M0MP38username5mbtpp6parser6Parser5block(self);
+    let _tmp$9;
+    if (_bind$22.$tag === 1) {
+      const _ok = _bind$22;
+      _tmp$9 = _ok._0;
+    } else {
+      return _bind$22;
+    }
+    return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr4ELam(pos, impl_bs, ps, _M0FP38username5mbtpp6parser8lam__ret(pos, ret, eff), _tmp$9));
   }
   return _M0MP38username5mbtpp6parser6Parser4failGRP38username5mbtpp6parser4ExprE(self, "expected an expression");
 }
@@ -11146,504 +12420,43 @@ function _M0MP38username5mbtpp6parser6Parser9ann__elem(self) {
   }
   return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(_tmp$9);
 }
-function _M0MP38username5mbtpp6parser6Parser4arms(self) {
-  const _bind$18 = _M0MP38username5mbtpp6parser6Parser6expect(self, "{");
+function _M0MP38username5mbtpp6parser6Parser5arrow(self) {
+  const pos = _M0MP38username5mbtpp6parser6Parser4peek(self).pos;
+  const is_async = _M0MP38username5mbtpp6parser6Parser2at(self, "async") && _M0MP38username5mbtpp6parser6Parser5at__k(self, 1, "(");
+  if (is_async) {
+    _M0MP38username5mbtpp6parser6Parser7advance(self);
+  }
+  const parenthesised = _M0MP38username5mbtpp6parser6Parser2at(self, "(");
+  const _bind$18 = _M0MP38username5mbtpp6parser6Parser4pipe(self);
+  let lhs;
   if (_bind$18.$tag === 1) {
     const _ok = _bind$18;
-    _ok._0;
+    lhs = _ok._0;
   } else {
     return _bind$18;
   }
-  const arms = [];
-  while (true) {
-    if (!_M0MP38username5mbtpp6parser6Parser2at(self, "}")) {
-      if (_M0MP38username5mbtpp6parser6Parser6accept(self, ";")) {
-        continue;
-      }
-      const pos = _M0MP38username5mbtpp6parser6Parser4peek(self).pos;
-      const _bind$19 = _M0MP38username5mbtpp6parser6Parser7pattern(self);
-      let pat;
-      if (_bind$19.$tag === 1) {
-        const _ok = _bind$19;
-        pat = _ok._0;
-      } else {
-        return _bind$19;
-      }
-      let rhs;
-      if (_M0MP38username5mbtpp6parser6Parser6accept(self, "=>")) {
-        if (_M0MP38username5mbtpp6parser6Parser2at(self, "{") && !_M0MP38username5mbtpp6parser6Parser19is__struct__literal(self)) {
-          const _bind$20 = _M0MP38username5mbtpp6parser6Parser5block(self);
-          if (_bind$20.$tag === 1) {
-            const _ok = _bind$20;
-            rhs = _ok._0;
-          } else {
-            return _bind$20;
-          }
-        } else {
-          const _bind$20 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-          if (_bind$20.$tag === 1) {
-            const _ok = _bind$20;
-            rhs = _ok._0;
-          } else {
-            return _bind$20;
-          }
-        }
-      } else {
-        rhs = undefined;
-      }
-      _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(arms, new _M0TP38username5mbtpp6parser3Arm(pos, pat, rhs));
-      if (!_M0MP38username5mbtpp6parser6Parser2at(self, "}")) {
-        const _bind$20 = _M0MP38username5mbtpp6parser6Parser9end__stmt(self);
-        if (_bind$20.$tag === 1) {
-          const _ok = _bind$20;
-          _ok._0;
-        } else {
-          return _bind$20;
-        }
-      }
-      continue;
-    } else {
-      break;
-    }
-  }
-  const _bind$19 = _M0MP38username5mbtpp6parser6Parser6expect(self, "}");
-  if (_bind$19.$tag === 1) {
-    const _ok = _bind$19;
-    _ok._0;
-  } else {
-    return _bind$19;
-  }
-  return new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser3ArmERP38username5mbtpp6parser10ParseErrorE2Ok(arms);
-}
-function _M0MP38username5mbtpp6parser6Parser5block(self) {
-  const pos = _M0MP38username5mbtpp6parser6Parser4peek(self).pos;
-  const _bind$18 = _M0MP38username5mbtpp6parser6Parser6expect(self, "{");
-  if (_bind$18.$tag === 1) {
-    const _ok = _bind$18;
-    _ok._0;
-  } else {
-    return _bind$18;
-  }
-  const stmts = [];
-  while (true) {
-    if (!_M0MP38username5mbtpp6parser6Parser2at(self, "}")) {
-      if (_M0MP38username5mbtpp6parser6Parser6accept(self, ";")) {
-        continue;
-      }
-      const _bind$19 = _M0MP38username5mbtpp6parser6Parser4stmt(self);
-      let _tmp$9;
-      if (_bind$19.$tag === 1) {
-        const _ok = _bind$19;
-        _tmp$9 = _ok._0;
-      } else {
-        return _bind$19;
-      }
-      _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(stmts, _tmp$9);
-      if (!_M0MP38username5mbtpp6parser6Parser2at(self, "}")) {
-        const _bind$20 = _M0MP38username5mbtpp6parser6Parser9end__stmt(self);
-        if (_bind$20.$tag === 1) {
-          const _ok = _bind$20;
-          _ok._0;
-        } else {
-          return _bind$20;
-        }
-      }
-      continue;
-    } else {
-      break;
-    }
-  }
-  const _bind$19 = _M0MP38username5mbtpp6parser6Parser6expect(self, "}");
-  if (_bind$19.$tag === 1) {
-    const _ok = _bind$19;
-    _ok._0;
-  } else {
-    return _bind$19;
-  }
-  return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr6EBlock(pos, stmts));
-}
-function _M0MP38username5mbtpp6parser6Parser4stmt(self) {
-  const pos = _M0MP38username5mbtpp6parser6Parser4peek(self).pos;
-  if (_M0MP38username5mbtpp6parser6Parser6accept(self, "let")) {
-    if (_M0MP38username5mbtpp6parser6Parser6accept(self, "mut")) {
-      const _bind$18 = _M0MP38username5mbtpp6parser6Parser5ident(self);
-      let name;
-      if (_bind$18.$tag === 1) {
-        const _ok = _bind$18;
-        name = _ok._0;
-      } else {
-        return _bind$18;
-      }
-      let ty;
-      if (_M0MP38username5mbtpp6parser6Parser6accept(self, ":")) {
-        const _bind$19 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-        if (_bind$19.$tag === 1) {
-          const _ok = _bind$19;
-          ty = _ok._0;
-        } else {
-          return _bind$19;
-        }
-      } else {
-        ty = undefined;
-      }
-      const _bind$19 = _M0MP38username5mbtpp6parser6Parser6expect(self, "=");
+  if (!_M0MP38username5mbtpp6parser6Parser2at(self, "->")) {
+    if (is_async) {
+      const _bind$19 = _M0MP38username5mbtpp6parser6Parser4failGuE(self, "expected `->` in an async function type");
       if (_bind$19.$tag === 1) {
         const _ok = _bind$19;
         _ok._0;
       } else {
         return _bind$19;
       }
-      const _bind$20 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-      let _tmp$9;
-      if (_bind$20.$tag === 1) {
-        const _ok = _bind$20;
-        _tmp$9 = _ok._0;
-      } else {
-        return _bind$20;
-      }
-      return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt7SLetMut(pos, name, ty, _tmp$9));
     }
-    const _bind$18 = _M0MP38username5mbtpp6parser6Parser7pattern(self);
-    let pat;
-    if (_bind$18.$tag === 1) {
-      const _ok = _bind$18;
-      pat = _ok._0;
-    } else {
-      return _bind$18;
-    }
-    if (_M0MP38username5mbtpp6parser6Parser6accept(self, "<-")) {
-      const _bind$19 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-      let _tmp$9;
-      if (_bind$19.$tag === 1) {
-        const _ok = _bind$19;
-        _tmp$9 = _ok._0;
-      } else {
-        return _bind$19;
-      }
-      return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt8SLetBind(pos, pat, _tmp$9));
-    }
-    let ty;
-    if (_M0MP38username5mbtpp6parser6Parser6accept(self, ":")) {
-      const _bind$19 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-      if (_bind$19.$tag === 1) {
-        const _ok = _bind$19;
-        ty = _ok._0;
-      } else {
-        return _bind$19;
-      }
-    } else {
-      ty = undefined;
-    }
-    const _bind$19 = _M0MP38username5mbtpp6parser6Parser6expect(self, "=");
-    if (_bind$19.$tag === 1) {
-      const _ok = _bind$19;
-      _ok._0;
-    } else {
-      return _bind$19;
-    }
-    const _bind$20 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-    let _tmp$9;
-    if (_bind$20.$tag === 1) {
-      const _ok = _bind$20;
-      _tmp$9 = _ok._0;
-    } else {
-      return _bind$20;
-    }
-    return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt4SLet(pos, pat, ty, _tmp$9));
+    return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(lhs);
   }
-  if (_M0MP38username5mbtpp6parser6Parser2at(self, "fn")) {
-    _L: {
-      _L$2: {
-        const _bind$18 = _M0MP38username5mbtpp6parser6Parser8peek__at(self, 1).tok;
-        if (_bind$18.$tag === 0) {
-          break _L$2;
-        } else {
-          if (_M0MP38username5mbtpp6parser6Parser5at__k(self, 1, "[")) {
-            break _L$2;
-          }
-        }
-        break _L;
-      }
-      _M0MP38username5mbtpp6parser6Parser7advance(self);
-      const _bind$18 = _M0MP38username5mbtpp6parser6Parser8fn__rest(self, pos, false);
-      let _tmp$9;
-      if (_bind$18.$tag === 1) {
-        const _ok = _bind$18;
-        _tmp$9 = _ok._0;
-      } else {
-        return _bind$18;
-      }
-      return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt3SFn(pos, _tmp$9));
-    }
-  }
-  if (_M0MP38username5mbtpp6parser6Parser6accept(self, "while")) {
-    const _bind$18 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-    let c;
-    if (_bind$18.$tag === 1) {
-      const _ok = _bind$18;
-      c = _ok._0;
-    } else {
-      return _bind$18;
-    }
-    const _bind$19 = _M0MP38username5mbtpp6parser6Parser5block(self);
-    let _tmp$9;
-    if (_bind$19.$tag === 1) {
-      const _ok = _bind$19;
-      _tmp$9 = _ok._0;
-    } else {
-      return _bind$19;
-    }
-    return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt6SWhile(pos, c, _tmp$9));
-  }
-  if (_M0MP38username5mbtpp6parser6Parser6accept(self, "for")) {
-    if (_M0MP38username5mbtpp6parser6Parser9is__ident(self) && _M0MP38username5mbtpp6parser6Parser5at__k(self, 1, "in")) {
-      const _bind$18 = _M0MP38username5mbtpp6parser6Parser5ident(self);
-      let x;
-      if (_bind$18.$tag === 1) {
-        const _ok = _bind$18;
-        x = _ok._0;
-      } else {
-        return _bind$18;
-      }
-      const _bind$19 = _M0MP38username5mbtpp6parser6Parser6expect(self, "in");
-      if (_bind$19.$tag === 1) {
-        const _ok = _bind$19;
-        _ok._0;
-      } else {
-        return _bind$19;
-      }
-      const _bind$20 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-      let e;
-      if (_bind$20.$tag === 1) {
-        const _ok = _bind$20;
-        e = _ok._0;
-      } else {
-        return _bind$20;
-      }
-      const _bind$21 = _M0MP38username5mbtpp6parser6Parser5block(self);
-      let _tmp$9;
-      if (_bind$21.$tag === 1) {
-        const _ok = _bind$21;
-        _tmp$9 = _ok._0;
-      } else {
-        return _bind$21;
-      }
-      return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt6SForIn(pos, x, e, _tmp$9));
-    }
-    const inits = [];
-    while (true) {
-      if (!_M0MP38username5mbtpp6parser6Parser2at(self, ";")) {
-        const _bind$18 = _M0MP38username5mbtpp6parser6Parser5ident(self);
-        let x;
-        if (_bind$18.$tag === 1) {
-          const _ok = _bind$18;
-          x = _ok._0;
-        } else {
-          return _bind$18;
-        }
-        const _bind$19 = _M0MP38username5mbtpp6parser6Parser6expect(self, "=");
-        if (_bind$19.$tag === 1) {
-          const _ok = _bind$19;
-          _ok._0;
-        } else {
-          return _bind$19;
-        }
-        const _bind$20 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-        let _tmp$9;
-        if (_bind$20.$tag === 1) {
-          const _ok = _bind$20;
-          _tmp$9 = _ok._0;
-        } else {
-          return _bind$20;
-        }
-        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(inits, { _0: x, _1: _tmp$9 });
-        if (!_M0MP38username5mbtpp6parser6Parser6accept(self, ",")) {
-          break;
-        }
-        continue;
-      } else {
-        break;
-      }
-    }
-    const _bind$18 = _M0MP38username5mbtpp6parser6Parser6expect(self, ";");
-    if (_bind$18.$tag === 1) {
-      const _ok = _bind$18;
-      _ok._0;
-    } else {
-      return _bind$18;
-    }
-    let cond;
-    if (_M0MP38username5mbtpp6parser6Parser2at(self, ";")) {
-      cond = undefined;
-    } else {
-      const _bind$19 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-      if (_bind$19.$tag === 1) {
-        const _ok = _bind$19;
-        cond = _ok._0;
-      } else {
-        return _bind$19;
-      }
-    }
-    const _bind$19 = _M0MP38username5mbtpp6parser6Parser6expect(self, ";");
-    if (_bind$19.$tag === 1) {
-      const _ok = _bind$19;
-      _ok._0;
-    } else {
-      return _bind$19;
-    }
-    const updates = [];
-    while (true) {
-      if (!_M0MP38username5mbtpp6parser6Parser2at(self, "{")) {
-        const _bind$20 = _M0MP38username5mbtpp6parser6Parser5ident(self);
-        let x;
-        if (_bind$20.$tag === 1) {
-          const _ok = _bind$20;
-          x = _ok._0;
-        } else {
-          return _bind$20;
-        }
-        const _bind$21 = _M0MP38username5mbtpp6parser6Parser6expect(self, "=");
-        if (_bind$21.$tag === 1) {
-          const _ok = _bind$21;
-          _ok._0;
-        } else {
-          return _bind$21;
-        }
-        const _bind$22 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-        let _tmp$9;
-        if (_bind$22.$tag === 1) {
-          const _ok = _bind$22;
-          _tmp$9 = _ok._0;
-        } else {
-          return _bind$22;
-        }
-        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(updates, { _0: x, _1: _tmp$9 });
-        if (!_M0MP38username5mbtpp6parser6Parser6accept(self, ",")) {
-          break;
-        }
-        continue;
-      } else {
-        break;
-      }
-    }
-    const _bind$20 = _M0MP38username5mbtpp6parser6Parser5block(self);
-    let _tmp$9;
-    if (_bind$20.$tag === 1) {
-      const _ok = _bind$20;
-      _tmp$9 = _ok._0;
-    } else {
-      return _bind$20;
-    }
-    return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt4SFor(pos, inits, cond, updates, _tmp$9));
-  }
-  const _bind$18 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-  let e;
-  if (_bind$18.$tag === 1) {
-    const _ok = _bind$18;
-    e = _ok._0;
-  } else {
-    return _bind$18;
-  }
-  const _bind$19 = ["=", "+=", "-=", "*=", "/="];
-  const _bind$20 = _bind$19.length;
-  let _tmp$9 = 0;
-  while (true) {
-    const _ = _tmp$9;
-    if (_ < _bind$20) {
-      const op = _bind$19[_];
-      if (_M0MP38username5mbtpp6parser6Parser2at(self, op)) {
-        _M0MP38username5mbtpp6parser6Parser7advance(self);
-        const _bind$21 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-        let _tmp$10;
-        if (_bind$21.$tag === 1) {
-          const _ok = _bind$21;
-          _tmp$10 = _ok._0;
-        } else {
-          return _bind$21;
-        }
-        return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt7SAssign(pos, e, op, _tmp$10));
-      }
-      _tmp$9 = _ + 1 | 0;
-      continue;
-    } else {
-      break;
-    }
-  }
-  return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4StmtRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Stmt5SExpr(pos, e));
-}
-function _M0MP38username5mbtpp6parser6Parser8fn__rest(self, pos, is_lemma) {
-  const _bind$18 = _M0MP38username5mbtpp6parser6Parser13impl__binders(self);
-  let impl_bs;
-  if (_bind$18.$tag === 1) {
-    const _ok = _bind$18;
-    impl_bs = _ok._0;
-  } else {
-    return _bind$18;
-  }
-  const _bind$19 = _M0MP38username5mbtpp6parser6Parser5ident(self);
-  let name;
+  _M0MP38username5mbtpp6parser6Parser7advance(self);
+  const _bind$19 = _M0MP38username5mbtpp6parser6Parser5arrow(self);
+  let cod;
   if (_bind$19.$tag === 1) {
     const _ok = _bind$19;
-    name = _ok._0;
+    cod = _ok._0;
   } else {
     return _bind$19;
   }
-  while (true) {
-    if (_M0MP38username5mbtpp6parser6Parser6accept(self, "::")) {
-      const _tmp$9 = name;
-      const _bind$20 = _M0MP38username5mbtpp6parser6Parser5ident(self);
-      let _tmp$10;
-      if (_bind$20.$tag === 1) {
-        const _ok = _bind$20;
-        _tmp$10 = _ok._0;
-      } else {
-        return _bind$20;
-      }
-      name = `${_tmp$9}::${_tmp$10}`;
-      continue;
-    } else {
-      break;
-    }
-  }
-  if (is_lemma && _M0MP38username5mbtpp6parser6Parser2at(self, "[")) {
-    const _tmp$9 = impl_bs;
-    const _bind$20 = _M0MP38username5mbtpp6parser6Parser13impl__binders(self);
-    let _tmp$10;
-    if (_bind$20.$tag === 1) {
-      const _ok = _bind$20;
-      _tmp$10 = _ok._0;
-    } else {
-      return _bind$20;
-    }
-    impl_bs = _M0IPC15array5ArrayPB3Add3addGsE(_tmp$9, _tmp$10);
-  }
-  let params;
-  if (_M0MP38username5mbtpp6parser6Parser2at(self, "(")) {
-    const _bind$20 = _M0MP38username5mbtpp6parser6Parser6params(self, false);
-    let _tmp$9;
-    if (_bind$20.$tag === 1) {
-      const _ok = _bind$20;
-      _tmp$9 = _ok._0;
-    } else {
-      return _bind$20;
-    }
-    params = new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4Some(_tmp$9);
-  } else {
-    params = _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4None__;
-  }
-  let ret;
-  if (_M0MP38username5mbtpp6parser6Parser6accept(self, "->")) {
-    const _bind$20 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-    if (_bind$20.$tag === 1) {
-      const _ok = _bind$20;
-      ret = _ok._0;
-    } else {
-      return _bind$20;
-    }
-  } else {
-    ret = undefined;
-  }
-  const _bind$20 = _M0MP38username5mbtpp6parser6Parser11raises__opt(self);
+  const _bind$20 = _M0MP38username5mbtpp6parser6Parser11effect__opt(self, is_async);
   let raises;
   if (_bind$20.$tag === 1) {
     const _ok = _bind$20;
@@ -11651,211 +12464,43 @@ function _M0MP38username5mbtpp6parser6Parser8fn__rest(self, pos, is_lemma) {
   } else {
     return _bind$20;
   }
-  let body;
-  if (_M0MP38username5mbtpp6parser6Parser6accept(self, "=")) {
-    _L: {
-      _L$2: {
-        const _bind$21 = _M0MP38username5mbtpp6parser6Parser4peek(self).tok;
-        if (_bind$21.$tag === 3) {
-          const _TStr = _bind$21;
-          const _x = _TStr._0;
-          if (_x.length === 1) {
-            const _x$2 = _x[0];
-            if (_x$2.$tag === 0) {
-              const _SPStr = _x$2;
-              const _s = _SPStr._0;
-              _M0MP38username5mbtpp6parser6Parser7advance(self);
-              body = new _M0DTP38username5mbtpp6parser6FnBody10BodyExtern(_s);
+  let binders;
+  _L: {
+    _L$2: {
+      switch (lhs.$tag) {
+        case 17: {
+          const _ETuple = lhs;
+          const _es = _ETuple._1;
+          if (parenthesised) {
+            binders = _M0FP38username5mbtpp6parser18exprs__to__binders(_es);
+          } else {
+            break _L$2;
+          }
+          break;
+        }
+        case 4: {
+          const _ELit = lhs;
+          const _x = _ELit._1;
+          if (_x.$tag === 4) {
+            if (parenthesised) {
+              binders = [];
             } else {
               break _L$2;
             }
           } else {
             break _L$2;
           }
-        } else {
+          break;
+        }
+        default: {
           break _L$2;
         }
-        break _L;
       }
-      const _bind$21 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-      let _tmp$9;
-      if (_bind$21.$tag === 1) {
-        const _ok = _bind$21;
-        _tmp$9 = _ok._0;
-      } else {
-        return _bind$21;
-      }
-      body = new _M0DTP38username5mbtpp6parser6FnBody8BodyExpr(_tmp$9);
+      break _L;
     }
-  } else {
-    const _bind$21 = _M0MP38username5mbtpp6parser6Parser5block(self);
-    let _tmp$9;
-    if (_bind$21.$tag === 1) {
-      const _ok = _bind$21;
-      _tmp$9 = _ok._0;
-    } else {
-      return _bind$21;
-    }
-    body = new _M0DTP38username5mbtpp6parser6FnBody8BodyExpr(_tmp$9);
+    binders = _M0FP38username5mbtpp6parser18exprs__to__binders([lhs]);
   }
-  return new _M0DTPC16result6ResultGRP38username5mbtpp6parser6FnDeclRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0TP38username5mbtpp6parser6FnDecl(pos, name, impl_bs, params, ret, raises, body, is_lemma));
-}
-function _M0MP38username5mbtpp6parser6Parser6params(self, names_only) {
-  const _bind$18 = _M0MP38username5mbtpp6parser6Parser6expect(self, "(");
-  if (_bind$18.$tag === 1) {
-    const _ok = _bind$18;
-    _ok._0;
-  } else {
-    return _bind$18;
-  }
-  const bs = [];
-  while (true) {
-    if (!_M0MP38username5mbtpp6parser6Parser2at(self, ")")) {
-      const pos = _M0MP38username5mbtpp6parser6Parser4peek(self).pos;
-      if (_M0MP38username5mbtpp6parser6Parser9is__ident(self) && (_M0MP38username5mbtpp6parser6Parser5at__k(self, 1, "~") || _M0MP38username5mbtpp6parser6Parser5at__k(self, 1, "?"))) {
-        const _bind$19 = _M0MP38username5mbtpp6parser6Parser5ident(self);
-        let name;
-        if (_bind$19.$tag === 1) {
-          const _ok = _bind$19;
-          name = _ok._0;
-        } else {
-          return _bind$19;
-        }
-        const labelled = _M0MP38username5mbtpp6parser6Parser6accept(self, "~");
-        if (!labelled) {
-          const _bind$20 = _M0MP38username5mbtpp6parser6Parser6expect(self, "?");
-          if (_bind$20.$tag === 1) {
-            const _ok = _bind$20;
-            _ok._0;
-          } else {
-            return _bind$20;
-          }
-        }
-        const _bind$20 = _M0MP38username5mbtpp6parser6Parser6expect(self, ":");
-        if (_bind$20.$tag === 1) {
-          const _ok = _bind$20;
-          _ok._0;
-        } else {
-          return _bind$20;
-        }
-        const _bind$21 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-        let ty;
-        if (_bind$21.$tag === 1) {
-          const _ok = _bind$21;
-          ty = _ok._0;
-        } else {
-          return _bind$21;
-        }
-        let kind;
-        if (!labelled) {
-          kind = _M0DTP38username5mbtpp6parser9ParamKind8Optional__;
-        } else {
-          if (_M0MP38username5mbtpp6parser6Parser6accept(self, "=")) {
-            const _bind$22 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-            let _tmp$9;
-            if (_bind$22.$tag === 1) {
-              const _ok = _bind$22;
-              _tmp$9 = _ok._0;
-            } else {
-              return _bind$22;
-            }
-            kind = new _M0DTP38username5mbtpp6parser9ParamKind8Labelled(_tmp$9);
-          } else {
-            kind = new _M0DTP38username5mbtpp6parser9ParamKind8Labelled(undefined);
-          }
-        }
-        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(bs, new _M0TP38username5mbtpp6parser6Binder(pos, name, ty, kind));
-      } else {
-        if ((_M0MP38username5mbtpp6parser6Parser9is__ident(self) || _M0MP38username5mbtpp6parser6Parser2at(self, "_")) && _M0MP38username5mbtpp6parser6Parser5at__k(self, 1, ":")) {
-          let name;
-          if (_M0MP38username5mbtpp6parser6Parser6accept(self, "_")) {
-            name = "_";
-          } else {
-            const _bind$19 = _M0MP38username5mbtpp6parser6Parser5ident(self);
-            if (_bind$19.$tag === 1) {
-              const _ok = _bind$19;
-              name = _ok._0;
-            } else {
-              return _bind$19;
-            }
-          }
-          _M0MP38username5mbtpp6parser6Parser7advance(self);
-          const _bind$19 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-          let _tmp$9;
-          if (_bind$19.$tag === 1) {
-            const _ok = _bind$19;
-            _tmp$9 = _ok._0;
-          } else {
-            return _bind$19;
-          }
-          _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(bs, new _M0TP38username5mbtpp6parser6Binder(pos, name, _tmp$9, _M0DTP38username5mbtpp6parser9ParamKind10Positional__));
-        } else {
-          if (names_only) {
-            let name;
-            if (_M0MP38username5mbtpp6parser6Parser6accept(self, "_")) {
-              name = "_";
-            } else {
-              const _bind$19 = _M0MP38username5mbtpp6parser6Parser5ident(self);
-              if (_bind$19.$tag === 1) {
-                const _ok = _bind$19;
-                name = _ok._0;
-              } else {
-                return _bind$19;
-              }
-            }
-            _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(bs, new _M0TP38username5mbtpp6parser6Binder(pos, name, undefined, _M0DTP38username5mbtpp6parser9ParamKind10Positional__));
-          } else {
-            const _bind$19 = _M0MP38username5mbtpp6parser6Parser4expr(self);
-            let _tmp$9;
-            if (_bind$19.$tag === 1) {
-              const _ok = _bind$19;
-              _tmp$9 = _ok._0;
-            } else {
-              return _bind$19;
-            }
-            _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(bs, new _M0TP38username5mbtpp6parser6Binder(pos, "_", _tmp$9, _M0DTP38username5mbtpp6parser9ParamKind10Positional__));
-          }
-        }
-      }
-      if (!_M0MP38username5mbtpp6parser6Parser6accept(self, ",")) {
-        break;
-      }
-      continue;
-    } else {
-      break;
-    }
-  }
-  const _bind$19 = _M0MP38username5mbtpp6parser6Parser6expect(self, ")");
-  if (_bind$19.$tag === 1) {
-    const _ok = _bind$19;
-    _ok._0;
-  } else {
-    return _bind$19;
-  }
-  return new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser6BinderERP38username5mbtpp6parser10ParseErrorE2Ok(bs);
-}
-function _M0MP38username5mbtpp6parser6Parser11raises__opt(self) {
-  let _tmp$9;
-  if (_M0MP38username5mbtpp6parser6Parser14is__same__line(self, "raise")) {
-    _M0MP38username5mbtpp6parser6Parser7advance(self);
-    if (_M0MP38username5mbtpp6parser6Parser6accept(self, "?")) {
-      return new _M0DTPC16result6ResultGORP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(undefined);
-    }
-    if (_M0MP38username5mbtpp6parser6Parser2at(self, "{") || (_M0MP38username5mbtpp6parser6Parser2at(self, "=") || (_M0MP38username5mbtpp6parser6Parser13at__stmt__end(self) || (_M0MP38username5mbtpp6parser6Parser2at(self, ",") || _M0MP38username5mbtpp6parser6Parser2at(self, ")"))))) {
-      _tmp$9 = new _M0DTP38username5mbtpp6parser4Expr4EVar(_M0MP38username5mbtpp6parser6Parser4peek(self).pos, "Error");
-    } else {
-      const _bind$18 = _M0MP38username5mbtpp6parser6Parser4pipe(self);
-      if (_bind$18.$tag === 1) {
-        const _ok = _bind$18;
-        _tmp$9 = _ok._0;
-      } else {
-        return _bind$18;
-      }
-    }
-  } else {
-    _tmp$9 = undefined;
-  }
-  return new _M0DTPC16result6ResultGORP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(_tmp$9);
+  return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr3EPi(pos, [], new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4Some(binders), cod, raises));
 }
 function _M0MP38username5mbtpp6parser6Parser8if__expr(self) {
   const pos = _M0MP38username5mbtpp6parser6Parser4peek(self).pos;
@@ -11993,6 +12638,157 @@ function _M0MP38username5mbtpp6parser6Parser11match__expr(self) {
     return _bind$20;
   }
   return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Expr6EMatch(pos, scrut, mr, _tmp$9));
+}
+function _M0MP38username5mbtpp6parser6Parser12noraise__opt(self) {
+  let _tmp$9;
+  if (_M0MP38username5mbtpp6parser6Parser6accept(self, "noraise")) {
+    const _bind$18 = _M0MP38username5mbtpp6parser6Parser4arms(self);
+    let _tmp$10;
+    if (_bind$18.$tag === 1) {
+      const _ok = _bind$18;
+      _tmp$10 = _ok._0;
+    } else {
+      return _bind$18;
+    }
+    _tmp$9 = new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3ArmEE4Some(_tmp$10);
+  } else {
+    _tmp$9 = _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3ArmEE4None__;
+  }
+  return new _M0DTPC16result6ResultGORPB5ArrayGRP38username5mbtpp6parser3ArmERP38username5mbtpp6parser10ParseErrorE2Ok(_tmp$9);
+}
+function _M0MP38username5mbtpp6parser6Parser6params(self, names_only) {
+  const _bind$18 = _M0MP38username5mbtpp6parser6Parser6expect(self, "(");
+  if (_bind$18.$tag === 1) {
+    const _ok = _bind$18;
+    _ok._0;
+  } else {
+    return _bind$18;
+  }
+  const bs = [];
+  while (true) {
+    if (!_M0MP38username5mbtpp6parser6Parser2at(self, ")")) {
+      const pos = _M0MP38username5mbtpp6parser6Parser4peek(self).pos;
+      if (_M0MP38username5mbtpp6parser6Parser9is__ident(self) && (_M0MP38username5mbtpp6parser6Parser5at__k(self, 1, "~") || _M0MP38username5mbtpp6parser6Parser5at__k(self, 1, "?"))) {
+        const _bind$19 = _M0MP38username5mbtpp6parser6Parser5ident(self);
+        let name;
+        if (_bind$19.$tag === 1) {
+          const _ok = _bind$19;
+          name = _ok._0;
+        } else {
+          return _bind$19;
+        }
+        const labelled = _M0MP38username5mbtpp6parser6Parser6accept(self, "~");
+        if (!labelled) {
+          const _bind$20 = _M0MP38username5mbtpp6parser6Parser6expect(self, "?");
+          if (_bind$20.$tag === 1) {
+            const _ok = _bind$20;
+            _ok._0;
+          } else {
+            return _bind$20;
+          }
+        }
+        const _bind$20 = _M0MP38username5mbtpp6parser6Parser6expect(self, ":");
+        if (_bind$20.$tag === 1) {
+          const _ok = _bind$20;
+          _ok._0;
+        } else {
+          return _bind$20;
+        }
+        const _bind$21 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+        let ty;
+        if (_bind$21.$tag === 1) {
+          const _ok = _bind$21;
+          ty = _ok._0;
+        } else {
+          return _bind$21;
+        }
+        let kind;
+        if (!labelled) {
+          kind = _M0DTP38username5mbtpp6parser9ParamKind8Optional__;
+        } else {
+          if (_M0MP38username5mbtpp6parser6Parser6accept(self, "=")) {
+            const _bind$22 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+            let _tmp$9;
+            if (_bind$22.$tag === 1) {
+              const _ok = _bind$22;
+              _tmp$9 = _ok._0;
+            } else {
+              return _bind$22;
+            }
+            kind = new _M0DTP38username5mbtpp6parser9ParamKind8Labelled(_tmp$9);
+          } else {
+            kind = new _M0DTP38username5mbtpp6parser9ParamKind8Labelled(undefined);
+          }
+        }
+        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(bs, new _M0TP38username5mbtpp6parser6Binder(pos, name, ty, kind));
+      } else {
+        if ((_M0MP38username5mbtpp6parser6Parser9is__ident(self) || _M0MP38username5mbtpp6parser6Parser2at(self, "_")) && _M0MP38username5mbtpp6parser6Parser5at__k(self, 1, ":")) {
+          let name;
+          if (_M0MP38username5mbtpp6parser6Parser6accept(self, "_")) {
+            name = "_";
+          } else {
+            const _bind$19 = _M0MP38username5mbtpp6parser6Parser5ident(self);
+            if (_bind$19.$tag === 1) {
+              const _ok = _bind$19;
+              name = _ok._0;
+            } else {
+              return _bind$19;
+            }
+          }
+          _M0MP38username5mbtpp6parser6Parser7advance(self);
+          const _bind$19 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+          let _tmp$9;
+          if (_bind$19.$tag === 1) {
+            const _ok = _bind$19;
+            _tmp$9 = _ok._0;
+          } else {
+            return _bind$19;
+          }
+          _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(bs, new _M0TP38username5mbtpp6parser6Binder(pos, name, _tmp$9, _M0DTP38username5mbtpp6parser9ParamKind10Positional__));
+        } else {
+          if (names_only) {
+            let name;
+            if (_M0MP38username5mbtpp6parser6Parser6accept(self, "_")) {
+              name = "_";
+            } else {
+              const _bind$19 = _M0MP38username5mbtpp6parser6Parser5ident(self);
+              if (_bind$19.$tag === 1) {
+                const _ok = _bind$19;
+                name = _ok._0;
+              } else {
+                return _bind$19;
+              }
+            }
+            _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(bs, new _M0TP38username5mbtpp6parser6Binder(pos, name, undefined, _M0DTP38username5mbtpp6parser9ParamKind10Positional__));
+          } else {
+            const _bind$19 = _M0MP38username5mbtpp6parser6Parser4expr(self);
+            let _tmp$9;
+            if (_bind$19.$tag === 1) {
+              const _ok = _bind$19;
+              _tmp$9 = _ok._0;
+            } else {
+              return _bind$19;
+            }
+            _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(bs, new _M0TP38username5mbtpp6parser6Binder(pos, "_", _tmp$9, _M0DTP38username5mbtpp6parser9ParamKind10Positional__));
+          }
+        }
+      }
+      if (!_M0MP38username5mbtpp6parser6Parser6accept(self, ",")) {
+        break;
+      }
+      continue;
+    } else {
+      break;
+    }
+  }
+  const _bind$19 = _M0MP38username5mbtpp6parser6Parser6expect(self, ")");
+  if (_bind$19.$tag === 1) {
+    const _ok = _bind$19;
+    _ok._0;
+  } else {
+    return _bind$19;
+  }
+  return new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser6BinderERP38username5mbtpp6parser10ParseErrorE2Ok(bs);
 }
 function _M0MP38username5mbtpp6parser6Parser15struct__literal(self) {
   const pos = _M0MP38username5mbtpp6parser6Parser4peek(self).pos;
@@ -12386,7 +13182,20 @@ function _M0MP38username5mbtpp6parser6Parser7derives(self) {
 function _M0MP38username5mbtpp6parser6Parser10decl__body(self) {
   const pos = _M0MP38username5mbtpp6parser6Parser4peek(self).pos;
   if (_M0MP38username5mbtpp6parser6Parser6accept(self, "fn")) {
-    const _bind$18 = _M0MP38username5mbtpp6parser6Parser8fn__rest(self, pos, false);
+    const _bind$18 = _M0MP38username5mbtpp6parser6Parser16fn__rest_2einner(self, pos, false, false);
+    let _tmp$9;
+    if (_bind$18.$tag === 1) {
+      const _ok = _bind$18;
+      _tmp$9 = _ok._0;
+    } else {
+      return _bind$18;
+    }
+    return new _M0DTPC16result6ResultGRP38username5mbtpp6parser4DeclRP38username5mbtpp6parser10ParseErrorE2Ok(new _M0DTP38username5mbtpp6parser4Decl3DFn(_tmp$9));
+  }
+  if (_M0MP38username5mbtpp6parser6Parser2at(self, "async") && _M0MP38username5mbtpp6parser6Parser5at__k(self, 1, "fn")) {
+    _M0MP38username5mbtpp6parser6Parser7advance(self);
+    _M0MP38username5mbtpp6parser6Parser7advance(self);
+    const _bind$18 = _M0MP38username5mbtpp6parser6Parser16fn__rest_2einner(self, pos, false, true);
     let _tmp$9;
     if (_bind$18.$tag === 1) {
       const _ok = _bind$18;
@@ -12421,7 +13230,7 @@ function _M0MP38username5mbtpp6parser6Parser10decl__body(self) {
     } else {
       return _bind$20;
     }
-    const impl_bs$2 = _M0IPC15array5ArrayPB3Add3addGsE(impl_bs, _tmp$9);
+    const impl_bs$2 = _M0IPC15array5ArrayPB3Add3addGUssEE(impl_bs, _tmp$9);
     if (_M0MP38username5mbtpp6parser6Parser6accept(self, ":")) {
       const _bind$21 = _M0MP38username5mbtpp6parser6Parser4expr(self);
       let ty;
@@ -13161,7 +13970,7 @@ function _M0FP38username5mbtpp6parser22parse__program_2einner(src, line0) {
   return new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser4DeclERP38username5mbtpp6parser10ParseErrorE2Ok(ds);
 }
 function _M0FP38username5mbtpp6parser11mbti__items(src) {
-  const lines = _M0MPB4Iter9to__arrayGsE(_M0MPB4Iter3mapGRPC16string10StringViewsE(_M0MPC16string6String5split(src, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5758), (l) => _M0MPC16string10StringView9to__owned(_M0MPC16string6String17trim__end_2einner(_M0MPC16string10StringView9to__owned(l), _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5759))));
+  const lines = _M0MPB4Iter9to__arrayGsE(_M0MPB4Iter3mapGRPC16string10StringViewsE(_M0MPC16string6String5split(src, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6093), (l) => _M0MPC16string10StringView9to__owned(_M0MPC16string6String17trim__end_2einner(_M0MPC16string10StringView9to__owned(l), _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6094))));
   const imports = [];
   const items = [];
   let attrs = [];
@@ -13169,30 +13978,30 @@ function _M0FP38username5mbtpp6parser11mbti__items(src) {
   while (true) {
     if (i < lines.length) {
       const line = _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(lines, i);
-      const t = _M0MPC16string10StringView9to__owned(_M0MPC16string6String12trim_2einner(line, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5760));
-      if (t === "" || (_M0MPC16string6String11has__prefix(t, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5761) || _M0MPC16string6String11has__prefix(t, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5762))) {
+      const t = _M0MPC16string10StringView9to__owned(_M0MPC16string6String12trim_2einner(line, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6095));
+      if (t === "" || (_M0MPC16string6String11has__prefix(t, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6096) || _M0MPC16string6String11has__prefix(t, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6097))) {
         i = i + 1 | 0;
         continue;
       }
-      if (_M0MPC16string6String11has__prefix(t, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5763)) {
+      if (_M0MPC16string6String11has__prefix(t, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6098)) {
         _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(attrs, t);
         i = i + 1 | 0;
         continue;
       }
-      if (_M0MPC16string6String11has__prefix(t, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5764) || _M0MPC16string6String11has__prefix(t, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5765)) {
-        const close = _M0MPC16string6String11has__prefix(t, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5766) ? ")" : "}";
+      if (_M0MPC16string6String11has__prefix(t, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6099) || _M0MPC16string6String11has__prefix(t, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6100)) {
+        const close = _M0MPC16string6String11has__prefix(t, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6101) ? ")" : "}";
         i = i + 1 | 0;
         while (true) {
           let _tmp$9;
           if (i < lines.length) {
-            const _p = _M0MPC16string10StringView9to__owned(_M0MPC16string6String12trim_2einner(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(lines, i), _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5767));
+            const _p = _M0MPC16string10StringView9to__owned(_M0MPC16string6String12trim_2einner(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(lines, i), _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6102));
             _tmp$9 = !(_p === close);
           } else {
             _tmp$9 = false;
           }
           if (_tmp$9) {
-            const q = _M0MPC16string10StringView9to__owned(_M0MPC16string6String12trim_2einner(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(lines, i), _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5768));
-            const _bind$18 = _M0MPC16string6String4find(q, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5769);
+            const q = _M0MPC16string10StringView9to__owned(_M0MPC16string6String12trim_2einner(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(lines, i), _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6103));
+            const _bind$18 = _M0MPC16string6String4find(q, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6104);
             let path;
             if (_bind$18 === undefined) {
               path = q;
@@ -13219,10 +14028,10 @@ function _M0FP38username5mbtpp6parser11mbti__items(src) {
       _M0IPB13StringBuilderPB6Logger13write__string(buf, line);
       i = i + 1 | 0;
       while (true) {
-        if (i < lines.length && (_M0MPC16string6String11has__prefix(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(lines, i), _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5770) || (_M0MPC16string6String11has__prefix(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(lines, i), _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5771) || _M0MPC16string6String11has__prefix(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(lines, i), _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5772)))) {
+        if (i < lines.length && (_M0MPC16string6String11has__prefix(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(lines, i), _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6105) || (_M0MPC16string6String11has__prefix(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(lines, i), _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6106) || _M0MPC16string6String11has__prefix(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(lines, i), _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6107)))) {
           _M0IPB13StringBuilderPB6Logger11write__char(buf, 10);
-          const inner = _M0MPC16string10StringView9to__owned(_M0MPC16string6String12trim_2einner(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(lines, i), _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5773));
-          if (!_M0MPC16string6String11has__prefix(inner, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS5774)) {
+          const inner = _M0MPC16string10StringView9to__owned(_M0MPC16string6String12trim_2einner(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(lines, i), _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6108));
+          if (!_M0MPC16string6String11has__prefix(inner, _M0FP38username5mbtpp6parser11mbti__itemsN6recordS6109)) {
             _M0IPB13StringBuilderPB6Logger13write__string(buf, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(lines, i));
           }
           i = i + 1 | 0;
@@ -13241,7 +14050,7 @@ function _M0FP38username5mbtpp6parser11mbti__items(src) {
   return { _0: imports, _1: items };
 }
 function _M0FP38username5mbtpp6parser13last__segment(path) {
-  const _bind$18 = _M0MPC16string6String9rev__find(path, _M0FP38username5mbtpp6parser13last__segmentN6recordS5796);
+  const _bind$18 = _M0MPC16string6String9rev__find(path, _M0FP38username5mbtpp6parser13last__segmentN6recordS6131);
   if (_bind$18 === undefined) {
     return path;
   } else {
@@ -13415,11 +14224,15 @@ function _M0FP38username5mbtpp6parser14collect__names(e, bound, out) {
       case 0: {
         const _EVar = e;
         const _n = _EVar._1;
-        if (!_M0MPC15array5Array8containsGsE(bound, _n) && !_M0MPB3Map8containsGsiE(out, _n)) {
-          _M0MPB3Map3setGsiE(out, _n, 0);
+        if (_M0MPC16string6String11has__prefix(_n, _M0FP38username5mbtpp6parser14collect__namesN6recordS6177)) {
           return;
         } else {
-          return;
+          if (!_M0MPC15array5Array8containsGsE(bound, _n) && !_M0MPB3Map8containsGsiE(out, _n)) {
+            _M0MPB3Map3setGsiE(out, _n, 0);
+            return;
+          } else {
+            return;
+          }
         }
       }
       case 6: {
@@ -13433,39 +14246,55 @@ function _M0FP38username5mbtpp6parser14collect__names(e, bound, out) {
             const _Some = _x$2;
             const _args = _Some._0;
             const _x$3 = _EApp._3;
-            if (!_M0MPC15array5Array8containsGsE(bound, _n$2)) {
-              const k = _M0MPC16option6Option10unwrap__orGiE(_M0MPB3Map3getGsiE(out, _n$2), 0);
-              _M0MPB3Map3setGsiE(out, _n$2, _args.length > k ? _args.length : k);
-            }
-            const _p = _args.length;
-            let _tmp$9 = 0;
-            while (true) {
-              const _p$2 = _tmp$9;
-              if (_p$2 < _p) {
-                const _p$3 = _args[_p$2];
-                go(_p$3);
-                _tmp$9 = _p$2 + 1 | 0;
-                continue;
-              } else {
-                break;
-              }
-            }
-            _M0MPC16option6Option3mapGRPB5ArrayGRP38username5mbtpp6parser4ExprEuE(_x$3, (xs) => {
-              const _p$2 = xs.length;
-              let _tmp$10 = 0;
+            if (_M0MPC16string6String11has__prefix(_n$2, _M0FP38username5mbtpp6parser14collect__namesN6recordS6178)) {
+              const _p = _args.length;
+              let _tmp$9 = 0;
               while (true) {
-                const _p$3 = _tmp$10;
-                if (_p$3 < _p$2) {
-                  const _p$4 = xs[_p$3];
-                  go(_p$4);
-                  _tmp$10 = _p$3 + 1 | 0;
+                const _p$2 = _tmp$9;
+                if (_p$2 < _p) {
+                  const _p$3 = _args[_p$2];
+                  go(_p$3);
+                  _tmp$9 = _p$2 + 1 | 0;
                   continue;
                 } else {
                   return;
                 }
               }
-            });
-            return;
+            } else {
+              if (!_M0MPC15array5Array8containsGsE(bound, _n$2)) {
+                const k = _M0MPC16option6Option10unwrap__orGiE(_M0MPB3Map3getGsiE(out, _n$2), 0);
+                _M0MPB3Map3setGsiE(out, _n$2, _args.length > k ? _args.length : k);
+              }
+              const _p = _args.length;
+              let _tmp$9 = 0;
+              while (true) {
+                const _p$2 = _tmp$9;
+                if (_p$2 < _p) {
+                  const _p$3 = _args[_p$2];
+                  go(_p$3);
+                  _tmp$9 = _p$2 + 1 | 0;
+                  continue;
+                } else {
+                  break;
+                }
+              }
+              _M0MPC16option6Option3mapGRPB5ArrayGRP38username5mbtpp6parser4ExprEuE(_x$3, (xs) => {
+                const _p$2 = xs.length;
+                let _tmp$10 = 0;
+                while (true) {
+                  const _p$3 = _tmp$10;
+                  if (_p$3 < _p$2) {
+                    const _p$4 = xs[_p$3];
+                    go(_p$4);
+                    _tmp$10 = _p$3 + 1 | 0;
+                    continue;
+                  } else {
+                    return;
+                  }
+                }
+              });
+              return;
+            }
           } else {
             const _x$3 = _EApp._3;
             i = _x$2;
@@ -13636,7 +14465,7 @@ function _M0MP38username5mbtpp6parser4Decl5inner(self) {
     continue;
   }
 }
-function _M0FP38username5mbtpp6parser18decl__bound__namesN3addS5905(e, out) {
+function _M0FP38username5mbtpp6parser18decl__bound__namesN3addS6242(e, out) {
   let _tmp$9 = e;
   _L: while (true) {
     const e$2 = _tmp$9;
@@ -13657,7 +14486,7 @@ function _M0FP38username5mbtpp6parser18decl__bound__namesN3addS5905(e, out) {
         if (_x === "+") {
           const _a = _EBin._2;
           const _b = _EBin._3;
-          _M0FP38username5mbtpp6parser18decl__bound__namesN3addS5905(_a, out);
+          _M0FP38username5mbtpp6parser18decl__bound__namesN3addS6242(_a, out);
           _tmp$9 = _b;
           continue _L;
         } else {
@@ -13773,7 +14602,7 @@ function _M0FP38username5mbtpp6parser18decl__bound__names(d) {
       } else {
         const _Some = _bind$19;
         const _t = _Some;
-        _M0FP38username5mbtpp6parser18decl__bound__namesN3addS5905(_t, out);
+        _M0FP38username5mbtpp6parser18decl__bound__namesN3addS6242(_t, out);
       }
       _tmp$9 = _ + 1 | 0;
       continue;
@@ -13783,7 +14612,7 @@ function _M0FP38username5mbtpp6parser18decl__bound__names(d) {
   }
   return out;
 }
-function _M0FP38username5mbtpp6parser17decl__type__namesN3tysS5942(out, bs, bound) {
+function _M0FP38username5mbtpp6parser17decl__type__namesN3tysS6279(out, bs, bound) {
   const _bind$18 = bs.length;
   let _tmp$9 = 0;
   while (true) {
@@ -13812,7 +14641,7 @@ function _M0FP38username5mbtpp6parser17decl__type__names(d) {
       _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_self, "Self");
       _M0MPC15array5Array10push__iterGRP38username5mbtpp6parser4StmtE(_self, _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(_M0FP38username5mbtpp6parser13binder__names(_fd.impl_params)));
       const bound = _self;
-      _M0FP38username5mbtpp6parser17decl__type__namesN3tysS5942(out, _M0MPC16option6Option10unwrap__orGRPB5ArrayGRP38username5mbtpp6parser6BinderEE(_fd.params, []), bound);
+      _M0FP38username5mbtpp6parser17decl__type__namesN3tysS6279(out, _M0MPC16option6Option10unwrap__orGRPB5ArrayGRP38username5mbtpp6parser6BinderEE(_fd.params, []), bound);
       _M0MPC16option6Option3mapGRP38username5mbtpp6parser4ExpruE(_fd.ret, (t) => {
         _M0FP38username5mbtpp6parser14collect__names(t, bound, out);
       });
@@ -13839,8 +14668,8 @@ function _M0FP38username5mbtpp6parser17decl__type__names(d) {
         const _ = _tmp$9;
         if (_ < _bind$21) {
           const c = _bind$20[_];
-          const b2 = _M0IPC15array5ArrayPB3Add3addGsE(bound$2, _M0FP38username5mbtpp6parser13binder__names(c.impl_params));
-          _M0FP38username5mbtpp6parser17decl__type__namesN3tysS5942(out, c.params, b2);
+          const b2 = _M0IPC15array5ArrayPB3Add3addGUssEE(bound$2, _M0FP38username5mbtpp6parser13binder__names(c.impl_params));
+          _M0FP38username5mbtpp6parser17decl__type__namesN3tysS6279(out, c.params, b2);
           _M0MPC16option6Option3mapGRP38username5mbtpp6parser4ExpruE(c.ret, (t) => {
             _M0FP38username5mbtpp6parser14collect__names(t, b2, out);
           });
@@ -13886,7 +14715,7 @@ function _M0FP38username5mbtpp6parser17decl__type__names(d) {
           _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_self$2, "Self");
           _M0MPC15array5Array10push__iterGRP38username5mbtpp6parser4StmtE(_self$2, _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(_M0FP38username5mbtpp6parser13binder__names(m.impl_params)));
           const bound$4 = _self$2;
-          _M0FP38username5mbtpp6parser17decl__type__namesN3tysS5942(out, m.params, bound$4);
+          _M0FP38username5mbtpp6parser17decl__type__namesN3tysS6279(out, m.params, bound$4);
           _M0FP38username5mbtpp6parser14collect__names(m.ret, bound$4, out);
           _tmp$11 = _ + 1 | 0;
           continue;
@@ -13919,231 +14748,138 @@ function _M0FP38username5mbtpp6parser10mbti__item(p, pkg_path) {
         _L$4: {
           _L$5: {
             _L$6: {
-              const _bind$18 = _M0MP38username5mbtpp6parser6Parser4peek(p).tok;
-              switch (_bind$18.$tag) {
-                case 5: {
-                  const _TSym = _bind$18;
-                  const _x = _TSym._0;
-                  switch (_x) {
-                    case "fn": {
-                      _M0MP38username5mbtpp6parser6Parser7advance(p);
-                      const _bind$19 = _M0MP38username5mbtpp6parser6Parser13impl__binders(p);
-                      let impl_bs;
-                      if (_bind$19.$tag === 1) {
-                        const _ok = _bind$19;
-                        impl_bs = _ok._0;
-                      } else {
-                        return _bind$19;
-                      }
-                      const _bind$20 = _M0MP38username5mbtpp6parser6Parser5ident(p);
-                      let name;
-                      if (_bind$20.$tag === 1) {
-                        const _ok = _bind$20;
-                        name = _ok._0;
-                      } else {
-                        return _bind$20;
-                      }
-                      while (true) {
-                        if (_M0MP38username5mbtpp6parser6Parser6accept(p, "::")) {
-                          const _tmp$9 = name;
-                          const _bind$21 = _M0MP38username5mbtpp6parser6Parser5ident(p);
-                          let _tmp$10;
+              _L$7: {
+                _L$8: {
+                  const _bind$18 = _M0MP38username5mbtpp6parser6Parser4peek(p).tok;
+                  switch (_bind$18.$tag) {
+                    case 5: {
+                      const _TSym = _bind$18;
+                      const _x = _TSym._0;
+                      switch (_x) {
+                        case "fn": {
+                          break _L$8;
+                        }
+                        case "async": {
+                          break _L$8;
+                        }
+                        case "let": {
+                          break _L$6;
+                        }
+                        case "struct": {
+                          break _L$4;
+                        }
+                        case "enum": {
+                          break _L$4;
+                        }
+                        case "suberror": {
+                          break _L$4;
+                        }
+                        case "trait": {
+                          break _L$4;
+                        }
+                        case "impl": {
+                          _M0MP38username5mbtpp6parser6Parser7advance(p);
+                          const _bind$19 = _M0MP38username5mbtpp6parser6Parser13impl__binders(p);
+                          let bs;
+                          if (_bind$19.$tag === 1) {
+                            const _ok = _bind$19;
+                            bs = _ok._0;
+                          } else {
+                            return _bind$19;
+                          }
+                          const _bind$20 = _M0MP38username5mbtpp6parser6Parser5ident(p);
+                          let tr;
+                          if (_bind$20.$tag === 1) {
+                            const _ok = _bind$20;
+                            tr = _ok._0;
+                          } else {
+                            return _bind$20;
+                          }
+                          while (true) {
+                            if (_M0MP38username5mbtpp6parser6Parser6accept(p, ".")) {
+                              const _tmp$9 = tr;
+                              const _bind$21 = _M0MP38username5mbtpp6parser6Parser5ident(p);
+                              let _tmp$10;
+                              if (_bind$21.$tag === 1) {
+                                const _ok = _bind$21;
+                                _tmp$10 = _ok._0;
+                              } else {
+                                return _bind$21;
+                              }
+                              tr = `${_tmp$9}.${_tmp$10}`;
+                              continue;
+                            } else {
+                              break;
+                            }
+                          }
+                          const _bind$21 = _M0MP38username5mbtpp6parser6Parser6expect(p, "for");
                           if (_bind$21.$tag === 1) {
                             const _ok = _bind$21;
-                            _tmp$10 = _ok._0;
+                            _ok._0;
                           } else {
                             return _bind$21;
                           }
-                          name = `${_tmp$9}::${_tmp$10}`;
-                          continue;
-                        } else {
+                          const _bind$22 = _M0MP38username5mbtpp6parser6Parser4expr(p);
+                          let ty;
+                          if (_bind$22.$tag === 1) {
+                            const _ok = _bind$22;
+                            ty = _ok._0;
+                          } else {
+                            return _bind$22;
+                          }
+                          out = [new _M0DTP38username5mbtpp6parser4Decl5DImpl(new _M0TP38username5mbtpp6parser8ImplDecl(pos, bs, tr, ty, "", [], new _M0DTP38username5mbtpp6parser4Expr4EVar(pos, "_")))];
                           break;
                         }
+                        default: {
+                          break _L$2;
+                        }
                       }
-                      const _bind$21 = _M0MP38username5mbtpp6parser6Parser6params(p, false);
-                      let _tmp$9;
-                      if (_bind$21.$tag === 1) {
-                        const _ok = _bind$21;
-                        _tmp$9 = _ok._0;
-                      } else {
-                        return _bind$21;
-                      }
-                      const params = _M0MPC15array5Array6filterGRP38username5mbtpp6parser6BinderE(_tmp$9, (b) => {
-                        const _bind$22 = b.ty;
-                        let _tmp$10;
-                        if (_bind$22 === undefined) {
-                          _tmp$10 = false;
-                        } else {
-                          const _Some = _bind$22;
-                          const _x$2 = _Some;
-                          if (_x$2.$tag === 0) {
-                            const _EVar = _x$2;
-                            const _x$3 = _EVar._1;
-                            switch (_x$3) {
-                              case "SourceLoc": {
-                                _tmp$10 = true;
-                                break;
-                              }
-                              case "ArgsLoc": {
-                                _tmp$10 = true;
-                                break;
-                              }
-                              case "@builtin.SourceLoc": {
-                                _tmp$10 = true;
-                                break;
-                              }
-                              case "@builtin.ArgsLoc": {
-                                _tmp$10 = true;
-                                break;
-                              }
-                              default: {
-                                _tmp$10 = false;
-                              }
+                      break;
+                    }
+                    case 0: {
+                      const _TIdent = _bind$18;
+                      const _x$2 = _TIdent._0;
+                      switch (_x$2) {
+                        case "const": {
+                          break _L$6;
+                        }
+                        case "type": {
+                          _M0MP38username5mbtpp6parser6Parser7advance(p);
+                          const _bind$23 = _M0MP38username5mbtpp6parser6Parser5ident(p);
+                          let name;
+                          if (_bind$23.$tag === 1) {
+                            const _ok = _bind$23;
+                            name = _ok._0;
+                          } else {
+                            return _bind$23;
+                          }
+                          const _bind$24 = _M0MP38username5mbtpp6parser6Parser13impl__binders(p);
+                          let bs$2;
+                          if (_bind$24.$tag === 1) {
+                            const _ok = _bind$24;
+                            bs$2 = _ok._0;
+                          } else {
+                            return _bind$24;
+                          }
+                          if (_M0MP38username5mbtpp6parser6Parser6accept(p, "=")) {
+                            const _bind$25 = _M0MP38username5mbtpp6parser6Parser4expr(p);
+                            let _tmp$9;
+                            if (_bind$25.$tag === 1) {
+                              const _ok = _bind$25;
+                              _tmp$9 = _ok._0;
+                            } else {
+                              return _bind$25;
                             }
+                            out = [new _M0DTP38username5mbtpp6parser4Decl4DDef(pos, name, bs$2, new _M0DTP38username5mbtpp6parser4Expr5EType(pos), _tmp$9)];
                           } else {
-                            _tmp$10 = false;
+                            p.i = p.toks.length - 1 | 0;
+                            out = [new _M0DTP38username5mbtpp6parser4Decl7DOpaque(pos, name, bs$2.length)];
                           }
-                        }
-                        return !_tmp$10;
-                      });
-                      let ret;
-                      if (_M0MP38username5mbtpp6parser6Parser6accept(p, "->")) {
-                        const _bind$22 = _M0MP38username5mbtpp6parser6Parser4expr(p);
-                        if (_bind$22.$tag === 1) {
-                          const _ok = _bind$22;
-                          ret = _ok._0;
-                        } else {
-                          return _bind$22;
-                        }
-                      } else {
-                        ret = new _M0DTP38username5mbtpp6parser4Expr4EVar(pos, "Unit");
-                      }
-                      const _bind$22 = _M0MP38username5mbtpp6parser6Parser11raises__opt(p);
-                      let raises;
-                      if (_bind$22.$tag === 1) {
-                        const _ok = _bind$22;
-                        raises = _ok._0;
-                      } else {
-                        return _bind$22;
-                      }
-                      const _tmp$10 = name;
-                      const _tmp$11 = new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4Some(params);
-                      const _p = name;
-                      out = [new _M0DTP38username5mbtpp6parser4Decl3DFn(new _M0TP38username5mbtpp6parser6FnDecl(pos, _tmp$10, impl_bs, _tmp$11, ret, raises, new _M0DTP38username5mbtpp6parser6FnBody10BodyExtern(`@mbt:${pkg_path}.${_p}`), false))];
-                      break;
-                    }
-                    case "let": {
-                      break _L$6;
-                    }
-                    case "struct": {
-                      break _L$4;
-                    }
-                    case "enum": {
-                      break _L$4;
-                    }
-                    case "suberror": {
-                      break _L$4;
-                    }
-                    case "trait": {
-                      break _L$4;
-                    }
-                    case "impl": {
-                      _M0MP38username5mbtpp6parser6Parser7advance(p);
-                      const _bind$23 = _M0MP38username5mbtpp6parser6Parser13impl__binders(p);
-                      let bs;
-                      if (_bind$23.$tag === 1) {
-                        const _ok = _bind$23;
-                        bs = _ok._0;
-                      } else {
-                        return _bind$23;
-                      }
-                      const _bind$24 = _M0MP38username5mbtpp6parser6Parser5ident(p);
-                      let tr;
-                      if (_bind$24.$tag === 1) {
-                        const _ok = _bind$24;
-                        tr = _ok._0;
-                      } else {
-                        return _bind$24;
-                      }
-                      while (true) {
-                        if (_M0MP38username5mbtpp6parser6Parser6accept(p, ".")) {
-                          const _tmp$12 = tr;
-                          const _bind$25 = _M0MP38username5mbtpp6parser6Parser5ident(p);
-                          let _tmp$13;
-                          if (_bind$25.$tag === 1) {
-                            const _ok = _bind$25;
-                            _tmp$13 = _ok._0;
-                          } else {
-                            return _bind$25;
-                          }
-                          tr = `${_tmp$12}.${_tmp$13}`;
-                          continue;
-                        } else {
                           break;
                         }
-                      }
-                      const _bind$25 = _M0MP38username5mbtpp6parser6Parser6expect(p, "for");
-                      if (_bind$25.$tag === 1) {
-                        const _ok = _bind$25;
-                        _ok._0;
-                      } else {
-                        return _bind$25;
-                      }
-                      const _bind$26 = _M0MP38username5mbtpp6parser6Parser4expr(p);
-                      let ty;
-                      if (_bind$26.$tag === 1) {
-                        const _ok = _bind$26;
-                        ty = _ok._0;
-                      } else {
-                        return _bind$26;
-                      }
-                      out = [new _M0DTP38username5mbtpp6parser4Decl5DImpl(new _M0TP38username5mbtpp6parser8ImplDecl(pos, bs, tr, ty, "", [], new _M0DTP38username5mbtpp6parser4Expr4EVar(pos, "_")))];
-                      break;
-                    }
-                    default: {
-                      break _L$2;
-                    }
-                  }
-                  break;
-                }
-                case 0: {
-                  const _TIdent = _bind$18;
-                  const _x$2 = _TIdent._0;
-                  switch (_x$2) {
-                    case "const": {
-                      break _L$6;
-                    }
-                    case "type": {
-                      _M0MP38username5mbtpp6parser6Parser7advance(p);
-                      const _bind$27 = _M0MP38username5mbtpp6parser6Parser5ident(p);
-                      let name$2;
-                      if (_bind$27.$tag === 1) {
-                        const _ok = _bind$27;
-                        name$2 = _ok._0;
-                      } else {
-                        return _bind$27;
-                      }
-                      const _bind$28 = _M0MP38username5mbtpp6parser6Parser13impl__binders(p);
-                      let bs$2;
-                      if (_bind$28.$tag === 1) {
-                        const _ok = _bind$28;
-                        bs$2 = _ok._0;
-                      } else {
-                        return _bind$28;
-                      }
-                      if (_M0MP38username5mbtpp6parser6Parser6accept(p, "=")) {
-                        const _bind$29 = _M0MP38username5mbtpp6parser6Parser4expr(p);
-                        let _tmp$12;
-                        if (_bind$29.$tag === 1) {
-                          const _ok = _bind$29;
-                          _tmp$12 = _ok._0;
-                        } else {
-                          return _bind$29;
+                        default: {
+                          break _L$2;
                         }
-                        out = [new _M0DTP38username5mbtpp6parser4Decl4DDef(pos, name$2, bs$2, new _M0DTP38username5mbtpp6parser4Expr5EType(pos), _tmp$12)];
-                      } else {
-                        p.i = p.toks.length - 1 | 0;
-                        out = [new _M0DTP38username5mbtpp6parser4Decl7DOpaque(pos, name$2, bs$2.length)];
                       }
                       break;
                     }
@@ -14151,11 +14887,127 @@ function _M0FP38username5mbtpp6parser10mbti__item(p, pkg_path) {
                       break _L$2;
                     }
                   }
-                  break;
+                  break _L$7;
                 }
-                default: {
-                  break _L$2;
+                const is_async = _M0MP38username5mbtpp6parser6Parser6accept(p, "async");
+                const _bind$18 = _M0MP38username5mbtpp6parser6Parser6expect(p, "fn");
+                if (_bind$18.$tag === 1) {
+                  const _ok = _bind$18;
+                  _ok._0;
+                } else {
+                  return _bind$18;
                 }
+                const _bind$19 = _M0MP38username5mbtpp6parser6Parser13impl__binders(p);
+                let impl_bs;
+                if (_bind$19.$tag === 1) {
+                  const _ok = _bind$19;
+                  impl_bs = _ok._0;
+                } else {
+                  return _bind$19;
+                }
+                const _bind$20 = _M0MP38username5mbtpp6parser6Parser5ident(p);
+                let name;
+                if (_bind$20.$tag === 1) {
+                  const _ok = _bind$20;
+                  name = _ok._0;
+                } else {
+                  return _bind$20;
+                }
+                while (true) {
+                  if (_M0MP38username5mbtpp6parser6Parser6accept(p, "::")) {
+                    const _tmp$9 = name;
+                    const _bind$21 = _M0MP38username5mbtpp6parser6Parser5ident(p);
+                    let _tmp$10;
+                    if (_bind$21.$tag === 1) {
+                      const _ok = _bind$21;
+                      _tmp$10 = _ok._0;
+                    } else {
+                      return _bind$21;
+                    }
+                    name = `${_tmp$9}::${_tmp$10}`;
+                    continue;
+                  } else {
+                    break;
+                  }
+                }
+                const _bind$21 = _M0MP38username5mbtpp6parser6Parser6params(p, false);
+                let _tmp$9;
+                if (_bind$21.$tag === 1) {
+                  const _ok = _bind$21;
+                  _tmp$9 = _ok._0;
+                } else {
+                  return _bind$21;
+                }
+                const params = _M0MPC15array5Array6filterGRP38username5mbtpp6parser6BinderE(_tmp$9, (b) => {
+                  const _bind$22 = b.ty;
+                  let _tmp$10;
+                  if (_bind$22 === undefined) {
+                    _tmp$10 = false;
+                  } else {
+                    const _Some = _bind$22;
+                    const _x = _Some;
+                    if (_x.$tag === 0) {
+                      const _EVar = _x;
+                      const _x$2 = _EVar._1;
+                      switch (_x$2) {
+                        case "SourceLoc": {
+                          _tmp$10 = true;
+                          break;
+                        }
+                        case "ArgsLoc": {
+                          _tmp$10 = true;
+                          break;
+                        }
+                        case "@builtin.SourceLoc": {
+                          _tmp$10 = true;
+                          break;
+                        }
+                        case "@builtin.ArgsLoc": {
+                          _tmp$10 = true;
+                          break;
+                        }
+                        default: {
+                          _tmp$10 = false;
+                        }
+                      }
+                    } else {
+                      _tmp$10 = false;
+                    }
+                  }
+                  return !_tmp$10;
+                });
+                let ret;
+                if (_M0MP38username5mbtpp6parser6Parser6accept(p, "->")) {
+                  const _bind$22 = _M0MP38username5mbtpp6parser6Parser4expr(p);
+                  if (_bind$22.$tag === 1) {
+                    const _ok = _bind$22;
+                    ret = _ok._0;
+                  } else {
+                    return _bind$22;
+                  }
+                } else {
+                  ret = new _M0DTP38username5mbtpp6parser4Expr4EVar(pos, "Unit");
+                }
+                const _bind$22 = _M0MP38username5mbtpp6parser6Parser11effect__opt(p, is_async);
+                let raises;
+                if (_bind$22.$tag === 1) {
+                  const _ok = _bind$22;
+                  raises = _ok._0;
+                } else {
+                  return _bind$22;
+                }
+                const _bind$23 = _M0MP38username5mbtpp6parser6Parser4peek(p).tok;
+                if (_bind$23.$tag === 0) {
+                  const _TIdent = _bind$23;
+                  const _x = _TIdent._0;
+                  if (_x === "nocancel") {
+                    _M0MP38username5mbtpp6parser6Parser7advance(p);
+                  }
+                }
+                const _tmp$10 = name;
+                const _tmp$11 = new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser6BinderEE4Some(params);
+                const _p = name;
+                out = [new _M0DTP38username5mbtpp6parser4Decl3DFn(new _M0TP38username5mbtpp6parser6FnDecl(pos, _tmp$10, impl_bs, _tmp$11, ret, raises, new _M0DTP38username5mbtpp6parser6FnBody10BodyExtern(`@mbt:${pkg_path}.${_p}`), false))];
               }
               break _L$5;
             }
@@ -14191,9 +15043,9 @@ function _M0FP38username5mbtpp6parser10mbti__item(p, pkg_path) {
         let full;
         if (p.toks.length > 2) {
           let _tmp$9;
-          if (_M0IP38username5mbtpp6parser3TokPB2Eq5equal(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(p.toks, 0).tok, _M0FP38username5mbtpp6parser10mbti__itemN6constrS5996)) {
+          if (_M0IP38username5mbtpp6parser3TokPB2Eq5equal(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(p.toks, 0).tok, _M0FP38username5mbtpp6parser10mbti__itemN6constrS6333)) {
             let _tmp$10;
-            if (_M0IP38username5mbtpp6parser3TokPB2Eq5equal(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(p.toks, 1).tok, _M0FP38username5mbtpp6parser10mbti__itemN6constrS5997)) {
+            if (_M0IP38username5mbtpp6parser3TokPB2Eq5equal(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(p.toks, 1).tok, _M0FP38username5mbtpp6parser10mbti__itemN6constrS6334)) {
               const _bind$18 = _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(p.toks, 2).tok;
               let _tmp$11;
               if (_bind$18.$tag === 0) {
@@ -14237,7 +15089,7 @@ function _M0FP38username5mbtpp6parser10mbti__item(p, pkg_path) {
         } else {
           return _bind$18;
         }
-        out = _M0IP38username5mbtpp6parser3TokPB2Eq5equal(kind, _M0FP38username5mbtpp6parser10mbti__itemN6constrS5998) ? [d] : [new _M0DTP38username5mbtpp6parser4Decl4DMbt(pos, undefined, !full, d)];
+        out = _M0IP38username5mbtpp6parser3TokPB2Eq5equal(kind, _M0FP38username5mbtpp6parser10mbti__itemN6constrS6335) ? [d] : [new _M0DTP38username5mbtpp6parser4Decl4DMbt(pos, undefined, !full, d)];
       }
       break _L;
     }
@@ -14262,11 +15114,11 @@ function _M0FP38username5mbtpp6parser10mbti__item(p, pkg_path) {
 }
 function _M0FP38username5mbtpp6parser12using__items(line, text, prefix, import_alias, out, skipped) {
   const pos = new _M0TP38username5mbtpp6parser3Pos(line, 1);
-  const t = _M0MPC16string10StringView9to__owned(_M0MPC16string6String12trim_2einner(text, _M0FP38username5mbtpp6parser12using__itemsN6recordS6039));
+  const t = _M0MPC16string10StringView9to__owned(_M0MPC16string6String12trim_2einner(text, _M0FP38username5mbtpp6parser12using__itemsN6recordS6381));
   _L: {
-    const _bind$18 = _M0MPC16string6String4find(t, _M0FP38username5mbtpp6parser12using__itemsN6recordS6040);
-    const _bind$19 = _M0MPC16string6String4find(t, _M0FP38username5mbtpp6parser12using__itemsN6recordS6041);
-    const _bind$20 = _M0MPC16string6String9rev__find(t, _M0FP38username5mbtpp6parser12using__itemsN6recordS6042);
+    const _bind$18 = _M0MPC16string6String4find(t, _M0FP38username5mbtpp6parser12using__itemsN6recordS6382);
+    const _bind$19 = _M0MPC16string6String4find(t, _M0FP38username5mbtpp6parser12using__itemsN6recordS6383);
+    const _bind$20 = _M0MPC16string6String9rev__find(t, _M0FP38username5mbtpp6parser12using__itemsN6recordS6384);
     if (_bind$18 === undefined) {
       break _L;
     } else {
@@ -14283,9 +15135,9 @@ function _M0FP38username5mbtpp6parser12using__items(line, text, prefix, import_a
           const _Some$3 = _bind$20;
           const _c = _Some$3;
           if (_a < _b && _b < _c) {
-            const q = _M0MPC16string10StringView9to__owned(_M0MPC16string6String12trim_2einner(t.substring(_a + 1 | 0, _b), _M0FP38username5mbtpp6parser12using__itemsN6recordS6043));
+            const q = _M0MPC16string10StringView9to__owned(_M0MPC16string6String12trim_2einner(t.substring(_a + 1 | 0, _b), _M0FP38username5mbtpp6parser12using__itemsN6recordS6385));
             const body = t.substring(_b + 1 | 0, _c);
-            const _it = _M0MPC16string6String5split(body, _M0FP38username5mbtpp6parser12using__itemsN6recordS6044);
+            const _it = _M0MPC16string6String5split(body, _M0FP38username5mbtpp6parser12using__itemsN6recordS6386);
             while (true) {
               const _bind$21 = _M0MPB4Iter4nextGRP38username5mbtpp2tt2TmE(_it);
               if (_bind$21 === undefined) {
@@ -14293,11 +15145,11 @@ function _M0FP38username5mbtpp6parser12using__items(line, text, prefix, import_a
               } else {
                 const _Some$4 = _bind$21;
                 const _entry = _Some$4;
-                const e = _M0MPC16string10StringView9to__owned(_M0MPC16string10StringView12trim_2einner(_entry, _M0FP38username5mbtpp6parser12using__itemsN6recordS6045));
+                const e = _M0MPC16string10StringView9to__owned(_M0MPC16string10StringView12trim_2einner(_entry, _M0FP38username5mbtpp6parser12using__itemsN6recordS6387));
                 if (e === "") {
                   continue;
                 }
-                const words = _M0MPB4Iter9to__arrayGsE(_M0MPB4Iter3mapGRPC16string10StringViewsE(_M0MPB4Iter6filterGRPC16string10StringViewE(_M0MPC16string6String5split(e, _M0FP38username5mbtpp6parser12using__itemsN6recordS6046), (w) => _M0IP016_24default__implPB2Eq10not__equalGRPC16string10StringViewE(w, _M0FP38username5mbtpp6parser12using__itemsN6recordS6047)), (w) => _M0MPC16string10StringView9to__owned(w)));
+                const words = _M0MPB4Iter9to__arrayGsE(_M0MPB4Iter3mapGRPC16string10StringViewsE(_M0MPB4Iter6filterGRPC16string10StringViewE(_M0MPC16string6String5split(e, _M0FP38username5mbtpp6parser12using__itemsN6recordS6388), (w) => _M0IP016_24default__implPB2Eq10not__equalGRPC16string10StringViewE(w, _M0FP38username5mbtpp6parser12using__itemsN6recordS6389)), (w) => _M0MPC16string10StringView9to__owned(w)));
                 let kind;
                 let name;
                 let rest;
@@ -14428,10 +15280,10 @@ function _M0FP38username5mbtpp6parser12using__items(line, text, prefix, import_a
   _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(skipped, t);
   return undefined;
 }
-function _M0FP38username5mbtpp6parser11parse__mbtiN7qualifyS6104(_env, self_ty) {
-  const prefix = _env._2;
-  const local = _env._1;
-  const import_alias = _env._0;
+function _M0FP38username5mbtpp6parser11parse__mbtiN7qualifyS6446(_env, self_ty) {
+  const local = _env._2;
+  const import_alias = _env._1;
+  const prefix = _env._0;
   return (p, n) => {
     _L: {
       if (n === "Self") {
@@ -14452,12 +15304,12 @@ function _M0FP38username5mbtpp6parser11parse__mbtiN7qualifyS6104(_env, self_ty) 
       if (_M0MPC15array5Array8containsGsE(local, n)) {
         return new _M0DTP38username5mbtpp6parser4Expr4EVar(p, `${prefix}${n}`);
       } else {
-        if (_M0MPC16string6String11has__prefix(n, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6109)) {
+        if (_M0MPC16string6String11has__prefix(n, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6451)) {
           const m = n.substring(9, n.length);
           return new _M0DTP38username5mbtpp6parser4Expr4EVar(p, m === "Int32" ? "Int" : m);
         } else {
-          if (_M0MPC16string6String11has__prefix(n, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6110)) {
-            const _bind$18 = _M0MPC16string6String4find(n, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6111);
+          if (_M0MPC16string6String11has__prefix(n, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6452)) {
+            const _bind$18 = _M0MPC16string6String4find(n, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6453);
             if (_bind$18 === undefined) {
               return new _M0DTP38username5mbtpp6parser4Expr4EVar(p, n);
             } else {
@@ -14527,7 +15379,7 @@ function _M0FP38username5mbtpp6parser11parse__mbti(src, alias, pkg_path, aliases
           } else {
             const _p$3 = _p$2;
             const _p$4 = _p$3;
-            if (_M0MPC16string6String11has__prefix(_p$4, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6105)) {
+            if (_M0MPC16string6String11has__prefix(_p$4, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6447)) {
               _tmp$11 = true;
               break;
             }
@@ -14537,7 +15389,7 @@ function _M0FP38username5mbtpp6parser11parse__mbti(src, alias, pkg_path, aliases
         if (_tmp$11) {
           break _L;
         }
-        const _bind$22 = _M0MPC16string6String4find(item.text, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6106);
+        const _bind$22 = _M0MPC16string6String4find(item.text, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6448);
         let first;
         if (_bind$22 === undefined) {
           first = item.text;
@@ -14546,7 +15398,7 @@ function _M0FP38username5mbtpp6parser11parse__mbti(src, alias, pkg_path, aliases
           const _k = _Some;
           first = item.text.substring(0, _k);
         }
-        if (_M0MPC16string6String11has__prefix(first, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6107) || _M0MPC16string6String11has__prefix(first, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6108)) {
+        if (_M0MPC16string6String11has__prefix(first, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6449) || _M0MPC16string6String11has__prefix(first, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6450)) {
           _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(usings, { _0: item.line, _1: item.text });
           break _L;
         }
@@ -14647,7 +15499,7 @@ function _M0FP38username5mbtpp6parser11parse__mbti(src, alias, pkg_path, aliases
       break;
     }
   }
-  const _env = { _0: import_alias, _1: local, _2: prefix };
+  const _env = { _0: prefix, _1: import_alias, _2: local };
   const decls = [];
   const impls = [];
   const reexports = [];
@@ -14690,7 +15542,7 @@ function _M0FP38username5mbtpp6parser11parse__mbti(src, alias, pkg_path, aliases
           let name;
           let self_ty;
           _L: {
-            const _bind$25 = _M0MPC16string6String4find(_fd.name, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6118);
+            const _bind$25 = _M0MPC16string6String4find(_fd.name, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6460);
             if (_bind$25 === undefined) {
               name = `${prefix}${_fd.name}`;
               self_ty = undefined;
@@ -14705,7 +15557,7 @@ function _M0FP38username5mbtpp6parser11parse__mbti(src, alias, pkg_path, aliases
               break _L;
             }
           }
-          const f = _M0FP38username5mbtpp6parser11parse__mbtiN7qualifyS6104(_env, self_ty);
+          const f = _M0FP38username5mbtpp6parser11parse__mbtiN7qualifyS6446(_env, self_ty);
           const qb = (b) => new _M0TP38username5mbtpp6parser6Binder(b.pos, b.name, _M0MPC16option6Option3mapGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser4ExprE(b.ty, (t) => _M0FP38username5mbtpp6parser10map__names(t, f)), b.kind);
           const _p = _fd.impl_params;
           const _p$2 = new Array(_p.length);
@@ -14748,9 +15600,9 @@ function _M0FP38username5mbtpp6parser11parse__mbti(src, alias, pkg_path, aliases
               const _$2 = _tmp$15;
               if (_$2 < _bind$25) {
                 const a = _attrs[_$2];
-                if (_M0MPC16string6String11has__prefix(a, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6112) && !_M0MPC16string6String8contains(a, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6113)) {
+                if (_M0MPC16string6String11has__prefix(a, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6454) && !_M0MPC16string6String8contains(a, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6455)) {
                   const _tmp$16 = _fd.name;
-                  const _p$4 = _M0MPC16string6String4find(_fd.name, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6114);
+                  const _p$4 = _M0MPC16string6String4find(_fd.name, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6456);
                   let _tmp$17;
                   if (_p$4 === undefined) {
                     _tmp$17 = $panic();
@@ -14760,9 +15612,9 @@ function _M0FP38username5mbtpp6parser11parse__mbti(src, alias, pkg_path, aliases
                   }
                   const m = _tmp$16.substring(_tmp$17 + 2 | 0, _fd.name.length);
                   let free;
-                  if (_M0MPC16string6String11has__prefix(a, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6115)) {
+                  if (_M0MPC16string6String11has__prefix(a, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6457)) {
                     const inner = a.substring(12, a.length - 1 | 0);
-                    free = _M0MPC16string10StringView9to__owned(_M0MPC16string6String12trim_2einner(_M0MPC16string10StringView9to__owned(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_M0MPB4Iter9to__arrayGsE(_M0MPC16string6String5split(inner, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6116)), 0)), _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6117));
+                    free = _M0MPC16string10StringView9to__owned(_M0MPC16string6String12trim_2einner(_M0MPC16string10StringView9to__owned(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_M0MPB4Iter9to__arrayGsE(_M0MPC16string6String5split(inner, _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6458)), 0)), _M0FP38username5mbtpp6parser11parse__mbtiN6recordS6459));
                   } else {
                     free = m;
                   }
@@ -14784,7 +15636,7 @@ function _M0FP38username5mbtpp6parser11parse__mbti(src, alias, pkg_path, aliases
           const _bs = _DDef._2;
           const _ty = _DDef._3;
           const _body = _DDef._4;
-          _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(decls, new _M0DTP38username5mbtpp6parser4Decl4DDef(_p$4, `${prefix}${_n}`, _bs, _ty, _M0FP38username5mbtpp6parser10map__names(_body, _M0FP38username5mbtpp6parser11parse__mbtiN7qualifyS6104(_env, undefined))));
+          _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(decls, new _M0DTP38username5mbtpp6parser4Decl4DDef(_p$4, `${prefix}${_n}`, _bs, _ty, _M0FP38username5mbtpp6parser10map__names(_body, _M0FP38username5mbtpp6parser11parse__mbtiN7qualifyS6446(_env, undefined))));
           break;
         }
         case 6: {
@@ -14798,7 +15650,7 @@ function _M0FP38username5mbtpp6parser11parse__mbti(src, alias, pkg_path, aliases
         case 2: {
           const _DEnum = d;
           const _ed = _DEnum._0;
-          const f$2 = _M0FP38username5mbtpp6parser11parse__mbtiN7qualifyS6104(_env, undefined);
+          const f$2 = _M0FP38username5mbtpp6parser11parse__mbtiN7qualifyS6446(_env, undefined);
           const qb$2 = (b) => new _M0TP38username5mbtpp6parser6Binder(b.pos, b.name, _M0MPC16option6Option3mapGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser4ExprE(b.ty, (t) => _M0FP38username5mbtpp6parser10map__names(t, f$2)), b.kind);
           const _tmp$15 = `${prefix}${_ed.name}`;
           const _p$6 = _ed.cons;
@@ -14854,7 +15706,7 @@ function _M0FP38username5mbtpp6parser11parse__mbti(src, alias, pkg_path, aliases
         case 3: {
           const _DStruct = d;
           const _sd = _DStruct._0;
-          const f$3 = _M0FP38username5mbtpp6parser11parse__mbtiN7qualifyS6104(_env, undefined);
+          const f$3 = _M0FP38username5mbtpp6parser11parse__mbtiN7qualifyS6446(_env, undefined);
           const _tmp$17 = _sd.pos;
           const _tmp$18 = `${prefix}${_sd.name}`;
           const _tmp$19 = _sd.impl_params;
@@ -14880,7 +15732,7 @@ function _M0FP38username5mbtpp6parser11parse__mbti(src, alias, pkg_path, aliases
         case 4: {
           const _DTrait = d;
           const _td = _DTrait._0;
-          const f$4 = _M0FP38username5mbtpp6parser11parse__mbtiN7qualifyS6104(_env, undefined);
+          const f$4 = _M0FP38username5mbtpp6parser11parse__mbtiN7qualifyS6446(_env, undefined);
           const qb$3 = (b) => new _M0TP38username5mbtpp6parser6Binder(b.pos, b.name, _M0MPC16option6Option3mapGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser4ExprE(b.ty, (t) => _M0FP38username5mbtpp6parser10map__names(t, f$4)), b.kind);
           const _tmp$22 = _td.pos;
           const _tmp$23 = `${prefix}${_td.name}`;
@@ -14953,7 +15805,7 @@ function _M0FP38username5mbtpp6parser11parse__mbti(src, alias, pkg_path, aliases
         default: {
           const _DImpl = d;
           const _id = _DImpl._0;
-          const f$5 = _M0FP38username5mbtpp6parser11parse__mbtiN7qualifyS6104(_env, undefined);
+          const f$5 = _M0FP38username5mbtpp6parser11parse__mbtiN7qualifyS6446(_env, undefined);
           const _tmp$27 = _id.pos;
           const _p$18 = _id.impl_params;
           const _p$19 = new Array(_p$18.length);
@@ -14975,7 +15827,7 @@ function _M0FP38username5mbtpp6parser11parse__mbti(src, alias, pkg_path, aliases
           if (_M0MPC15array5Array8containsGsE(local, tr)) {
             _tmp$29 = `${prefix}${tr}`;
           } else {
-            const _bind$25 = _M0FP38username5mbtpp6parser10map__names(new _M0DTP38username5mbtpp6parser4Expr4EVar(_M0FP38username5mbtpp6parser11parse__mbtiN6recordS6119, tr), _M0FP38username5mbtpp6parser11parse__mbtiN7qualifyS6104(_env, undefined));
+            const _bind$25 = _M0FP38username5mbtpp6parser10map__names(new _M0DTP38username5mbtpp6parser4Expr4EVar(_M0FP38username5mbtpp6parser11parse__mbtiN6recordS6461, tr), _M0FP38username5mbtpp6parser11parse__mbtiN7qualifyS6446(_env, undefined));
             if (_bind$25.$tag === 0) {
               const _EVar = _bind$25;
               _tmp$29 = _EVar._1;
@@ -15020,7 +15872,7 @@ function _M0FP38username5mbtpp6parser11parse__mbti(src, alias, pkg_path, aliases
               }
               break _L$2;
             }
-            _M0MPC15array5Array3setGURP38username5mbtpp6parser3PosORPB5ArrayGRP38username5mbtpp2tt8GoalInfoEEE(decls, first, new _M0DTP38username5mbtpp6parser4Decl4DMbt(_p$21, name$2, _ro, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(decls, first)));
+            _M0MPC15array5Array3setGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt4IcitEE(decls, first, new _M0DTP38username5mbtpp6parser4Decl4DMbt(_p$21, name$2, _ro, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(decls, first)));
           }
         }
       }
@@ -15249,31 +16101,41 @@ function _M0MP38username5mbtpp6parser3Pat3pos(self) {
       const _p$4 = _PLit._0;
       return _p$4;
     }
-    default: {
+    case 4: {
       const _PTuple = self;
       const _p$5 = _PTuple._0;
       return _p$5;
     }
+    case 5: {
+      const _POr = self;
+      const _p$6 = _POr._0;
+      return _p$6;
+    }
+    default: {
+      const _PAs = self;
+      const _p$7 = _PAs._0;
+      return _p$7;
+    }
   }
 }
-function _M0IP38username5mbtpp2tt4IcitPB2Eq5equal(_x_3109, _x_3110) {
-  switch (_x_3109) {
+function _M0IP38username5mbtpp2tt4IcitPB2Eq5equal(_x_3307, _x_3308) {
+  switch (_x_3307) {
     case 0: {
-      if (_x_3110 === 0) {
+      if (_x_3308 === 0) {
         return true;
       } else {
         return false;
       }
     }
     case 1: {
-      if (_x_3110 === 1) {
+      if (_x_3308 === 1) {
         return true;
       } else {
         return false;
       }
     }
     default: {
-      if (_x_3110 === 2) {
+      if (_x_3308 === 2) {
         return true;
       } else {
         return false;
@@ -15994,7 +16856,7 @@ function _M0FP38username5mbtpp2tt10prim__pure(name, args) {
         if (args.length === 1) {
           const _x = args[0];
           if (_x.$tag === 4) {
-            return _M0FP38username5mbtpp2tt10prim__pureN6constrS6426;
+            return _M0FP38username5mbtpp2tt10prim__pureN6constrS6772;
           } else {
             break _L;
           }
@@ -16686,6 +17548,35 @@ function _M0FP38username5mbtpp2tt16match__vals__opt(env, vs, cls) {
                 break;
               }
             }
+            const _bind$21 = cl.cond;
+            if (_bind$21 === undefined) {
+            } else {
+              const _Some = _bind$21;
+              const _g = _Some;
+              _L$4: {
+                _L$5: {
+                  const _bind$22 = _M0FP38username5mbtpp2tt5force(_M0FP38username5mbtpp2tt4eval(env2, _g));
+                  if (_bind$22.$tag === 10) {
+                    const _VLit = _bind$22;
+                    const _x = _VLit._0;
+                    if (_x.$tag === 3) {
+                      const _LBool = _x;
+                      const _x$2 = _LBool._0;
+                      if (_x$2 === true) {
+                      } else {
+                        break _L$2;
+                      }
+                    } else {
+                      break _L$5;
+                    }
+                  } else {
+                    break _L$5;
+                  }
+                  break _L$4;
+                }
+                return undefined;
+              }
+            }
             return _M0FP38username5mbtpp2tt4eval(env2, cl.body);
           }
           case 1: {
@@ -17018,6 +17909,9 @@ function _M0FP38username5mbtpp2tt11pats__slots(ps) {
 }
 function _M0FP38username5mbtpp2tt17clause__body__val(env, lvl, cl) {
   return _M0FP38username5mbtpp2tt4eval(_M0FP38username5mbtpp2tt6concatGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt4IcitEE(env, _M0FP38username5mbtpp2tt11fresh__vars(lvl, _M0FP38username5mbtpp2tt11pats__slots(cl.pats))), cl.body);
+}
+function _M0FP38username5mbtpp2tt18clause__guard__val(env, lvl, cl) {
+  return _M0MPC16option6Option3mapGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValE(cl.cond, (g) => _M0FP38username5mbtpp2tt4eval(_M0FP38username5mbtpp2tt6concatGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt4IcitEE(env, _M0FP38username5mbtpp2tt11fresh__vars(lvl, _M0FP38username5mbtpp2tt11pats__slots(cl.pats))), g));
 }
 function _M0FP38username5mbtpp2tt11force__meta(v) {
   let _tmp$9 = v;
@@ -17356,8 +18250,26 @@ function _M0FP38username5mbtpp2tt6rename(p, v) {
                   _L$7: {
                     _L$8: {
                       const _p$10 = _M0FP38username5mbtpp2tt11pats__slots(_p$8.pats);
+                      const _p$11 = _M0FP38username5mbtpp2tt13lift__pren__n(p, _p$10);
+                      const _p$12 = _M0FP38username5mbtpp2tt18clause__guard__val(_env, p.cod, _p$8);
+                      let _p$13;
+                      if (_p$12 === undefined) {
+                        _p$13 = undefined;
+                      } else {
+                        const _p$14 = _p$12;
+                        const _p$15 = _p$14;
+                        const _bind$29 = _M0FP38username5mbtpp2tt6rename(_p$11, _p$15);
+                        if (_bind$29.$tag === 1) {
+                          const _ok = _bind$29;
+                          _p$13 = _ok._0;
+                        } else {
+                          const _err = _bind$29;
+                          _p$9 = _err._0;
+                          break _L$8;
+                        }
+                      }
                       const _tmp$18 = _p$8.pats;
-                      const _bind$29 = _M0FP38username5mbtpp2tt6rename(_M0FP38username5mbtpp2tt13lift__pren__n(p, _p$10), _M0FP38username5mbtpp2tt17clause__body__val(_env, p.cod, _p$8));
+                      const _bind$29 = _M0FP38username5mbtpp2tt6rename(_p$11, _M0FP38username5mbtpp2tt17clause__body__val(_env, p.cod, _p$8));
                       let _tmp$19;
                       if (_bind$29.$tag === 1) {
                         const _ok = _bind$29;
@@ -17367,7 +18279,7 @@ function _M0FP38username5mbtpp2tt6rename(p, v) {
                         _p$9 = _err._0;
                         break _L$8;
                       }
-                      _bind$28 = new _M0DTPC16result6ResultGRP38username5mbtpp2tt6ClauseRP38username5mbtpp2tt10UnifyErrorE2Ok(new _M0TP38username5mbtpp2tt6Clause(_tmp$18, _tmp$19));
+                      _bind$28 = new _M0DTPC16result6ResultGRP38username5mbtpp2tt6ClauseRP38username5mbtpp2tt10UnifyErrorE2Ok(new _M0TP38username5mbtpp2tt6Clause(_tmp$18, _p$13, _tmp$19));
                       break _L$7;
                     }
                     _bind$28 = new _M0DTPC16result6ResultGRP38username5mbtpp2tt6ClauseRP38username5mbtpp2tt10UnifyErrorE3Err(_p$9);
@@ -18440,27 +19352,56 @@ function _M0FP38username5mbtpp2tt13unify__struct(ts, t0, u0) {
                                     const k = _tmp$12;
                                     if (k < _cls1.length) {
                                       const n = _M0FP38username5mbtpp2tt11pats__slots(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_cls1, k).pats);
+                                      let _tmp$13;
                                       if (n !== _M0FP38username5mbtpp2tt11pats__slots(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_cls2, k).pats)) {
+                                        _tmp$13 = true;
+                                      } else {
+                                        const _bind$20 = _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_cls1, k).cond;
+                                        const _p = !(_bind$20 === undefined);
+                                        const _bind$21 = _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_cls2, k).cond;
+                                        const _p$2 = !(_bind$21 === undefined);
+                                        _tmp$13 = !(_p === _p$2);
+                                      }
+                                      if (_tmp$13) {
                                         return new _M0DTPC16result6ResultGuRP38username5mbtpp2tt10UnifyErrorE3Err(new _M0DTPC15error5Error47username_2fmbtpp_2ftt_2eUnifyError_2eUnifyError("different matches"));
                                       }
                                       let ts2 = ts;
-                                      let _tmp$13 = 0;
+                                      let _tmp$14 = 0;
                                       while (true) {
-                                        const _ = _tmp$13;
+                                        const _ = _tmp$14;
                                         if (_ < n) {
                                           ts2 = _M0FP38username5mbtpp2tt11types__push(ts2, undefined);
-                                          _tmp$13 = _ + 1 | 0;
+                                          _tmp$14 = _ + 1 | 0;
                                           continue;
                                         } else {
                                           break;
                                         }
                                       }
-                                      const _bind$20 = _M0FP38username5mbtpp2tt5unify(ts2, _M0FP38username5mbtpp2tt17clause__body__val(_env1, lvl, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_cls1, k)), _M0FP38username5mbtpp2tt17clause__body__val(_env2, lvl, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_cls2, k)));
-                                      if (_bind$20.$tag === 1) {
-                                        const _ok = _bind$20;
+                                      const _bind$20 = _M0FP38username5mbtpp2tt18clause__guard__val(_env1, lvl, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_cls1, k));
+                                      const _bind$21 = _M0FP38username5mbtpp2tt18clause__guard__val(_env2, lvl, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_cls2, k));
+                                      if (_bind$20 === undefined) {
+                                      } else {
+                                        const _Some = _bind$20;
+                                        const _g1$2 = _Some;
+                                        if (_bind$21 === undefined) {
+                                        } else {
+                                          const _Some$2 = _bind$21;
+                                          const _g2$2 = _Some$2;
+                                          const _bind$22 = _M0FP38username5mbtpp2tt5unify(ts2, _g1$2, _g2$2);
+                                          if (_bind$22.$tag === 1) {
+                                            const _ok = _bind$22;
+                                            _ok._0;
+                                          } else {
+                                            return _bind$22;
+                                          }
+                                        }
+                                      }
+                                      const _bind$22 = _M0FP38username5mbtpp2tt5unify(ts2, _M0FP38username5mbtpp2tt17clause__body__val(_env1, lvl, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_cls1, k)), _M0FP38username5mbtpp2tt17clause__body__val(_env2, lvl, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_cls2, k)));
+                                      if (_bind$22.$tag === 1) {
+                                        const _ok = _bind$22;
                                         _ok._0;
                                       } else {
-                                        return _bind$20;
+                                        return _bind$22;
                                       }
                                       _tmp$12 = k + 1 | 0;
                                       continue;
@@ -18532,6 +19473,9 @@ function _M0FP38username5mbtpp2tt9unify__sp(ts, sp1, sp2) {
   }
   return new _M0DTPC16result6ResultGuRP38username5mbtpp2tt10UnifyErrorE2Ok(undefined);
 }
+function _M0MP38username5mbtpp2tt6Clause3map(self, f) {
+  return new _M0TP38username5mbtpp2tt6Clause(self.pats, _M0MPC16option6Option3mapGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt2TmE(self.cond, f), f(self.body));
+}
 function _M0FP38username5mbtpp2tt9tm__shift(t, d, c) {
   const go = (x) => _M0FP38username5mbtpp2tt9tm__shift(x, d, c);
   switch (t.$tag) {
@@ -18597,7 +19541,7 @@ function _M0FP38username5mbtpp2tt9tm__shift(t, d, c) {
         const _p$5 = _tmp$10;
         if (_p$5 < _p$4) {
           const _p$6 = _cls[_p$5];
-          _p$3[_p$5] = new _M0TP38username5mbtpp2tt6Clause(_p$6.pats, _M0FP38username5mbtpp2tt9tm__shift(_p$6.body, d, c + _M0FP38username5mbtpp2tt11pats__slots(_p$6.pats) | 0));
+          _p$3[_p$5] = _M0MP38username5mbtpp2tt6Clause3map(_p$6, (_p$7) => _M0FP38username5mbtpp2tt9tm__shift(_p$7, d, c + _M0FP38username5mbtpp2tt11pats__slots(_p$6.pats) | 0));
           _tmp$10 = _p$5 + 1 | 0;
           continue;
         } else {
@@ -18761,10 +19705,10 @@ function _M0FP38username5mbtpp2tt6tm__eq(a, b) {
     }
   }
 }
-function _M0FP38username5mbtpp2tt12tm__abstractN2goS7482(_env, x, k) {
-  const a = _env._2;
-  const found = _env._1;
-  const d = _env._0;
+function _M0FP38username5mbtpp2tt12tm__abstractN2goS7857(_env, x, k) {
+  const found = _env._2;
+  const d = _env._1;
+  const a = _env._0;
   const _bind$18 = _M0FP38username5mbtpp2tt12tm__abstract(x, a, d + k | 0);
   const _r = _bind$18._0;
   const _f = _bind$18._1;
@@ -18778,7 +19722,7 @@ function _M0FP38username5mbtpp2tt12tm__abstract(t, a, d) {
     return { _0: new _M0DTP38username5mbtpp2tt2Tm3Var(d), _1: true };
   }
   const found = new _M0TPB8MutLocalGbE(false);
-  const _env = { _0: d, _1: found, _2: a };
+  const _env = { _0: a, _1: d, _2: found };
   let r;
   switch (t.$tag) {
     case 4: {
@@ -18787,7 +19731,7 @@ function _M0FP38username5mbtpp2tt12tm__abstract(t, a, d) {
       const _i = _Lam._1;
       const _g = _Lam._2;
       const _b = _Lam._3;
-      r = new _M0DTP38username5mbtpp2tt2Tm3Lam(_x, _i, _g, _M0FP38username5mbtpp2tt12tm__abstractN2goS7482(_env, _b, 1));
+      r = new _M0DTP38username5mbtpp2tt2Tm3Lam(_x, _i, _g, _M0FP38username5mbtpp2tt12tm__abstractN2goS7857(_env, _b, 1));
       break;
     }
     case 5: {
@@ -18795,7 +19739,7 @@ function _M0FP38username5mbtpp2tt12tm__abstract(t, a, d) {
       const _f = _App._0;
       const _x$2 = _App._1;
       const _i$2 = _App._2;
-      r = new _M0DTP38username5mbtpp2tt2Tm3App(_M0FP38username5mbtpp2tt12tm__abstractN2goS7482(_env, _f, 0), _M0FP38username5mbtpp2tt12tm__abstractN2goS7482(_env, _x$2, 0), _i$2);
+      r = new _M0DTP38username5mbtpp2tt2Tm3App(_M0FP38username5mbtpp2tt12tm__abstractN2goS7857(_env, _f, 0), _M0FP38username5mbtpp2tt12tm__abstractN2goS7857(_env, _x$2, 0), _i$2);
       break;
     }
     case 6: {
@@ -18805,7 +19749,7 @@ function _M0FP38username5mbtpp2tt12tm__abstract(t, a, d) {
       const _g$2 = _Pi._2;
       const _s = _Pi._3;
       const _b$2 = _Pi._4;
-      r = new _M0DTP38username5mbtpp2tt2Tm2Pi(_x$3, _i$3, _g$2, _M0FP38username5mbtpp2tt12tm__abstractN2goS7482(_env, _s, 0), _M0FP38username5mbtpp2tt12tm__abstractN2goS7482(_env, _b$2, 1));
+      r = new _M0DTP38username5mbtpp2tt2Tm2Pi(_x$3, _i$3, _g$2, _M0FP38username5mbtpp2tt12tm__abstractN2goS7857(_env, _s, 0), _M0FP38username5mbtpp2tt12tm__abstractN2goS7857(_env, _b$2, 1));
       break;
     }
     case 7: {
@@ -18814,7 +19758,7 @@ function _M0FP38username5mbtpp2tt12tm__abstract(t, a, d) {
       const _s$2 = _Let._1;
       const _v = _Let._2;
       const _b$3 = _Let._3;
-      r = new _M0DTP38username5mbtpp2tt2Tm3Let(_x$4, _M0FP38username5mbtpp2tt12tm__abstractN2goS7482(_env, _s$2, 0), _M0FP38username5mbtpp2tt12tm__abstractN2goS7482(_env, _v, 0), _M0FP38username5mbtpp2tt12tm__abstractN2goS7482(_env, _b$3, 1));
+      r = new _M0DTP38username5mbtpp2tt2Tm3Let(_x$4, _M0FP38username5mbtpp2tt12tm__abstractN2goS7857(_env, _s$2, 0), _M0FP38username5mbtpp2tt12tm__abstractN2goS7857(_env, _v, 0), _M0FP38username5mbtpp2tt12tm__abstractN2goS7857(_env, _b$3, 1));
       break;
     }
     case 11: {
@@ -18828,7 +19772,7 @@ function _M0FP38username5mbtpp2tt12tm__abstract(t, a, d) {
         const _p$3 = _tmp$9;
         if (_p$3 < _p$2) {
           const _p$4 = _ss[_p$3];
-          _p[_p$3] = _M0FP38username5mbtpp2tt12tm__abstractN2goS7482(_env, _p$4, 0);
+          _p[_p$3] = _M0FP38username5mbtpp2tt12tm__abstractN2goS7857(_env, _p$4, 0);
           _tmp$9 = _p$3 + 1 | 0;
           continue;
         } else {
@@ -18842,7 +19786,7 @@ function _M0FP38username5mbtpp2tt12tm__abstract(t, a, d) {
         const _p$5 = _tmp$10;
         if (_p$5 < _p$4) {
           const _p$6 = _cls[_p$5];
-          _p$3[_p$5] = new _M0TP38username5mbtpp2tt6Clause(_p$6.pats, _M0FP38username5mbtpp2tt12tm__abstractN2goS7482(_env, _p$6.body, _M0FP38username5mbtpp2tt11pats__slots(_p$6.pats)));
+          _p$3[_p$5] = _M0MP38username5mbtpp2tt6Clause3map(_p$6, (_p$7) => _M0FP38username5mbtpp2tt12tm__abstractN2goS7857(_env, _p$7, _M0FP38username5mbtpp2tt11pats__slots(_p$6.pats)));
           _tmp$10 = _p$5 + 1 | 0;
           continue;
         } else {
@@ -18856,7 +19800,7 @@ function _M0FP38username5mbtpp2tt12tm__abstract(t, a, d) {
       const _Raises = t;
       const _s$3 = _Raises._0;
       const _e = _Raises._1;
-      r = new _M0DTP38username5mbtpp2tt2Tm6Raises(_M0FP38username5mbtpp2tt12tm__abstractN2goS7482(_env, _s$3, 0), _M0FP38username5mbtpp2tt12tm__abstractN2goS7482(_env, _e, 0));
+      r = new _M0DTP38username5mbtpp2tt2Tm6Raises(_M0FP38username5mbtpp2tt12tm__abstractN2goS7857(_env, _s$3, 0), _M0FP38username5mbtpp2tt12tm__abstractN2goS7857(_env, _e, 0));
       break;
     }
     default: {
@@ -18948,7 +19892,7 @@ function _M0FP38username5mbtpp2tt8nat__lit(t) {
         case "Nat::Z": {
           const _x$3 = _bind$18._1;
           if (_x$3.length === 0) {
-            return _M0FP38username5mbtpp2tt8nat__litN6constrS7581;
+            return _M0FP38username5mbtpp2tt8nat__litN6constrS7957;
           } else {
             break _L;
           }
@@ -18986,7 +19930,7 @@ function _M0FP38username5mbtpp2tt8nat__lit(t) {
   return undefined;
 }
 function _M0FP38username5mbtpp2tt10op__symbol(n) {
-  const _bind$18 = _M0MPC16string6String9rev__find(n, _M0FP38username5mbtpp2tt10op__symbolN6recordS7596);
+  const _bind$18 = _M0MPC16string6String9rev__find(n, _M0FP38username5mbtpp2tt10op__symbolN6recordS7972);
   let m;
   if (_bind$18 === undefined) {
     return undefined;
@@ -18997,34 +19941,34 @@ function _M0FP38username5mbtpp2tt10op__symbol(n) {
   }
   switch (m) {
     case "op_add": {
-      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7597;
+      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7973;
     }
     case "op_sub": {
-      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7598;
+      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7974;
     }
     case "op_mul": {
-      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7599;
+      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7975;
     }
     case "op_div": {
-      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7600;
+      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7976;
     }
     case "op_mod": {
-      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7601;
+      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7977;
     }
     case "op_equal": {
-      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7602;
+      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7978;
     }
     case "op_lt": {
-      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7603;
+      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7979;
     }
     case "op_le": {
-      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7604;
+      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7980;
     }
     case "op_gt": {
-      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7605;
+      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7981;
     }
     case "op_ge": {
-      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7606;
+      return _M0FP38username5mbtpp2tt10op__symbolN6constrS7982;
     }
     default: {
       return undefined;
@@ -19046,7 +19990,7 @@ function _M0FP38username5mbtpp2tt11short__name(n) {
   if (_bind$18 === undefined) {
     return n;
   } else {
-    const _bind$19 = _M0MPC16string6String9rev__find(n, _M0FP38username5mbtpp2tt11short__nameN6recordS7623);
+    const _bind$19 = _M0MPC16string6String9rev__find(n, _M0FP38username5mbtpp2tt11short__nameN6recordS7999);
     if (_bind$19 === undefined) {
       return n;
     } else {
@@ -19141,7 +20085,7 @@ function _M0FP38username5mbtpp2tt9show__pat(names, p) {
           break;
         }
       }
-      const s = _ps.length === 0 ? _M0FP38username5mbtpp2tt11short__name(_c) : `${_M0FP38username5mbtpp2tt11short__name(_c)}(${_M0MPC15array5Array4joinGsE(shown, _M0FP38username5mbtpp2tt9show__patN6recordS7640)})`;
+      const s = _ps.length === 0 ? _M0FP38username5mbtpp2tt11short__name(_c) : `${_M0FP38username5mbtpp2tt11short__name(_c)}(${_M0MPC15array5Array4joinGsE(shown, _M0FP38username5mbtpp2tt9show__patN6recordS8016)})`;
       return { _0: s, _1: bound };
     }
   }
@@ -19266,10 +20210,10 @@ function _M0FP38username5mbtpp2tt10show__prec(names, t, prec) {
       }
       let s = _M0FP38username5mbtpp2tt10show__prec(names, _h, 3);
       if (impls.length > 0) {
-        s = `${s}[${_M0MPC15array5Array4joinGsE(impls, _M0FP38username5mbtpp2tt10show__precN6recordS7666)}]`;
+        s = `${s}[${_M0MPC15array5Array4joinGsE(impls, _M0FP38username5mbtpp2tt10show__precN6recordS8042)}]`;
       }
       if (expls.length > 0) {
-        s = `${s}(${_M0MPC15array5Array4joinGsE(expls, _M0FP38username5mbtpp2tt10show__precN6recordS7667)})`;
+        s = `${s}(${_M0MPC15array5Array4joinGsE(expls, _M0FP38username5mbtpp2tt10show__precN6recordS8043)})`;
       }
       return s;
     }
@@ -19309,13 +20253,79 @@ function _M0FP38username5mbtpp2tt10show__prec(names, t, prec) {
       }
       let s$2 = "";
       if (impls$2.length > 0) {
-        s$2 = `[${_M0MPC15array5Array4joinGsE(impls$2, _M0FP38username5mbtpp2tt10show__precN6recordS7668)}]`;
+        s$2 = `[${_M0MPC15array5Array4joinGsE(impls$2, _M0FP38username5mbtpp2tt10show__precN6recordS8044)}]`;
       }
       if (expls$2.length > 0) {
-        s$2 = `${s$2}(${_M0MPC15array5Array4joinGsE(expls$2, _M0FP38username5mbtpp2tt10show__precN6recordS7669)})`;
+        s$2 = `${s$2}(${_M0MPC15array5Array4joinGsE(expls$2, _M0FP38username5mbtpp2tt10show__precN6recordS8045)})`;
+      }
+      let pre;
+      let cod;
+      _L: {
+        _L$2: {
+          let r;
+          let e;
+          _L$3: {
+            const _bind$22 = cur;
+            if (_bind$22.$tag === 12) {
+              const _Raises = _bind$22;
+              const _r = _Raises._0;
+              const _x$2 = _Raises._1;
+              if (_x$2.$tag === 5) {
+                const _App = _x$2;
+                const _x$3 = _App._0;
+                if (_x$3.$tag === 1) {
+                  const _Global$2 = _x$3;
+                  const _x$4 = _Global$2._0;
+                  if (_x$4 === "%Async") {
+                    const _x$5 = _App._1;
+                    if (_x$5.$tag === 1) {
+                      const _Global$3 = _x$5;
+                      const _x$6 = _Global$3._0;
+                      switch (_x$6) {
+                        case "%NoRaise": {
+                          pre = "async ";
+                          cod = `${_M0FP38username5mbtpp2tt10show__prec(ns, _r, 1)} noraise`;
+                          break _L;
+                        }
+                        case "Error": {
+                          pre = "async ";
+                          cod = _M0FP38username5mbtpp2tt10show__prec(ns, _r, 1);
+                          break _L;
+                        }
+                        default: {
+                          r = _r;
+                          e = _x$5;
+                          break _L$3;
+                        }
+                      }
+                    } else {
+                      r = _r;
+                      e = _x$5;
+                      break _L$3;
+                    }
+                  } else {
+                    break _L$2;
+                  }
+                } else {
+                  break _L$2;
+                }
+              } else {
+                break _L$2;
+              }
+            } else {
+              break _L$2;
+            }
+          }
+          pre = "async ";
+          cod = `${_M0FP38username5mbtpp2tt10show__prec(ns, r, 1)} raise ${_M0FP38username5mbtpp2tt10show__prec(ns, e, 1)}`;
+          break _L;
+        }
+        pre = "";
+        cod = _M0FP38username5mbtpp2tt10show__prec(ns, cur, 0);
+        break _L;
       }
       const _p = prec > 0;
-      const _p$2 = `${s$2} -> ${_M0FP38username5mbtpp2tt10show__prec(ns, cur, 0)}`;
+      const _p$2 = `${pre}${s$2} -> ${cod}`;
       return _p ? `(${_p$2})` : _p$2;
     }
     case 4: {
@@ -19339,7 +20349,7 @@ function _M0FP38username5mbtpp2tt10show__prec(names, t, prec) {
         }
       }
       const _p$3 = prec > 0;
-      const _p$4 = `(${_M0MPC15array5Array4joinGsE(xs, _M0FP38username5mbtpp2tt10show__precN6recordS7670)}) => ${_M0FP38username5mbtpp2tt10show__prec(ns$2, cur$2, 0)}`;
+      const _p$4 = `(${_M0MPC15array5Array4joinGsE(xs, _M0FP38username5mbtpp2tt10show__precN6recordS8046)}) => ${_M0FP38username5mbtpp2tt10show__prec(ns$2, cur$2, 0)}`;
       return _p$3 ? `(${_p$4})` : _p$4;
     }
     case 7: {
@@ -19381,7 +20391,7 @@ function _M0FP38username5mbtpp2tt10show__prec(names, t, prec) {
               break;
             }
           }
-          const _p$13 = _p$10.length === 1 ? _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_p$10, 0) : `(${_M0MPC15array5Array4joinGsE(_p$10, _M0FP38username5mbtpp2tt10show__precN6recordS7671)})`;
+          const _p$13 = _p$10.length === 1 ? _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_p$10, 0) : `(${_M0MPC15array5Array4joinGsE(_p$10, _M0FP38username5mbtpp2tt10show__precN6recordS8047)})`;
           _p$5[_p$7] = `${_p$13} => ${_M0FP38username5mbtpp2tt10show__prec(_p$9, _p$8.body, 0)}`;
           _tmp$10 = _p$7 + 1 | 0;
           continue;
@@ -19408,9 +20418,9 @@ function _M0FP38username5mbtpp2tt10show__prec(names, t, prec) {
             break;
           }
         }
-        s$3 = `(${_M0MPC15array5Array4joinGsE(_p$7, _M0FP38username5mbtpp2tt10show__precN6recordS7672)})`;
+        s$3 = `(${_M0MPC15array5Array4joinGsE(_p$7, _M0FP38username5mbtpp2tt10show__precN6recordS8048)})`;
       }
-      return `match ${s$3} { ${_M0MPC15array5Array4joinGsE(arms, _M0FP38username5mbtpp2tt10show__precN6recordS7673)} }`;
+      return `match ${s$3} { ${_M0MPC15array5Array4joinGsE(arms, _M0FP38username5mbtpp2tt10show__precN6recordS8049)} }`;
     }
     case 12: {
       const _Raises = t;
@@ -19435,7 +20445,7 @@ function _M0FP38username5mbtpp2tt10show__prec(names, t, prec) {
           break;
         }
       }
-      return `[${_M0MPC15array5Array4joinGsE(_p$7, _M0FP38username5mbtpp2tt10show__precN6recordS7674)}]`;
+      return `[${_M0MPC15array5Array4joinGsE(_p$7, _M0FP38username5mbtpp2tt10show__precN6recordS8050)}]`;
     }
     default: {
       return "<stmt>";
@@ -19445,7 +20455,7 @@ function _M0FP38username5mbtpp2tt10show__prec(names, t, prec) {
 function _M0FP38username5mbtpp2tt8show__tm(names, t) {
   return _M0FP38username5mbtpp2tt10show__prec(names, t, 0);
 }
-function _M0FP38username5mbtpp2tt11quote__withN1qS7779(full, l, x) {
+function _M0FP38username5mbtpp2tt11quote__withN1qS8173(full, l, x) {
   return _M0FP38username5mbtpp2tt11quote__with(l, x, full);
 }
 function _M0FP38username5mbtpp2tt11quote__with(lvl, v, full) {
@@ -19504,7 +20514,7 @@ function _M0FP38username5mbtpp2tt11quote__with(lvl, v, full) {
         const _i = _VLam._1;
         const _g = _VLam._2;
         const _cl = _VLam._3;
-        return new _M0DTP38username5mbtpp2tt2Tm3Lam(_x, _i, _g, _M0FP38username5mbtpp2tt11quote__withN1qS7779(full, lvl + 1 | 0, _M0FP38username5mbtpp2tt4inst(_cl, new _M0DTP38username5mbtpp2tt3Val6VRigid(lvl, []))));
+        return new _M0DTP38username5mbtpp2tt2Tm3Lam(_x, _i, _g, _M0FP38username5mbtpp2tt11quote__withN1qS8173(full, lvl + 1 | 0, _M0FP38username5mbtpp2tt4inst(_cl, new _M0DTP38username5mbtpp2tt3Val6VRigid(lvl, []))));
       }
       case 7: {
         const _VPi = _bind$18;
@@ -19513,7 +20523,7 @@ function _M0FP38username5mbtpp2tt11quote__with(lvl, v, full) {
         const _g$2 = _VPi._2;
         const _a = _VPi._3;
         const _cl$2 = _VPi._4;
-        return new _M0DTP38username5mbtpp2tt2Tm2Pi(_x$2, _i$2, _g$2, _M0FP38username5mbtpp2tt11quote__withN1qS7779(full, lvl, _a), _M0FP38username5mbtpp2tt11quote__withN1qS7779(full, lvl + 1 | 0, _M0FP38username5mbtpp2tt4inst(_cl$2, new _M0DTP38username5mbtpp2tt3Val6VRigid(lvl, []))));
+        return new _M0DTP38username5mbtpp2tt2Tm2Pi(_x$2, _i$2, _g$2, _M0FP38username5mbtpp2tt11quote__withN1qS8173(full, lvl, _a), _M0FP38username5mbtpp2tt11quote__withN1qS8173(full, lvl + 1 | 0, _M0FP38username5mbtpp2tt4inst(_cl$2, new _M0DTP38username5mbtpp2tt3Val6VRigid(lvl, []))));
       }
       case 8: {
         return _M0DTP38username5mbtpp2tt2Tm1U__;
@@ -19530,7 +20540,7 @@ function _M0FP38username5mbtpp2tt11quote__with(lvl, v, full) {
         const _VRaises = _bind$18;
         const _a$2 = _VRaises._0;
         const _e = _VRaises._1;
-        return new _M0DTP38username5mbtpp2tt2Tm6Raises(_M0FP38username5mbtpp2tt11quote__withN1qS7779(full, lvl, _a$2), _M0FP38username5mbtpp2tt11quote__withN1qS7779(full, lvl, _e));
+        return new _M0DTP38username5mbtpp2tt2Tm6Raises(_M0FP38username5mbtpp2tt11quote__withN1qS8173(full, lvl, _a$2), _M0FP38username5mbtpp2tt11quote__withN1qS8173(full, lvl, _e));
       }
       case 12: {
         const _VMatch = _bind$18;
@@ -19545,7 +20555,8 @@ function _M0FP38username5mbtpp2tt11quote__with(lvl, v, full) {
           const _p$3 = _tmp$9;
           if (_p$3 < _p$2) {
             const _p$4 = _cls[_p$3];
-            _p[_p$3] = new _M0TP38username5mbtpp2tt6Clause(_p$4.pats, _M0FP38username5mbtpp2tt11quote__withN1qS7779(full, lvl + _M0FP38username5mbtpp2tt11pats__slots(_p$4.pats) | 0, _M0FP38username5mbtpp2tt17clause__body__val(_env, lvl, _p$4)));
+            const _p$5 = lvl + _M0FP38username5mbtpp2tt11pats__slots(_p$4.pats) | 0;
+            _p[_p$3] = new _M0TP38username5mbtpp2tt6Clause(_p$4.pats, _M0MPC16option6Option3mapGRP38username5mbtpp2tt3ValRP38username5mbtpp2tt2TmE(_M0FP38username5mbtpp2tt18clause__guard__val(_env, lvl, _p$4), (_p$6) => _M0FP38username5mbtpp2tt11quote__withN1qS8173(full, _p$5, _p$6)), _M0FP38username5mbtpp2tt11quote__withN1qS8173(full, _p$5, _M0FP38username5mbtpp2tt17clause__body__val(_env, lvl, _p$4)));
             _tmp$9 = _p$3 + 1 | 0;
             continue;
           } else {
@@ -19560,7 +20571,7 @@ function _M0FP38username5mbtpp2tt11quote__with(lvl, v, full) {
           const _p$5 = _tmp$10;
           if (_p$5 < _p$4) {
             const _p$6 = _vs[_p$5];
-            _p$3[_p$5] = _M0FP38username5mbtpp2tt11quote__withN1qS7779(full, lvl, _p$6);
+            _p$3[_p$5] = _M0FP38username5mbtpp2tt11quote__withN1qS8173(full, lvl, _p$6);
             _tmp$10 = _p$5 + 1 | 0;
             continue;
           } else {
@@ -19585,7 +20596,7 @@ function _M0FP38username5mbtpp2tt11quote__with(lvl, v, full) {
           const _p$7 = _tmp$11;
           if (_p$7 < _p$6) {
             const _p$8 = _vs$2[_p$7];
-            _p$5[_p$7] = _M0FP38username5mbtpp2tt11quote__withN1qS7779(full, lvl, _p$8);
+            _p$5[_p$7] = _M0FP38username5mbtpp2tt11quote__withN1qS8173(full, lvl, _p$8);
             _tmp$11 = _p$7 + 1 | 0;
             continue;
           } else {
@@ -19814,7 +20825,7 @@ function _M0FP38username5mbtpp2tt15instance__paths(t, ty, out, depth) {
           if (_ < _bind$21) {
             const s = _bind$20[_];
             const acc = `${_tr}::super$${s}`;
-            _M0FP38username5mbtpp2tt15instance__paths(new _M0DTP38username5mbtpp2tt2Tm3App(new _M0DTP38username5mbtpp2tt2Tm3App(new _M0DTP38username5mbtpp2tt2Tm6Global(acc), _M0FP38username5mbtpp2tt15instance__pathsN6constrS7901, 1), t, 2), new _M0DTP38username5mbtpp2tt3Val5VData(s, [{ _0: _self_v, _1: 0 }]), out, depth + 1 | 0);
+            _M0FP38username5mbtpp2tt15instance__paths(new _M0DTP38username5mbtpp2tt2Tm3App(new _M0DTP38username5mbtpp2tt2Tm3App(new _M0DTP38username5mbtpp2tt2Tm6Global(acc), _M0FP38username5mbtpp2tt15instance__pathsN6constrS8297, 1), t, 2), new _M0DTP38username5mbtpp2tt3Val5VData(s, [{ _0: _self_v, _1: 0 }]), out, depth + 1 | 0);
             _tmp$9 = _ + 1 | 0;
             continue;
           } else {
@@ -20146,7 +21157,45 @@ function _M0FP38username5mbtpp2tt13insert__until(cxt, t, aty, ty) {
   return _M0FP38username5mbtpp2tt6insert(cxt, t, aty);
 }
 function _M0MP38username5mbtpp2tt3Cxt2at(self, pos) {
-  return new _M0TP38username5mbtpp2tt3Cxt(self.env, self.names, self.types, self.bound, self.muts, self.lvl, pos, self.can_raise, self.ret_ty, self.in_loop);
+  return new _M0TP38username5mbtpp2tt3Cxt(self.env, self.names, self.types, self.bound, self.muts, self.lvl, pos, self.can_raise, self.can_async, self.ret_ty, self.in_loop);
+}
+function _M0FP38username5mbtpp2tt10effect__of(e) {
+  _L: {
+    const _bind$18 = _M0FP38username5mbtpp2tt5force(e);
+    if (_bind$18.$tag === 3) {
+      const _VData = _bind$18;
+      const _x = _VData._0;
+      if (_x === "%Async") {
+        const _x$2 = _VData._1;
+        if (_x$2.length === 1) {
+          const _x$3 = _x$2[0];
+          const _err = _x$3._0;
+          _L$2: {
+            const _bind$19 = _M0FP38username5mbtpp2tt5force(_err);
+            if (_bind$19.$tag === 3) {
+              const _VData$2 = _bind$19;
+              const _x$4 = _VData$2._0;
+              if (_x$4 === "%NoRaise") {
+                return { _0: true, _1: undefined };
+              } else {
+                break _L$2;
+              }
+            } else {
+              break _L$2;
+            }
+          }
+          return { _0: true, _1: _err };
+        } else {
+          break _L;
+        }
+      } else {
+        break _L;
+      }
+    } else {
+      break _L;
+    }
+  }
+  return { _0: false, _1: e };
 }
 function _M0FP38username5mbtpp2tt11group__size(ty, lvl) {
   let n = 0;
@@ -20438,6 +21487,65 @@ function _M0FP38username5mbtpp2tt13place__tagged(cxt, infos, args) {
   }
   return new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp2tt3ArgERP38username5mbtpp2tt9ElabErrorE2Ok(out);
 }
+function _M0FP38username5mbtpp2tt10tm__occurs(t, ix) {
+  let _tmp$9 = t;
+  let _tmp$10 = ix;
+  _L: while (true) {
+    const t$2 = _tmp$9;
+    const ix$2 = _tmp$10;
+    switch (t$2.$tag) {
+      case 0: {
+        const _Var = t$2;
+        const _i = _Var._0;
+        return _i === ix$2;
+      }
+      case 6: {
+        const _Pi = t$2;
+        const _a = _Pi._3;
+        const _b = _Pi._4;
+        if (_M0FP38username5mbtpp2tt10tm__occurs(_a, ix$2)) {
+          return true;
+        } else {
+          _tmp$9 = _b;
+          _tmp$10 = ix$2 + 1 | 0;
+          continue _L;
+        }
+      }
+      case 4: {
+        const _Lam = t$2;
+        const _b$2 = _Lam._3;
+        _tmp$9 = _b$2;
+        _tmp$10 = ix$2 + 1 | 0;
+        continue _L;
+      }
+      case 5: {
+        const _App = t$2;
+        const _f = _App._0;
+        const _a$2 = _App._1;
+        if (_M0FP38username5mbtpp2tt10tm__occurs(_f, ix$2)) {
+          return true;
+        } else {
+          _tmp$9 = _a$2;
+          continue _L;
+        }
+      }
+      case 12: {
+        const _Raises = t$2;
+        const _a$3 = _Raises._0;
+        const _b$3 = _Raises._1;
+        if (_M0FP38username5mbtpp2tt10tm__occurs(_a$3, ix$2)) {
+          return true;
+        } else {
+          _tmp$9 = _b$3;
+          continue _L;
+        }
+      }
+      default: {
+        return false;
+      }
+    }
+  }
+}
 function _M0FP38username5mbtpp2tt12record__name(p, x, global, show) {
   if (p.line >= 1000000 && !_M0MPC15array5Array8containsGiE(_M0FP38username5mbtpp2tt14derived__lines, p.line)) {
     _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_M0FP38username5mbtpp2tt11name__infos, new _M0TP38username5mbtpp2tt8NameInfo(p, x, global, show));
@@ -20457,7 +21565,7 @@ function _M0FP38username5mbtpp2tt18show__global__type(name) {
   }
 }
 function _M0FP38username5mbtpp2tt14record__global(p, x, n) {
-  _M0FP38username5mbtpp2tt12record__name(p, x, n, () => `${n} : ${_M0MPC16option6Option10unwrap__orGsE(_M0FP38username5mbtpp2tt18show__global__type(n), "?")}`);
+  _M0FP38username5mbtpp2tt12record__name(p, x, n, () => `${n} : ${_M0MPC16option6Option10unwrap__orGRP38username5mbtpp6parser4ExprE(_M0FP38username5mbtpp2tt18show__global__type(n), "?")}`);
 }
 function _M0FP38username5mbtpp2tt10head__name(ty) {
   const _bind$18 = _M0FP38username5mbtpp2tt5force(ty);
@@ -20555,14 +21663,14 @@ function _M0FP38username5mbtpp2tt20check__constructible(cxt, name) {
   }
 }
 function _M0MP38username5mbtpp2tt3Cxt13define__local(self, x, ty, v) {
-  return new _M0TP38username5mbtpp2tt3Cxt(_M0FP38username5mbtpp2tt5push1GRP38username5mbtpp2tt3ValE(self.env, v), _M0FP38username5mbtpp2tt5push1GRP38username5mbtpp2tt3ValE(self.names, x), _M0FP38username5mbtpp2tt5push1GRP38username5mbtpp2tt3ValE(self.types, ty), _M0FP38username5mbtpp2tt5push1GbE(self.bound, false), _M0FP38username5mbtpp2tt5push1GbE(self.muts, false), self.lvl + 1 | 0, self.pos, self.can_raise, self.ret_ty, self.in_loop);
+  return new _M0TP38username5mbtpp2tt3Cxt(_M0FP38username5mbtpp2tt5push1GRP38username5mbtpp2tt3ValE(self.env, v), _M0FP38username5mbtpp2tt5push1GRP38username5mbtpp2tt3ValE(self.names, x), _M0FP38username5mbtpp2tt5push1GRP38username5mbtpp2tt3ValE(self.types, ty), _M0FP38username5mbtpp2tt5push1GbE(self.bound, false), _M0FP38username5mbtpp2tt5push1GbE(self.muts, false), self.lvl + 1 | 0, self.pos, self.can_raise, self.can_async, self.ret_ty, self.in_loop);
 }
 function _M0FP38username5mbtpp2tt8nat__pat(p, n) {
   return n === 0 ? new _M0DTP38username5mbtpp6parser3Pat4PCon(p, "Nat::Z", _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4None__, []) : new _M0DTP38username5mbtpp6parser3Pat4PCon(p, "Nat::S", _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4None__, [_M0FP38username5mbtpp2tt8nat__pat(p, n - 1 | 0)]);
 }
 function _M0FP38username5mbtpp2tt13resolve__name(cxt, x, prefer_type, expected) {
-  if (_M0MPC16string6String11has__prefix(x, _M0FP38username5mbtpp2tt13resolve__nameN6recordS8137) && (!_M0MPC16string6String8contains(x, _M0FP38username5mbtpp2tt13resolve__nameN6recordS8138) && !_M0MPB3Map8containsGsRP38username5mbtpp2tt6GEntryE(_M0FP38username5mbtpp2tt7globals, x))) {
-    const _bind$18 = _M0MPC16string6String9rev__find(x, _M0FP38username5mbtpp2tt13resolve__nameN6recordS8139);
+  if (_M0MPC16string6String11has__prefix(x, _M0FP38username5mbtpp2tt13resolve__nameN6recordS8563) && (!_M0MPC16string6String8contains(x, _M0FP38username5mbtpp2tt13resolve__nameN6recordS8564) && !_M0MPB3Map8containsGsRP38username5mbtpp2tt6GEntryE(_M0FP38username5mbtpp2tt7globals, x))) {
+    const _bind$18 = _M0MPC16string6String9rev__find(x, _M0FP38username5mbtpp2tt13resolve__nameN6recordS8565);
     if (_bind$18 === undefined) {
     } else {
       const _Some = _bind$18;
@@ -20622,7 +21730,7 @@ function _M0FP38username5mbtpp2tt13resolve__name(cxt, x, prefer_type, expected) 
       if (exact) {
         return new _M0DTPC16result6ResultGsRP38username5mbtpp2tt9ElabErrorE2Ok(x);
       } else {
-        const _bind$19 = _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(cxt, `ambiguous constructor ${x}: ${_M0MPC15array5Array4joinGsE(cands, _M0FP38username5mbtpp2tt13resolve__nameN6recordS8140)} (add a type annotation or qualify it)`);
+        const _bind$19 = _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(cxt, `ambiguous constructor ${x}: ${_M0MPC15array5Array4joinGsE(cands, _M0FP38username5mbtpp2tt13resolve__nameN6recordS8566)} (add a type annotation or qualify it)`);
         if (_bind$19.$tag === 1) {
           const _ok = _bind$19;
           c = _ok._0;
@@ -20647,7 +21755,7 @@ function _M0FP38username5mbtpp2tt13resolve__name(cxt, x, prefer_type, expected) 
 function _M0MP38username5mbtpp2tt3Cxt4bind(self, x, ty) {
   const _tmp$9 = self.env;
   const _p = self.lvl;
-  return new _M0TP38username5mbtpp2tt3Cxt(_M0FP38username5mbtpp2tt5push1GRP38username5mbtpp2tt3ValE(_tmp$9, new _M0DTP38username5mbtpp2tt3Val6VRigid(_p, [])), _M0FP38username5mbtpp2tt5push1GRP38username5mbtpp2tt3ValE(self.names, x), _M0FP38username5mbtpp2tt5push1GRP38username5mbtpp2tt3ValE(self.types, ty), _M0FP38username5mbtpp2tt5push1GbE(self.bound, true), _M0FP38username5mbtpp2tt5push1GbE(self.muts, false), self.lvl + 1 | 0, self.pos, self.can_raise, self.ret_ty, self.in_loop);
+  return new _M0TP38username5mbtpp2tt3Cxt(_M0FP38username5mbtpp2tt5push1GRP38username5mbtpp2tt3ValE(_tmp$9, new _M0DTP38username5mbtpp2tt3Val6VRigid(_p, [])), _M0FP38username5mbtpp2tt5push1GRP38username5mbtpp2tt3ValE(self.names, x), _M0FP38username5mbtpp2tt5push1GRP38username5mbtpp2tt3ValE(self.types, ty), _M0FP38username5mbtpp2tt5push1GbE(self.bound, true), _M0FP38username5mbtpp2tt5push1GbE(self.muts, false), self.lvl + 1 | 0, self.pos, self.can_raise, self.can_async, self.ret_ty, self.in_loop);
 }
 function _M0FP38username5mbtpp2tt6occurs(lvl, x, v) {
   let _tmp$9 = lvl;
@@ -20816,7 +21924,7 @@ function _M0FP38username5mbtpp2tt6occurs(lvl, x, v) {
 }
 function _M0MP38username5mbtpp2tt3Cxt11define__var(self, x, v) {
   const env = _M0MPC15array5Array4copyGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt4IcitEE(self.env);
-  _M0MPC15array5Array3setGURP38username5mbtpp6parser3PosORPB5ArrayGRP38username5mbtpp2tt8GoalInfoEEE(env, x, v);
+  _M0MPC15array5Array3setGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt4IcitEE(env, x, v);
   const lvl = self.lvl;
   const _p = new Array(env.length);
   const _p$2 = env.length;
@@ -20851,7 +21959,7 @@ function _M0MP38username5mbtpp2tt3Cxt11define__var(self, x, v) {
     }
   }
   const types = _p$4;
-  return new _M0TP38username5mbtpp2tt3Cxt(env2, self.names, types, bound, self.muts, self.lvl, self.pos, self.can_raise, self.ret_ty, self.in_loop);
+  return new _M0TP38username5mbtpp2tt3Cxt(env2, self.names, types, bound, self.muts, self.lvl, self.pos, self.can_raise, self.can_async, self.ret_ty, self.in_loop);
 }
 function _M0MP38username5mbtpp2tt3Cxt6refine(self, eqs0) {
   const eqs = _M0MPC15array5Array4copyGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt4IcitEE(eqs0);
@@ -20985,7 +22093,7 @@ function _M0MP38username5mbtpp2tt3Cxt6refine(self, eqs0) {
                                 return _M0DTP38username5mbtpp2tt7Refined9RConflict__;
                               }
                               if (_sp1.length !== _sp2.length) {
-                                return _M0MP38username5mbtpp2tt3Cxt6refineN6constrS8220;
+                                return _M0MP38username5mbtpp2tt3Cxt6refineN6constrS8646;
                               }
                               let _tmp$9 = 0;
                               while (true) {
@@ -21042,7 +22150,7 @@ function _M0MP38username5mbtpp2tt3Cxt6refine(self, eqs0) {
                   if (other.$tag === 4) {
                     return _M0DTP38username5mbtpp2tt7Refined9RConflict__;
                   }
-                  return _M0MP38username5mbtpp2tt3Cxt6refineN6constrS8219;
+                  return _M0MP38username5mbtpp2tt3Cxt6refineN6constrS8645;
                 } else {
                   cur = _M0MP38username5mbtpp2tt3Cxt11define__var(cur, x, other);
                 }
@@ -21064,10 +22172,10 @@ function _M0MP38username5mbtpp2tt3Cxt6refine(self, eqs0) {
   }
   return new _M0DTP38username5mbtpp2tt7Refined3ROk(cur);
 }
-function _M0FP38username5mbtpp2tt10check__patN6simpleS8260(_env, x, cp) {
+function _M0FP38username5mbtpp2tt18check__pat_2einnerN6simpleS8686(_env, x, cp) {
   const scrut = _env._2;
-  const cxt = _env._1;
-  const ty = _env._0;
+  const ty = _env._1;
+  const cxt = _env._0;
   let c2;
   if (scrut === undefined) {
     c2 = _M0MP38username5mbtpp2tt3Cxt4bind(cxt, x, ty);
@@ -21078,300 +22186,344 @@ function _M0FP38username5mbtpp2tt10check__patN6simpleS8260(_env, x, cp) {
   }
   return new _M0TP38username5mbtpp2tt6PatOut(c2, cp, cxt.lvl, false, undefined);
 }
-function _M0FP38username5mbtpp2tt10check__pat(cxt0, p, ty0, index_unify, scrut, refine_scrut) {
+function _M0FP38username5mbtpp2tt18check__pat_2einner(cxt0, p, ty0, index_unify, scrut, refine_scrut, as_name) {
   let _tmp$9 = cxt0;
   let _tmp$10 = p;
   let _tmp$11 = ty0;
+  let _tmp$12 = as_name;
   _L: while (true) {
     const cxt0$2 = _tmp$9;
     const p$2 = _tmp$10;
     const ty0$2 = _tmp$11;
+    const as_name$2 = _tmp$12;
     const cxt = _M0MP38username5mbtpp2tt3Cxt2at(cxt0$2, _M0MP38username5mbtpp6parser3Pat3pos(p$2));
     const ty = _M0FP38username5mbtpp2tt5force(_M0MP38username5mbtpp2tt3Cxt5subst(cxt, ty0$2));
-    const _env = { _0: ty, _1: cxt, _2: scrut };
+    const _env = { _0: cxt, _1: ty, _2: scrut };
     let l;
     _L$2: {
-      switch (p$2.$tag) {
-        case 0: {
-          const _PVar = p$2;
-          const _x = _PVar._1;
-          return new _M0DTPC16result6ResultGRP38username5mbtpp2tt6PatOutRP38username5mbtpp2tt9ElabErrorE2Ok(_M0FP38username5mbtpp2tt10check__patN6simpleS8260(_env, _x, new _M0DTP38username5mbtpp2tt4CPat5CPVar(_x)));
-        }
-        case 1: {
-          return new _M0DTPC16result6ResultGRP38username5mbtpp2tt6PatOutRP38username5mbtpp2tt9ElabErrorE2Ok(_M0FP38username5mbtpp2tt10check__patN6simpleS8260(_env, "_", _M0DTP38username5mbtpp2tt4CPat6CPWild__));
-        }
-        case 3: {
-          const _PLit = p$2;
-          const _q = _PLit._0;
-          const _x$2 = _PLit._1;
-          if (_x$2.$tag === 0) {
-            const _LInt = _x$2;
-            const _n = _LInt._0;
-            if (_M0IPC16option6OptionPB2Eq5equalGsE(_M0FP38username5mbtpp2tt10head__name(ty), _M0FP38username5mbtpp2tt10check__patN6constrS8261)) {
-              if (_n < 0) {
-                return _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(cxt, "negative natural number");
-              } else {
+      let q;
+      _L$3: {
+        switch (p$2.$tag) {
+          case 0: {
+            const _PVar = p$2;
+            const _x = _PVar._1;
+            return new _M0DTPC16result6ResultGRP38username5mbtpp2tt6PatOutRP38username5mbtpp2tt9ElabErrorE2Ok(_M0FP38username5mbtpp2tt18check__pat_2einnerN6simpleS8686(_env, _x, new _M0DTP38username5mbtpp2tt4CPat5CPVar(_x)));
+          }
+          case 1: {
+            return new _M0DTPC16result6ResultGRP38username5mbtpp2tt6PatOutRP38username5mbtpp2tt9ElabErrorE2Ok(_M0FP38username5mbtpp2tt18check__pat_2einnerN6simpleS8686(_env, "_", _M0DTP38username5mbtpp2tt4CPat6CPWild__));
+          }
+          case 6: {
+            const _PAs = p$2;
+            const _x$2 = _PAs._0;
+            const _x$3 = _PAs._1;
+            switch (_x$3.$tag) {
+              case 1: {
+                const _PWild = _x$3;
+                const _q = _PWild._0;
+                const _x$4 = _PAs._2;
                 _tmp$9 = cxt;
-                _tmp$10 = _M0FP38username5mbtpp2tt8nat__pat(_q, _n);
+                _tmp$10 = new _M0DTP38username5mbtpp6parser3Pat4PVar(_q, _x$4);
                 _tmp$11 = ty;
+                _tmp$12 = "_";
                 continue _L;
               }
+              case 0: {
+                q = _x$2;
+                break _L$3;
+              }
+              case 6: {
+                q = _x$2;
+                break _L$3;
+              }
+              default: {
+                const _x$5 = _PAs._2;
+                _tmp$9 = cxt;
+                _tmp$10 = _x$3;
+                _tmp$11 = ty;
+                _tmp$12 = _x$5;
+                continue _L;
+              }
+            }
+          }
+          case 5: {
+            const _POr = p$2;
+            const _q$2 = _POr._0;
+            return _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(_M0MP38username5mbtpp2tt3Cxt2at(cxt, _q$2), "an or-pattern cannot be used here");
+          }
+          case 3: {
+            const _PLit = p$2;
+            const _q$3 = _PLit._0;
+            const _x$6 = _PLit._1;
+            if (_x$6.$tag === 0) {
+              const _LInt = _x$6;
+              const _n = _LInt._0;
+              if (_M0IPC16option6OptionPB2Eq5equalGsE(_M0FP38username5mbtpp2tt10head__name(ty), _M0FP38username5mbtpp2tt18check__pat_2einnerN6constrS8687)) {
+                if (_n < 0) {
+                  return _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(cxt, "negative natural number");
+                } else {
+                  _tmp$9 = cxt;
+                  _tmp$10 = _M0FP38username5mbtpp2tt8nat__pat(_q$3, _n);
+                  _tmp$11 = ty;
+                  continue _L;
+                }
+              } else {
+                l = _x$6;
+                break _L$2;
+              }
             } else {
-              l = _x$2;
+              l = _x$6;
               break _L$2;
             }
-          } else {
-            l = _x$2;
-            break _L$2;
           }
-        }
-        case 4: {
-          const _PTuple = p$2;
-          const _q$2 = _PTuple._0;
-          const _ps = _PTuple._1;
-          _tmp$9 = cxt;
-          _tmp$10 = new _M0DTP38username5mbtpp6parser3Pat4PCon(_q$2, `Tuple${_M0MPC13int3Int18to__string_2einner(_ps.length, 10)}::mk`, _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4None__, _ps);
-          _tmp$11 = ty;
-          continue _L;
-        }
-        default: {
-          const _PCon = p$2;
-          const _cpos = _PCon._0;
-          const _name = _PCon._1;
-          const _impl_ps = _PCon._2;
-          const _expl_ps = _PCon._3;
-          let _bind$18;
-          if (ty.$tag === 3) {
-            const _VData = ty;
-            const _d = _VData._0;
-            const _sp = _VData._1;
-            _bind$18 = { _0: _d, _1: _sp };
-          } else {
-            const _bind$19 = _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(cxt, `cannot match constructor ${_name} against type ${_M0MP38username5mbtpp2tt3Cxt4show(cxt, ty)}`);
+          case 4: {
+            const _PTuple = p$2;
+            const _q$4 = _PTuple._0;
+            const _ps = _PTuple._1;
+            _tmp$9 = cxt;
+            _tmp$10 = new _M0DTP38username5mbtpp6parser3Pat4PCon(_q$4, `Tuple${_M0MPC13int3Int18to__string_2einner(_ps.length, 10)}::mk`, _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4None__, _ps);
+            _tmp$11 = ty;
+            continue _L;
+          }
+          default: {
+            const _PCon = p$2;
+            const _cpos = _PCon._0;
+            const _name = _PCon._1;
+            const _impl_ps = _PCon._2;
+            const _expl_ps = _PCon._3;
+            let _bind$18;
+            if (ty.$tag === 3) {
+              const _VData = ty;
+              const _d = _VData._0;
+              const _sp = _VData._1;
+              _bind$18 = { _0: _d, _1: _sp };
+            } else {
+              const _bind$19 = _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(cxt, `cannot match constructor ${_name} against type ${_M0MP38username5mbtpp2tt3Cxt4show(cxt, ty)}`);
+              if (_bind$19.$tag === 1) {
+                const _ok = _bind$19;
+                _bind$18 = _ok._0;
+              } else {
+                return _bind$19;
+              }
+            }
+            const _d = _bind$18._0;
+            const _sp = _bind$18._1;
+            const _bind$19 = _M0FP38username5mbtpp2tt13resolve__name(cxt, _name, false, _d);
+            let c;
             if (_bind$19.$tag === 1) {
               const _ok = _bind$19;
-              _bind$18 = _ok._0;
+              c = _ok._0;
             } else {
               return _bind$19;
             }
-          }
-          const _d = _bind$18._0;
-          const _sp = _bind$18._1;
-          const _bind$19 = _M0FP38username5mbtpp2tt13resolve__name(cxt, _name, false, _d);
-          let c;
-          if (_bind$19.$tag === 1) {
-            const _ok = _bind$19;
-            c = _ok._0;
-          } else {
-            return _bind$19;
-          }
-          _M0FP38username5mbtpp2tt14record__global(_cpos, _name, c);
-          let ci;
-          _L$3: {
+            _M0FP38username5mbtpp2tt14record__global(_cpos, _name, c);
+            let ci;
             _L$4: {
-              const _bind$20 = _M0FP38username5mbtpp2tt9con__info(c);
-              if (_bind$20 === undefined) {
+              _L$5: {
+                const _bind$20 = _M0FP38username5mbtpp2tt9con__info(c);
+                if (_bind$20 === undefined) {
+                  break _L$5;
+                } else {
+                  const _Some = _bind$20;
+                  const _ci = _Some;
+                  if (_ci.data === _d) {
+                    ci = _ci;
+                  } else {
+                    break _L$5;
+                  }
+                }
                 break _L$4;
+              }
+              const _bind$20 = _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(cxt, `${_name} is not a constructor of ${_d}`);
+              if (_bind$20.$tag === 1) {
+                const _ok = _bind$20;
+                ci = _ok._0;
               } else {
-                const _Some = _bind$20;
-                const _ci = _Some;
-                if (_ci.data === _d) {
-                  ci = _ci;
-                } else {
-                  break _L$4;
-                }
-              }
-              break _L$3;
-            }
-            const _bind$20 = _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(cxt, `${_name} is not a constructor of ${_d}`);
-            if (_bind$20.$tag === 1) {
-              const _ok = _bind$20;
-              ci = _ok._0;
-            } else {
-              return _bind$20;
-            }
-          }
-          const impl_ps = _M0MPC16option6Option10unwrap__orGRPB5ArrayGRP38username5mbtpp6parser6BinderEE(_impl_ps, []);
-          if (impl_ps.length > ci.nimpl) {
-            const _bind$20 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, `too many implicit arguments in pattern ${_name}`);
-            if (_bind$20.$tag === 1) {
-              const _ok = _bind$20;
-              _ok._0;
-            } else {
-              return _bind$20;
-            }
-          }
-          if (_expl_ps.length !== (ci.nargs - ci.nimpl | 0)) {
-            const _bind$20 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, `constructor ${_name} takes ${_M0MPC13int3Int18to__string_2einner(ci.nargs - ci.nimpl | 0, 10)} argument(s)`);
-            if (_bind$20.$tag === 1) {
-              const _ok = _bind$20;
-              _ok._0;
-            } else {
-              return _bind$20;
-            }
-          }
-          const s = cxt.lvl;
-          let cur = _M0MP38username5mbtpp2tt3Cxt4bind(cxt, "_", ty);
-          const _bind$20 = _M0FP38username5mbtpp2tt13global__entry(cxt, c);
-          let _tmp$12;
-          if (_bind$20.$tag === 1) {
-            const _ok = _bind$20;
-            _tmp$12 = _ok._0;
-          } else {
-            return _bind$20;
-          }
-          let cty = _tmp$12.vty;
-          const args = [];
-          let _tmp$13 = 0;
-          while (true) {
-            const k = _tmp$13;
-            if (k < ci.nparams) {
-              const _bind$21 = _M0FP38username5mbtpp2tt5force(cty);
-              if (_bind$21.$tag === 7) {
-                const _VPi = _bind$21;
-                const _i = _VPi._1;
-                const _cl = _VPi._4;
-                _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(args, { _0: _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_sp, k)._0, _1: _i });
-                cty = _M0FP38username5mbtpp2tt4inst(_cl, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_sp, k)._0);
-              } else {
-                const _bind$22 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, "bad constructor type");
-                if (_bind$22.$tag === 1) {
-                  const _ok = _bind$22;
-                  _ok._0;
-                } else {
-                  return _bind$22;
-                }
-              }
-              _tmp$13 = k + 1 | 0;
-              continue;
-            } else {
-              break;
-            }
-          }
-          const subs = [];
-          let _tmp$14 = 0;
-          while (true) {
-            const k = _tmp$14;
-            if (k < ci.nargs) {
-              if (k < ci.nimpl) {
-                _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(subs, k < impl_ps.length ? _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(impl_ps, k) : new _M0DTP38username5mbtpp6parser3Pat5PWild(_M0MP38username5mbtpp6parser3Pat3pos(p$2)));
-              } else {
-                _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(subs, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_expl_ps, k - ci.nimpl | 0));
-              }
-              _tmp$14 = k + 1 | 0;
-              continue;
-            } else {
-              break;
-            }
-          }
-          const cps = [];
-          let _tmp$15 = 0;
-          while (true) {
-            const k = _tmp$15;
-            if (k < ci.nargs) {
-              const _bind$21 = _M0FP38username5mbtpp2tt5force(cty);
-              if (_bind$21.$tag === 7) {
-                const _VPi = _bind$21;
-                const _i = _VPi._1;
-                const _a = _VPi._3;
-                const _cl = _VPi._4;
-                const _bind$22 = _M0FP38username5mbtpp2tt10check__pat(cur, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(subs, k), _a, true, undefined, false);
-                let out;
-                if (_bind$22.$tag === 1) {
-                  const _ok = _bind$22;
-                  out = _ok._0;
-                } else {
-                  return _bind$22;
-                }
-                if (out.conflict) {
-                  return new _M0DTPC16result6ResultGRP38username5mbtpp2tt6PatOutRP38username5mbtpp2tt9ElabErrorE2Ok(new _M0TP38username5mbtpp2tt6PatOut(out.cxt, _M0DTP38username5mbtpp2tt4CPat6CPWild__, s, true, undefined));
-                }
-                cur = out.cxt;
-                _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(cps, out.pat);
-                const _p = out.slot;
-                _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(args, { _0: new _M0DTP38username5mbtpp2tt3Val6VRigid(_p, []), _1: _i });
-                const _p$2 = out.slot;
-                cty = _M0FP38username5mbtpp2tt4inst(_cl, new _M0DTP38username5mbtpp2tt3Val6VRigid(_p$2, []));
-              } else {
-                const _bind$22 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, "bad constructor type");
-                if (_bind$22.$tag === 1) {
-                  const _ok = _bind$22;
-                  _ok._0;
-                } else {
-                  return _bind$22;
-                }
-              }
-              _tmp$15 = k + 1 | 0;
-              continue;
-            } else {
-              break;
-            }
-          }
-          const ret = _M0FP38username5mbtpp2tt5force(_M0MP38username5mbtpp2tt3Cxt5subst(cur, cty));
-          const cv = new _M0DTP38username5mbtpp2tt3Val4VCon(c, args);
-          const eqs = [{ _0: new _M0DTP38username5mbtpp2tt3Val6VRigid(s, []), _1: cv }];
-          if (index_unify) {
-            if (ret.$tag === 3) {
-              const _VData = ret;
-              const _rsp = _VData._1;
-              let _tmp$16 = ci.nparams;
-              while (true) {
-                const k = _tmp$16;
-                if (k < _sp.length && k < _rsp.length) {
-                  _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(eqs, { _0: _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_sp, k)._0, _1: _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_rsp, k)._0 });
-                  _tmp$16 = k + 1 | 0;
-                  continue;
-                } else {
-                  break;
-                }
+                return _bind$20;
               }
             }
-          }
-          const _bind$21 = _M0MP38username5mbtpp2tt3Cxt6refine(cur, eqs);
-          switch (_bind$21.$tag) {
-            case 0: {
-              const _ROk = _bind$21;
-              const _c2 = _ROk._0;
-              cur = _c2;
-              break;
-            }
-            case 1: {
-              return new _M0DTPC16result6ResultGRP38username5mbtpp2tt6PatOutRP38username5mbtpp2tt9ElabErrorE2Ok(new _M0TP38username5mbtpp2tt6PatOut(cur, _M0DTP38username5mbtpp2tt4CPat6CPWild__, s, true, undefined));
-            }
-            default: {
-              const _RStuck = _bind$21;
-              const _msg = _RStuck._0;
-              const _bind$22 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, `cannot decide whether ${_name} matches ${_M0MP38username5mbtpp2tt3Cxt4show(cxt, ty)} (${_msg}); use \`match e as x in T return R\``);
-              if (_bind$22.$tag === 1) {
-                const _ok = _bind$22;
+            const impl_ps = _M0MPC16option6Option10unwrap__orGRPB5ArrayGRP38username5mbtpp6parser6BinderEE(_impl_ps, []);
+            if (impl_ps.length > ci.nimpl) {
+              const _bind$20 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, `too many implicit arguments in pattern ${_name}`);
+              if (_bind$20.$tag === 1) {
+                const _ok = _bind$20;
                 _ok._0;
               } else {
-                return _bind$22;
+                return _bind$20;
               }
             }
-          }
-          if (refine_scrut) {
-            if (scrut === undefined) {
+            if (_expl_ps.length !== (ci.nargs - ci.nimpl | 0)) {
+              const _bind$20 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, `constructor ${_name} takes ${_M0MPC13int3Int18to__string_2einner(ci.nargs - ci.nimpl | 0, 10)} argument(s)`);
+              if (_bind$20.$tag === 1) {
+                const _ok = _bind$20;
+                _ok._0;
+              } else {
+                return _bind$20;
+              }
+            }
+            const s = cxt.lvl;
+            let cur = _M0MP38username5mbtpp2tt3Cxt4bind(cxt, as_name$2, ty);
+            const _bind$20 = _M0FP38username5mbtpp2tt13global__entry(cxt, c);
+            let _tmp$13;
+            if (_bind$20.$tag === 1) {
+              const _ok = _bind$20;
+              _tmp$13 = _ok._0;
             } else {
-              const _Some = scrut;
-              const _v = _Some;
-              const _bind$23 = _M0MP38username5mbtpp2tt3Cxt6refine(cur, [{ _0: _v, _1: new _M0DTP38username5mbtpp2tt3Val6VRigid(s, []) }]);
-              switch (_bind$23.$tag) {
-                case 0: {
-                  const _ROk$2 = _bind$23;
-                  const _c2$2 = _ROk$2._0;
-                  cur = _c2$2;
-                  break;
+              return _bind$20;
+            }
+            let cty = _tmp$13.vty;
+            const args = [];
+            let _tmp$14 = 0;
+            while (true) {
+              const k = _tmp$14;
+              if (k < ci.nparams) {
+                const _bind$21 = _M0FP38username5mbtpp2tt5force(cty);
+                if (_bind$21.$tag === 7) {
+                  const _VPi = _bind$21;
+                  const _i = _VPi._1;
+                  const _cl = _VPi._4;
+                  _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(args, { _0: _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_sp, k)._0, _1: _i });
+                  cty = _M0FP38username5mbtpp2tt4inst(_cl, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_sp, k)._0);
+                } else {
+                  const _bind$22 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, "bad constructor type");
+                  if (_bind$22.$tag === 1) {
+                    const _ok = _bind$22;
+                    _ok._0;
+                  } else {
+                    return _bind$22;
+                  }
                 }
-                case 1: {
-                  return new _M0DTPC16result6ResultGRP38username5mbtpp2tt6PatOutRP38username5mbtpp2tt9ElabErrorE2Ok(new _M0TP38username5mbtpp2tt6PatOut(cur, _M0DTP38username5mbtpp2tt4CPat6CPWild__, s, true, undefined));
+                _tmp$14 = k + 1 | 0;
+                continue;
+              } else {
+                break;
+              }
+            }
+            const subs = [];
+            let _tmp$15 = 0;
+            while (true) {
+              const k = _tmp$15;
+              if (k < ci.nargs) {
+                if (k < ci.nimpl) {
+                  _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(subs, k < impl_ps.length ? _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(impl_ps, k) : new _M0DTP38username5mbtpp6parser3Pat5PWild(_M0MP38username5mbtpp6parser3Pat3pos(p$2)));
+                } else {
+                  _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(subs, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_expl_ps, k - ci.nimpl | 0));
+                }
+                _tmp$15 = k + 1 | 0;
+                continue;
+              } else {
+                break;
+              }
+            }
+            const cps = [];
+            let _tmp$16 = 0;
+            while (true) {
+              const k = _tmp$16;
+              if (k < ci.nargs) {
+                const _bind$21 = _M0FP38username5mbtpp2tt5force(cty);
+                if (_bind$21.$tag === 7) {
+                  const _VPi = _bind$21;
+                  const _i = _VPi._1;
+                  const _a = _VPi._3;
+                  const _cl = _VPi._4;
+                  const _bind$22 = _M0FP38username5mbtpp2tt18check__pat_2einner(cur, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(subs, k), _a, true, undefined, false, "_");
+                  let out;
+                  if (_bind$22.$tag === 1) {
+                    const _ok = _bind$22;
+                    out = _ok._0;
+                  } else {
+                    return _bind$22;
+                  }
+                  if (out.conflict) {
+                    return new _M0DTPC16result6ResultGRP38username5mbtpp2tt6PatOutRP38username5mbtpp2tt9ElabErrorE2Ok(new _M0TP38username5mbtpp2tt6PatOut(out.cxt, _M0DTP38username5mbtpp2tt4CPat6CPWild__, s, true, undefined));
+                  }
+                  cur = out.cxt;
+                  _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(cps, out.pat);
+                  const _p = out.slot;
+                  _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(args, { _0: new _M0DTP38username5mbtpp2tt3Val6VRigid(_p, []), _1: _i });
+                  const _p$2 = out.slot;
+                  cty = _M0FP38username5mbtpp2tt4inst(_cl, new _M0DTP38username5mbtpp2tt3Val6VRigid(_p$2, []));
+                } else {
+                  const _bind$22 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, "bad constructor type");
+                  if (_bind$22.$tag === 1) {
+                    const _ok = _bind$22;
+                    _ok._0;
+                  } else {
+                    return _bind$22;
+                  }
+                }
+                _tmp$16 = k + 1 | 0;
+                continue;
+              } else {
+                break;
+              }
+            }
+            const ret = _M0FP38username5mbtpp2tt5force(_M0MP38username5mbtpp2tt3Cxt5subst(cur, cty));
+            const cv = new _M0DTP38username5mbtpp2tt3Val4VCon(c, args);
+            const eqs = [{ _0: new _M0DTP38username5mbtpp2tt3Val6VRigid(s, []), _1: cv }];
+            if (index_unify) {
+              if (ret.$tag === 3) {
+                const _VData = ret;
+                const _rsp = _VData._1;
+                let _tmp$17 = ci.nparams;
+                while (true) {
+                  const k = _tmp$17;
+                  if (k < _sp.length && k < _rsp.length) {
+                    _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(eqs, { _0: _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_sp, k)._0, _1: _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_rsp, k)._0 });
+                    _tmp$17 = k + 1 | 0;
+                    continue;
+                  } else {
+                    break;
+                  }
                 }
               }
             }
+            const _bind$21 = _M0MP38username5mbtpp2tt3Cxt6refine(cur, eqs);
+            switch (_bind$21.$tag) {
+              case 0: {
+                const _ROk = _bind$21;
+                const _c2 = _ROk._0;
+                cur = _c2;
+                break;
+              }
+              case 1: {
+                return new _M0DTPC16result6ResultGRP38username5mbtpp2tt6PatOutRP38username5mbtpp2tt9ElabErrorE2Ok(new _M0TP38username5mbtpp2tt6PatOut(cur, _M0DTP38username5mbtpp2tt4CPat6CPWild__, s, true, undefined));
+              }
+              default: {
+                const _RStuck = _bind$21;
+                const _msg = _RStuck._0;
+                const _bind$22 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, `cannot decide whether ${_name} matches ${_M0MP38username5mbtpp2tt3Cxt4show(cxt, ty)} (${_msg}); use \`match e as x in T return R\``);
+                if (_bind$22.$tag === 1) {
+                  const _ok = _bind$22;
+                  _ok._0;
+                } else {
+                  return _bind$22;
+                }
+              }
+            }
+            if (refine_scrut) {
+              if (scrut === undefined) {
+              } else {
+                const _Some = scrut;
+                const _v = _Some;
+                const _bind$23 = _M0MP38username5mbtpp2tt3Cxt6refine(cur, [{ _0: _v, _1: new _M0DTP38username5mbtpp2tt3Val6VRigid(s, []) }]);
+                switch (_bind$23.$tag) {
+                  case 0: {
+                    const _ROk$2 = _bind$23;
+                    const _c2$2 = _ROk$2._0;
+                    cur = _c2$2;
+                    break;
+                  }
+                  case 1: {
+                    return new _M0DTPC16result6ResultGRP38username5mbtpp2tt6PatOutRP38username5mbtpp2tt9ElabErrorE2Ok(new _M0TP38username5mbtpp2tt6PatOut(cur, _M0DTP38username5mbtpp2tt4CPat6CPWild__, s, true, undefined));
+                  }
+                }
+              }
+            }
+            return new _M0DTPC16result6ResultGRP38username5mbtpp2tt6PatOutRP38username5mbtpp2tt9ElabErrorE2Ok(new _M0TP38username5mbtpp2tt6PatOut(cur, new _M0DTP38username5mbtpp2tt4CPat5CPCon(c, cps), s, false, ret));
           }
-          return new _M0DTPC16result6ResultGRP38username5mbtpp2tt6PatOutRP38username5mbtpp2tt9ElabErrorE2Ok(new _M0TP38username5mbtpp2tt6PatOut(cur, new _M0DTP38username5mbtpp2tt4CPat5CPCon(c, cps), s, false, ret));
         }
       }
+      return _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(_M0MP38username5mbtpp2tt3Cxt2at(cxt, q), "a variable cannot be named twice here");
     }
     const _bind$18 = _M0MP38username5mbtpp2tt3Cxt5unify(cxt, ty, _M0FP38username5mbtpp2tt9lit__type(l));
     if (_bind$18.$tag === 1) {
@@ -21380,7 +22532,7 @@ function _M0FP38username5mbtpp2tt10check__pat(cxt0, p, ty0, index_unify, scrut, 
     } else {
       return _bind$18;
     }
-    return new _M0DTPC16result6ResultGRP38username5mbtpp2tt6PatOutRP38username5mbtpp2tt9ElabErrorE2Ok(_M0FP38username5mbtpp2tt10check__patN6simpleS8260(_env, "_", new _M0DTP38username5mbtpp2tt4CPat5CPLit(l)));
+    return new _M0DTPC16result6ResultGRP38username5mbtpp2tt6PatOutRP38username5mbtpp2tt9ElabErrorE2Ok(_M0FP38username5mbtpp2tt18check__pat_2einnerN6simpleS8686(_env, as_name$2, new _M0DTP38username5mbtpp2tt4CPat5CPLit(l)));
   }
 }
 function _M0FP38username5mbtpp2tt16is__subsingleton(cxt, d) {
@@ -21453,6 +22605,46 @@ function _M0FP38username5mbtpp2tt16is__subsingleton(cxt, d) {
   }
   return new _M0DTPC16result6ResultGbRP38username5mbtpp2tt9ElabErrorE2Ok(true);
 }
+function _M0FP38username5mbtpp2tt6splits(p) {
+  let _tmp$9 = p;
+  _L: while (true) {
+    const p$2 = _tmp$9;
+    switch (p$2.$tag) {
+      case 2: {
+        return true;
+      }
+      case 4: {
+        return true;
+      }
+      case 3: {
+        return true;
+      }
+      case 6: {
+        const _PAs = p$2;
+        const _q = _PAs._1;
+        _tmp$9 = _q;
+        continue _L;
+      }
+      case 5: {
+        const _POr = p$2;
+        const _a = _POr._1;
+        const _b = _POr._2;
+        if (_M0FP38username5mbtpp2tt6splits(_a)) {
+          return true;
+        } else {
+          _tmp$9 = _b;
+          continue _L;
+        }
+      }
+      case 0: {
+        return false;
+      }
+      default: {
+        return false;
+      }
+    }
+  }
+}
 function _M0FP38username5mbtpp2tt17check__prop__elim(cxt, tys, arms, goal) {
   let _tmp$9 = 0;
   while (true) {
@@ -21475,22 +22667,7 @@ function _M0FP38username5mbtpp2tt17check__prop__elim(cxt, tys, arms, goal) {
               if (_p$2.$tag === 1) {
                 const _p$3 = _p$2;
                 const _p$4 = _p$3._0;
-                const _p$5 = _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_p$4, k);
-                let _tmp$10;
-                switch (_p$5.$tag) {
-                  case 2: {
-                    _tmp$10 = true;
-                    break;
-                  }
-                  case 4: {
-                    _tmp$10 = true;
-                    break;
-                  }
-                  default: {
-                    _tmp$10 = false;
-                  }
-                }
-                if (_tmp$10) {
+                if (_M0FP38username5mbtpp2tt6splits(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_p$4, k))) {
                   splits = true;
                   break;
                 }
@@ -21701,7 +22878,7 @@ function _M0FP38username5mbtpp2tt10split__var(cxt, l) {
     const _VData = ty;
     const _x = _VData._0;
     if (_x === "Bool") {
-      return new _M0DTPC16result6ResultGORPB5ArrayGRP38username5mbtpp2tt3CxtERP38username5mbtpp2tt9ElabErrorE2Ok(new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp2tt3CxtEE4Some([_M0MP38username5mbtpp2tt3Cxt11define__var(cxt, l, _M0FP38username5mbtpp2tt10split__varN6constrS8424), _M0MP38username5mbtpp2tt3Cxt11define__var(cxt, l, _M0FP38username5mbtpp2tt10split__varN6constrS8426)]));
+      return new _M0DTPC16result6ResultGORPB5ArrayGRP38username5mbtpp2tt3CxtERP38username5mbtpp2tt9ElabErrorE2Ok(new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp2tt3CxtEE4Some([_M0MP38username5mbtpp2tt3Cxt11define__var(cxt, l, _M0FP38username5mbtpp2tt10split__varN6constrS8870), _M0MP38username5mbtpp2tt3Cxt11define__var(cxt, l, _M0FP38username5mbtpp2tt10split__varN6constrS8872)]));
     } else {
       const _sp = _VData._1;
       _L: {
@@ -21860,7 +23037,7 @@ function _M0FP38username5mbtpp2tt15has__empty__var(cxt) {
   }
   return new _M0DTPC16result6ResultGbRP38username5mbtpp2tt9ElabErrorE2Ok(false);
 }
-function _M0FP38username5mbtpp2tt5coverN13show__problemS8477(_env) {
+function _M0FP38username5mbtpp2tt5coverN13show__problemS8923(_env) {
   const problem = _env._1;
   const cxt = _env._0;
   const _p = new Array(problem.length);
@@ -21878,12 +23055,12 @@ function _M0FP38username5mbtpp2tt5coverN13show__problemS8477(_env) {
     }
   }
   const s = _p;
-  return s.length === 1 ? _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(s, 0) : `(${_M0MPC15array5Array4joinGsE(s, _M0FP38username5mbtpp2tt5coverN6recordS8478)})`;
+  return s.length === 1 ? _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(s, 0) : `(${_M0MPC15array5Array4joinGsE(s, _M0FP38username5mbtpp2tt5coverN6recordS8924)})`;
 }
 function _M0FP38username5mbtpp2tt5cover(cxt, problem, clauses, missing, depth) {
   const _env = { _0: cxt, _1: problem };
   if (depth > 64) {
-    _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(missing, `${_M0FP38username5mbtpp2tt5coverN13show__problemS8477(_env)} (too deep)`);
+    _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(missing, `${_M0FP38username5mbtpp2tt5coverN13show__problemS8923(_env)} (too deep)`);
     return new _M0DTPC16result6ResultGuRP38username5mbtpp2tt9ElabErrorE2Ok(undefined);
   }
   const _bind$18 = clauses.length;
@@ -21893,6 +23070,11 @@ function _M0FP38username5mbtpp2tt5cover(cxt, problem, clauses, missing, depth) {
     if (_ < _bind$18) {
       const cl = clauses[_];
       _L$2: {
+        const _bind$19 = cl.cond;
+        if (_bind$19 === undefined) {
+        } else {
+          break _L$2;
+        }
         const rs = [];
         let _tmp$10 = 0;
         while (true) {
@@ -21905,8 +23087,8 @@ function _M0FP38username5mbtpp2tt5cover(cxt, problem, clauses, missing, depth) {
             break;
           }
         }
-        const _bind$19 = _M0FP38username5mbtpp2tt12cov__combine(rs);
-        switch (_bind$19.$tag) {
+        const _bind$20 = _M0FP38username5mbtpp2tt12cov__combine(rs);
+        switch (_bind$20.$tag) {
           case 0: {
             return new _M0DTPC16result6ResultGuRP38username5mbtpp2tt9ElabErrorE2Ok(undefined);
           }
@@ -21914,31 +23096,31 @@ function _M0FP38username5mbtpp2tt5cover(cxt, problem, clauses, missing, depth) {
             break _L$2;
           }
           case 2: {
-            const _CBlocked = _bind$19;
+            const _CBlocked = _bind$20;
             const _l = _CBlocked._0;
-            const _bind$20 = _M0FP38username5mbtpp2tt10split__var(cxt, _l);
-            let _bind$21;
-            if (_bind$20.$tag === 1) {
-              const _ok = _bind$20;
-              _bind$21 = _ok._0;
-            } else {
-              return _bind$20;
-            }
+            const _bind$21 = _M0FP38username5mbtpp2tt10split__var(cxt, _l);
+            let _bind$22;
             if (_bind$21.$tag === 1) {
-              const _Some = _bind$21;
+              const _ok = _bind$21;
+              _bind$22 = _ok._0;
+            } else {
+              return _bind$21;
+            }
+            if (_bind$22.$tag === 1) {
+              const _Some = _bind$22;
               const _cases = _Some._0;
-              const _bind$22 = _cases.length;
+              const _bind$23 = _cases.length;
               let _tmp$11 = 0;
               while (true) {
                 const _$2 = _tmp$11;
-                if (_$2 < _bind$22) {
+                if (_$2 < _bind$23) {
                   const c2 = _cases[_$2];
-                  const _bind$23 = _M0FP38username5mbtpp2tt5cover(c2, problem, clauses, missing, depth + 1 | 0);
-                  if (_bind$23.$tag === 1) {
-                    const _ok = _bind$23;
+                  const _bind$24 = _M0FP38username5mbtpp2tt5cover(c2, problem, clauses, missing, depth + 1 | 0);
+                  if (_bind$24.$tag === 1) {
+                    const _ok = _bind$24;
                     _ok._0;
                   } else {
-                    return _bind$23;
+                    return _bind$24;
                   }
                   _tmp$11 = _$2 + 1 | 0;
                   continue;
@@ -21948,12 +23130,12 @@ function _M0FP38username5mbtpp2tt5cover(cxt, problem, clauses, missing, depth) {
               }
               return new _M0DTPC16result6ResultGuRP38username5mbtpp2tt9ElabErrorE2Ok(undefined);
             } else {
-              _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(missing, _M0FP38username5mbtpp2tt5coverN13show__problemS8477(_env));
+              _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(missing, _M0FP38username5mbtpp2tt5coverN13show__problemS8923(_env));
               return new _M0DTPC16result6ResultGuRP38username5mbtpp2tt9ElabErrorE2Ok(undefined);
             }
           }
           default: {
-            _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(missing, `${_M0FP38username5mbtpp2tt5coverN13show__problemS8477(_env)} (cannot decide)`);
+            _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(missing, `${_M0FP38username5mbtpp2tt5coverN13show__problemS8923(_env)} (cannot decide)`);
             return new _M0DTPC16result6ResultGuRP38username5mbtpp2tt9ElabErrorE2Ok(undefined);
           }
         }
@@ -21973,7 +23155,7 @@ function _M0FP38username5mbtpp2tt5cover(cxt, problem, clauses, missing, depth) {
     return _bind$19;
   }
   if (!_tmp$10) {
-    _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(missing, _M0FP38username5mbtpp2tt5coverN13show__problemS8477(_env));
+    _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(missing, _M0FP38username5mbtpp2tt5coverN13show__problemS8923(_env));
   }
   return new _M0DTPC16result6ResultGuRP38username5mbtpp2tt9ElabErrorE2Ok(undefined);
 }
@@ -21986,7 +23168,409 @@ function _M0FP38username5mbtpp2tt8coverage(cxt, problem, clauses) {
   } else {
     return _bind$18;
   }
-  return missing.length > 0 ? _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, `match is not exhaustive; missing case(s):\n  ${_M0MPC15array5Array4joinGsE(missing, _M0FP38username5mbtpp2tt8coverageN6recordS8508)}`) : new _M0DTPC16result6ResultGuRP38username5mbtpp2tt9ElabErrorE2Ok(undefined);
+  return missing.length > 0 ? _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, `match is not exhaustive; missing case(s):\n  ${_M0MPC15array5Array4joinGsE(missing, _M0FP38username5mbtpp2tt8coverageN6recordS8955)}`) : new _M0DTPC16result6ResultGuRP38username5mbtpp2tt9ElabErrorE2Ok(undefined);
+}
+function _M0FP38username5mbtpp2tt9pat__vars(p, out) {
+  let _tmp$9 = p;
+  _L: while (true) {
+    const p$2 = _tmp$9;
+    switch (p$2.$tag) {
+      case 0: {
+        const _PVar = p$2;
+        const _x = _PVar._1;
+        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(out, _x);
+        return;
+      }
+      case 1: {
+        return;
+      }
+      case 3: {
+        return;
+      }
+      case 2: {
+        const _PCon = p$2;
+        const _i = _PCon._2;
+        const _e = _PCon._3;
+        const _bind$18 = _M0MPC16option6Option10unwrap__orGRPB5ArrayGRP38username5mbtpp6parser6BinderEE(_i, []);
+        const _bind$19 = _bind$18.length;
+        let _tmp$10 = 0;
+        while (true) {
+          const _ = _tmp$10;
+          if (_ < _bind$19) {
+            const q = _bind$18[_];
+            _M0FP38username5mbtpp2tt9pat__vars(q, out);
+            _tmp$10 = _ + 1 | 0;
+            continue;
+          } else {
+            break;
+          }
+        }
+        const _bind$20 = _e.length;
+        let _tmp$11 = 0;
+        while (true) {
+          const _ = _tmp$11;
+          if (_ < _bind$20) {
+            const q = _e[_];
+            _M0FP38username5mbtpp2tt9pat__vars(q, out);
+            _tmp$11 = _ + 1 | 0;
+            continue;
+          } else {
+            return;
+          }
+        }
+      }
+      case 4: {
+        const _PTuple = p$2;
+        const _ps = _PTuple._1;
+        const _bind$21 = _ps.length;
+        let _tmp$12 = 0;
+        while (true) {
+          const _ = _tmp$12;
+          if (_ < _bind$21) {
+            const q = _ps[_];
+            _M0FP38username5mbtpp2tt9pat__vars(q, out);
+            _tmp$12 = _ + 1 | 0;
+            continue;
+          } else {
+            return;
+          }
+        }
+      }
+      case 5: {
+        const _POr = p$2;
+        const _a = _POr._1;
+        _tmp$9 = _a;
+        continue _L;
+      }
+      default: {
+        const _PAs = p$2;
+        const _q = _PAs._1;
+        const _x$2 = _PAs._2;
+        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(out, _x$2);
+        _tmp$9 = _q;
+        continue _L;
+      }
+    }
+  }
+}
+function _M0FP38username5mbtpp2tt9alt__vars(a) {
+  const _p = a._1;
+  const _p$2 = new Array(_p.length);
+  const _p$3 = _p.length;
+  let _tmp$9 = 0;
+  while (true) {
+    const _p$4 = _tmp$9;
+    if (_p$4 < _p$3) {
+      const _p$5 = _p[_p$4];
+      _p$2[_p$4] = _p$5._0;
+      _tmp$9 = _p$4 + 1 | 0;
+      continue;
+    } else {
+      break;
+    }
+  }
+  const out = _p$2;
+  _M0FP38username5mbtpp2tt9pat__vars(a._0, out);
+  _M0MPC15array5Array4sortGsE(out);
+  return out;
+}
+function _M0FP38username5mbtpp2tt9pat__alts(cxt, p) {
+  _L: {
+    switch (p.$tag) {
+      case 0: {
+        break _L;
+      }
+      case 1: {
+        break _L;
+      }
+      case 3: {
+        break _L;
+      }
+      case 2: {
+        const _PCon = p;
+        const _q = _PCon._0;
+        const _c = _PCon._1;
+        const _impl_ps = _PCon._2;
+        const _expl_ps = _PCon._3;
+        const ni = _M0MPC16option6Option10unwrap__orGiE(_M0MPC16option6Option3mapGRPB5ArrayGRP38username5mbtpp6parser3PatEiE(_impl_ps, (ps) => ps.length), 0);
+        const subs = _M0IPC15array5ArrayPB3Add3addGUssEE(_M0MPC16option6Option10unwrap__orGRPB5ArrayGRP38username5mbtpp6parser6BinderEE(_impl_ps, []), _expl_ps);
+        const _bind$18 = _M0FP38username5mbtpp2tt9sub__alts(cxt, subs);
+        let _p;
+        if (_bind$18.$tag === 1) {
+          const _ok = _bind$18;
+          _p = _ok._0;
+        } else {
+          return _bind$18;
+        }
+        const _p$2 = new Array(_p.length);
+        const _p$3 = _p.length;
+        let _tmp$9 = 0;
+        while (true) {
+          const _p$4 = _tmp$9;
+          if (_p$4 < _p$3) {
+            const _p$5 = _p[_p$4];
+            const _p$6 = _p$5._0;
+            const _p$7 = _p$5._1;
+            const _p$8 = _M0MPC16option6Option3mapGRPB5ArrayGRP38username5mbtpp6parser3PatERPB5ArrayGRP38username5mbtpp6parser3PatEE(_impl_ps, (_p$9) => _M0MPC15array9ArrayView9to__ownedGRP38username5mbtpp2tt2TmE(_M0MPC15array5Array21clamped__view_2einnerGRP38username5mbtpp2tt2TmE(_p$6, 0, ni)));
+            _p$2[_p$4] = { _0: new _M0DTP38username5mbtpp6parser3Pat4PCon(_q, _c, _p$8, _M0MPC15array9ArrayView9to__ownedGRP38username5mbtpp2tt2TmE(_M0MPC15array5Array21clamped__view_2einnerGRP38username5mbtpp2tt2TmE(_p$6, ni, undefined))), _1: _p$7 };
+            _tmp$9 = _p$4 + 1 | 0;
+            continue;
+          } else {
+            break;
+          }
+        }
+        return new _M0DTPC16result6ResultGRPB5ArrayGURP38username5mbtpp6parser3PatRPB5ArrayGUssEEEERP38username5mbtpp2tt9ElabErrorE2Ok(_p$2);
+      }
+      case 4: {
+        const _PTuple = p;
+        const _q$2 = _PTuple._0;
+        const _ps = _PTuple._1;
+        const _bind$19 = _M0FP38username5mbtpp2tt9sub__alts(cxt, _ps);
+        let _p$4;
+        if (_bind$19.$tag === 1) {
+          const _ok = _bind$19;
+          _p$4 = _ok._0;
+        } else {
+          return _bind$19;
+        }
+        const _p$5 = new Array(_p$4.length);
+        const _p$6 = _p$4.length;
+        let _tmp$10 = 0;
+        while (true) {
+          const _p$7 = _tmp$10;
+          if (_p$7 < _p$6) {
+            const _p$8 = _p$4[_p$7];
+            _p$5[_p$7] = { _0: new _M0DTP38username5mbtpp6parser3Pat6PTuple(_q$2, _p$8._0), _1: _p$8._1 };
+            _tmp$10 = _p$7 + 1 | 0;
+            continue;
+          } else {
+            break;
+          }
+        }
+        return new _M0DTPC16result6ResultGRPB5ArrayGURP38username5mbtpp6parser3PatRPB5ArrayGUssEEEERP38username5mbtpp2tt9ElabErrorE2Ok(_p$5);
+      }
+      case 5: {
+        const _POr = p;
+        const _q$3 = _POr._0;
+        const _a = _POr._1;
+        const _b = _POr._2;
+        const _bind$20 = _M0FP38username5mbtpp2tt9pat__alts(cxt, _a);
+        let xs;
+        if (_bind$20.$tag === 1) {
+          const _ok = _bind$20;
+          xs = _ok._0;
+        } else {
+          return _bind$20;
+        }
+        const _bind$21 = _M0FP38username5mbtpp2tt9pat__alts(cxt, _b);
+        let ys;
+        if (_bind$21.$tag === 1) {
+          const _ok = _bind$21;
+          ys = _ok._0;
+        } else {
+          return _bind$21;
+        }
+        const vs = _M0FP38username5mbtpp2tt9alt__vars(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(xs, 0));
+        const _bind$22 = ys.length;
+        let _tmp$11 = 0;
+        while (true) {
+          const _ = _tmp$11;
+          if (_ < _bind$22) {
+            const y = ys[_];
+            if (_M0IP016_24default__implPB2Eq10not__equalGRPB5ArrayGsEE(_M0FP38username5mbtpp2tt9alt__vars(y), vs)) {
+              const _bind$23 = _M0MP38username5mbtpp2tt3Cxt4failGuE(_M0MP38username5mbtpp2tt3Cxt2at(cxt, _q$3), "the alternatives of an or-pattern must bind the same variables");
+              if (_bind$23.$tag === 1) {
+                const _ok = _bind$23;
+                _ok._0;
+              } else {
+                return _bind$23;
+              }
+            }
+            _tmp$11 = _ + 1 | 0;
+            continue;
+          } else {
+            break;
+          }
+        }
+        return new _M0DTPC16result6ResultGRPB5ArrayGURP38username5mbtpp6parser3PatRPB5ArrayGUssEEEERP38username5mbtpp2tt9ElabErrorE2Ok(_M0IPC15array5ArrayPB3Add3addGUssEE(xs, ys));
+      }
+      default: {
+        const _PAs = p;
+        const _q$4 = _PAs._0;
+        const _inner = _PAs._1;
+        const _x = _PAs._2;
+        const _bind$23 = _M0FP38username5mbtpp2tt9pat__alts(cxt, _inner);
+        let _p$7;
+        if (_bind$23.$tag === 1) {
+          const _ok = _bind$23;
+          _p$7 = _ok._0;
+        } else {
+          return _bind$23;
+        }
+        const _p$8 = new Array(_p$7.length);
+        const _p$9 = _p$7.length;
+        let _tmp$12 = 0;
+        while (true) {
+          const _p$10 = _tmp$12;
+          if (_p$10 < _p$9) {
+            const _p$11 = _p$7[_p$10];
+            const _p$12 = _p$11._0;
+            const _p$13 = _p$11._1;
+            let _tmp$13;
+            let _p$14;
+            _L$2: {
+              _L$3: {
+                switch (_p$12.$tag) {
+                  case 1: {
+                    _tmp$13 = { _0: new _M0DTP38username5mbtpp6parser3Pat4PVar(_q$4, _x), _1: _p$13 };
+                    break;
+                  }
+                  case 0: {
+                    const _p$15 = _p$12;
+                    const _p$16 = _p$15._1;
+                    _p$14 = _p$16;
+                    break _L$3;
+                  }
+                  case 6: {
+                    const _p$17 = _p$12;
+                    const _p$18 = _p$17._2;
+                    _p$14 = _p$18;
+                    break _L$3;
+                  }
+                  default: {
+                    _tmp$13 = { _0: new _M0DTP38username5mbtpp6parser3Pat3PAs(_q$4, _p$12, _x), _1: _p$13 };
+                  }
+                }
+                break _L$2;
+              }
+              _tmp$13 = { _0: _p$12, _1: _M0IPC15array5ArrayPB3Add3addGUssEE(_p$13, [{ _0: _x, _1: _p$14 }]) };
+            }
+            _p$8[_p$10] = _tmp$13;
+            _tmp$12 = _p$10 + 1 | 0;
+            continue;
+          } else {
+            break;
+          }
+        }
+        return new _M0DTPC16result6ResultGRPB5ArrayGURP38username5mbtpp6parser3PatRPB5ArrayGUssEEEERP38username5mbtpp2tt9ElabErrorE2Ok(_p$8);
+      }
+    }
+  }
+  return new _M0DTPC16result6ResultGRPB5ArrayGURP38username5mbtpp6parser3PatRPB5ArrayGUssEEEERP38username5mbtpp2tt9ElabErrorE2Ok([{ _0: p, _1: [] }]);
+}
+function _M0FP38username5mbtpp2tt9sub__alts(cxt, ps) {
+  let out = [{ _0: [], _1: [] }];
+  const _bind$18 = ps.length;
+  let _tmp$9 = 0;
+  while (true) {
+    const _ = _tmp$9;
+    if (_ < _bind$18) {
+      const p = ps[_];
+      const _bind$19 = _M0FP38username5mbtpp2tt9pat__alts(cxt, p);
+      let alts;
+      if (_bind$19.$tag === 1) {
+        const _ok = _bind$19;
+        alts = _ok._0;
+      } else {
+        return _bind$19;
+      }
+      const next = [];
+      const _bind$20 = out;
+      const _bind$21 = _bind$20.length;
+      let _tmp$10 = 0;
+      while (true) {
+        const _$2 = _tmp$10;
+        if (_$2 < _bind$21) {
+          const prefix = _bind$20[_$2];
+          const _bind$22 = alts.length;
+          let _tmp$11 = 0;
+          while (true) {
+            const _$3 = _tmp$11;
+            if (_$3 < _bind$22) {
+              const a = alts[_$3];
+              _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(next, { _0: _M0IPC15array5ArrayPB3Add3addGUssEE(prefix._0, [a._0]), _1: _M0IPC15array5ArrayPB3Add3addGUssEE(prefix._1, a._1) });
+              _tmp$11 = _$3 + 1 | 0;
+              continue;
+            } else {
+              break;
+            }
+          }
+          _tmp$10 = _$2 + 1 | 0;
+          continue;
+        } else {
+          break;
+        }
+      }
+      out = next;
+      _tmp$9 = _ + 1 | 0;
+      continue;
+    } else {
+      break;
+    }
+  }
+  return new _M0DTPC16result6ResultGRPB5ArrayGURPB5ArrayGRP38username5mbtpp6parser3PatERPB5ArrayGUssEEEERP38username5mbtpp2tt9ElabErrorE2Ok(out);
+}
+function _M0FP38username5mbtpp2tt12expand__arms(cxt, arms) {
+  const out = [];
+  const _bind$18 = arms.length;
+  let _tmp$9 = 0;
+  while (true) {
+    const _ = _tmp$9;
+    if (_ < _bind$18) {
+      const arm = arms[_];
+      const _bind$19 = _M0FP38username5mbtpp2tt9pat__alts(cxt, arm.pat);
+      let _bind$20;
+      if (_bind$19.$tag === 1) {
+        const _ok = _bind$19;
+        _bind$20 = _ok._0;
+      } else {
+        return _bind$19;
+      }
+      const _bind$21 = _bind$20.length;
+      let _tmp$10 = 0;
+      while (true) {
+        const _$2 = _tmp$10;
+        if (_$2 < _bind$21) {
+          const a = _bind$20[_$2];
+          const _pat = a._0;
+          const _al = a._1;
+          const wrap = (e) => {
+            if (_al.length === 0) {
+              return e;
+            }
+            const p = _M0MP38username5mbtpp6parser4Expr3pos(e);
+            const _p = new Array(_al.length);
+            const _p$2 = _al.length;
+            let _tmp$11 = 0;
+            while (true) {
+              const _p$3 = _tmp$11;
+              if (_p$3 < _p$2) {
+                const _p$4 = _al[_p$3];
+                _p[_p$3] = new _M0DTP38username5mbtpp6parser4Stmt4SLet(p, new _M0DTP38username5mbtpp6parser3Pat4PVar(p, _p$4._0), undefined, new _M0DTP38username5mbtpp6parser4Expr4EVar(p, _p$4._1));
+                _tmp$11 = _p$3 + 1 | 0;
+                continue;
+              } else {
+                break;
+              }
+            }
+            const stmts = _p;
+            _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(stmts, new _M0DTP38username5mbtpp6parser4Stmt5SExpr(p, e));
+            return new _M0DTP38username5mbtpp6parser4Expr6EBlock(p, stmts);
+          };
+          _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(out, new _M0TP38username5mbtpp6parser3Arm(arm.pos, _pat, _M0MPC16option6Option3mapGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser4ExprE(arm.cond, wrap), _M0MPC16option6Option3mapGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser4ExprE(arm.rhs, wrap)));
+          _tmp$10 = _$2 + 1 | 0;
+          continue;
+        } else {
+          break;
+        }
+      }
+      _tmp$9 = _ + 1 | 0;
+      continue;
+    } else {
+      break;
+    }
+  }
+  return new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser3ArmERP38username5mbtpp2tt9ElabErrorE2Ok(out);
 }
 function _M0FP38username5mbtpp2tt10flat__args(e, out) {
   if (e.$tag === 6) {
@@ -22108,7 +23692,7 @@ function _M0FP38username5mbtpp2tt9dyn__dict(d, tr, get_inst) {
     if (_ < _bind$19) {
       const f = _bind$18[_];
       _L: {
-        if (_M0MPC16string6String11has__prefix(f, _M0FP38username5mbtpp2tt9dyn__dictN6recordS8554)) {
+        if (_M0MPC16string6String11has__prefix(f, _M0FP38username5mbtpp2tt9dyn__dictN6recordS9114)) {
           const s = f.substring(6, f.length);
           _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(args, { _0: _M0FP38username5mbtpp2tt9dyn__dict(d, s, _M0FP38username5mbtpp2tt11super__inst(d, tr, s, get_inst)), _1: 0 });
           break _L;
@@ -22203,7 +23787,7 @@ function _M0FP38username5mbtpp2tt13trait__supers(tr) {
       if (_x$2.$tag === 1) {
         const _Some$2 = _x$2;
         const _fs = _Some$2._0;
-        const _p = _M0MPC15array5Array6filterGsE(_fs, (f) => _M0MPC16string6String11has__prefix(f, _M0FP38username5mbtpp2tt13trait__supersN6recordS8589));
+        const _p = _M0MPC15array5Array6filterGsE(_fs, (f) => _M0MPC16string6String11has__prefix(f, _M0FP38username5mbtpp2tt13trait__supersN6recordS9149));
         const _p$2 = new Array(_p.length);
         const _p$3 = _p.length;
         let _tmp$9 = 0;
@@ -22428,7 +24012,7 @@ function _M0FP38username5mbtpp2tt13trait__bounds(cxt, e) {
   return new _M0DTPC16result6ResultGORPB5ArrayGsERP38username5mbtpp2tt9ElabErrorE2Ok(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__);
 }
 function _M0FP38username5mbtpp2tt10empty__cxt(pos) {
-  return new _M0TP38username5mbtpp2tt3Cxt([], [], [], [], [], 0, pos, false, undefined, false);
+  return new _M0TP38username5mbtpp2tt3Cxt([], [], [], [], [], 0, pos, false, false, undefined, false);
 }
 function _M0FP38username5mbtpp2tt10has__metas(t) {
   let _tmp$9 = t;
@@ -22726,7 +24310,7 @@ function _M0FP38username5mbtpp2tt14solve__pending(final_) {
   }
   return new _M0DTPC16result6ResultGuRP38username5mbtpp2tt9ElabErrorE2Ok(undefined);
 }
-function _M0FP38username5mbtpp2tt4zonkN12solved__headS8725(h) {
+function _M0FP38username5mbtpp2tt4zonkN12solved__headS9285(h) {
   let m;
   _L: {
     switch (h.$tag) {
@@ -22764,7 +24348,7 @@ function _M0FP38username5mbtpp2tt4zonk(lvl, t) {
         const _bind$18 = _M0FP38username5mbtpp2tt12flatten__app(t);
         const _h = _bind$18._0;
         const _args = _bind$18._1;
-        if (_M0FP38username5mbtpp2tt4zonkN12solved__headS8725(_h)) {
+        if (_M0FP38username5mbtpp2tt4zonkN12solved__headS9285(_h)) {
           return _M0FP38username5mbtpp2tt5quote(lvl, _M0FP38username5mbtpp2tt4eval(_M0FP38username5mbtpp2tt11fresh__vars(0, lvl), t));
         } else {
           const _tmp$9 = go(_h);
@@ -22843,7 +24427,7 @@ function _M0FP38username5mbtpp2tt4zonk(lvl, t) {
           const _p$5 = _tmp$10;
           if (_p$5 < _p$4) {
             const _p$6 = _cls[_p$5];
-            _p$3[_p$5] = new _M0TP38username5mbtpp2tt6Clause(_p$6.pats, _M0FP38username5mbtpp2tt4zonk(lvl + _M0FP38username5mbtpp2tt11pats__slots(_p$6.pats) | 0, _p$6.body));
+            _p$3[_p$5] = _M0MP38username5mbtpp2tt6Clause3map(_p$6, (_p$7) => _M0FP38username5mbtpp2tt4zonk(lvl + _M0FP38username5mbtpp2tt11pats__slots(_p$6.pats) | 0, _p$7));
             _tmp$10 = _p$5 + 1 | 0;
             continue;
           } else {
@@ -22863,7 +24447,7 @@ function _M0FP38username5mbtpp2tt4zonk(lvl, t) {
           const _p$7 = _tmp$11;
           if (_p$7 < _p$6) {
             const _p$8 = _cls$2[_p$7];
-            _p$5[_p$7] = new _M0TP38username5mbtpp2tt6Clause(_p$8.pats, _M0FP38username5mbtpp2tt4zonk(lvl + _M0FP38username5mbtpp2tt11pats__slots(_p$8.pats) | 0, _p$8.body));
+            _p$5[_p$7] = _M0MP38username5mbtpp2tt6Clause3map(_p$8, (_p$9) => _M0FP38username5mbtpp2tt4zonk(lvl + _M0FP38username5mbtpp2tt11pats__slots(_p$8.pats) | 0, _p$9));
             _tmp$11 = _p$7 + 1 | 0;
             continue;
           } else {
@@ -22931,7 +24515,7 @@ function _M0FP38username5mbtpp2tt4zonk(lvl, t) {
       }
     }
   }
-  return _M0FP38username5mbtpp2tt4zonkN12solved__headS8725(t) ? _M0FP38username5mbtpp2tt5quote(lvl, _M0FP38username5mbtpp2tt4eval(_M0FP38username5mbtpp2tt11fresh__vars(0, lvl), t)) : t;
+  return _M0FP38username5mbtpp2tt4zonkN12solved__headS9285(t) ? _M0FP38username5mbtpp2tt5quote(lvl, _M0FP38username5mbtpp2tt4eval(_M0FP38username5mbtpp2tt11fresh__vars(0, lvl), t)) : t;
 }
 function _M0FP38username5mbtpp2tt14finish_2einner(cxt, what, ts, lvl) {
   const _bind$18 = _M0FP38username5mbtpp2tt14solve__pending(false);
@@ -23051,65 +24635,6 @@ function _M0FP38username5mbtpp2tt4lams(bs, body) {
   }
   return t;
 }
-function _M0FP38username5mbtpp2tt10tm__occurs(t, ix) {
-  let _tmp$9 = t;
-  let _tmp$10 = ix;
-  _L: while (true) {
-    const t$2 = _tmp$9;
-    const ix$2 = _tmp$10;
-    switch (t$2.$tag) {
-      case 0: {
-        const _Var = t$2;
-        const _i = _Var._0;
-        return _i === ix$2;
-      }
-      case 6: {
-        const _Pi = t$2;
-        const _a = _Pi._3;
-        const _b = _Pi._4;
-        if (_M0FP38username5mbtpp2tt10tm__occurs(_a, ix$2)) {
-          return true;
-        } else {
-          _tmp$9 = _b;
-          _tmp$10 = ix$2 + 1 | 0;
-          continue _L;
-        }
-      }
-      case 4: {
-        const _Lam = t$2;
-        const _b$2 = _Lam._3;
-        _tmp$9 = _b$2;
-        _tmp$10 = ix$2 + 1 | 0;
-        continue _L;
-      }
-      case 5: {
-        const _App = t$2;
-        const _f = _App._0;
-        const _a$2 = _App._1;
-        if (_M0FP38username5mbtpp2tt10tm__occurs(_f, ix$2)) {
-          return true;
-        } else {
-          _tmp$9 = _a$2;
-          continue _L;
-        }
-      }
-      case 12: {
-        const _Raises = t$2;
-        const _a$3 = _Raises._0;
-        const _b$3 = _Raises._1;
-        if (_M0FP38username5mbtpp2tt10tm__occurs(_a$3, ix$2)) {
-          return true;
-        } else {
-          _tmp$9 = _b$3;
-          continue _L;
-        }
-      }
-      default: {
-        return false;
-      }
-    }
-  }
-}
 function _M0FP38username5mbtpp2tt20trait__method__names(tr) {
   _L: {
     const _bind$18 = _M0FP38username5mbtpp2tt10data__info(tr);
@@ -23122,7 +24647,7 @@ function _M0FP38username5mbtpp2tt20trait__method__names(tr) {
       if (_x$2.$tag === 1) {
         const _Some$2 = _x$2;
         const _fs = _Some$2._0;
-        return _M0MPC15array5Array6filterGsE(_fs, (f) => !_M0MPC16string6String11has__prefix(f, _M0FP38username5mbtpp2tt20trait__method__namesN6recordS8841));
+        return _M0MPC15array5Array6filterGsE(_fs, (f) => !_M0MPC16string6String11has__prefix(f, _M0FP38username5mbtpp2tt20trait__method__namesN6recordS9385));
       } else {
         break _L;
       }
@@ -23140,7 +24665,7 @@ function _M0FP38username5mbtpp2tt23object__safety__problem(tr) {
     const _x$2 = _x.kind;
     if (_x$2.$tag === 8) {
     } else {
-      return _M0FP38username5mbtpp2tt23object__safety__problemN6constrS8851;
+      return _M0FP38username5mbtpp2tt23object__safety__problemN6constrS9395;
     }
   }
   const _bind$19 = _M0FP38username5mbtpp2tt13trait__supers(tr);
@@ -23225,7 +24750,7 @@ function _M0FP38username5mbtpp2tt23object__safety__problem(tr) {
   return undefined;
 }
 function _M0FP38username5mbtpp2tt6if__tm(c, t, e) {
-  return new _M0DTP38username5mbtpp2tt2Tm5Match([c], [new _M0TP38username5mbtpp2tt6Clause([_M0FP38username5mbtpp2tt6if__tmN6constrS8881], t), new _M0TP38username5mbtpp2tt6Clause([_M0DTP38username5mbtpp2tt4CPat6CPWild__], e)]);
+  return new _M0DTP38username5mbtpp2tt2Tm5Match([c], [new _M0TP38username5mbtpp2tt6Clause([_M0FP38username5mbtpp2tt6if__tmN6constrS9425], undefined, t), new _M0TP38username5mbtpp2tt6Clause([_M0DTP38username5mbtpp2tt4CPat6CPWild__], undefined, e)]);
 }
 function _M0FP38username5mbtpp2tt10op__method(op) {
   switch (op) {
@@ -23310,6 +24835,226 @@ function _M0FP38username5mbtpp2tt14reject__tagged(cxt, ps) {
   }
   return new _M0DTPC16result6ResultGuRP38username5mbtpp2tt9ElabErrorE2Ok(undefined);
 }
+function _M0FP38username5mbtpp2tt9conjuncts(c, out) {
+  let _tmp$9 = c;
+  while (true) {
+    const c$2 = _tmp$9;
+    _L: {
+      if (c$2.$tag === 15) {
+        const _EBin = c$2;
+        const _x = _EBin._1;
+        if (_x === "&&") {
+          const _a = _EBin._2;
+          const _b = _EBin._3;
+          _M0FP38username5mbtpp2tt9conjuncts(_a, out);
+          _tmp$9 = _b;
+          continue;
+        } else {
+          break _L;
+        }
+      } else {
+        break _L;
+      }
+    }
+    _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(out, c$2);
+    return;
+  }
+}
+function _M0FP38username5mbtpp2tt10cond__exprN5boolsS9446(cs, i) {
+  let k = i;
+  let e = undefined;
+  while (true) {
+    let _tmp$9;
+    if (k < cs.length) {
+      const _bind$18 = _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(cs, k);
+      let _tmp$10;
+      if (_bind$18.$tag === 31) {
+        _tmp$10 = true;
+      } else {
+        _tmp$10 = false;
+      }
+      _tmp$9 = !_tmp$10;
+    } else {
+      _tmp$9 = false;
+    }
+    if (_tmp$9) {
+      const _bind$18 = e;
+      let _tmp$10;
+      if (_bind$18 === undefined) {
+        _tmp$10 = _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(cs, k);
+      } else {
+        const _Some = _bind$18;
+        const _a = _Some;
+        _tmp$10 = new _M0DTP38username5mbtpp6parser4Expr4EBin(_M0MP38username5mbtpp6parser4Expr3pos(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(cs, k)), "&&", _a, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(cs, k));
+      }
+      e = _tmp$10;
+      k = k + 1 | 0;
+      continue;
+    } else {
+      break;
+    }
+  }
+  return { _0: e, _1: k };
+}
+function _M0FP38username5mbtpp2tt10cond__exprN2goS9447(_env, i) {
+  const f = _env._2;
+  const t = _env._1;
+  const cs = _env._0;
+  if (i >= cs.length) {
+    return t;
+  }
+  const _bind$18 = _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(cs, i);
+  if (_bind$18.$tag === 31) {
+    const _EIs = _bind$18;
+    const _p = _EIs._0;
+    const _e = _EIs._1;
+    const _pat = _EIs._2;
+    const _bind$19 = _M0FP38username5mbtpp2tt10cond__exprN5boolsS9446(cs, i + 1 | 0);
+    const _g = _bind$19._0;
+    const _k = _bind$19._1;
+    return new _M0DTP38username5mbtpp6parser4Expr6EMatch(_p, _e, undefined, [new _M0TP38username5mbtpp6parser3Arm(_p, _pat, _g, _M0FP38username5mbtpp2tt10cond__exprN2goS9447(_env, _k)), new _M0TP38username5mbtpp6parser3Arm(_p, new _M0DTP38username5mbtpp6parser3Pat5PWild(_p), undefined, f)]);
+  } else {
+    const _bind$19 = _M0FP38username5mbtpp2tt10cond__exprN5boolsS9446(cs, i);
+    const _g = _bind$19._0;
+    const _k = _bind$19._1;
+    let _tmp$9;
+    if (_g === undefined) {
+      _tmp$9 = $panic();
+    } else {
+      const _p = _g;
+      _tmp$9 = _p;
+    }
+    return new _M0DTP38username5mbtpp6parser4Expr3EIf(_M0MP38username5mbtpp6parser4Expr3pos(_bind$18), _tmp$9, _M0FP38username5mbtpp2tt10cond__exprN2goS9447(_env, _k), f);
+  }
+}
+function _M0FP38username5mbtpp2tt10cond__expr(c, t, f) {
+  const cs = [];
+  _M0FP38username5mbtpp2tt9conjuncts(c, cs);
+  const _env = { _0: cs, _1: t, _2: f };
+  return _M0FP38username5mbtpp2tt10cond__exprN2goS9447(_env, 0);
+}
+function _M0FP38username5mbtpp2tt7has__is(c) {
+  let _tmp$9 = c;
+  _L: while (true) {
+    const c$2 = _tmp$9;
+    switch (c$2.$tag) {
+      case 31: {
+        return true;
+      }
+      case 15: {
+        const _EBin = c$2;
+        const _x = _EBin._1;
+        if (_x === "&&") {
+          const _a = _EBin._2;
+          const _b = _EBin._3;
+          if (_M0FP38username5mbtpp2tt7has__is(_a)) {
+            return true;
+          } else {
+            _tmp$9 = _b;
+            continue _L;
+          }
+        } else {
+          return false;
+        }
+      }
+      default: {
+        return false;
+      }
+    }
+  }
+}
+function _M0FP38username5mbtpp2tt16fresh__name__gen(base) {
+  _M0FP38username5mbtpp2tt2st.fresh = _M0FP38username5mbtpp2tt2st.fresh + 1 | 0;
+  return `${base}$${_M0MPC13int3Int18to__string_2einner(_M0FP38username5mbtpp2tt2st.fresh, 10)}`;
+}
+function _M0FP38username5mbtpp2tt12try__noraiseN4wrapS9486(c, e) {
+  return new _M0DTP38username5mbtpp6parser4Expr4EApp(_M0MP38username5mbtpp6parser4Expr3pos(e), new _M0DTP38username5mbtpp6parser4Expr4EVar(_M0MP38username5mbtpp6parser4Expr3pos(e), `Result::${c}`), _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__, new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4Some([e]));
+}
+function _M0FP38username5mbtpp2tt12try__noraise(p, body, arms, ok) {
+  const v = _M0FP38username5mbtpp2tt16fresh__name__gen("__ok");
+  const r = _M0FP38username5mbtpp2tt16fresh__name__gen("__err");
+  const _p = new Array(arms.length);
+  const _p$2 = arms.length;
+  let _tmp$9 = 0;
+  while (true) {
+    const _p$3 = _tmp$9;
+    if (_p$3 < _p$2) {
+      const _p$4 = arms[_p$3];
+      _p[_p$3] = new _M0TP38username5mbtpp6parser3Arm(_p$4.pos, _p$4.pat, _p$4.cond, _M0MPC16option6Option3mapGRP38username5mbtpp6parser4ExprRP38username5mbtpp6parser4ExprE(_p$4.rhs, (_p$5) => _M0FP38username5mbtpp2tt12try__noraiseN4wrapS9486("Err", _p$5)));
+      _tmp$9 = _p$3 + 1 | 0;
+      continue;
+    } else {
+      break;
+    }
+  }
+  const handlers = _p;
+  return new _M0DTP38username5mbtpp6parser4Expr6EMatch(p, new _M0DTP38username5mbtpp6parser4Expr4ETry(p, _M0FP38username5mbtpp2tt12try__noraiseN4wrapS9486("Ok", body), handlers, _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3ArmEE4None__), undefined, [new _M0TP38username5mbtpp6parser3Arm(p, new _M0DTP38username5mbtpp6parser3Pat4PCon(p, "Result::Ok", _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4None__, [new _M0DTP38username5mbtpp6parser3Pat4PVar(p, v)]), undefined, new _M0DTP38username5mbtpp6parser4Expr6EMatch(p, new _M0DTP38username5mbtpp6parser4Expr4EVar(p, v), undefined, ok)), new _M0TP38username5mbtpp6parser3Arm(p, new _M0DTP38username5mbtpp6parser3Pat4PCon(p, "Result::Err", _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser3PatEE4None__, [new _M0DTP38username5mbtpp6parser3Pat4PVar(p, r)]), undefined, new _M0DTP38username5mbtpp6parser4Expr4EVar(p, r))]);
+}
+function _M0FP38username5mbtpp2tt5sugar(e) {
+  _L: {
+    let p;
+    _L$2: {
+      switch (e.$tag) {
+        case 10: {
+          const _EIf = e;
+          const _p = _EIf._0;
+          const _c = _EIf._1;
+          const _t = _EIf._2;
+          const _el = _EIf._3;
+          if (_M0FP38username5mbtpp2tt7has__is(_c)) {
+            return _M0FP38username5mbtpp2tt10cond__expr(_c, _t, _M0MPC16option6Option10unwrap__orGRP38username5mbtpp6parser4ExprE(_el, new _M0DTP38username5mbtpp6parser4Expr4ELit(_p, _M0DTP38username5mbtpp6parser3Lit5LUnit__)));
+          } else {
+            break _L;
+          }
+        }
+        case 31: {
+          const _EIs = e;
+          const _p$2 = _EIs._0;
+          if (_M0FP38username5mbtpp2tt7has__is(e)) {
+            p = _p$2;
+            break _L$2;
+          } else {
+            break _L;
+          }
+        }
+        case 15: {
+          const _EBin = e;
+          const _p$3 = _EBin._0;
+          const _x = _EBin._1;
+          if (_x === "&&") {
+            if (_M0FP38username5mbtpp2tt7has__is(e)) {
+              p = _p$3;
+              break _L$2;
+            } else {
+              break _L;
+            }
+          } else {
+            break _L;
+          }
+        }
+        case 20: {
+          const _ETry = e;
+          const _p$4 = _ETry._0;
+          const _body = _ETry._1;
+          const _arms = _ETry._2;
+          const _x$2 = _ETry._3;
+          if (_x$2.$tag === 1) {
+            const _Some = _x$2;
+            const _ok = _Some._0;
+            return _M0FP38username5mbtpp2tt12try__noraise(_p$4, _body, _arms, _ok);
+          } else {
+            break _L;
+          }
+        }
+        default: {
+          break _L;
+        }
+      }
+    }
+    return _M0FP38username5mbtpp2tt10cond__expr(e, new _M0DTP38username5mbtpp6parser4Expr4ELit(p, _M0FP38username5mbtpp2tt5sugarN6constrS9498), new _M0DTP38username5mbtpp6parser4Expr4ELit(p, _M0FP38username5mbtpp2tt5sugarN6constrS9499));
+  }
+  return undefined;
+}
 function _M0FP38username5mbtpp2tt11local__type(cxt, l) {
   return _M0FP38username5mbtpp2tt8show__tm(_M0MPC15array9ArrayView9to__ownedGRP38username5mbtpp2tt2TmE(_M0MPC15array5Array21clamped__view_2einnerGRP38username5mbtpp2tt2TmE(cxt.names, 0, l)), _M0FP38username5mbtpp2tt5quote(l, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(cxt.types, l)));
 }
@@ -23329,15 +25074,25 @@ function _M0MP38username5mbtpp2tt3Cxt6lookup(self, x) {
   }
   return undefined;
 }
-function _M0FP38username5mbtpp2tt16fresh__name__gen(base) {
-  _M0FP38username5mbtpp2tt2st.fresh = _M0FP38username5mbtpp2tt2st.fresh + 1 | 0;
-  return `${base}$${_M0MPC13int3Int18to__string_2einner(_M0FP38username5mbtpp2tt2st.fresh, 10)}`;
-}
 function _M0MP38username5mbtpp2tt3Cxt9bind__mut(self, x, ty) {
   const c = _M0MP38username5mbtpp2tt3Cxt4bind(self, x, ty);
   const muts = _M0MPC15array5Array4copyGbE(c.muts);
   _M0MPC15array5Array3setGbE(muts, c.lvl - 1 | 0, true);
-  return new _M0TP38username5mbtpp2tt3Cxt(c.env, c.names, c.types, c.bound, muts, c.lvl, c.pos, c.can_raise, c.ret_ty, c.in_loop);
+  return new _M0TP38username5mbtpp2tt3Cxt(c.env, c.names, c.types, c.bound, muts, c.lvl, c.pos, c.can_raise, c.can_async, c.ret_ty, c.in_loop);
+}
+function _M0FP38username5mbtpp2tt13body__effects(ty) {
+  const _bind$18 = _M0FP38username5mbtpp2tt5force(ty);
+  if (_bind$18.$tag === 11) {
+    const _VRaises = _bind$18;
+    const _a = _VRaises._0;
+    const _e = _VRaises._1;
+    const _bind$19 = _M0FP38username5mbtpp2tt10effect__of(_e);
+    const _is_async = _bind$19._0;
+    const _err = _bind$19._1;
+    return { _0: _a, _1: !(_err === undefined), _2: _is_async };
+  } else {
+    return { _0: _bind$18, _1: false, _2: false };
+  }
 }
 function _M0FP38username5mbtpp2tt11lift__binds(e, out) {
   const go = (x) => _M0FP38username5mbtpp2tt11lift__binds(x, out);
@@ -23571,13 +25326,13 @@ function _M0FP38username5mbtpp2tt8pat__lam(p, pat, body) {
     }
     default: {
       const x = _M0FP38username5mbtpp2tt16fresh__name__gen("__p");
-      return new _M0DTP38username5mbtpp6parser4Expr4ELam(p, [], [new _M0TP38username5mbtpp6parser6Binder(p, x, undefined, _M0DTP38username5mbtpp6parser9ParamKind10Positional__)], undefined, new _M0DTP38username5mbtpp6parser4Expr6EMatch(p, new _M0DTP38username5mbtpp6parser4Expr4EVar(p, x), undefined, [new _M0TP38username5mbtpp6parser3Arm(p, pat, body)]));
+      return new _M0DTP38username5mbtpp6parser4Expr4ELam(p, [], [new _M0TP38username5mbtpp6parser6Binder(p, x, undefined, _M0DTP38username5mbtpp6parser9ParamKind10Positional__)], undefined, new _M0DTP38username5mbtpp6parser4Expr6EMatch(p, new _M0DTP38username5mbtpp6parser4Expr4EVar(p, x), undefined, [new _M0TP38username5mbtpp6parser3Arm(p, pat, undefined, body)]));
     }
   }
 }
 function _M0FP38username5mbtpp2tt14desugar__stmts(stmts) {
   if (stmts.length === 0) {
-    return new _M0DTP38username5mbtpp6parser4Expr4ELit(_M0FP38username5mbtpp2tt14desugar__stmtsN6recordS8986, _M0DTP38username5mbtpp6parser3Lit5LUnit__);
+    return new _M0DTP38username5mbtpp6parser4Expr4ELit(_M0FP38username5mbtpp2tt14desugar__stmtsN6recordS9621, _M0DTP38username5mbtpp6parser3Lit5LUnit__);
   }
   const rest = _M0MPC15array9ArrayView9to__ownedGRP38username5mbtpp2tt2TmE(_M0MPC15array5Array21clamped__view_2einnerGRP38username5mbtpp2tt2TmE(stmts, 1, undefined));
   const last = rest.length === 0;
@@ -23696,10 +25451,16 @@ function _M0FP38username5mbtpp2tt14desugar__stmts(stmts) {
           p = _p$14;
           break;
         }
-        default: {
+        case 2: {
           const _SLetBind$3 = s;
           const _p$15 = _SLetBind$3._0;
           p = _p$15;
+          break;
+        }
+        default: {
+          const _SGuard = s;
+          const _p$16 = _SGuard._0;
+          p = _p$16;
         }
       }
       inner = new _M0DTP38username5mbtpp6parser4Expr6EBlock(p, [s, new _M0DTP38username5mbtpp6parser4Stmt5SExpr(p, _M0FP38username5mbtpp2tt14desugar__stmts(rest))]);
@@ -23713,8 +25474,8 @@ function _M0FP38username5mbtpp2tt14desugar__stmts(stmts) {
       const _x$2 = _bind$19._0;
       const _m$2 = _bind$19._1;
       const p$2 = _M0MP38username5mbtpp6parser4Expr3pos(_m$2);
-      const _p$16 = _M0FP38username5mbtpp2tt8pat__lam(p$2, new _M0DTP38username5mbtpp6parser3Pat4PVar(p$2, _x$2), inner);
-      inner = new _M0DTP38username5mbtpp6parser4Expr4EApp(p$2, new _M0DTP38username5mbtpp6parser4Expr4EVar(p$2, "Monad::bind"), _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__, new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4Some([_m$2, _p$16]));
+      const _p$17 = _M0FP38username5mbtpp2tt8pat__lam(p$2, new _M0DTP38username5mbtpp6parser3Pat4PVar(p$2, _x$2), inner);
+      inner = new _M0DTP38username5mbtpp6parser4Expr4EApp(p$2, new _M0DTP38username5mbtpp6parser4Expr4EVar(p$2, "Monad::bind"), _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__, new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4Some([_m$2, _p$17]));
       _tmp$9 = k - 1 | 0;
       continue;
     } else {
@@ -23733,12 +25494,12 @@ function _M0FP38username5mbtpp2tt14desugar__monad(b) {
   }
 }
 function _M0FP38username5mbtpp2tt7nat__tm(n) {
-  let t = _M0FP38username5mbtpp2tt7nat__tmN6constrS9052;
+  let t = _M0FP38username5mbtpp2tt7nat__tmN6constrS9689;
   let _tmp$9 = 0;
   while (true) {
     const _ = _tmp$9;
     if (_ < n) {
-      t = new _M0DTP38username5mbtpp2tt2Tm3App(_M0FP38username5mbtpp2tt7nat__tmN6constrS9053, t, 0);
+      t = new _M0DTP38username5mbtpp2tt2Tm3App(_M0FP38username5mbtpp2tt7nat__tmN6constrS9690, t, 0);
       _tmp$9 = _ + 1 | 0;
       continue;
     } else {
@@ -23755,7 +25516,7 @@ function _M0FP38username5mbtpp2tt9pack__dyn(cxt, t, aty, ty) {
       const _d = _VData._0;
       const _x = _VData._1;
       if (_x.length === 0) {
-        if (_M0MPC16string6String11has__prefix(_d, _M0FP38username5mbtpp2tt9pack__dynN6recordS9058) && _M0IP016_24default__implPB2Eq10not__equalGOsE(_M0FP38username5mbtpp2tt10head__name(aty), _d)) {
+        if (_M0MPC16string6String11has__prefix(_d, _M0FP38username5mbtpp2tt9pack__dynN6recordS9695) && _M0IP016_24default__implPB2Eq10not__equalGOsE(_M0FP38username5mbtpp2tt10head__name(aty), _d)) {
           const tr = _d.substring(1, _d.length);
           const a = _M0MP38username5mbtpp2tt3Cxt5quote(cxt, aty);
           const m = _M0MP38username5mbtpp2tt3Cxt11fresh__meta(cxt);
@@ -23806,7 +25567,7 @@ function _M0FP38username5mbtpp2tt10goal__info(cxt, ty) {
     if (l < cxt.lvl) {
       _L: {
         const x = _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(cxt.names, l);
-        if (x === "_" || _M0MPC16string6String8contains(x, _M0FP38username5mbtpp2tt10goal__infoN6recordS9080)) {
+        if (x === "_" || _M0MPC16string6String8contains(x, _M0FP38username5mbtpp2tt10goal__infoN6recordS9717)) {
           break _L;
         }
         _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(hyps, `${x} : ${_M0FP38username5mbtpp2tt11local__type(cxt, l)}`);
@@ -24100,7 +25861,7 @@ function _M0FP38username5mbtpp2tt12run__tactics(cxt, tacs, ty) {
             const _VData = xty;
             const _x$2 = _VData._0;
             if (_x$2 === "Bool") {
-              pats = [new _M0DTP38username5mbtpp6parser3Pat4PLit(_p$10, _M0FP38username5mbtpp2tt12run__tacticsN6constrS9090), new _M0DTP38username5mbtpp6parser3Pat4PLit(_p$10, _M0FP38username5mbtpp2tt12run__tacticsN6constrS9091)];
+              pats = [new _M0DTP38username5mbtpp6parser3Pat4PLit(_p$10, _M0FP38username5mbtpp2tt12run__tacticsN6constrS9727), new _M0DTP38username5mbtpp6parser3Pat4PLit(_p$10, _M0FP38username5mbtpp2tt12run__tacticsN6constrS9728)];
             } else {
               const _bind$34 = _M0FP38username5mbtpp2tt10data__info(_x$2);
               if (_bind$34 === undefined) {
@@ -24170,7 +25931,7 @@ function _M0FP38username5mbtpp2tt12run__tactics(cxt, tacs, ty) {
             if (_$2 < _bind$34) {
               const pat = pats[_$2];
               _L: {
-                const _bind$35 = _M0FP38username5mbtpp2tt10check__pat(_bind$22, pat, xty, true, sval, true);
+                const _bind$35 = _M0FP38username5mbtpp2tt18check__pat_2einner(_bind$22, pat, xty, true, sval, true, "_");
                 let out;
                 if (_bind$35.$tag === 1) {
                   const _ok = _bind$35;
@@ -24183,7 +25944,7 @@ function _M0FP38username5mbtpp2tt12run__tactics(cxt, tacs, ty) {
                 }
                 const h = _M0FP38username5mbtpp2tt9new__goal(out.cxt, _M0MP38username5mbtpp2tt3Cxt5subst(out.cxt, _bind$23));
                 _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(new_goals, h);
-                _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(clauses, new _M0TP38username5mbtpp2tt6Clause([out.pat], h.meta));
+                _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(clauses, new _M0TP38username5mbtpp2tt6Clause([out.pat], undefined, h.meta));
                 break _L;
               }
               _tmp$13 = _$2 + 1 | 0;
@@ -24288,12 +26049,12 @@ function _M0FP38username5mbtpp2tt12run__tactics(cxt, tacs, ty) {
               return _bind$41;
             }
           }
-          const eq_tm = _rev ? _th : _M0FP38username5mbtpp2tt4apps(_M0FP38username5mbtpp2tt12run__tacticsN6constrS9092, [{ _0: _M0MP38username5mbtpp2tt3Cxt5quote(_bind$22, _ety), _1: 1 }, { _0: _M0MP38username5mbtpp2tt3Cxt5quote(_bind$22, _a), _1: 1 }, { _0: _M0MP38username5mbtpp2tt3Cxt5quote(_bind$22, _b), _1: 1 }, { _0: _th, _1: 0 }]);
+          const eq_tm = _rev ? _th : _M0FP38username5mbtpp2tt4apps(_M0FP38username5mbtpp2tt12run__tacticsN6constrS9729, [{ _0: _M0MP38username5mbtpp2tt3Cxt5quote(_bind$22, _ety), _1: 1 }, { _0: _M0MP38username5mbtpp2tt3Cxt5quote(_bind$22, _a), _1: 1 }, { _0: _M0MP38username5mbtpp2tt3Cxt5quote(_bind$22, _b), _1: 1 }, { _0: _th, _1: 0 }]);
           const new_ty = _M0FP38username5mbtpp2tt4eval(_M0FP38username5mbtpp2tt5push1GRP38username5mbtpp2tt3ValE(_bind$22.env, to), _motive$2);
           const c2 = _M0MP38username5mbtpp2tt3Cxt4bind(_bind$22, "_", new _M0DTP38username5mbtpp2tt3Val5VData("Id", [{ _0: _ety, _1: 1 }, { _0: to, _1: 0 }, { _0: from, _1: 0 }]));
           const h2 = _M0FP38username5mbtpp2tt9new__goal(c2, new_ty);
           _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(new_goals, h2);
-          const _bind$41 = _M0FP38username5mbtpp2tt11solve__goal(g, new _M0DTP38username5mbtpp2tt2Tm5Match([eq_tm], [new _M0TP38username5mbtpp2tt6Clause([new _M0DTP38username5mbtpp2tt4CPat5CPCon("Id::Refl", [])], h2.meta)]));
+          const _bind$41 = _M0FP38username5mbtpp2tt11solve__goal(g, new _M0DTP38username5mbtpp2tt2Tm5Match([eq_tm], [new _M0TP38username5mbtpp2tt6Clause([new _M0DTP38username5mbtpp2tt4CPat5CPCon("Id::Refl", [])], undefined, h2.meta)]));
           if (_bind$41.$tag === 1) {
             const _ok = _bind$41;
             _ok._0;
@@ -24372,7 +26133,7 @@ function _M0FP38username5mbtpp2tt12run__tactics(cxt, tacs, ty) {
           break;
         }
       }
-      _M0MPC15array5Array3setGURP38username5mbtpp6parser3PosORPB5ArrayGRP38username5mbtpp2tt8GoalInfoEEE(_bind$20, _tmp$15, { _0: pos, _1: new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp2tt8GoalInfoEE4Some(_p$12) });
+      _M0MPC15array5Array3setGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt4IcitEE(_bind$20, _tmp$15, { _0: pos, _1: new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp2tt8GoalInfoEE4Some(_p$12) });
       _tmp$9 = _ + 1 | 0;
       continue;
     } else {
@@ -24384,7 +26145,7 @@ function _M0FP38username5mbtpp2tt12run__tactics(cxt, tacs, ty) {
     const _bind$22 = _M0MP38username5mbtpp2tt3Cxt4failGuE(g.cxt, `unsolved goal(s); the first is\n  ${_M0MP38username5mbtpp2tt3Cxt4show(g.cxt, g.ty)}\nin context ${_M0MPC15array5Array4joinGsE(_M0MPC15array5Array6filterGsE(g.cxt.names, (n) => {
       const _p$2 = "_";
       return !(n === _p$2);
-    }), _M0FP38username5mbtpp2tt12run__tacticsN6recordS9093)}`);
+    }), _M0FP38username5mbtpp2tt12run__tacticsN6recordS9730)}`);
     if (_bind$22.$tag === 1) {
       const _ok = _bind$22;
       _ok._0;
@@ -24402,6 +26163,14 @@ function _M0FP38username5mbtpp2tt5check(cxt0, e, ty0) {
     const cxt0$2 = _tmp$9;
     const e$2 = _tmp$10;
     const ty0$2 = _tmp$11;
+    const _bind$18 = _M0FP38username5mbtpp2tt5sugar(e$2);
+    if (_bind$18 === undefined) {
+    } else {
+      const _Some = _bind$18;
+      const _e2 = _Some;
+      _tmp$10 = _e2;
+      continue;
+    }
     const cxt = _M0MP38username5mbtpp2tt3Cxt2at(cxt0$2, _M0MP38username5mbtpp6parser4Expr3pos(e$2));
     const ty = _M0FP38username5mbtpp2tt5force(ty0$2);
     _L$2: {
@@ -24409,8 +26178,8 @@ function _M0FP38username5mbtpp2tt5check(cxt0, e, ty0) {
       _L$3: {
         let b;
         _L$4: {
-          let arms;
           let body;
+          let arms;
           _L$5: {
             _L$6: {
               let x;
@@ -24681,8 +26450,8 @@ function _M0FP38username5mbtpp2tt5check(cxt0, e, ty0) {
                                                   const _ETry = e$2;
                                                   const _body$2 = _ETry._1;
                                                   const _arms$2 = _ETry._2;
-                                                  arms = _arms$2;
                                                   body = _body$2;
+                                                  arms = _arms$2;
                                                   break _L$5;
                                                 }
                                                 case 23: {
@@ -24947,7 +26716,7 @@ function _M0FP38username5mbtpp2tt5check(cxt0, e, ty0) {
                                                     if (_x$7.length === 1) {
                                                       const _x$8 = _x$7[0];
                                                       const _a$6 = _x$8._0;
-                                                      let _bind$18;
+                                                      let _bind$19;
                                                       let _p;
                                                       _L$19: {
                                                         _L$20: {
@@ -24958,13 +26727,13 @@ function _M0FP38username5mbtpp2tt5check(cxt0, e, ty0) {
                                                             const _p$4 = _tmp$12;
                                                             if (_p$4 < _p$3) {
                                                               const _p$5 = _es[_p$4];
-                                                              const _bind$19 = _M0FP38username5mbtpp2tt5check(cxt, _p$5, _a$6);
+                                                              const _bind$20 = _M0FP38username5mbtpp2tt5check(cxt, _p$5, _a$6);
                                                               let _tmp$13;
-                                                              if (_bind$19.$tag === 1) {
-                                                                const _ok = _bind$19;
+                                                              if (_bind$20.$tag === 1) {
+                                                                const _ok = _bind$20;
                                                                 _tmp$13 = _ok._0;
                                                               } else {
-                                                                const _err = _bind$19;
+                                                                const _err = _bind$20;
                                                                 _p = _err._0;
                                                                 break _L$20;
                                                               }
@@ -24975,17 +26744,17 @@ function _M0FP38username5mbtpp2tt5check(cxt0, e, ty0) {
                                                               break;
                                                             }
                                                           }
-                                                          _bind$18 = new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp2tt2TmERP38username5mbtpp2tt9ElabErrorE2Ok(_p$2);
+                                                          _bind$19 = new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp2tt2TmERP38username5mbtpp2tt9ElabErrorE2Ok(_p$2);
                                                           break _L$19;
                                                         }
-                                                        _bind$18 = new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp2tt2TmERP38username5mbtpp2tt9ElabErrorE3Err(_p);
+                                                        _bind$19 = new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp2tt2TmERP38username5mbtpp2tt9ElabErrorE3Err(_p);
                                                       }
                                                       let _tmp$12;
-                                                      if (_bind$18.$tag === 1) {
-                                                        const _ok = _bind$18;
+                                                      if (_bind$19.$tag === 1) {
+                                                        const _ok = _bind$19;
                                                         _tmp$12 = _ok._0;
                                                       } else {
-                                                        return _bind$18;
+                                                        return _bind$19;
                                                       }
                                                       return new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(new _M0DTP38username5mbtpp2tt2Tm8ArrayLit(_tmp$12));
                                                     } else {
@@ -25030,8 +26799,8 @@ function _M0FP38username5mbtpp2tt5check(cxt0, e, ty0) {
                                                 const _ETry = e$2;
                                                 const _body$2 = _ETry._1;
                                                 const _arms$2 = _ETry._2;
-                                                arms = _arms$2;
                                                 body = _body$2;
+                                                arms = _arms$2;
                                                 break _L$5;
                                               }
                                               case 23: {
@@ -25054,42 +26823,42 @@ function _M0FP38username5mbtpp2tt5check(cxt0, e, ty0) {
                                         }
                                       }
                                     }
-                                    let _bind$18;
+                                    let _bind$19;
                                     if (e$2.$tag === 0) {
-                                      const _bind$19 = _M0FP38username5mbtpp2tt11infer__head(cxt, e$2, undefined);
-                                      let _bind$20;
-                                      if (_bind$19.$tag === 1) {
-                                        const _ok = _bind$19;
-                                        _bind$20 = _ok._0;
+                                      const _bind$20 = _M0FP38username5mbtpp2tt11infer__head(cxt, e$2, undefined);
+                                      let _bind$21;
+                                      if (_bind$20.$tag === 1) {
+                                        const _ok = _bind$20;
+                                        _bind$21 = _ok._0;
                                       } else {
-                                        return _bind$19;
+                                        return _bind$20;
                                       }
-                                      const _t = _bind$20._0;
-                                      const _aty = _bind$20._1;
-                                      _bind$18 = { _0: _t, _1: _aty };
+                                      const _t = _bind$21._0;
+                                      const _aty = _bind$21._1;
+                                      _bind$19 = { _0: _t, _1: _aty };
                                     } else {
-                                      const _bind$19 = _M0FP38username5mbtpp2tt5infer(cxt, e$2);
-                                      if (_bind$19.$tag === 1) {
-                                        const _ok = _bind$19;
-                                        _bind$18 = _ok._0;
+                                      const _bind$20 = _M0FP38username5mbtpp2tt5infer(cxt, e$2);
+                                      if (_bind$20.$tag === 1) {
+                                        const _ok = _bind$20;
+                                        _bind$19 = _ok._0;
                                       } else {
-                                        return _bind$19;
+                                        return _bind$20;
                                       }
                                     }
-                                    const _t = _bind$18._0;
-                                    const _aty = _bind$18._1;
+                                    const _t = _bind$19._0;
+                                    const _aty = _bind$19._1;
                                     _L$19: {
-                                      const _bind$19 = _M0FP38username5mbtpp2tt5force(_aty);
-                                      if (_bind$19.$tag === 7) {
-                                        const _VPi = _bind$19;
+                                      const _bind$20 = _M0FP38username5mbtpp2tt5force(_aty);
+                                      if (_bind$20.$tag === 7) {
+                                        const _VPi = _bind$20;
                                         const _j = _VPi._1;
                                         if (_M0IP016_24default__implPB2Eq10not__equalGRP38username5mbtpp2tt4IcitE(_j, 0)) {
-                                          const _bind$20 = _M0MP38username5mbtpp2tt3Cxt5unify(cxt, ty, _aty);
-                                          if (_bind$20.$tag === 1) {
-                                            const _ok = _bind$20;
+                                          const _bind$21 = _M0MP38username5mbtpp2tt3Cxt5unify(cxt, ty, _aty);
+                                          if (_bind$21.$tag === 1) {
+                                            const _ok = _bind$21;
                                             _ok._0;
                                           } else {
-                                            return _bind$20;
+                                            return _bind$21;
                                           }
                                           return new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_t);
                                         } else {
@@ -25103,9 +26872,9 @@ function _M0FP38username5mbtpp2tt5check(cxt0, e, ty0) {
                                     let cur = ty;
                                     const wrap = [];
                                     while (true) {
-                                      const _bind$19 = _M0FP38username5mbtpp2tt5force(cur);
-                                      if (_bind$19.$tag === 7) {
-                                        const _VPi = _bind$19;
+                                      const _bind$20 = _M0FP38username5mbtpp2tt5force(cur);
+                                      if (_bind$20.$tag === 7) {
+                                        const _VPi = _bind$20;
                                         const _x = _VPi._0;
                                         const _i = _VPi._1;
                                         const _a = _VPi._3;
@@ -25114,7 +26883,7 @@ function _M0FP38username5mbtpp2tt5check(cxt0, e, ty0) {
                                           const _p = c$2.lvl;
                                           const v = new _M0DTP38username5mbtpp2tt3Val6VRigid(_p, []);
                                           c$2 = _M0MP38username5mbtpp2tt3Cxt4bind(c$2, `?${_x}`, _a);
-                                          _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(wrap, { _0: _x, _1: _i, _2: _M0FP38username5mbtpp2tt5checkN6constrS9253 });
+                                          _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(wrap, { _0: _x, _1: _i, _2: _M0FP38username5mbtpp2tt5checkN6constrS9890 });
                                           cur = _M0FP38username5mbtpp2tt4inst(_cl, v);
                                           continue;
                                         } else {
@@ -25124,22 +26893,22 @@ function _M0FP38username5mbtpp2tt5check(cxt0, e, ty0) {
                                         break;
                                       }
                                     }
-                                    const _bind$19 = _M0FP38username5mbtpp2tt13insert__until(c$2, _M0FP38username5mbtpp2tt9tm__shift(_t, wrap.length, 0), _aty, cur);
-                                    let _bind$20;
-                                    if (_bind$19.$tag === 1) {
-                                      const _ok = _bind$19;
-                                      _bind$20 = _ok._0;
+                                    const _bind$20 = _M0FP38username5mbtpp2tt13insert__until(c$2, _M0FP38username5mbtpp2tt9tm__shift(_t, wrap.length, 0), _aty, cur);
+                                    let _bind$21;
+                                    if (_bind$20.$tag === 1) {
+                                      const _ok = _bind$20;
+                                      _bind$21 = _ok._0;
                                     } else {
-                                      return _bind$19;
+                                      return _bind$20;
                                     }
-                                    const _t2 = _bind$20._0;
-                                    const _aty2 = _bind$20._1;
-                                    const _bind$21 = _M0MP38username5mbtpp2tt3Cxt5unify(c$2, cur, _aty2);
-                                    if (_bind$21.$tag === 1) {
-                                      const _ok = _bind$21;
+                                    const _t2 = _bind$21._0;
+                                    const _aty2 = _bind$21._1;
+                                    const _bind$22 = _M0MP38username5mbtpp2tt3Cxt5unify(c$2, cur, _aty2);
+                                    if (_bind$22.$tag === 1) {
+                                      const _ok = _bind$22;
                                       _ok._0;
                                     } else {
-                                      return _bind$21;
+                                      return _bind$22;
                                     }
                                     const _p = new Array(wrap.length);
                                     const _p$2 = wrap.length;
@@ -25161,119 +26930,119 @@ function _M0FP38username5mbtpp2tt5check(cxt0, e, ty0) {
                                   const v = new _M0DTP38username5mbtpp2tt3Val6VRigid(_p, []);
                                   const name = _M0IP38username5mbtpp2tt4IcitPB2Eq5equal(i$2, 2) ? `_inst_${x$4}` : `?${x$4}`;
                                   const c2 = _M0MP38username5mbtpp2tt3Cxt4bind(cxt, name, a$2);
-                                  const _bind$18 = _M0FP38username5mbtpp2tt5check(c2, e$2, _M0FP38username5mbtpp2tt4inst(cl, v));
+                                  const _bind$19 = _M0FP38username5mbtpp2tt5check(c2, e$2, _M0FP38username5mbtpp2tt4inst(cl, v));
                                   let _tmp$12;
-                                  if (_bind$18.$tag === 1) {
-                                    const _ok = _bind$18;
+                                  if (_bind$19.$tag === 1) {
+                                    const _ok = _bind$19;
                                     _tmp$12 = _ok._0;
                                   } else {
-                                    return _bind$18;
+                                    return _bind$19;
                                   }
                                   return new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(new _M0DTP38username5mbtpp2tt2Tm3Lam(x$4, i$2, false, _tmp$12));
                                 }
-                                const _bind$18 = _M0FP38username5mbtpp2tt12check__block(cxt, stmts, ty);
+                                const _bind$19 = _M0FP38username5mbtpp2tt12check__block(cxt, stmts, ty);
                                 let _tmp$12;
-                                if (_bind$18.$tag === 1) {
-                                  const _ok = _bind$18;
+                                if (_bind$19.$tag === 1) {
+                                  const _ok = _bind$19;
                                   _tmp$12 = _ok._0;
                                 } else {
-                                  return _bind$18;
+                                  return _bind$19;
                                 }
                                 return new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_tmp$12._0);
                               }
-                              const _bind$18 = _M0FP38username5mbtpp2tt5check(cxt, c, new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []));
+                              const _bind$19 = _M0FP38username5mbtpp2tt5check(cxt, c, new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []));
                               let tc;
-                              if (_bind$18.$tag === 1) {
-                                const _ok = _bind$18;
-                                tc = _ok._0;
-                              } else {
-                                return _bind$18;
-                              }
-                              const _bind$19 = _M0FP38username5mbtpp2tt18check__under__slot(cxt, t, ty, new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []), _M0FP38username5mbtpp2tt5checkN6constrS9250);
-                              let tt;
                               if (_bind$19.$tag === 1) {
                                 const _ok = _bind$19;
-                                tt = _ok._0;
+                                tc = _ok._0;
                               } else {
                                 return _bind$19;
                               }
+                              const _bind$20 = _M0FP38username5mbtpp2tt18check__under__slot(cxt, t, ty, new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []), _M0FP38username5mbtpp2tt5checkN6constrS9887);
+                              let tt;
+                              if (_bind$20.$tag === 1) {
+                                const _ok = _bind$20;
+                                tt = _ok._0;
+                              } else {
+                                return _bind$20;
+                              }
                               let te;
                               if (el === undefined) {
-                                const _bind$20 = _M0MP38username5mbtpp2tt3Cxt5unify(cxt, ty, new _M0DTP38username5mbtpp2tt3Val5VData("Unit", []));
-                                if (_bind$20.$tag === 1) {
-                                  const _ok = _bind$20;
+                                const _bind$21 = _M0MP38username5mbtpp2tt3Cxt5unify(cxt, ty, new _M0DTP38username5mbtpp2tt3Val5VData("Unit", []));
+                                if (_bind$21.$tag === 1) {
+                                  const _ok = _bind$21;
                                   _ok._0;
                                 } else {
-                                  return _bind$20;
+                                  return _bind$21;
                                 }
                                 te = new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0DTP38username5mbtpp6parser3Lit5LUnit__);
                               } else {
                                 const _Some = el;
                                 const _x = _Some;
-                                const _bind$20 = _M0FP38username5mbtpp2tt18check__under__slot(cxt, _x, ty, new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []), _M0FP38username5mbtpp2tt5checkN6constrS9252);
-                                if (_bind$20.$tag === 1) {
-                                  const _ok = _bind$20;
+                                const _bind$21 = _M0FP38username5mbtpp2tt18check__under__slot(cxt, _x, ty, new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []), _M0FP38username5mbtpp2tt5checkN6constrS9889);
+                                if (_bind$21.$tag === 1) {
+                                  const _ok = _bind$21;
                                   te = _ok._0;
                                 } else {
-                                  return _bind$20;
+                                  return _bind$21;
                                 }
                               }
                               return new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_M0FP38username5mbtpp2tt6if__tm(tc, tt, te));
                             }
-                            const _bind$18 = _M0FP38username5mbtpp2tt11elab__match(cxt, scr, ret, arms$2, ty);
+                            const _bind$19 = _M0FP38username5mbtpp2tt11elab__match(cxt, scr, ret, arms$2, ty);
                             let _tmp$12;
-                            if (_bind$18.$tag === 1) {
-                              const _ok = _bind$18;
+                            if (_bind$19.$tag === 1) {
+                              const _ok = _bind$19;
                               _tmp$12 = _ok._0;
                             } else {
-                              return _bind$18;
+                              return _bind$19;
                             }
                             return new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_tmp$12._0);
                           }
-                          const _bind$18 = _M0FP38username5mbtpp2tt12elab__struct(cxt, fields, ty);
+                          const _bind$19 = _M0FP38username5mbtpp2tt12elab__struct(cxt, fields, ty);
                           let _tmp$12;
-                          if (_bind$18.$tag === 1) {
-                            const _ok = _bind$18;
+                          if (_bind$19.$tag === 1) {
+                            const _ok = _bind$19;
                             _tmp$12 = _ok._0;
                           } else {
-                            return _bind$18;
+                            return _bind$19;
                           }
                           return new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_tmp$12._0);
                         }
-                        const _bind$18 = _M0FP38username5mbtpp2tt5check(cxt, a, ty);
+                        const _bind$19 = _M0FP38username5mbtpp2tt5check(cxt, a, ty);
                         let ta;
-                        if (_bind$18.$tag === 1) {
-                          const _ok = _bind$18;
-                          ta = _ok._0;
-                        } else {
-                          return _bind$18;
-                        }
-                        const _bind$19 = _M0FP38username5mbtpp2tt12elab__method(cxt, ta, ty, _M0FP38username5mbtpp2tt10op__method(op), _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__, [new _M0DTP38username5mbtpp2tt3Arg2AE(b$2)], undefined);
-                        let _bind$20;
                         if (_bind$19.$tag === 1) {
                           const _ok = _bind$19;
-                          _bind$20 = _ok._0;
+                          ta = _ok._0;
                         } else {
                           return _bind$19;
                         }
-                        const _t = _bind$20._0;
-                        const _aty = _bind$20._1;
-                        const _bind$21 = _M0MP38username5mbtpp2tt3Cxt5unify(cxt, ty, _aty);
-                        if (_bind$21.$tag === 1) {
-                          const _ok = _bind$21;
+                        const _bind$20 = _M0FP38username5mbtpp2tt12elab__method(cxt, ta, ty, _M0FP38username5mbtpp2tt10op__method(op), _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__, [new _M0DTP38username5mbtpp2tt3Arg2AE(b$2)], undefined);
+                        let _bind$21;
+                        if (_bind$20.$tag === 1) {
+                          const _ok = _bind$20;
+                          _bind$21 = _ok._0;
+                        } else {
+                          return _bind$20;
+                        }
+                        const _t = _bind$21._0;
+                        const _aty = _bind$21._1;
+                        const _bind$22 = _M0MP38username5mbtpp2tt3Cxt5unify(cxt, ty, _aty);
+                        if (_bind$22.$tag === 1) {
+                          const _ok = _bind$22;
                           _ok._0;
                         } else {
-                          return _bind$21;
+                          return _bind$22;
                         }
                         return new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_t);
                       }
-                      const _bind$18 = _M0FP38username5mbtpp2tt11elab__tuple(cxt, es, ty);
+                      const _bind$19 = _M0FP38username5mbtpp2tt11elab__tuple(cxt, es, ty);
                       let _tmp$12;
-                      if (_bind$18.$tag === 1) {
-                        const _ok = _bind$18;
+                      if (_bind$19.$tag === 1) {
+                        const _ok = _bind$19;
                         _tmp$12 = _ok._0;
                       } else {
-                        return _bind$18;
+                        return _bind$19;
                       }
                       return new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_tmp$12._0);
                     }
@@ -25282,92 +27051,92 @@ function _M0FP38username5mbtpp2tt5check(cxt0, e, ty0) {
                       const _VData = ty;
                       const _d = _VData._0;
                       const _x = _VData._1;
-                      to_dyn = _x.length === 0 ? _M0MPC16string6String11has__prefix(_d, _M0FP38username5mbtpp2tt5checkN6recordS9248) : false;
+                      to_dyn = _x.length === 0 ? _M0MPC16string6String11has__prefix(_d, _M0FP38username5mbtpp2tt5checkN6recordS9885) : false;
                     } else {
                       to_dyn = false;
                     }
-                    const _bind$18 = _M0FP38username5mbtpp2tt9elab__app(cxt, f, i, x$3, to_dyn ? undefined : ty);
-                    let _bind$19;
-                    if (_bind$18.$tag === 1) {
-                      const _ok = _bind$18;
-                      _bind$19 = _ok._0;
+                    const _bind$19 = _M0FP38username5mbtpp2tt9elab__app(cxt, f, i, x$3, to_dyn ? undefined : ty);
+                    let _bind$20;
+                    if (_bind$19.$tag === 1) {
+                      const _ok = _bind$19;
+                      _bind$20 = _ok._0;
                     } else {
-                      return _bind$18;
+                      return _bind$19;
                     }
-                    const _t = _bind$19._0;
-                    const _aty = _bind$19._1;
-                    const _bind$20 = _M0FP38username5mbtpp2tt13insert__until(cxt, _t, _aty, ty);
-                    let _bind$21;
-                    if (_bind$20.$tag === 1) {
-                      const _ok = _bind$20;
-                      _bind$21 = _ok._0;
+                    const _t = _bind$20._0;
+                    const _aty = _bind$20._1;
+                    const _bind$21 = _M0FP38username5mbtpp2tt13insert__until(cxt, _t, _aty, ty);
+                    let _bind$22;
+                    if (_bind$21.$tag === 1) {
+                      const _ok = _bind$21;
+                      _bind$22 = _ok._0;
                     } else {
-                      return _bind$20;
+                      return _bind$21;
                     }
-                    const _t$2 = _bind$21._0;
-                    const _aty$2 = _bind$21._1;
-                    const _bind$22 = _M0FP38username5mbtpp2tt9pack__dyn(cxt, _t$2, _aty$2, ty);
-                    let _bind$23;
-                    if (_bind$22.$tag === 1) {
-                      const _ok = _bind$22;
-                      _bind$23 = _ok._0;
+                    const _t$2 = _bind$22._0;
+                    const _aty$2 = _bind$22._1;
+                    const _bind$23 = _M0FP38username5mbtpp2tt9pack__dyn(cxt, _t$2, _aty$2, ty);
+                    let _bind$24;
+                    if (_bind$23.$tag === 1) {
+                      const _ok = _bind$23;
+                      _bind$24 = _ok._0;
                     } else {
-                      return _bind$22;
+                      return _bind$23;
                     }
-                    if (_bind$23 === undefined) {
-                      const _bind$24 = _M0MP38username5mbtpp2tt3Cxt5unify(cxt, ty, _aty$2);
-                      if (_bind$24.$tag === 1) {
-                        const _ok = _bind$24;
+                    if (_bind$24 === undefined) {
+                      const _bind$25 = _M0MP38username5mbtpp2tt3Cxt5unify(cxt, ty, _aty$2);
+                      if (_bind$25.$tag === 1) {
+                        const _ok = _bind$25;
                         _ok._0;
                       } else {
-                        return _bind$24;
+                        return _bind$25;
                       }
                       return new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_t$2);
                     } else {
-                      const _Some = _bind$23;
+                      const _Some = _bind$24;
                       const _packed = _Some;
                       return new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_packed);
                     }
                   }
-                  const _bind$18 = _M0FP38username5mbtpp2tt11infer__head(cxt, e$2, ty);
-                  let _bind$19;
-                  if (_bind$18.$tag === 1) {
-                    const _ok = _bind$18;
-                    _bind$19 = _ok._0;
+                  const _bind$19 = _M0FP38username5mbtpp2tt11infer__head(cxt, e$2, ty);
+                  let _bind$20;
+                  if (_bind$19.$tag === 1) {
+                    const _ok = _bind$19;
+                    _bind$20 = _ok._0;
                   } else {
-                    return _bind$18;
+                    return _bind$19;
                   }
-                  const _t = _bind$19._0;
-                  const _aty = _bind$19._1;
-                  const _bind$20 = _M0FP38username5mbtpp2tt13insert__until(cxt, _t, _aty, ty);
-                  let _bind$21;
-                  if (_bind$20.$tag === 1) {
-                    const _ok = _bind$20;
-                    _bind$21 = _ok._0;
+                  const _t = _bind$20._0;
+                  const _aty = _bind$20._1;
+                  const _bind$21 = _M0FP38username5mbtpp2tt13insert__until(cxt, _t, _aty, ty);
+                  let _bind$22;
+                  if (_bind$21.$tag === 1) {
+                    const _ok = _bind$21;
+                    _bind$22 = _ok._0;
                   } else {
-                    return _bind$20;
+                    return _bind$21;
                   }
-                  const _t$2 = _bind$21._0;
-                  const _aty$2 = _bind$21._1;
-                  const _bind$22 = _M0FP38username5mbtpp2tt9pack__dyn(cxt, _t$2, _aty$2, ty);
-                  let _bind$23;
-                  if (_bind$22.$tag === 1) {
-                    const _ok = _bind$22;
-                    _bind$23 = _ok._0;
+                  const _t$2 = _bind$22._0;
+                  const _aty$2 = _bind$22._1;
+                  const _bind$23 = _M0FP38username5mbtpp2tt9pack__dyn(cxt, _t$2, _aty$2, ty);
+                  let _bind$24;
+                  if (_bind$23.$tag === 1) {
+                    const _ok = _bind$23;
+                    _bind$24 = _ok._0;
                   } else {
-                    return _bind$22;
+                    return _bind$23;
                   }
-                  if (_bind$23 === undefined) {
-                    const _bind$24 = _M0MP38username5mbtpp2tt3Cxt5unify(cxt, ty, _aty$2);
-                    if (_bind$24.$tag === 1) {
-                      const _ok = _bind$24;
+                  if (_bind$24 === undefined) {
+                    const _bind$25 = _M0MP38username5mbtpp2tt3Cxt5unify(cxt, ty, _aty$2);
+                    if (_bind$25.$tag === 1) {
+                      const _ok = _bind$25;
                       _ok._0;
                     } else {
-                      return _bind$24;
+                      return _bind$25;
                     }
                     return new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_t$2);
                   } else {
-                    const _Some = _bind$23;
+                    const _Some = _bind$24;
                     const _packed = _Some;
                     return new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_packed);
                   }
@@ -25377,12 +27146,12 @@ function _M0FP38username5mbtpp2tt5check(cxt0, e, ty0) {
               return _M0FP38username5mbtpp2tt12elab__return(cxt, x);
             }
             if (!cxt.in_loop) {
-              const _bind$18 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, "break/continue outside of a loop");
-              if (_bind$18.$tag === 1) {
-                const _ok = _bind$18;
+              const _bind$19 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, "break/continue outside of a loop");
+              if (_bind$19.$tag === 1) {
+                const _ok = _bind$19;
                 _ok._0;
               } else {
-                return _bind$18;
+                return _bind$19;
               }
             }
             if (e$2.$tag === 27) {
@@ -25391,13 +27160,13 @@ function _M0FP38username5mbtpp2tt5check(cxt0, e, ty0) {
               return new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_M0DTP38username5mbtpp2tt2Tm8Continue__);
             }
           }
-          const _bind$18 = _M0FP38username5mbtpp2tt9elab__try(cxt, body, arms, ty);
+          const _bind$19 = _M0FP38username5mbtpp2tt9elab__try(cxt, body, arms, ty);
           let _tmp$12;
-          if (_bind$18.$tag === 1) {
-            const _ok = _bind$18;
+          if (_bind$19.$tag === 1) {
+            const _ok = _bind$19;
             _tmp$12 = _ok._0;
           } else {
-            return _bind$18;
+            return _bind$19;
           }
           return new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_tmp$12._0);
         }
@@ -25408,45 +27177,45 @@ function _M0FP38username5mbtpp2tt5check(cxt0, e, ty0) {
       }
       return _M0FP38username5mbtpp2tt12run__tactics(cxt, tacs, ty);
     }
-    const _bind$18 = _M0FP38username5mbtpp2tt5infer(cxt, e$2);
-    let _bind$19;
-    if (_bind$18.$tag === 1) {
-      const _ok = _bind$18;
-      _bind$19 = _ok._0;
+    const _bind$19 = _M0FP38username5mbtpp2tt5infer(cxt, e$2);
+    let _bind$20;
+    if (_bind$19.$tag === 1) {
+      const _ok = _bind$19;
+      _bind$20 = _ok._0;
     } else {
-      return _bind$18;
+      return _bind$19;
     }
-    const _t = _bind$19._0;
-    const _aty = _bind$19._1;
-    const _bind$20 = _M0FP38username5mbtpp2tt13insert__until(cxt, _t, _aty, ty);
-    let _bind$21;
-    if (_bind$20.$tag === 1) {
-      const _ok = _bind$20;
-      _bind$21 = _ok._0;
+    const _t = _bind$20._0;
+    const _aty = _bind$20._1;
+    const _bind$21 = _M0FP38username5mbtpp2tt13insert__until(cxt, _t, _aty, ty);
+    let _bind$22;
+    if (_bind$21.$tag === 1) {
+      const _ok = _bind$21;
+      _bind$22 = _ok._0;
     } else {
-      return _bind$20;
+      return _bind$21;
     }
-    const _t$2 = _bind$21._0;
-    const _aty$2 = _bind$21._1;
-    const _bind$22 = _M0FP38username5mbtpp2tt9pack__dyn(cxt, _t$2, _aty$2, ty);
-    let _bind$23;
-    if (_bind$22.$tag === 1) {
-      const _ok = _bind$22;
-      _bind$23 = _ok._0;
+    const _t$2 = _bind$22._0;
+    const _aty$2 = _bind$22._1;
+    const _bind$23 = _M0FP38username5mbtpp2tt9pack__dyn(cxt, _t$2, _aty$2, ty);
+    let _bind$24;
+    if (_bind$23.$tag === 1) {
+      const _ok = _bind$23;
+      _bind$24 = _ok._0;
     } else {
-      return _bind$22;
+      return _bind$23;
     }
-    if (_bind$23 === undefined) {
-      const _bind$24 = _M0MP38username5mbtpp2tt3Cxt5unify(cxt, ty, _aty$2);
-      if (_bind$24.$tag === 1) {
-        const _ok = _bind$24;
+    if (_bind$24 === undefined) {
+      const _bind$25 = _M0MP38username5mbtpp2tt3Cxt5unify(cxt, ty, _aty$2);
+      if (_bind$25.$tag === 1) {
+        const _ok = _bind$25;
         _ok._0;
       } else {
-        return _bind$24;
+        return _bind$25;
       }
       return new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_t$2);
     } else {
-      const _Some = _bind$23;
+      const _Some = _bind$24;
       const _packed = _Some;
       return new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_packed);
     }
@@ -25543,7 +27312,7 @@ function _M0FP38username5mbtpp2tt12check__block(cxt, stmts, goal) {
                 const _ty$2 = _Some;
                 scr = new _M0DTP38username5mbtpp6parser4Expr4EAnn(_p$2, _e$2, _ty$2);
               }
-              const m = new _M0DTP38username5mbtpp6parser4Expr6EMatch(_p$2, scr, undefined, [new _M0TP38username5mbtpp6parser3Arm(_p$2, _pat, new _M0DTP38username5mbtpp6parser4Expr6EBlock(_p$2, rest))]);
+              const m = new _M0DTP38username5mbtpp6parser4Expr6EMatch(_p$2, scr, undefined, [new _M0TP38username5mbtpp6parser3Arm(_p$2, _pat, undefined, new _M0DTP38username5mbtpp6parser4Expr6EBlock(_p$2, rest))]);
               if (goal === undefined) {
                 return _M0FP38username5mbtpp2tt5infer(c, m);
               } else {
@@ -25727,7 +27496,16 @@ function _M0FP38username5mbtpp2tt12check__block(cxt, stmts, goal) {
             return _bind$25;
           }
         }
-        const lam = new _M0DTP38username5mbtpp6parser4Expr4ELam(_p$5, _d.impl_params, _M0MPC16option6Option10unwrap__orGRPB5ArrayGRP38username5mbtpp6parser6BinderEE(_d.params, []), _d.ret, body);
+        const _bind$25 = _d.raises;
+        let ret;
+        if (_bind$25 === undefined) {
+          ret = _d.ret;
+        } else {
+          const _Some = _bind$25;
+          const _eff = _Some;
+          ret = new _M0DTP38username5mbtpp6parser4Expr4EEff(_p$5, _M0MPC16option6Option10unwrap__orGRP38username5mbtpp6parser4ExprE(_d.ret, new _M0DTP38username5mbtpp6parser4Expr5EHole(_p$5)), _eff);
+        }
+        const lam = new _M0DTP38username5mbtpp6parser4Expr4ELam(_p$5, _d.impl_params, _M0MPC16option6Option10unwrap__orGRPB5ArrayGRP38username5mbtpp6parser6BinderEE(_d.params, []), ret, body);
         const _self = [];
         _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_self, new _M0DTP38username5mbtpp6parser4Stmt4SLet(_p$5, new _M0DTP38username5mbtpp6parser3Pat4PVar(_p$5, _d.name), undefined, lam));
         _M0MPC15array5Array10push__iterGRP38username5mbtpp6parser4StmtE(_self, _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(rest));
@@ -25751,20 +27529,20 @@ function _M0FP38username5mbtpp2tt12check__block(cxt, stmts, goal) {
                 const _x$2 = _EVar._1;
                 _L$5: {
                   _L$6: {
-                    const _bind$25 = _M0MP38username5mbtpp2tt3Cxt6lookup(cxt, _x$2);
-                    if (_bind$25 === undefined) {
+                    const _bind$26 = _M0MP38username5mbtpp2tt3Cxt6lookup(cxt, _x$2);
+                    if (_bind$26 === undefined) {
                       break _L$6;
                     } else {
-                      const _Some = _bind$25;
+                      const _Some = _bind$26;
                       const _l = _Some;
                       if (_M0MPC15array5Array2atGbE(cxt.muts, _l)) {
-                        const _bind$26 = _M0FP38username5mbtpp2tt5check(c$3, rhs, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(cxt.types, _l));
+                        const _bind$27 = _M0FP38username5mbtpp2tt5check(c$3, rhs, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(cxt.types, _l));
                         let _tmp$10;
-                        if (_bind$26.$tag === 1) {
-                          const _ok = _bind$26;
+                        if (_bind$27.$tag === 1) {
+                          const _ok = _bind$27;
                           _tmp$10 = _ok._0;
                         } else {
-                          return _bind$26;
+                          return _bind$27;
                         }
                         t = new _M0DTP38username5mbtpp2tt2Tm6Assign((cxt.lvl - 1 | 0) - _l | 0, _tmp$10);
                       } else {
@@ -25773,12 +27551,12 @@ function _M0FP38username5mbtpp2tt12check__block(cxt, stmts, goal) {
                     }
                     break _L$5;
                   }
-                  const _bind$25 = _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(c$3, `${_x$2} is not a mutable variable`);
-                  if (_bind$25.$tag === 1) {
-                    const _ok = _bind$25;
+                  const _bind$26 = _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(c$3, `${_x$2} is not a mutable variable`);
+                  if (_bind$26.$tag === 1) {
+                    const _ok = _bind$26;
                     t = _ok._0;
                   } else {
-                    return _bind$25;
+                    return _bind$26;
                   }
                 }
                 break;
@@ -25794,13 +27572,13 @@ function _M0FP38username5mbtpp2tt12check__block(cxt, stmts, goal) {
                     const _i = _x$4[0];
                     const _x$5 = _EApp._3;
                     if (_x$5.$tag === 0) {
-                      const _bind$25 = _M0FP38username5mbtpp2tt10infer__ins(c$3, new _M0DTP38username5mbtpp6parser4Expr7EMethod(_p$6, _arr, "op_set", _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__, [_i, rhs]));
+                      const _bind$26 = _M0FP38username5mbtpp2tt10infer__ins(c$3, new _M0DTP38username5mbtpp6parser4Expr7EMethod(_p$6, _arr, "op_set", _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__, [_i, rhs]));
                       let _tmp$10;
-                      if (_bind$25.$tag === 1) {
-                        const _ok = _bind$25;
+                      if (_bind$26.$tag === 1) {
+                        const _ok = _bind$26;
                         _tmp$10 = _ok._0;
                       } else {
-                        return _bind$25;
+                        return _bind$26;
                       }
                       t = _tmp$10._0;
                     } else {
@@ -25820,24 +27598,24 @@ function _M0FP38username5mbtpp2tt12check__block(cxt, stmts, goal) {
             }
             break _L$3;
           }
-          const _bind$25 = _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(c$3, "invalid assignment target");
-          if (_bind$25.$tag === 1) {
-            const _ok = _bind$25;
+          const _bind$26 = _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(c$3, "invalid assignment target");
+          if (_bind$26.$tag === 1) {
+            const _ok = _bind$26;
             t = _ok._0;
           } else {
-            return _bind$25;
+            return _bind$26;
           }
         }
-        const _bind$25 = _M0FP38username5mbtpp2tt12check__block(cxt, rest, goal);
-        let _bind$26;
-        if (_bind$25.$tag === 1) {
-          const _ok = _bind$25;
-          _bind$26 = _ok._0;
+        const _bind$26 = _M0FP38username5mbtpp2tt12check__block(cxt, rest, goal);
+        let _bind$27;
+        if (_bind$26.$tag === 1) {
+          const _ok = _bind$26;
+          _bind$27 = _ok._0;
         } else {
-          return _bind$25;
+          return _bind$26;
         }
-        const _r$3 = _bind$26._0;
-        const _rty$3 = _bind$26._1;
+        const _r$3 = _bind$27._0;
+        const _rty$3 = _bind$27._1;
         return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: new _M0DTP38username5mbtpp2tt2Tm3Seq(t, _r$3), _1: _rty$3 });
       }
       case 5: {
@@ -25845,120 +27623,138 @@ function _M0FP38username5mbtpp2tt12check__block(cxt, stmts, goal) {
         const _p$7 = _SWhile._0;
         const _cond = _SWhile._1;
         const _body = _SWhile._2;
-        const c$4 = _M0MP38username5mbtpp2tt3Cxt2at(cxt, _p$7);
-        const _bind$27 = _M0FP38username5mbtpp2tt5check(c$4, _cond, new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []));
-        let tc;
-        if (_bind$27.$tag === 1) {
-          const _ok = _bind$27;
-          tc = _ok._0;
+        if (_M0FP38username5mbtpp2tt7has__is(_cond)) {
+          const body2 = _M0FP38username5mbtpp2tt10cond__expr(_cond, _body, new _M0DTP38username5mbtpp6parser4Expr6EBreak(_p$7));
+          const _self$2 = [];
+          _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_self$2, new _M0DTP38username5mbtpp6parser4Stmt6SWhile(_p$7, new _M0DTP38username5mbtpp6parser4Expr4ELit(_p$7, _M0FP38username5mbtpp2tt12check__blockN6constrS10155), body2));
+          _M0MPC15array5Array10push__iterGRP38username5mbtpp6parser4StmtE(_self$2, _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(rest));
+          _tmp$9 = _self$2;
+          continue _L;
         } else {
-          return _bind$27;
+          const c$4 = _M0MP38username5mbtpp2tt3Cxt2at(cxt, _p$7);
+          const _bind$28 = _M0FP38username5mbtpp2tt5check(c$4, _cond, new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []));
+          let tc;
+          if (_bind$28.$tag === 1) {
+            const _ok = _bind$28;
+            tc = _ok._0;
+          } else {
+            return _bind$28;
+          }
+          const _bind$29 = _M0FP38username5mbtpp2tt5check(new _M0TP38username5mbtpp2tt3Cxt(c$4.env, c$4.names, c$4.types, c$4.bound, c$4.muts, c$4.lvl, c$4.pos, c$4.can_raise, c$4.can_async, c$4.ret_ty, true), _body, new _M0DTP38username5mbtpp2tt3Val5VData("Unit", []));
+          let tb;
+          if (_bind$29.$tag === 1) {
+            const _ok = _bind$29;
+            tb = _ok._0;
+          } else {
+            return _bind$29;
+          }
+          const _bind$30 = _M0FP38username5mbtpp2tt12check__block(cxt, rest, goal);
+          let _bind$31;
+          if (_bind$30.$tag === 1) {
+            const _ok = _bind$30;
+            _bind$31 = _ok._0;
+          } else {
+            return _bind$30;
+          }
+          const _r$4 = _bind$31._0;
+          const _rty$4 = _bind$31._1;
+          return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: new _M0DTP38username5mbtpp2tt2Tm3Seq(new _M0DTP38username5mbtpp2tt2Tm5While(tc, tb, new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0DTP38username5mbtpp6parser3Lit5LUnit__)), _r$4), _1: _rty$4 });
         }
-        const _bind$28 = _M0FP38username5mbtpp2tt5check(new _M0TP38username5mbtpp2tt3Cxt(c$4.env, c$4.names, c$4.types, c$4.bound, c$4.muts, c$4.lvl, c$4.pos, c$4.can_raise, c$4.ret_ty, true), _body, new _M0DTP38username5mbtpp2tt3Val5VData("Unit", []));
-        let tb;
-        if (_bind$28.$tag === 1) {
-          const _ok = _bind$28;
-          tb = _ok._0;
-        } else {
-          return _bind$28;
-        }
-        const _bind$29 = _M0FP38username5mbtpp2tt12check__block(cxt, rest, goal);
-        let _bind$30;
-        if (_bind$29.$tag === 1) {
-          const _ok = _bind$29;
-          _bind$30 = _ok._0;
-        } else {
-          return _bind$29;
-        }
-        const _r$4 = _bind$30._0;
-        const _rty$4 = _bind$30._1;
-        return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: new _M0DTP38username5mbtpp2tt2Tm3Seq(new _M0DTP38username5mbtpp2tt2Tm5While(tc, tb, new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0DTP38username5mbtpp6parser3Lit5LUnit__)), _r$4), _1: _rty$4 });
+      }
+      case 9: {
+        const _SGuard = s;
+        const _p$8 = _SGuard._0;
+        const _cond$2 = _SGuard._1;
+        const _el = _SGuard._2;
+        const el = _M0MPC16option6Option10unwrap__orGRP38username5mbtpp6parser4ExprE(_el, new _M0DTP38username5mbtpp6parser4Expr4EApp(_p$8, new _M0DTP38username5mbtpp6parser4Expr4EVar(_p$8, "abort"), _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__, new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4Some([new _M0DTP38username5mbtpp6parser4Expr4ELit(_p$8, _M0FP38username5mbtpp2tt12check__blockN6constrS10156)])));
+        _tmp$9 = [new _M0DTP38username5mbtpp6parser4Stmt5SExpr(_p$8, new _M0DTP38username5mbtpp6parser4Expr3EIf(_p$8, _cond$2, new _M0DTP38username5mbtpp6parser4Expr6EBlock(_p$8, rest), el))];
+        continue _L;
       }
       case 6: {
         const _SFor = s;
-        const _p$8 = _SFor._0;
+        const _p$9 = _SFor._0;
         const _inits = _SFor._1;
-        const _cond$2 = _SFor._2;
+        const _cond$3 = _SFor._2;
         const _updates = _SFor._3;
         const _body$2 = _SFor._4;
-        let c$5 = _M0MP38username5mbtpp2tt3Cxt2at(cxt, _p$8);
+        let c$4 = _M0MP38username5mbtpp2tt3Cxt2at(cxt, _p$9);
         const lets = [];
-        const _bind$31 = _inits.length;
+        const _bind$28 = _inits.length;
         let _tmp$10 = 0;
         while (true) {
           const _ = _tmp$10;
-          if (_ < _bind$31) {
+          if (_ < _bind$28) {
             const init = _inits[_];
-            const _bind$32 = _M0FP38username5mbtpp2tt10infer__ins(c$5, init._1);
-            let _bind$33;
-            if (_bind$32.$tag === 1) {
-              const _ok = _bind$32;
-              _bind$33 = _ok._0;
+            const _bind$29 = _M0FP38username5mbtpp2tt10infer__ins(c$4, init._1);
+            let _bind$30;
+            if (_bind$29.$tag === 1) {
+              const _ok = _bind$29;
+              _bind$30 = _ok._0;
             } else {
-              return _bind$32;
+              return _bind$29;
             }
-            const _t$3 = _bind$33._0;
-            const _a$3 = _bind$33._1;
-            _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(lets, { _0: init._0, _1: _M0MP38username5mbtpp2tt3Cxt5quote(c$5, _a$3), _2: _t$3 });
-            c$5 = _M0MP38username5mbtpp2tt3Cxt9bind__mut(c$5, init._0, _a$3);
+            const _t$3 = _bind$30._0;
+            const _a$3 = _bind$30._1;
+            _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(lets, { _0: init._0, _1: _M0MP38username5mbtpp2tt3Cxt5quote(c$4, _a$3), _2: _t$3 });
+            c$4 = _M0MP38username5mbtpp2tt3Cxt9bind__mut(c$4, init._0, _a$3);
             _tmp$10 = _ + 1 | 0;
             continue;
           } else {
             break;
           }
         }
-        let tc$2;
-        if (_cond$2 === undefined) {
-          tc$2 = _M0FP38username5mbtpp2tt12check__blockN6constrS9516;
+        let tc;
+        if (_cond$3 === undefined) {
+          tc = _M0FP38username5mbtpp2tt12check__blockN6constrS10158;
         } else {
-          const _Some = _cond$2;
+          const _Some = _cond$3;
           const _e$4 = _Some;
-          const _bind$32 = _M0FP38username5mbtpp2tt5check(c$5, _e$4, new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []));
-          if (_bind$32.$tag === 1) {
-            const _ok = _bind$32;
-            tc$2 = _ok._0;
+          const _bind$29 = _M0FP38username5mbtpp2tt5check(c$4, _e$4, new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []));
+          if (_bind$29.$tag === 1) {
+            const _ok = _bind$29;
+            tc = _ok._0;
           } else {
-            return _bind$32;
+            return _bind$29;
           }
         }
-        const _tmp$11 = c$5;
-        const _bind$32 = _M0FP38username5mbtpp2tt5check(new _M0TP38username5mbtpp2tt3Cxt(_tmp$11.env, _tmp$11.names, _tmp$11.types, _tmp$11.bound, _tmp$11.muts, _tmp$11.lvl, _tmp$11.pos, _tmp$11.can_raise, _tmp$11.ret_ty, true), _body$2, new _M0DTP38username5mbtpp2tt3Val5VData("Unit", []));
-        let tb$2;
-        if (_bind$32.$tag === 1) {
-          const _ok = _bind$32;
-          tb$2 = _ok._0;
+        const _tmp$11 = c$4;
+        const _bind$29 = _M0FP38username5mbtpp2tt5check(new _M0TP38username5mbtpp2tt3Cxt(_tmp$11.env, _tmp$11.names, _tmp$11.types, _tmp$11.bound, _tmp$11.muts, _tmp$11.lvl, _tmp$11.pos, _tmp$11.can_raise, _tmp$11.can_async, _tmp$11.ret_ty, true), _body$2, new _M0DTP38username5mbtpp2tt3Val5VData("Unit", []));
+        let tb;
+        if (_bind$29.$tag === 1) {
+          const _ok = _bind$29;
+          tb = _ok._0;
         } else {
-          return _bind$32;
+          return _bind$29;
         }
         let step = new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0DTP38username5mbtpp6parser3Lit5LUnit__);
         let _tmp$12 = _updates.length - 1 | 0;
         while (true) {
           const k = _tmp$12;
           if (k >= 0) {
-            const _bind$33 = _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_updates, k);
-            const _x$2 = _bind$33._0;
-            const _e$4 = _bind$33._1;
-            const _bind$34 = _M0MP38username5mbtpp2tt3Cxt6lookup(c$5, _x$2);
-            if (_bind$34 === undefined) {
-              const _bind$35 = _M0MP38username5mbtpp2tt3Cxt4failGuE(c$5, `unknown loop variable ${_x$2}`);
-              if (_bind$35.$tag === 1) {
-                const _ok = _bind$35;
+            const _bind$30 = _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_updates, k);
+            const _x$2 = _bind$30._0;
+            const _e$4 = _bind$30._1;
+            const _bind$31 = _M0MP38username5mbtpp2tt3Cxt6lookup(c$4, _x$2);
+            if (_bind$31 === undefined) {
+              const _bind$32 = _M0MP38username5mbtpp2tt3Cxt4failGuE(c$4, `unknown loop variable ${_x$2}`);
+              if (_bind$32.$tag === 1) {
+                const _ok = _bind$32;
                 _ok._0;
               } else {
-                return _bind$35;
+                return _bind$32;
               }
             } else {
-              const _Some = _bind$34;
+              const _Some = _bind$31;
               const _l = _Some;
-              const _bind$35 = _M0FP38username5mbtpp2tt5check(c$5, _e$4, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(c$5.types, _l));
+              const _bind$32 = _M0FP38username5mbtpp2tt5check(c$4, _e$4, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(c$4.types, _l));
               let _tmp$13;
-              if (_bind$35.$tag === 1) {
-                const _ok = _bind$35;
+              if (_bind$32.$tag === 1) {
+                const _ok = _bind$32;
                 _tmp$13 = _ok._0;
               } else {
-                return _bind$35;
+                return _bind$32;
               }
-              step = new _M0DTP38username5mbtpp2tt2Tm3Seq(new _M0DTP38username5mbtpp2tt2Tm6Assign((c$5.lvl - 1 | 0) - _l | 0, _tmp$13), step);
+              step = new _M0DTP38username5mbtpp2tt2Tm3Seq(new _M0DTP38username5mbtpp2tt2Tm6Assign((c$4.lvl - 1 | 0) - _l | 0, _tmp$13), step);
             }
             _tmp$12 = k - 1 | 0;
             continue;
@@ -25966,15 +27762,15 @@ function _M0FP38username5mbtpp2tt12check__block(cxt, stmts, goal) {
             break;
           }
         }
-        let loop_tm = new _M0DTP38username5mbtpp2tt2Tm5While(tc$2, tb$2, step);
+        let loop_tm = new _M0DTP38username5mbtpp2tt2Tm5While(tc, tb, step);
         let _tmp$13 = lets.length - 1 | 0;
         while (true) {
           const k = _tmp$13;
           if (k >= 0) {
-            const _bind$33 = _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(lets, k);
-            const _x$2 = _bind$33._0;
-            const _a$3 = _bind$33._1;
-            const _t$3 = _bind$33._2;
+            const _bind$30 = _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(lets, k);
+            const _x$2 = _bind$30._0;
+            const _a$3 = _bind$30._1;
+            const _t$3 = _bind$30._2;
             loop_tm = new _M0DTP38username5mbtpp2tt2Tm6LetMut(_x$2, _a$3, _t$3, loop_tm);
             _tmp$13 = k - 1 | 0;
             continue;
@@ -25982,64 +27778,64 @@ function _M0FP38username5mbtpp2tt12check__block(cxt, stmts, goal) {
             break;
           }
         }
-        const _bind$33 = _M0FP38username5mbtpp2tt12check__block(cxt, rest, goal);
-        let _bind$34;
-        if (_bind$33.$tag === 1) {
-          const _ok = _bind$33;
-          _bind$34 = _ok._0;
+        const _bind$30 = _M0FP38username5mbtpp2tt12check__block(cxt, rest, goal);
+        let _bind$31;
+        if (_bind$30.$tag === 1) {
+          const _ok = _bind$30;
+          _bind$31 = _ok._0;
         } else {
-          return _bind$33;
+          return _bind$30;
         }
-        const _r$5 = _bind$34._0;
-        const _rty$5 = _bind$34._1;
-        return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: new _M0DTP38username5mbtpp2tt2Tm3Seq(loop_tm, _r$5), _1: _rty$5 });
+        const _r$4 = _bind$31._0;
+        const _rty$4 = _bind$31._1;
+        return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: new _M0DTP38username5mbtpp2tt2Tm3Seq(loop_tm, _r$4), _1: _rty$4 });
       }
       default: {
         const _SForIn = s;
-        const _p$9 = _SForIn._0;
+        const _p$10 = _SForIn._0;
         const _x$2 = _SForIn._1;
         const _e$4 = _SForIn._2;
         const _body$3 = _SForIn._3;
         const i = _M0FP38username5mbtpp2tt16fresh__name__gen("__i");
-        const ev = new _M0DTP38username5mbtpp6parser4Expr4EVar(_p$9, i);
-        const one = new _M0DTP38username5mbtpp6parser4Expr4ELit(_p$9, _M0FP38username5mbtpp2tt12check__blockN6constrS9517);
-        const step$2 = [{ _0: i, _1: new _M0DTP38username5mbtpp6parser4Expr4EBin(_p$9, "+", ev, one) }];
+        const ev = new _M0DTP38username5mbtpp6parser4Expr4EVar(_p$10, i);
+        const one = new _M0DTP38username5mbtpp6parser4Expr4ELit(_p$10, _M0FP38username5mbtpp2tt12check__blockN6constrS10159);
+        const step$2 = [{ _0: i, _1: new _M0DTP38username5mbtpp6parser4Expr4EBin(_p$10, "+", ev, one) }];
         let loop_stmts;
         if (_e$4.$tag === 29) {
           const _ERange = _e$4;
           const _a$3 = _ERange._1;
           const _b = _ERange._2;
           const _incl = _ERange._3;
-          const cond = new _M0DTP38username5mbtpp6parser4Expr4EBin(_p$9, _incl ? "<=" : "<", ev, _b);
-          const body2 = new _M0DTP38username5mbtpp6parser4Expr6EBlock(_p$9, [new _M0DTP38username5mbtpp6parser4Stmt4SLet(_p$9, new _M0DTP38username5mbtpp6parser3Pat4PVar(_p$9, _x$2), undefined, ev), new _M0DTP38username5mbtpp6parser4Stmt5SExpr(_p$9, _body$3)]);
-          loop_stmts = [new _M0DTP38username5mbtpp6parser4Stmt4SFor(_p$9, [{ _0: i, _1: _a$3 }], cond, step$2, body2)];
+          const cond = new _M0DTP38username5mbtpp6parser4Expr4EBin(_p$10, _incl ? "<=" : "<", ev, _b);
+          const body2 = new _M0DTP38username5mbtpp6parser4Expr6EBlock(_p$10, [new _M0DTP38username5mbtpp6parser4Stmt4SLet(_p$10, new _M0DTP38username5mbtpp6parser3Pat4PVar(_p$10, _x$2), undefined, ev), new _M0DTP38username5mbtpp6parser4Stmt5SExpr(_p$10, _body$3)]);
+          loop_stmts = [new _M0DTP38username5mbtpp6parser4Stmt4SFor(_p$10, [{ _0: i, _1: _a$3 }], cond, step$2, body2)];
         } else {
           const arr = _M0FP38username5mbtpp2tt16fresh__name__gen("__a");
-          const av = new _M0DTP38username5mbtpp6parser4Expr4EVar(_p$9, arr);
-          const cond = new _M0DTP38username5mbtpp6parser4Expr4EBin(_p$9, "<", ev, new _M0DTP38username5mbtpp6parser4Expr7EMethod(_p$9, av, "length", _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__, []));
-          const body2 = new _M0DTP38username5mbtpp6parser4Expr6EBlock(_p$9, [new _M0DTP38username5mbtpp6parser4Stmt4SLet(_p$9, new _M0DTP38username5mbtpp6parser3Pat4PVar(_p$9, _x$2), undefined, new _M0DTP38username5mbtpp6parser4Expr4EApp(_p$9, av, new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4Some([ev]), _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__)), new _M0DTP38username5mbtpp6parser4Stmt5SExpr(_p$9, _body$3)]);
-          loop_stmts = [new _M0DTP38username5mbtpp6parser4Stmt4SLet(_p$9, new _M0DTP38username5mbtpp6parser3Pat4PVar(_p$9, arr), undefined, _e$4), new _M0DTP38username5mbtpp6parser4Stmt4SFor(_p$9, [{ _0: i, _1: new _M0DTP38username5mbtpp6parser4Expr4ELit(_p$9, _M0FP38username5mbtpp2tt12check__blockN6constrS9518) }], cond, step$2, body2)];
+          const av = new _M0DTP38username5mbtpp6parser4Expr4EVar(_p$10, arr);
+          const cond = new _M0DTP38username5mbtpp6parser4Expr4EBin(_p$10, "<", ev, new _M0DTP38username5mbtpp6parser4Expr7EMethod(_p$10, av, "length", _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__, []));
+          const body2 = new _M0DTP38username5mbtpp6parser4Expr6EBlock(_p$10, [new _M0DTP38username5mbtpp6parser4Stmt4SLet(_p$10, new _M0DTP38username5mbtpp6parser3Pat4PVar(_p$10, _x$2), undefined, new _M0DTP38username5mbtpp6parser4Expr4EApp(_p$10, av, new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4Some([ev]), _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__)), new _M0DTP38username5mbtpp6parser4Stmt5SExpr(_p$10, _body$3)]);
+          loop_stmts = [new _M0DTP38username5mbtpp6parser4Stmt4SLet(_p$10, new _M0DTP38username5mbtpp6parser3Pat4PVar(_p$10, arr), undefined, _e$4), new _M0DTP38username5mbtpp6parser4Stmt4SFor(_p$10, [{ _0: i, _1: new _M0DTP38username5mbtpp6parser4Expr4ELit(_p$10, _M0FP38username5mbtpp2tt12check__blockN6constrS10160) }], cond, step$2, body2)];
         }
-        const _bind$35 = _M0FP38username5mbtpp2tt12check__block(cxt, loop_stmts, new _M0DTP38username5mbtpp2tt3Val5VData("Unit", []));
-        let _bind$36;
-        if (_bind$35.$tag === 1) {
-          const _ok = _bind$35;
-          _bind$36 = _ok._0;
+        const _bind$32 = _M0FP38username5mbtpp2tt12check__block(cxt, loop_stmts, new _M0DTP38username5mbtpp2tt3Val5VData("Unit", []));
+        let _bind$33;
+        if (_bind$32.$tag === 1) {
+          const _ok = _bind$32;
+          _bind$33 = _ok._0;
         } else {
-          return _bind$35;
+          return _bind$32;
         }
-        const _t$3 = _bind$36._0;
-        const _bind$37 = _M0FP38username5mbtpp2tt12check__block(cxt, rest, goal);
-        let _bind$38;
-        if (_bind$37.$tag === 1) {
-          const _ok = _bind$37;
-          _bind$38 = _ok._0;
+        const _t$3 = _bind$33._0;
+        const _bind$34 = _M0FP38username5mbtpp2tt12check__block(cxt, rest, goal);
+        let _bind$35;
+        if (_bind$34.$tag === 1) {
+          const _ok = _bind$34;
+          _bind$35 = _ok._0;
         } else {
-          return _bind$37;
+          return _bind$34;
         }
-        const _r$6 = _bind$38._0;
-        const _rty$6 = _bind$38._1;
-        return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: new _M0DTP38username5mbtpp2tt2Tm3Seq(_t$3, _r$6), _1: _rty$6 });
+        const _r$5 = _bind$35._0;
+        const _rty$5 = _bind$35._1;
+        return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: new _M0DTP38username5mbtpp2tt2Tm3Seq(_t$3, _r$5), _1: _rty$5 });
       }
     }
   }
@@ -26145,7 +27941,7 @@ function _M0FP38username5mbtpp2tt9elab__app(cxt, f, impl_args, expl_args, expect
     const _p = _EVar._0;
     const _x = _EVar._1;
     if (_bind$18 === undefined) {
-      if (!_M0MPC16string6String8contains(_x, _M0FP38username5mbtpp2tt9elab__appN6recordS9710)) {
+      if (!_M0MPC16string6String8contains(_x, _M0FP38username5mbtpp2tt9elab__appN6recordS10363)) {
         const _bind$19 = _M0MP38username5mbtpp2tt3Cxt6lookup(cxt, _x);
         if (_bind$19 === undefined) {
           if (!_M0MPB3Map8containsGsRP38username5mbtpp2tt6GEntryE(_M0FP38username5mbtpp2tt7globals, _x)) {
@@ -26192,7 +27988,7 @@ function _M0FP38username5mbtpp2tt9elab__app(cxt, f, impl_args, expl_args, expect
                   break;
                 }
               }
-              const _bind$22 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, `no constructor named ${_x} fits here:\n  ${_M0MPC15array5Array4joinGsE(errs, _M0FP38username5mbtpp2tt9elab__appN6recordS9711)}`);
+              const _bind$22 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, `no constructor named ${_x} fits here:\n  ${_M0MPC15array5Array4joinGsE(errs, _M0FP38username5mbtpp2tt9elab__appN6recordS10364)}`);
               if (_bind$22.$tag === 1) {
                 const _ok = _bind$22;
                 _ok._0;
@@ -26362,7 +28158,7 @@ function _M0FP38username5mbtpp2tt9app__core(cxt, head, head_ty, skip_params, imp
         }
       }
       if (_args.length === 0) {
-        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(ms, _M0FP38username5mbtpp2tt9app__coreN5tupleS9748);
+        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(ms, _M0FP38username5mbtpp2tt9app__coreN5tupleS10401);
       }
       const fty = _M0FP38username5mbtpp2tt3pis(ms, _M0MP38username5mbtpp2tt3Cxt11fresh__meta(cxt));
       const _bind$19 = _M0MP38username5mbtpp2tt3Cxt5unify(cxt, _M0MP38username5mbtpp2tt3Cxt4eval(cxt, fty), ty);
@@ -26446,6 +28242,7 @@ function _M0FP38username5mbtpp2tt9app__core(cxt, head, head_ty, skip_params, imp
     }
     const deferred = [];
     const expl_terms = [];
+    const t0 = t;
     const _bind$19 = args$2.length;
     let _tmp$9 = 0;
     while (true) {
@@ -26492,9 +28289,14 @@ function _M0FP38username5mbtpp2tt9app__core(cxt, head, head_ty, skip_params, imp
                       }
                     }
                     if (_tmp$10) {
-                      const m = _M0MP38username5mbtpp2tt3Cxt11fresh__meta(cxt);
-                      _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(deferred, { _0: m, _1: _ELam, _2: _dom });
-                      arg = m;
+                      if (_M0FP38username5mbtpp2tt10tm__occurs(_cl.body, 0)) {
+                        const m = _M0MP38username5mbtpp2tt3Cxt11fresh__meta(cxt);
+                        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(deferred, { _0: expl_terms.length, _1: m, _2: _ELam, _3: _dom });
+                        arg = m;
+                      } else {
+                        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(deferred, { _0: expl_terms.length, _1: undefined, _2: _ELam, _3: _dom });
+                        arg = new _M0DTP38username5mbtpp2tt2Tm3Lit(_M0DTP38username5mbtpp6parser3Lit5LUnit__);
+                      }
                     } else {
                       break _L$4;
                     }
@@ -26535,47 +28337,73 @@ function _M0FP38username5mbtpp2tt9app__core(cxt, head, head_ty, skip_params, imp
         break;
       }
     }
-    const _bind$20 = deferred.length;
-    let _tmp$10 = 0;
-    while (true) {
-      const _ = _tmp$10;
-      if (_ < _bind$20) {
-        const d = deferred[_];
-        const _m = d._0;
-        const _e = d._1;
-        const _dom = d._2;
-        const _bind$21 = _M0FP38username5mbtpp2tt5check(cxt, _e, _dom);
-        let lt;
-        if (_bind$21.$tag === 1) {
-          const _ok = _bind$21;
-          lt = _ok._0;
+    if (deferred.length > 0) {
+      const _bind$20 = deferred.length;
+      let _tmp$10 = 0;
+      while (true) {
+        const _ = _tmp$10;
+        if (_ < _bind$20) {
+          const d = deferred[_];
+          const _k = d._0;
+          const _m = d._1;
+          const _e = d._2;
+          const _dom = d._3;
+          const _bind$21 = _M0FP38username5mbtpp2tt5check(cxt, _e, _dom);
+          let lt;
+          if (_bind$21.$tag === 1) {
+            const _ok = _bind$21;
+            lt = _ok._0;
+          } else {
+            return _bind$21;
+          }
+          if (_m === undefined) {
+            _M0MPC15array5Array3setGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt4IcitEE(expl_terms, _k, { _0: lt, _1: 0 });
+          } else {
+            const _Some$2 = _m;
+            const _m$2 = _Some$2;
+            const _bind$22 = _M0MP38username5mbtpp2tt3Cxt5unify(cxt, _M0MP38username5mbtpp2tt3Cxt4eval(cxt, _m$2), _M0MP38username5mbtpp2tt3Cxt4eval(cxt, lt));
+            if (_bind$22.$tag === 1) {
+              const _ok = _bind$22;
+              _ok._0;
+            } else {
+              return _bind$22;
+            }
+          }
+          _tmp$10 = _ + 1 | 0;
+          continue;
         } else {
-          return _bind$21;
+          break;
         }
-        const _bind$22 = _M0MP38username5mbtpp2tt3Cxt5unify(cxt, _M0MP38username5mbtpp2tt3Cxt4eval(cxt, _m), _M0MP38username5mbtpp2tt3Cxt4eval(cxt, lt));
-        if (_bind$22.$tag === 1) {
-          const _ok = _bind$22;
-          _ok._0;
-        } else {
-          return _bind$22;
-        }
-        _tmp$10 = _ + 1 | 0;
-        continue;
-      } else {
-        break;
       }
+      t = _M0FP38username5mbtpp2tt4apps(t0, expl_terms);
     }
-    const _bind$21 = _M0FP38username5mbtpp2tt5force(ty);
-    if (_bind$21.$tag === 11) {
-      const _VRaises = _bind$21;
+    const _bind$20 = _M0FP38username5mbtpp2tt5force(ty);
+    if (_bind$20.$tag === 11) {
+      const _VRaises = _bind$20;
       const _r = _VRaises._0;
-      if (!cxt.can_raise) {
-        const _bind$22 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, "this call may raise an error; use it inside `try` or in a function declared with `raise`");
+      const _e = _VRaises._1;
+      const _bind$21 = _M0FP38username5mbtpp2tt10effect__of(_e);
+      const _is_async = _bind$21._0;
+      const _err = _bind$21._1;
+      if (_is_async && !cxt.can_async) {
+        const _bind$22 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, "this calls an async function, which can only be done in an async function");
         if (_bind$22.$tag === 1) {
           const _ok = _bind$22;
           _ok._0;
         } else {
           return _bind$22;
+        }
+      }
+      if (_err === undefined) {
+      } else {
+        if (!cxt.can_raise) {
+          const _bind$22 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, "this call may raise an error; use it inside `try` or in a function declared with `raise`");
+          if (_bind$22.$tag === 1) {
+            const _ok = _bind$22;
+            _ok._0;
+          } else {
+            return _bind$22;
+          }
         }
       }
       return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: t, _1: _r });
@@ -26680,7 +28508,7 @@ function _M0FP38username5mbtpp2tt11infer__head(cxt, f, expected) {
       const _EVar = f;
       const _p = _EVar._0;
       const _x = _EVar._1;
-      if (!_M0MPC16string6String8contains(_x, _M0FP38username5mbtpp2tt11infer__headN6recordS9849)) {
+      if (!_M0MPC16string6String8contains(_x, _M0FP38username5mbtpp2tt11infer__headN6recordS10510)) {
         const _bind$18 = _M0MP38username5mbtpp2tt3Cxt6lookup(cxt, _x);
         if (_bind$18 === undefined) {
           p = _p;
@@ -26773,22 +28601,30 @@ function _M0FP38username5mbtpp2tt5infer(cxt0, e) {
   _L: while (true) {
     const cxt0$2 = _tmp$9;
     const e$2 = _tmp$10;
+    const _bind$18 = _M0FP38username5mbtpp2tt5sugar(e$2);
+    if (_bind$18 === undefined) {
+    } else {
+      const _Some = _bind$18;
+      const _e2 = _Some;
+      _tmp$10 = _e2;
+      continue;
+    }
     const cxt = _M0MP38username5mbtpp2tt3Cxt2at(cxt0$2, _M0MP38username5mbtpp6parser4Expr3pos(e$2));
     _L$2: {
       let x;
       _L$3: {
         switch (e$2.$tag) {
           case 0: {
-            const _bind$18 = _M0FP38username5mbtpp2tt11infer__head(cxt, e$2, undefined);
-            let _bind$19;
-            if (_bind$18.$tag === 1) {
-              const _ok = _bind$18;
-              _bind$19 = _ok._0;
+            const _bind$19 = _M0FP38username5mbtpp2tt11infer__head(cxt, e$2, undefined);
+            let _bind$20;
+            if (_bind$19.$tag === 1) {
+              const _ok = _bind$19;
+              _bind$20 = _ok._0;
             } else {
-              return _bind$18;
+              return _bind$19;
             }
-            const _t = _bind$19._0;
-            const _ty = _bind$19._1;
+            const _t = _bind$20._0;
+            const _ty = _bind$20._1;
             return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: _t, _1: _ty });
           }
           case 1: {
@@ -26809,12 +28645,12 @@ function _M0FP38username5mbtpp2tt5infer(cxt0, e) {
           case 5: {
             const _EInterp = e$2;
             const _parts = _EInterp._1;
-            let acc = new _M0DTP38username5mbtpp6parser4Expr4ELit(cxt.pos, _M0FP38username5mbtpp2tt5inferN6constrS9879);
-            const _bind$20 = _parts.length;
+            let acc = new _M0DTP38username5mbtpp6parser4Expr4ELit(cxt.pos, _M0FP38username5mbtpp2tt5inferN6constrS10540);
+            const _bind$21 = _parts.length;
             let _tmp$11 = 0;
             while (true) {
               const _ = _tmp$11;
-              if (_ < _bind$20) {
+              if (_ < _bind$21) {
                 const p = _parts[_];
                 let x$2;
                 if (p.$tag === 0) {
@@ -26857,22 +28693,22 @@ function _M0FP38username5mbtpp2tt5infer(cxt0, e) {
             const _impls$2 = _ELam._1;
             const _ps = _ELam._2;
             const _ret = _ELam._3;
-            const _bind$21 = _M0FP38username5mbtpp2tt16infer__lam__type(cxt, _impls$2, _ps, _ret);
-            let _bind$22;
-            if (_bind$21.$tag === 1) {
-              const _ok = _bind$21;
-              _bind$22 = _ok._0;
+            const _bind$22 = _M0FP38username5mbtpp2tt16infer__lam__type(cxt, _impls$2, _ps, _ret);
+            let _bind$23;
+            if (_bind$22.$tag === 1) {
+              const _ok = _bind$22;
+              _bind$23 = _ok._0;
             } else {
-              return _bind$21;
+              return _bind$22;
             }
-            const _ty$2 = _bind$22._1;
-            const _bind$23 = _M0FP38username5mbtpp2tt5check(cxt, e$2, _ty$2);
+            const _ty$2 = _bind$23._1;
+            const _bind$24 = _M0FP38username5mbtpp2tt5check(cxt, e$2, _ty$2);
             let _tmp$12;
-            if (_bind$23.$tag === 1) {
-              const _ok = _bind$23;
+            if (_bind$24.$tag === 1) {
+              const _ok = _bind$24;
               _tmp$12 = _ok._0;
             } else {
-              return _bind$23;
+              return _bind$24;
             }
             return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: _tmp$12, _1: _ty$2 });
           }
@@ -26888,43 +28724,43 @@ function _M0FP38username5mbtpp2tt5infer(cxt0, e) {
             const _el = _EIf._3;
             if (_el === undefined) {
               const unit = new _M0DTP38username5mbtpp2tt3Val5VData("Unit", []);
-              const _bind$24 = _M0FP38username5mbtpp2tt5check(cxt, e$2, unit);
+              const _bind$25 = _M0FP38username5mbtpp2tt5check(cxt, e$2, unit);
               let _tmp$13;
-              if (_bind$24.$tag === 1) {
-                const _ok = _bind$24;
+              if (_bind$25.$tag === 1) {
+                const _ok = _bind$25;
                 _tmp$13 = _ok._0;
               } else {
-                return _bind$24;
+                return _bind$25;
               }
               return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: _tmp$13, _1: unit });
             } else {
               const _Some = _el;
               const _x$2 = _Some;
-              const _bind$24 = _M0FP38username5mbtpp2tt5check(cxt, _c, new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []));
+              const _bind$25 = _M0FP38username5mbtpp2tt5check(cxt, _c, new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []));
               let tc;
-              if (_bind$24.$tag === 1) {
-                const _ok = _bind$24;
-                tc = _ok._0;
-              } else {
-                return _bind$24;
-              }
-              const _bind$25 = _M0FP38username5mbtpp2tt10infer__ins(_M0MP38username5mbtpp2tt3Cxt13define__local(cxt, "_", new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []), _M0FP38username5mbtpp2tt5inferN6constrS9881), _t$2);
-              let _bind$26;
               if (_bind$25.$tag === 1) {
                 const _ok = _bind$25;
-                _bind$26 = _ok._0;
+                tc = _ok._0;
               } else {
                 return _bind$25;
               }
-              const _tt = _bind$26._0;
-              const _ty$3 = _bind$26._1;
-              const _bind$27 = _M0FP38username5mbtpp2tt18check__under__slot(cxt, _x$2, _ty$3, new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []), _M0FP38username5mbtpp2tt5inferN6constrS9883);
+              const _bind$26 = _M0FP38username5mbtpp2tt10infer__ins(_M0MP38username5mbtpp2tt3Cxt13define__local(cxt, "_", new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []), _M0FP38username5mbtpp2tt5inferN6constrS10542), _t$2);
+              let _bind$27;
+              if (_bind$26.$tag === 1) {
+                const _ok = _bind$26;
+                _bind$27 = _ok._0;
+              } else {
+                return _bind$26;
+              }
+              const _tt = _bind$27._0;
+              const _ty$3 = _bind$27._1;
+              const _bind$28 = _M0FP38username5mbtpp2tt18check__under__slot(cxt, _x$2, _ty$3, new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []), _M0FP38username5mbtpp2tt5inferN6constrS10544);
               let te;
-              if (_bind$27.$tag === 1) {
-                const _ok = _bind$27;
+              if (_bind$28.$tag === 1) {
+                const _ok = _bind$28;
                 te = _ok._0;
               } else {
-                return _bind$27;
+                return _bind$28;
               }
               return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: _M0FP38username5mbtpp2tt6if__tm(tc, _tt, te), _1: _ty$3 });
             }
@@ -26940,40 +28776,40 @@ function _M0FP38username5mbtpp2tt5infer(cxt0, e) {
             const _EAnn = e$2;
             const _x$2 = _EAnn._1;
             const _t$3 = _EAnn._2;
-            let _bind$24;
+            let _bind$25;
             let _p;
             _L$4: {
               _L$5: {
-                const _bind$25 = _M0FP38username5mbtpp2tt17check__type__sort(cxt, _t$3);
+                const _bind$26 = _M0FP38username5mbtpp2tt17check__type__sort(cxt, _t$3);
                 let _tmp$13;
-                if (_bind$25.$tag === 1) {
-                  const _ok = _bind$25;
+                if (_bind$26.$tag === 1) {
+                  const _ok = _bind$26;
                   _tmp$13 = _ok._0;
                 } else {
-                  const _err = _bind$25;
+                  const _err = _bind$26;
                   _p = _err._0;
                   break _L$5;
                 }
-                _bind$24 = new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_tmp$13._0);
+                _bind$25 = new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_tmp$13._0);
                 break _L$4;
               }
-              _bind$24 = new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE3Err(_p);
+              _bind$25 = new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE3Err(_p);
             }
             let _tmp$13;
-            if (_bind$24.$tag === 1) {
-              const _ok = _bind$24;
-              _tmp$13 = _ok._0;
-            } else {
-              return _bind$24;
-            }
-            const a$2 = _M0MP38username5mbtpp2tt3Cxt4eval(cxt, _tmp$13);
-            const _bind$25 = _M0FP38username5mbtpp2tt5check(cxt, _x$2, a$2);
-            let _tmp$14;
             if (_bind$25.$tag === 1) {
               const _ok = _bind$25;
-              _tmp$14 = _ok._0;
+              _tmp$13 = _ok._0;
             } else {
               return _bind$25;
+            }
+            const a$2 = _M0MP38username5mbtpp2tt3Cxt4eval(cxt, _tmp$13);
+            const _bind$26 = _M0FP38username5mbtpp2tt5check(cxt, _x$2, a$2);
+            let _tmp$14;
+            if (_bind$26.$tag === 1) {
+              const _ok = _bind$26;
+              _tmp$14 = _ok._0;
+            } else {
+              return _bind$26;
             }
             return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: _tmp$14, _1: a$2 });
           }
@@ -26982,16 +28818,16 @@ function _M0FP38username5mbtpp2tt5infer(cxt0, e) {
             const _p$2 = _EField._0;
             const _x$3 = _EField._1;
             const _f$2 = _EField._2;
-            const _bind$26 = _M0FP38username5mbtpp2tt10infer__ins(cxt, _x$3);
-            let _bind$27;
-            if (_bind$26.$tag === 1) {
-              const _ok = _bind$26;
-              _bind$27 = _ok._0;
+            const _bind$27 = _M0FP38username5mbtpp2tt10infer__ins(cxt, _x$3);
+            let _bind$28;
+            if (_bind$27.$tag === 1) {
+              const _ok = _bind$27;
+              _bind$28 = _ok._0;
             } else {
-              return _bind$26;
+              return _bind$27;
             }
-            const _t$4 = _bind$27._0;
-            const _ty$3 = _bind$27._1;
+            const _t$4 = _bind$28._0;
+            const _ty$3 = _bind$28._1;
             return _M0FP38username5mbtpp2tt11elab__field(cxt, _t$4, _ty$3, _f$2, _p$2);
           }
           case 14: {
@@ -27001,16 +28837,16 @@ function _M0FP38username5mbtpp2tt5infer(cxt0, e) {
             const _m = _EMethod._2;
             const _i$2 = _EMethod._3;
             const _args = _EMethod._4;
-            const _bind$28 = _M0FP38username5mbtpp2tt10infer__ins(cxt, _x$4);
-            let _bind$29;
-            if (_bind$28.$tag === 1) {
-              const _ok = _bind$28;
-              _bind$29 = _ok._0;
+            const _bind$29 = _M0FP38username5mbtpp2tt10infer__ins(cxt, _x$4);
+            let _bind$30;
+            if (_bind$29.$tag === 1) {
+              const _ok = _bind$29;
+              _bind$30 = _ok._0;
             } else {
-              return _bind$28;
+              return _bind$29;
             }
-            const _t$5 = _bind$29._0;
-            const _ty$4 = _bind$29._1;
+            const _t$5 = _bind$30._0;
+            const _ty$4 = _bind$30._1;
             const _p$4 = new Array(_args.length);
             const _p$5 = _args.length;
             let _tmp$15 = 0;
@@ -27045,28 +28881,28 @@ function _M0FP38username5mbtpp2tt5infer(cxt0, e) {
                   const _EVar = _x$6;
                   const _tr = _EVar._1;
                   const c = _M0MP38username5mbtpp2tt3Cxt2at(cxt, _p$6);
-                  const _bind$30 = _M0FP38username5mbtpp2tt6ensure(c, _tr);
-                  if (_bind$30.$tag === 1) {
-                    const _ok = _bind$30;
-                    _ok._0;
-                  } else {
-                    return _bind$30;
-                  }
-                  if (!_M0MPB3Map8containsGsRP38username5mbtpp2tt9TraitInfoE(_M0FP38username5mbtpp2tt2st.traits, _tr)) {
-                    const _bind$31 = _M0MP38username5mbtpp2tt3Cxt4failGuE(c, `${_tr} is not a trait`);
-                    if (_bind$31.$tag === 1) {
-                      const _ok = _bind$31;
-                      _ok._0;
-                    } else {
-                      return _bind$31;
-                    }
-                  }
-                  const _bind$31 = _M0FP38username5mbtpp2tt11ensure__dyn(c, _tr);
+                  const _bind$31 = _M0FP38username5mbtpp2tt6ensure(c, _tr);
                   if (_bind$31.$tag === 1) {
                     const _ok = _bind$31;
                     _ok._0;
                   } else {
                     return _bind$31;
+                  }
+                  if (!_M0MPB3Map8containsGsRP38username5mbtpp2tt9TraitInfoE(_M0FP38username5mbtpp2tt2st.traits, _tr)) {
+                    const _bind$32 = _M0MP38username5mbtpp2tt3Cxt4failGuE(c, `${_tr} is not a trait`);
+                    if (_bind$32.$tag === 1) {
+                      const _ok = _bind$32;
+                      _ok._0;
+                    } else {
+                      return _bind$32;
+                    }
+                  }
+                  const _bind$32 = _M0FP38username5mbtpp2tt11ensure__dyn(c, _tr);
+                  if (_bind$32.$tag === 1) {
+                    const _ok = _bind$32;
+                    _ok._0;
+                  } else {
+                    return _bind$32;
                   }
                   return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: new _M0DTP38username5mbtpp2tt2Tm6Global(`&${_tr}`), _1: _M0DTP38username5mbtpp2tt3Val2VU__ });
                 } else {
@@ -27076,16 +28912,16 @@ function _M0FP38username5mbtpp2tt5infer(cxt0, e) {
               }
               case "-": {
                 const _x$7 = _EUn._2;
-                const _bind$30 = _M0FP38username5mbtpp2tt10infer__ins(cxt, _x$7);
-                let _bind$31;
-                if (_bind$30.$tag === 1) {
-                  const _ok = _bind$30;
-                  _bind$31 = _ok._0;
+                const _bind$31 = _M0FP38username5mbtpp2tt10infer__ins(cxt, _x$7);
+                let _bind$32;
+                if (_bind$31.$tag === 1) {
+                  const _ok = _bind$31;
+                  _bind$32 = _ok._0;
                 } else {
-                  return _bind$30;
+                  return _bind$31;
                 }
-                const _t$6 = _bind$31._0;
-                const _ty$5 = _bind$31._1;
+                const _t$6 = _bind$32._0;
+                const _ty$5 = _bind$32._1;
                 return _M0FP38username5mbtpp2tt12elab__method(cxt, _t$6, _ty$5, "op_neg", _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__, [], undefined);
               }
               default: {
@@ -27107,17 +28943,17 @@ function _M0FP38username5mbtpp2tt5infer(cxt0, e) {
             if (_es$2.length === 0) {
               a$3 = _M0MP38username5mbtpp2tt3Cxt4eval(cxt, _M0MP38username5mbtpp2tt3Cxt11fresh__meta(cxt));
             } else {
-              const _bind$32 = _M0FP38username5mbtpp2tt10infer__ins(cxt, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_es$2, 0));
+              const _bind$33 = _M0FP38username5mbtpp2tt10infer__ins(cxt, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_es$2, 0));
               let _tmp$16;
-              if (_bind$32.$tag === 1) {
-                const _ok = _bind$32;
+              if (_bind$33.$tag === 1) {
+                const _ok = _bind$33;
                 _tmp$16 = _ok._0;
               } else {
-                return _bind$32;
+                return _bind$33;
               }
               a$3 = _tmp$16._1;
             }
-            let _bind$32;
+            let _bind$33;
             let _p$7;
             _L$5: {
               _L$6: {
@@ -27128,13 +28964,13 @@ function _M0FP38username5mbtpp2tt5infer(cxt0, e) {
                   const _p$10 = _tmp$16;
                   if (_p$10 < _p$9) {
                     const _p$11 = _es$2[_p$10];
-                    const _bind$33 = _M0FP38username5mbtpp2tt5check(cxt, _p$11, a$3);
+                    const _bind$34 = _M0FP38username5mbtpp2tt5check(cxt, _p$11, a$3);
                     let _tmp$17;
-                    if (_bind$33.$tag === 1) {
-                      const _ok = _bind$33;
+                    if (_bind$34.$tag === 1) {
+                      const _ok = _bind$34;
                       _tmp$17 = _ok._0;
                     } else {
-                      const _err = _bind$33;
+                      const _err = _bind$34;
                       _p$7 = _err._0;
                       break _L$6;
                     }
@@ -27145,17 +28981,17 @@ function _M0FP38username5mbtpp2tt5infer(cxt0, e) {
                     break;
                   }
                 }
-                _bind$32 = new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp2tt2TmERP38username5mbtpp2tt9ElabErrorE2Ok(_p$8);
+                _bind$33 = new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp2tt2TmERP38username5mbtpp2tt9ElabErrorE2Ok(_p$8);
                 break _L$5;
               }
-              _bind$32 = new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp2tt2TmERP38username5mbtpp2tt9ElabErrorE3Err(_p$7);
+              _bind$33 = new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp2tt2TmERP38username5mbtpp2tt9ElabErrorE3Err(_p$7);
             }
             let ts;
-            if (_bind$32.$tag === 1) {
-              const _ok = _bind$32;
+            if (_bind$33.$tag === 1) {
+              const _ok = _bind$33;
               ts = _ok._0;
             } else {
-              return _bind$32;
+              return _bind$33;
             }
             return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: new _M0DTP38username5mbtpp2tt2Tm8ArrayLit(ts), _1: new _M0DTP38username5mbtpp2tt3Val5VData("Array", [{ _0: a$3, _1: 1 }]) });
           }
@@ -27173,28 +29009,28 @@ function _M0FP38username5mbtpp2tt5infer(cxt0, e) {
           case 21: {
             const _ETryQ = e$2;
             const _x$9 = _ETryQ._1;
-            const _bind$33 = _M0FP38username5mbtpp2tt10infer__ins(new _M0TP38username5mbtpp2tt3Cxt(cxt.env, cxt.names, cxt.types, cxt.bound, cxt.muts, cxt.lvl, cxt.pos, true, cxt.ret_ty, cxt.in_loop), _x$9);
-            let _bind$34;
-            if (_bind$33.$tag === 1) {
-              const _ok = _bind$33;
-              _bind$34 = _ok._0;
+            const _bind$34 = _M0FP38username5mbtpp2tt10infer__ins(new _M0TP38username5mbtpp2tt3Cxt(cxt.env, cxt.names, cxt.types, cxt.bound, cxt.muts, cxt.lvl, cxt.pos, true, cxt.can_async, cxt.ret_ty, cxt.in_loop), _x$9);
+            let _bind$35;
+            if (_bind$34.$tag === 1) {
+              const _ok = _bind$34;
+              _bind$35 = _ok._0;
             } else {
-              return _bind$33;
+              return _bind$34;
             }
-            const _t$7 = _bind$34._0;
-            const _ty$6 = _bind$34._1;
+            const _t$7 = _bind$35._0;
+            const _ty$6 = _bind$35._1;
             const err = new _M0DTP38username5mbtpp2tt3Val5VData("Error", []);
             const res_ty = new _M0DTP38username5mbtpp2tt3Val5VData("Result", [{ _0: _ty$6, _1: 1 }, { _0: err, _1: 1 }]);
-            const _bind$35 = _M0FP38username5mbtpp2tt6ensure(cxt, "Result::Ok");
-            if (_bind$35.$tag === 1) {
-              const _ok = _bind$35;
+            const _bind$36 = _M0FP38username5mbtpp2tt6ensure(cxt, "Result::Ok");
+            if (_bind$36.$tag === 1) {
+              const _ok = _bind$36;
               _ok._0;
             } else {
-              return _bind$35;
+              return _bind$36;
             }
-            const ok = _M0FP38username5mbtpp2tt4apps(_M0FP38username5mbtpp2tt5inferN6constrS9884, [{ _0: _M0MP38username5mbtpp2tt3Cxt5quote(cxt, _ty$6), _1: 1 }, _M0FP38username5mbtpp2tt5inferN5tupleS9886, { _0: _t$7, _1: 0 }]);
-            const errv = _M0FP38username5mbtpp2tt4apps(_M0FP38username5mbtpp2tt5inferN6constrS9887, [{ _0: _M0FP38username5mbtpp2tt5quote(cxt.lvl + 1 | 0, _ty$6), _1: 1 }, _M0FP38username5mbtpp2tt5inferN5tupleS9889, _M0FP38username5mbtpp2tt5inferN5tupleS9891]);
-            return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: new _M0DTP38username5mbtpp2tt2Tm3Try(ok, [new _M0TP38username5mbtpp2tt6Clause([_M0FP38username5mbtpp2tt5inferN6constrS9892], errv)]), _1: res_ty });
+            const ok = _M0FP38username5mbtpp2tt4apps(_M0FP38username5mbtpp2tt5inferN6constrS10545, [{ _0: _M0MP38username5mbtpp2tt3Cxt5quote(cxt, _ty$6), _1: 1 }, _M0FP38username5mbtpp2tt5inferN5tupleS10547, { _0: _t$7, _1: 0 }]);
+            const errv = _M0FP38username5mbtpp2tt4apps(_M0FP38username5mbtpp2tt5inferN6constrS10548, [{ _0: _M0FP38username5mbtpp2tt5quote(cxt.lvl + 1 | 0, _ty$6), _1: 1 }, _M0FP38username5mbtpp2tt5inferN5tupleS10550, _M0FP38username5mbtpp2tt5inferN5tupleS10552]);
+            return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: new _M0DTP38username5mbtpp2tt2Tm3Try(ok, [new _M0TP38username5mbtpp2tt6Clause([_M0FP38username5mbtpp2tt5inferN6constrS10553], undefined, errv)]), _1: res_ty });
           }
           case 22: {
             break _L$2;
@@ -27222,29 +29058,90 @@ function _M0FP38username5mbtpp2tt5infer(cxt0, e) {
             const _x$10 = _ETagged._1;
             return _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(cxt, `labelled argument ${_x$10}= can only appear in a call`);
           }
-          default: {
+          case 29: {
             return _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(cxt, "a range can only be used in a for loop");
+          }
+          case 31: {
+            return _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(cxt, "unexpected pattern test");
+          }
+          default: {
+            const _EEff = e$2;
+            const _t$8 = _EEff._1;
+            const _eff = _EEff._2;
+            let _bind$37;
+            let _p$8;
+            _L$6: {
+              _L$7: {
+                const _bind$38 = _M0FP38username5mbtpp2tt17check__type__sort(cxt, _t$8);
+                let _tmp$16;
+                if (_bind$38.$tag === 1) {
+                  const _ok = _bind$38;
+                  _tmp$16 = _ok._0;
+                } else {
+                  const _err = _bind$38;
+                  _p$8 = _err._0;
+                  break _L$7;
+                }
+                _bind$37 = new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_tmp$16._0);
+                break _L$6;
+              }
+              _bind$37 = new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE3Err(_p$8);
+            }
+            let _tmp$16;
+            if (_bind$37.$tag === 1) {
+              const _ok = _bind$37;
+              _tmp$16 = _ok._0;
+            } else {
+              return _bind$37;
+            }
+            let _bind$38;
+            let _p$9;
+            _L$7: {
+              _L$8: {
+                const _bind$39 = _M0FP38username5mbtpp2tt17check__type__sort(cxt, _eff);
+                let _tmp$17;
+                if (_bind$39.$tag === 1) {
+                  const _ok = _bind$39;
+                  _tmp$17 = _ok._0;
+                } else {
+                  const _err = _bind$39;
+                  _p$9 = _err._0;
+                  break _L$8;
+                }
+                _bind$38 = new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_tmp$17._0);
+                break _L$7;
+              }
+              _bind$38 = new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE3Err(_p$9);
+            }
+            let _tmp$17;
+            if (_bind$38.$tag === 1) {
+              const _ok = _bind$38;
+              _tmp$17 = _ok._0;
+            } else {
+              return _bind$38;
+            }
+            return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: new _M0DTP38username5mbtpp2tt2Tm6Raises(_tmp$16, _tmp$17), _1: _M0DTP38username5mbtpp2tt3Val2VU__ });
           }
         }
       }
-      const _bind$18 = _M0FP38username5mbtpp2tt5check(cxt, x, new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []));
+      const _bind$19 = _M0FP38username5mbtpp2tt5check(cxt, x, new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []));
       let t;
-      if (_bind$18.$tag === 1) {
-        const _ok = _bind$18;
+      if (_bind$19.$tag === 1) {
+        const _ok = _bind$19;
         t = _ok._0;
       } else {
-        return _bind$18;
+        return _bind$19;
       }
-      return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: _M0FP38username5mbtpp2tt6if__tm(t, _M0FP38username5mbtpp2tt5inferN6constrS9876, _M0FP38username5mbtpp2tt5inferN6constrS9878), _1: new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []) });
+      return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: _M0FP38username5mbtpp2tt6if__tm(t, _M0FP38username5mbtpp2tt5inferN6constrS10537, _M0FP38username5mbtpp2tt5inferN6constrS10539), _1: new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []) });
     }
     const a = _M0MP38username5mbtpp2tt3Cxt4eval(cxt, _M0MP38username5mbtpp2tt3Cxt11fresh__meta(cxt));
-    const _bind$18 = _M0FP38username5mbtpp2tt5check(cxt, e$2, a);
+    const _bind$19 = _M0FP38username5mbtpp2tt5check(cxt, e$2, a);
     let _tmp$11;
-    if (_bind$18.$tag === 1) {
-      const _ok = _bind$18;
+    if (_bind$19.$tag === 1) {
+      const _ok = _bind$19;
       _tmp$11 = _ok._0;
     } else {
-      return _bind$18;
+      return _bind$19;
     }
     return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: _tmp$11, _1: a });
   }
@@ -27300,6 +29197,14 @@ function _M0FP38username5mbtpp2tt11elab__field(cxt, t, ty, f, at) {
   }
 }
 function _M0FP38username5mbtpp2tt11elab__match(cxt, scr, ret, arms, goal) {
+  const _bind$18 = _M0FP38username5mbtpp2tt12expand__arms(cxt, arms);
+  let arms$2;
+  if (_bind$18.$tag === 1) {
+    const _ok = _bind$18;
+    arms$2 = _ok._0;
+  } else {
+    return _bind$18;
+  }
   let scrs;
   _L: {
     _L$2: {
@@ -27307,7 +29212,7 @@ function _M0FP38username5mbtpp2tt11elab__match(cxt, scr, ret, arms, goal) {
         const _ETuple = scr;
         const _es = _ETuple._1;
         if (ret === undefined) {
-          const _p = _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(arms);
+          const _p = _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(arms$2);
           let _tmp$9;
           while (true) {
             const _p$2 = _M0MPB4Iter4nextGRP38username5mbtpp2tt2TmE(_p);
@@ -27357,13 +29262,13 @@ function _M0FP38username5mbtpp2tt11elab__match(cxt, scr, ret, arms, goal) {
     }
     scrs = [scr];
   }
-  const _p = new Array(arms.length);
-  const _p$2 = arms.length;
+  const _p = new Array(arms$2.length);
+  const _p$2 = arms$2.length;
   let _tmp$9 = 0;
   while (true) {
     const _p$3 = _tmp$9;
     if (_p$3 < _p$2) {
-      const _p$4 = arms[_p$3];
+      const _p$4 = arms$2[_p$3];
       let _tmp$10;
       let _p$5;
       _L$2: {
@@ -27430,7 +29335,7 @@ function _M0FP38username5mbtpp2tt11elab__match(cxt, scr, ret, arms, goal) {
       const _Some = goal;
       goal$2 = _Some;
     }
-    let _bind$18;
+    let _bind$19;
     let _p$3;
     _L$2: {
       _L$3: {
@@ -27441,13 +29346,13 @@ function _M0FP38username5mbtpp2tt11elab__match(cxt, scr, ret, arms, goal) {
           const _p$6 = _tmp$10;
           if (_p$6 < _p$5) {
             const _p$7 = scrs[_p$6];
-            const _bind$19 = _M0FP38username5mbtpp2tt10infer__ins(cxt, _p$7);
+            const _bind$20 = _M0FP38username5mbtpp2tt10infer__ins(cxt, _p$7);
             let _tmp$11;
-            if (_bind$19.$tag === 1) {
-              const _ok = _bind$19;
+            if (_bind$20.$tag === 1) {
+              const _ok = _bind$20;
               _tmp$11 = _ok._0;
             } else {
-              const _err = _bind$19;
+              const _err = _bind$20;
               _p$3 = _err._0;
               break _L$3;
             }
@@ -27458,17 +29363,17 @@ function _M0FP38username5mbtpp2tt11elab__match(cxt, scr, ret, arms, goal) {
             break;
           }
         }
-        _bind$18 = new _M0DTPC16result6ResultGRPB5ArrayGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValEERP38username5mbtpp2tt9ElabErrorE2Ok(_p$4);
+        _bind$19 = new _M0DTPC16result6ResultGRPB5ArrayGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValEERP38username5mbtpp2tt9ElabErrorE2Ok(_p$4);
         break _L$2;
       }
-      _bind$18 = new _M0DTPC16result6ResultGRPB5ArrayGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValEERP38username5mbtpp2tt9ElabErrorE3Err(_p$3);
+      _bind$19 = new _M0DTPC16result6ResultGRPB5ArrayGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValEERP38username5mbtpp2tt9ElabErrorE3Err(_p$3);
     }
     let sts;
-    if (_bind$18.$tag === 1) {
-      const _ok = _bind$18;
+    if (_bind$19.$tag === 1) {
+      const _ok = _bind$19;
       sts = _ok._0;
     } else {
-      return _bind$18;
+      return _bind$19;
     }
     const _p$4 = new Array(sts.length);
     const _p$5 = sts.length;
@@ -27489,24 +29394,24 @@ function _M0FP38username5mbtpp2tt11elab__match(cxt, scr, ret, arms, goal) {
     let _tmp$11 = 0;
     while (true) {
       const j = _tmp$11;
-      if (j < arms.length) {
-        const arm = _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(arms, j);
-        let cur = _M0MP38username5mbtpp2tt3Cxt2at(cxt, arm.pos);
+      if (j < arms$2.length) {
+        const arm = _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(arms$2, j);
+        const cur = new _M0TPB8MutLocalGRP38username5mbtpp2tt3CxtE(_M0MP38username5mbtpp2tt3Cxt2at(cxt, arm.pos));
         const cps = [];
         let conflict = false;
         let _tmp$12 = 0;
         while (true) {
           const i = _tmp$12;
           if (i < scrs.length) {
-            const _bind$19 = _M0FP38username5mbtpp2tt10check__pat(cur, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_M0MPC15array5Array2atGORP38username5mbtpp2tt3ValE(pats, j), i), _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(sts, i)._1, true, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(svals, i), true);
+            const _bind$20 = _M0FP38username5mbtpp2tt18check__pat_2einner(cur.val, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_M0MPC15array5Array2atGORP38username5mbtpp2tt3ValE(pats, j), i), _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(sts, i)._1, true, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(svals, i), true, "_");
             let out;
-            if (_bind$19.$tag === 1) {
-              const _ok = _bind$19;
+            if (_bind$20.$tag === 1) {
+              const _ok = _bind$20;
               out = _ok._0;
             } else {
-              return _bind$19;
+              return _bind$20;
             }
-            cur = out.cxt;
+            cur.val = out.cxt;
             if (out.conflict) {
               conflict = true;
               break;
@@ -27518,40 +29423,59 @@ function _M0FP38username5mbtpp2tt11elab__match(cxt, scr, ret, arms, goal) {
             break;
           }
         }
-        const _bind$19 = conflict;
-        const _bind$20 = arm.rhs;
-        if (_bind$19 === true) {
+        const _bind$20 = conflict;
+        const _bind$21 = arm.rhs;
+        if (_bind$20 === true) {
         } else {
-          if (_bind$20 === undefined) {
-            const _bind$21 = _M0FP38username5mbtpp2tt15has__empty__var(cur);
-            let _tmp$13;
-            if (_bind$21.$tag === 1) {
-              const _ok = _bind$21;
-              _tmp$13 = _ok._0;
+          if (_bind$21 === undefined) {
+            const _bind$22 = arm.cond;
+            if (_bind$22 === undefined) {
+              const _bind$23 = _M0FP38username5mbtpp2tt15has__empty__var(cur.val);
+              let _tmp$13;
+              if (_bind$23.$tag === 1) {
+                const _ok = _bind$23;
+                _tmp$13 = _ok._0;
+              } else {
+                return _bind$23;
+              }
+              if (!_tmp$13) {
+                const _bind$24 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cur.val, "this pattern is not impossible");
+                if (_bind$24.$tag === 1) {
+                  const _ok = _bind$24;
+                  _ok._0;
+                } else {
+                  return _bind$24;
+                }
+              }
             } else {
-              return _bind$21;
-            }
-            if (!_tmp$13) {
-              const _bind$22 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cur, "this pattern is not impossible");
-              if (_bind$22.$tag === 1) {
-                const _ok = _bind$22;
+              const _bind$23 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cur.val, "an impossible pattern cannot have a guard");
+              if (_bind$23.$tag === 1) {
+                const _ok = _bind$23;
                 _ok._0;
               } else {
-                return _bind$22;
+                return _bind$23;
               }
             }
           } else {
-            const _Some = _bind$20;
+            const _Some = _bind$21;
             const _rhs = _Some;
-            const _bind$21 = _M0FP38username5mbtpp2tt5check(cur, _rhs, _M0MP38username5mbtpp2tt3Cxt5subst(cur, goal$2));
+            const _bind$22 = _M0MPC16option6Option3mapGRP38username5mbtpp6parser4ExprRP38username5mbtpp2tt2TmEHRP38username5mbtpp2tt9ElabError(arm.cond, (g) => _M0FP38username5mbtpp2tt5check(cur.val, g, new _M0DTP38username5mbtpp2tt3Val5VData("Bool", [])));
+            let cond;
+            if (_bind$22.$tag === 1) {
+              const _ok = _bind$22;
+              cond = _ok._0;
+            } else {
+              return _bind$22;
+            }
+            const _bind$23 = _M0FP38username5mbtpp2tt5check(cur.val, _rhs, _M0MP38username5mbtpp2tt3Cxt5subst(cur.val, goal$2));
             let body;
-            if (_bind$21.$tag === 1) {
-              const _ok = _bind$21;
+            if (_bind$23.$tag === 1) {
+              const _ok = _bind$23;
               body = _ok._0;
             } else {
-              return _bind$21;
+              return _bind$23;
             }
-            _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(clauses, new _M0TP38username5mbtpp2tt6Clause(cps, body));
+            _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(clauses, new _M0TP38username5mbtpp2tt6Clause(cps, cond, body));
           }
         }
         _tmp$11 = j + 1 | 0;
@@ -27574,12 +29498,12 @@ function _M0FP38username5mbtpp2tt11elab__match(cxt, scr, ret, arms, goal) {
         break;
       }
     }
-    const _bind$19 = _M0FP38username5mbtpp2tt17check__prop__elim(cxt, _p$6, pats, goal$2);
-    if (_bind$19.$tag === 1) {
-      const _ok = _bind$19;
+    const _bind$20 = _M0FP38username5mbtpp2tt17check__prop__elim(cxt, _p$6, pats, goal$2);
+    if (_bind$20.$tag === 1) {
+      const _ok = _bind$20;
       _ok._0;
     } else {
-      return _bind$19;
+      return _bind$20;
     }
     let cc = cxt;
     const problem = [];
@@ -27589,9 +29513,9 @@ function _M0FP38username5mbtpp2tt11elab__match(cxt, scr, ret, arms, goal) {
       if (i < scrs.length) {
         _L$3: {
           _L$4: {
-            const _bind$20 = _M0FP38username5mbtpp2tt5force(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(svals, i));
-            if (_bind$20.$tag === 0) {
-              const _VRigid = _bind$20;
+            const _bind$21 = _M0FP38username5mbtpp2tt5force(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(svals, i));
+            if (_bind$21.$tag === 0) {
+              const _VRigid = _bind$21;
               const _x = _VRigid._0;
               const _x$2 = _VRigid._1;
               if (_x$2.length === 0) {
@@ -27618,12 +29542,12 @@ function _M0FP38username5mbtpp2tt11elab__match(cxt, scr, ret, arms, goal) {
         break;
       }
     }
-    const _bind$20 = _M0FP38username5mbtpp2tt8coverage(cc, problem, clauses);
-    if (_bind$20.$tag === 1) {
-      const _ok = _bind$20;
+    const _bind$21 = _M0FP38username5mbtpp2tt8coverage(cc, problem, clauses);
+    if (_bind$21.$tag === 1) {
+      const _ok = _bind$21;
       _ok._0;
     } else {
-      return _bind$20;
+      return _bind$21;
     }
     const _p$8 = new Array(sts.length);
     const _p$9 = sts.length;
@@ -27643,7 +29567,7 @@ function _M0FP38username5mbtpp2tt11elab__match(cxt, scr, ret, arms, goal) {
   } else {
     const _Some = ret;
     const _mr = _Some;
-    return _M0FP38username5mbtpp2tt16elab__match__ret(cxt, scr, _mr, arms, goal);
+    return _M0FP38username5mbtpp2tt16elab__match__ret(cxt, scr, _mr, arms$2, goal);
   }
 }
 function _M0FP38username5mbtpp2tt16elab__match__ret(cxt, scr, mr, arms, goal) {
@@ -27781,7 +29705,7 @@ function _M0FP38username5mbtpp2tt16elab__match__ret(cxt, scr, mr, arms, goal) {
       break;
     }
   }
-  cm = _M0MP38username5mbtpp2tt3Cxt4bind(cm, _M0MPC16option6Option10unwrap__orGsE(mr.as_name, "_"), new _M0DTP38username5mbtpp2tt3Val5VData(_d, tsp));
+  cm = _M0MP38username5mbtpp2tt3Cxt4bind(cm, _M0MPC16option6Option10unwrap__orGRP38username5mbtpp6parser4ExprE(mr.as_name, "_"), new _M0DTP38username5mbtpp2tt3Val5VData(_d, tsp));
   const _bind$24 = mr.ret;
   let r;
   if (_bind$24 === undefined) {
@@ -27858,47 +29782,55 @@ function _M0FP38username5mbtpp2tt16elab__match__ret(cxt, scr, mr, arms, goal) {
     }
   }
   const clauses = [];
-  const _bind$25 = arms.length;
+  const _bind$25 = _M0FP38username5mbtpp2tt12expand__arms(cxt, arms);
+  let arms$2;
+  if (_bind$25.$tag === 1) {
+    const _ok = _bind$25;
+    arms$2 = _ok._0;
+  } else {
+    return _bind$25;
+  }
+  const _bind$26 = arms$2.length;
   let _tmp$12 = 0;
   while (true) {
     const _ = _tmp$12;
-    if (_ < _bind$25) {
-      const arm = arms[_];
+    if (_ < _bind$26) {
+      const arm = arms$2[_];
       _L: {
-        const _bind$26 = _M0FP38username5mbtpp2tt10check__pat(_M0MP38username5mbtpp2tt3Cxt2at(cxt, arm.pos), arm.pat, _a, false, sval, false);
+        const _bind$27 = _M0FP38username5mbtpp2tt18check__pat_2einner(_M0MP38username5mbtpp2tt3Cxt2at(cxt, arm.pos), arm.pat, _a, false, sval, false, "_");
         let out;
-        if (_bind$26.$tag === 1) {
-          const _ok = _bind$26;
+        if (_bind$27.$tag === 1) {
+          const _ok = _bind$27;
           out = _ok._0;
         } else {
-          return _bind$26;
+          return _bind$27;
         }
         if (out.conflict) {
           break _L;
         }
-        const _bind$27 = arm.rhs;
+        const _bind$28 = arm.rhs;
         let rhs;
-        if (_bind$27 === undefined) {
-          const _bind$28 = _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(out.cxt, "this pattern is not impossible");
-          if (_bind$28.$tag === 1) {
-            const _ok = _bind$28;
+        if (_bind$28 === undefined) {
+          const _bind$29 = _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(out.cxt, "this pattern is not impossible");
+          if (_bind$29.$tag === 1) {
+            const _ok = _bind$29;
             rhs = _ok._0;
           } else {
-            return _bind$28;
+            return _bind$29;
           }
         } else {
-          const _Some = _bind$27;
+          const _Some = _bind$28;
           rhs = _Some;
         }
         let idx;
         let xv;
         _L$2: {
           _L$3: {
-            const _bind$28 = out.ret_ty;
-            if (_bind$28 === undefined) {
+            const _bind$29 = out.ret_ty;
+            if (_bind$29 === undefined) {
               break _L$3;
             } else {
-              const _Some = _bind$28;
+              const _Some = _bind$29;
               const _x = _Some;
               if (_x.$tag === 3) {
                 const _VData = _x;
@@ -27933,16 +29865,24 @@ function _M0FP38username5mbtpp2tt16elab__match__ret(cxt, scr, mr, arms, goal) {
         }
         const env = _M0FP38username5mbtpp2tt6concatGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt4IcitEE(_M0FP38username5mbtpp2tt6concatGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt4IcitEE(_M0MPC15array9ArrayView9to__ownedGRP38username5mbtpp2tt2TmE(_M0MPC15array5Array21clamped__view_2einnerGRP38username5mbtpp2tt2TmE(out.cxt.env, 0, cxt.lvl)), idx), [xv]);
         const g = _M0MP38username5mbtpp2tt3Cxt5subst(out.cxt, _M0FP38username5mbtpp2tt4eval(env, r));
+        const _bind$29 = _M0MPC16option6Option3mapGRP38username5mbtpp6parser4ExprRP38username5mbtpp2tt2TmEHRP38username5mbtpp2tt9ElabError(arm.cond, (e) => _M0FP38username5mbtpp2tt5check(out.cxt, e, new _M0DTP38username5mbtpp2tt3Val5VData("Bool", [])));
+        let cond;
+        if (_bind$29.$tag === 1) {
+          const _ok = _bind$29;
+          cond = _ok._0;
+        } else {
+          return _bind$29;
+        }
         const _tmp$13 = [out.pat];
-        const _bind$28 = _M0FP38username5mbtpp2tt5check(out.cxt, rhs, g);
+        const _bind$30 = _M0FP38username5mbtpp2tt5check(out.cxt, rhs, g);
         let _tmp$14;
-        if (_bind$28.$tag === 1) {
-          const _ok = _bind$28;
+        if (_bind$30.$tag === 1) {
+          const _ok = _bind$30;
           _tmp$14 = _ok._0;
         } else {
-          return _bind$28;
+          return _bind$30;
         }
-        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(clauses, new _M0TP38username5mbtpp2tt6Clause(_tmp$13, _tmp$14));
+        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(clauses, new _M0TP38username5mbtpp2tt6Clause(_tmp$13, cond, _tmp$14));
         break _L;
       }
       _tmp$12 = _ + 1 | 0;
@@ -27952,13 +29892,13 @@ function _M0FP38username5mbtpp2tt16elab__match__ret(cxt, scr, mr, arms, goal) {
     }
   }
   const _tmp$13 = [_a];
-  const _p$5 = new Array(arms.length);
-  const _p$6 = arms.length;
+  const _p$5 = new Array(arms$2.length);
+  const _p$6 = arms$2.length;
   let _tmp$14 = 0;
   while (true) {
     const _p$7 = _tmp$14;
     if (_p$7 < _p$6) {
-      const _p$8 = arms[_p$7];
+      const _p$8 = arms$2[_p$7];
       _p$5[_p$7] = [_p$8.pat];
       _tmp$14 = _p$7 + 1 | 0;
       continue;
@@ -27966,31 +29906,31 @@ function _M0FP38username5mbtpp2tt16elab__match__ret(cxt, scr, mr, arms, goal) {
       break;
     }
   }
-  const _bind$26 = _M0FP38username5mbtpp2tt17check__prop__elim(cxt, _tmp$13, _p$5, res_ty);
-  if (_bind$26.$tag === 1) {
-    const _ok = _bind$26;
+  const _bind$27 = _M0FP38username5mbtpp2tt17check__prop__elim(cxt, _tmp$13, _p$5, res_ty);
+  if (_bind$27.$tag === 1) {
+    const _ok = _bind$27;
     _ok._0;
   } else {
-    return _bind$26;
+    return _bind$27;
   }
   let cc = cxt;
   const gsp = [];
-  const _bind$27 = _M0FP38username5mbtpp2tt13global__entry(cxt, _d);
+  const _bind$28 = _M0FP38username5mbtpp2tt13global__entry(cxt, _d);
   let _tmp$15;
-  if (_bind$27.$tag === 1) {
-    const _ok = _bind$27;
+  if (_bind$28.$tag === 1) {
+    const _ok = _bind$28;
     _tmp$15 = _ok._0;
   } else {
-    return _bind$27;
+    return _bind$28;
   }
   let dty$2 = _tmp$15.vty;
   let _tmp$16 = 0;
   while (true) {
     const k = _tmp$16;
     if (k < (np + di.nindices | 0)) {
-      const _bind$28 = _M0FP38username5mbtpp2tt5force(dty$2);
-      if (_bind$28.$tag === 7) {
-        const _VPi = _bind$28;
+      const _bind$29 = _M0FP38username5mbtpp2tt5force(dty$2);
+      if (_bind$29.$tag === 7) {
+        const _VPi = _bind$29;
         const _i = _VPi._1;
         const _dom = _VPi._3;
         const _cl = _VPi._4;
@@ -28014,12 +29954,12 @@ function _M0FP38username5mbtpp2tt16elab__match__ret(cxt, scr, mr, arms, goal) {
   const _p$7 = cc.lvl;
   const x = new _M0DTP38username5mbtpp2tt3Val6VRigid(_p$7, []);
   cc = _M0MP38username5mbtpp2tt3Cxt4bind(cc, "_", new _M0DTP38username5mbtpp2tt3Val5VData(_d, gsp));
-  const _bind$28 = _M0FP38username5mbtpp2tt8coverage(cc, [x], clauses);
-  if (_bind$28.$tag === 1) {
-    const _ok = _bind$28;
+  const _bind$29 = _M0FP38username5mbtpp2tt8coverage(cc, [x], clauses);
+  if (_bind$29.$tag === 1) {
+    const _ok = _bind$29;
     _ok._0;
   } else {
-    return _bind$28;
+    return _bind$29;
   }
   return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: new _M0DTP38username5mbtpp2tt2Tm5Match([_ts], clauses), _1: res_ty });
 }
@@ -28146,7 +30086,7 @@ function _M0FP38username5mbtpp2tt12elab__struct(cxt, fields, expected) {
     }
     const _bind$18 = found;
     if (_bind$18 === undefined) {
-      const _bind$19 = _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(cxt, `no struct with fields ${_M0MPC15array5Array4joinGsE(names, _M0FP38username5mbtpp2tt12elab__structN6recordS10190)}`);
+      const _bind$19 = _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(cxt, `no struct with fields ${_M0MPC15array5Array4joinGsE(names, _M0FP38username5mbtpp2tt12elab__structN6recordS10864)}`);
       if (_bind$19.$tag === 1) {
         const _ok = _bind$19;
         d = _ok._0;
@@ -28302,7 +30242,7 @@ function _M0FP38username5mbtpp2tt12elab__struct(cxt, fields, expected) {
   return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: _t, _1: _ty });
 }
 function _M0FP38username5mbtpp2tt9elab__try(cxt, body, arms, goal) {
-  const bc = new _M0TP38username5mbtpp2tt3Cxt(cxt.env, cxt.names, cxt.types, cxt.bound, cxt.muts, cxt.lvl, cxt.pos, true, cxt.ret_ty, cxt.in_loop);
+  const bc = new _M0TP38username5mbtpp2tt3Cxt(cxt.env, cxt.names, cxt.types, cxt.bound, cxt.muts, cxt.lvl, cxt.pos, true, cxt.can_async, cxt.ret_ty, cxt.in_loop);
   let _bind$18;
   if (goal === undefined) {
     const _bind$19 = _M0FP38username5mbtpp2tt10infer__ins(bc, body);
@@ -28328,75 +30268,103 @@ function _M0FP38username5mbtpp2tt9elab__try(cxt, body, arms, goal) {
   const _tb = _bind$18._0;
   const _ty = _bind$18._1;
   const clauses = [];
-  const _bind$19 = arms.length;
+  const _bind$19 = _M0FP38username5mbtpp2tt12expand__arms(cxt, arms);
+  let _bind$20;
+  if (_bind$19.$tag === 1) {
+    const _ok = _bind$19;
+    _bind$20 = _ok._0;
+  } else {
+    return _bind$19;
+  }
+  const _bind$21 = _bind$20.length;
   let _tmp$9 = 0;
   while (true) {
     const _ = _tmp$9;
-    if (_ < _bind$19) {
-      const arm = arms[_];
+    if (_ < _bind$21) {
+      const arm = _bind$20[_];
       const c = _M0MP38username5mbtpp2tt3Cxt2at(cxt, arm.pos);
-      const _bind$20 = arm.pat;
+      let head = arm.pat;
+      while (true) {
+        const _bind$22 = head;
+        if (_bind$22.$tag === 6) {
+          const _PAs = _bind$22;
+          const _q = _PAs._1;
+          head = _q;
+          continue;
+        } else {
+          break;
+        }
+      }
+      const _bind$22 = head;
       let ety;
-      if (_bind$20.$tag === 2) {
-        const _PCon = _bind$20;
+      if (_bind$22.$tag === 2) {
+        const _PCon = _bind$22;
         const _name = _PCon._1;
-        const _bind$21 = _M0FP38username5mbtpp2tt13resolve__name(c, _name, false, undefined);
+        const _bind$23 = _M0FP38username5mbtpp2tt13resolve__name(c, _name, false, undefined);
         let con;
-        if (_bind$21.$tag === 1) {
-          const _ok = _bind$21;
+        if (_bind$23.$tag === 1) {
+          const _ok = _bind$23;
           con = _ok._0;
         } else {
-          return _bind$21;
+          return _bind$23;
         }
-        const _bind$22 = _M0FP38username5mbtpp2tt9con__info(con);
-        if (_bind$22 === undefined) {
-          const _bind$23 = _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(c, `${_name} is not an error constructor`);
-          if (_bind$23.$tag === 1) {
-            const _ok = _bind$23;
+        const _bind$24 = _M0FP38username5mbtpp2tt9con__info(con);
+        if (_bind$24 === undefined) {
+          const _bind$25 = _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(c, `${_name} is not an error constructor`);
+          if (_bind$25.$tag === 1) {
+            const _ok = _bind$25;
             ety = _ok._0;
           } else {
-            return _bind$23;
+            return _bind$25;
           }
         } else {
-          const _Some = _bind$22;
+          const _Some = _bind$24;
           const _ci = _Some;
           ety = new _M0DTP38username5mbtpp2tt3Val5VData(_ci.data, []);
         }
       } else {
         ety = new _M0DTP38username5mbtpp2tt3Val5VData("Error", []);
       }
-      const _bind$21 = _M0FP38username5mbtpp2tt10check__pat(c, arm.pat, ety, true, undefined, false);
+      const _bind$23 = _M0FP38username5mbtpp2tt18check__pat_2einner(c, arm.pat, ety, true, undefined, false, "_");
       let out;
-      if (_bind$21.$tag === 1) {
-        const _ok = _bind$21;
-        out = _ok._0;
-      } else {
-        return _bind$21;
-      }
-      const _bind$22 = arm.rhs;
-      let rhs;
-      if (_bind$22 === undefined) {
-        const _bind$23 = _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(c, "missing handler body");
-        if (_bind$23.$tag === 1) {
-          const _ok = _bind$23;
-          rhs = _ok._0;
-        } else {
-          return _bind$23;
-        }
-      } else {
-        const _Some = _bind$22;
-        rhs = _Some;
-      }
-      const _tmp$10 = [out.pat];
-      const _bind$23 = _M0FP38username5mbtpp2tt5check(out.cxt, rhs, _ty);
-      let _tmp$11;
       if (_bind$23.$tag === 1) {
         const _ok = _bind$23;
-        _tmp$11 = _ok._0;
+        out = _ok._0;
       } else {
         return _bind$23;
       }
-      _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(clauses, new _M0TP38username5mbtpp2tt6Clause(_tmp$10, _tmp$11));
+      const _bind$24 = arm.rhs;
+      let rhs;
+      if (_bind$24 === undefined) {
+        const _bind$25 = _M0MP38username5mbtpp2tt3Cxt4failGURP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValRP38username5mbtpp2tt3ValEE(c, "missing handler body");
+        if (_bind$25.$tag === 1) {
+          const _ok = _bind$25;
+          rhs = _ok._0;
+        } else {
+          return _bind$25;
+        }
+      } else {
+        const _Some = _bind$24;
+        rhs = _Some;
+      }
+      const _bind$25 = _M0MPC16option6Option3mapGRP38username5mbtpp6parser4ExprRP38username5mbtpp2tt2TmEHRP38username5mbtpp2tt9ElabError(arm.cond, (e) => _M0FP38username5mbtpp2tt5check(out.cxt, e, new _M0DTP38username5mbtpp2tt3Val5VData("Bool", [])));
+      let cond;
+      if (_bind$25.$tag === 1) {
+        const _ok = _bind$25;
+        cond = _ok._0;
+      } else {
+        return _bind$25;
+      }
+      const _tmp$10 = [out.pat];
+      const _bind$26 = _M0FP38username5mbtpp2tt5check(out.cxt, rhs, _ty);
+      let _tmp$11;
+      if (_bind$26.$tag === 1) {
+        const _ok = _bind$26;
+        _tmp$11 = _ok._0;
+      } else {
+        return _bind$26;
+      }
+      _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(clauses, new _M0TP38username5mbtpp2tt6Clause(_tmp$10, cond, _tmp$11));
       _tmp$9 = _ + 1 | 0;
       continue;
     } else {
@@ -28661,7 +30629,7 @@ function _M0FP38username5mbtpp2tt18elab__struct__decl(sd) {
         }
       }
       const vars = _p$4;
-      const body = _M0FP38username5mbtpp2tt4lams(_M0FP38username5mbtpp2tt6concatGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt4IcitEE(_pbs2, [{ _0: "self", _1: 0, _2: self_ty }]), new _M0DTP38username5mbtpp2tt2Tm5Match([_M0FP38username5mbtpp2tt18elab__struct__declN6constrS10314], [new _M0TP38username5mbtpp2tt6Clause([new _M0DTP38username5mbtpp2tt4CPat5CPCon(`${d}::mk`, vars)], new _M0DTP38username5mbtpp2tt2Tm3Var((n - 1 | 0) - k | 0))]));
+      const body = _M0FP38username5mbtpp2tt4lams(_M0FP38username5mbtpp2tt6concatGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt4IcitEE(_pbs2, [{ _0: "self", _1: 0, _2: self_ty }]), new _M0DTP38username5mbtpp2tt2Tm5Match([_M0FP38username5mbtpp2tt18elab__struct__declN6constrS10996], [new _M0TP38username5mbtpp2tt6Clause([new _M0DTP38username5mbtpp2tt4CPat5CPCon(`${d}::mk`, vars)], undefined, new _M0DTP38username5mbtpp2tt2Tm3Var((n - 1 | 0) - k | 0))]));
       _M0FP38username5mbtpp2tt8register(fname, pty, new _M0DTP38username5mbtpp2tt5GKind5GFunc(body, false, np + 1 | 0));
       const _tmp$16 = new _M0DTP38username5mbtpp2tt3Val7VGlobal(fname, []);
       const _p$6 = _M0FP38username5mbtpp2tt11fresh__vars(0, np);
@@ -28821,7 +30789,7 @@ function _M0FP38username5mbtpp2tt19elab__expl__binders(cxt, bs) {
   let c = cxt;
   const out = [];
   if (bs.length === 0) {
-    _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(out, _M0FP38username5mbtpp2tt19elab__expl__bindersN5tupleS10397);
+    _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(out, _M0FP38username5mbtpp2tt19elab__expl__bindersN5tupleS11079);
     return new _M0DTPC16result6ResultGURP38username5mbtpp2tt3CxtRPB5ArrayGUsRP38username5mbtpp2tt4IcitRP38username5mbtpp2tt2TmEEERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: _M0MP38username5mbtpp2tt3Cxt4bind(c, "_", new _M0DTP38username5mbtpp2tt3Val5VData("Unit", [])), _1: out });
   }
   const _bind$18 = bs.length;
@@ -28874,7 +30842,7 @@ function _M0FP38username5mbtpp2tt19elab__expl__binders(cxt, bs) {
         } else {
           return _bind$21;
         }
-        a$2 = new _M0DTP38username5mbtpp2tt2Tm3App(_M0FP38username5mbtpp2tt19elab__expl__bindersN6constrS10398, a, 1);
+        a$2 = new _M0DTP38username5mbtpp2tt2Tm3App(_M0FP38username5mbtpp2tt19elab__expl__bindersN6constrS11080, a, 1);
       } else {
         a$2 = a;
       }
@@ -29002,7 +30970,7 @@ function _M0FP38username5mbtpp2tt10infer__bin(cxt, op, a, b) {
           } else {
             return _bind$20;
           }
-          const t = _M0FP38username5mbtpp2tt4apps(_M0FP38username5mbtpp2tt10infer__binN6constrS10441, [{ _0: _M0MP38username5mbtpp2tt3Cxt5quote(cxt, _ty), _1: 1 }, { _0: _ta, _1: 0 }, { _0: tb, _1: 0 }]);
+          const t = _M0FP38username5mbtpp2tt4apps(_M0FP38username5mbtpp2tt10infer__binN6constrS11123, [{ _0: _M0MP38username5mbtpp2tt3Cxt5quote(cxt, _ty), _1: 1 }, { _0: _ta, _1: 0 }, { _0: tb, _1: 0 }]);
           return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: t, _1: _M0DTP38username5mbtpp2tt3Val5VProp__ });
         }
         case "&&": {
@@ -29021,7 +30989,7 @@ function _M0FP38username5mbtpp2tt10infer__bin(cxt, op, a, b) {
             return _bind$21;
           }
           const _t = _bind$22._0;
-          return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: _M0FP38username5mbtpp2tt6if__tm(_t, _M0FP38username5mbtpp2tt10infer__binN6constrS10443, _M0FP38username5mbtpp2tt10infer__binN6constrS10445), _1: new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []) });
+          return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: _M0FP38username5mbtpp2tt6if__tm(_t, _M0FP38username5mbtpp2tt10infer__binN6constrS11125, _M0FP38username5mbtpp2tt10infer__binN6constrS11127), _1: new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []) });
         }
         case "<": {
           break _L;
@@ -29066,7 +31034,7 @@ function _M0FP38username5mbtpp2tt10infer__bin(cxt, op, a, b) {
     } else {
       return _bind$19;
     }
-    const t = op === "&&" ? _M0FP38username5mbtpp2tt6if__tm(ta, tb, _M0FP38username5mbtpp2tt10infer__binN6constrS10438) : _M0FP38username5mbtpp2tt6if__tm(ta, _M0FP38username5mbtpp2tt10infer__binN6constrS10440, tb);
+    const t = op === "&&" ? _M0FP38username5mbtpp2tt6if__tm(ta, tb, _M0FP38username5mbtpp2tt10infer__binN6constrS11120) : _M0FP38username5mbtpp2tt6if__tm(ta, _M0FP38username5mbtpp2tt10infer__binN6constrS11122, tb);
     return new _M0DTPC16result6ResultGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt3ValERP38username5mbtpp2tt9ElabErrorE2Ok({ _0: t, _1: new _M0DTP38username5mbtpp2tt3Val5VData("Bool", []) });
   }
   const _bind$18 = _M0FP38username5mbtpp2tt10infer__ins(cxt, a);
@@ -29098,7 +31066,7 @@ function _M0FP38username5mbtpp2tt10infer__bin(cxt, op, a, b) {
     }
     const _c = _bind$23._0;
     const int_ty = new _M0DTP38username5mbtpp2tt3Val5VData("Int", []);
-    return _M0FP38username5mbtpp2tt12elab__method(cxt, _c, int_ty, _M0FP38username5mbtpp2tt10op__method(op), _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__, [new _M0DTP38username5mbtpp2tt3Arg2AV(_M0FP38username5mbtpp2tt10infer__binN6constrS10436, int_ty)], undefined);
+    return _M0FP38username5mbtpp2tt12elab__method(cxt, _c, int_ty, _M0FP38username5mbtpp2tt10op__method(op), _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__, [new _M0DTP38username5mbtpp2tt3Arg2AV(_M0FP38username5mbtpp2tt10infer__binN6constrS11118, int_ty)], undefined);
   } else {
     return _M0FP38username5mbtpp2tt12elab__method(cxt, _ta, _aty, _M0FP38username5mbtpp2tt10op__method(op), _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__, [new _M0DTP38username5mbtpp2tt3Arg2AE(b)], undefined);
   }
@@ -29434,7 +31402,7 @@ function _M0FP38username5mbtpp2tt10check__lam(cxt0, impls, ps, ret, body, ty0) {
         const _p = cxt.lvl;
         const v = new _M0DTP38username5mbtpp2tt3Val6VRigid(_p, []);
         cxt = _M0MP38username5mbtpp2tt3Cxt4bind(cxt, name, _a);
-        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(wrap, { _0: name, _1: _i, _2: _M0FP38username5mbtpp2tt10check__lamN6constrS10509 });
+        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(wrap, { _0: name, _1: _i, _2: _M0FP38username5mbtpp2tt10check__lamN6constrS11191 });
         ty = _M0FP38username5mbtpp2tt5force(_M0FP38username5mbtpp2tt4inst(_cl, v));
         continue;
       } else {
@@ -29520,7 +31488,7 @@ function _M0FP38username5mbtpp2tt10check__lam(cxt0, impls, ps, ret, body, ty0) {
         const _p = cxt.lvl;
         const v = new _M0DTP38username5mbtpp2tt3Val6VRigid(_p, []);
         cxt = _M0MP38username5mbtpp2tt3Cxt4bind(cxt, p.name, _a);
-        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(wrap, { _0: p.name, _1: 0, _2: _M0FP38username5mbtpp2tt10check__lamN6constrS10510 });
+        _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(wrap, { _0: p.name, _1: 0, _2: _M0FP38username5mbtpp2tt10check__lamN6constrS11192 });
         ty = _M0FP38username5mbtpp2tt5force(_M0FP38username5mbtpp2tt4inst(_cl, v));
       } else {
         const _bind$22 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cxt, "not a function type");
@@ -29578,31 +31546,19 @@ function _M0FP38username5mbtpp2tt10check__lam(cxt0, impls, ps, ret, body, ty0) {
       return _bind$22;
     }
   }
-  let body_ty;
-  let can_raise;
-  _L: {
-    const _bind$21 = ty;
-    if (_bind$21.$tag === 11) {
-      const _VRaises = _bind$21;
-      const _a = _VRaises._0;
-      body_ty = _a;
-      can_raise = true;
-      break _L;
-    } else {
-      body_ty = ty;
-      can_raise = false;
-      break _L;
-    }
-  }
+  const _bind$21 = _M0FP38username5mbtpp2tt13body__effects(ty);
+  const _body_ty = _bind$21._0;
+  const _can_raise = _bind$21._1;
+  const _can_async = _bind$21._2;
   const _tmp$10 = cxt;
-  const bc = new _M0TP38username5mbtpp2tt3Cxt(_tmp$10.env, _tmp$10.names, _tmp$10.types, _tmp$10.bound, _tmp$10.muts, _tmp$10.lvl, _tmp$10.pos, can_raise, body_ty, false);
-  const _bind$21 = _M0FP38username5mbtpp2tt5check(bc, body, body_ty);
+  const bc = new _M0TP38username5mbtpp2tt3Cxt(_tmp$10.env, _tmp$10.names, _tmp$10.types, _tmp$10.bound, _tmp$10.muts, _tmp$10.lvl, _tmp$10.pos, _can_raise, _can_async, _body_ty, false);
+  const _bind$22 = _M0FP38username5mbtpp2tt5check(bc, body, _body_ty);
   let _tmp$11;
-  if (_bind$21.$tag === 1) {
-    const _ok = _bind$21;
+  if (_bind$22.$tag === 1) {
+    const _ok = _bind$22;
     _tmp$11 = _ok._0;
   } else {
-    return _bind$21;
+    return _bind$22;
   }
   return new _M0DTPC16result6ResultGRP38username5mbtpp2tt2TmRP38username5mbtpp2tt9ElabErrorE2Ok(_M0FP38username5mbtpp2tt4lams(wrap, _tmp$11));
 }
@@ -30024,7 +31980,7 @@ function _M0FP38username5mbtpp2tt11mbt__ty__ok(ctx, t) {
   }
 }
 function _M0FP38username5mbtpp2tt19no__mbt__type__note(shown) {
-  return _M0MPC16string6String8contains(shown, _M0FP38username5mbtpp2tt19no__mbt__type__noteN6recordS10682) ? ", which does not translate to MoonBit (arrays are not supported yet)" : ", which has no MoonBit type";
+  return _M0MPC16string6String8contains(shown, _M0FP38username5mbtpp2tt19no__mbt__type__noteN6recordS11362) ? ", which does not translate to MoonBit (arrays are not supported yet)" : ", which has no MoonBit type";
 }
 function _M0FP38username5mbtpp2tt13starts__upper(s) {
   const _bind$18 = _M0MPC16string6String9get__char(s, 0);
@@ -30040,7 +31996,7 @@ function _M0FP38username5mbtpp2tt18mbt__data__problem(d) {
   const _bind$18 = _M0FP38username5mbtpp2tt10data__info(d);
   let di;
   if (_bind$18 === undefined) {
-    return _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS10688;
+    return _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS11368;
   } else {
     const _Some = _bind$18;
     di = _Some;
@@ -30053,17 +32009,17 @@ function _M0FP38username5mbtpp2tt18mbt__data__problem(d) {
     const _p$2 = _p;
     info = _p$2;
   }
-  if (info.defined && (_M0MPC15array5Array8containsGsE(_M0FP38username5mbtpp2tt13mbt__reserved, d) || (!_M0FP38username5mbtpp2tt13starts__upper(d) || _M0MPC16string6String8contains(d, _M0FP38username5mbtpp2tt18mbt__data__problemN6recordS10689)))) {
+  if (info.defined && (_M0MPC15array5Array8containsGsE(_M0FP38username5mbtpp2tt13mbt__reserved, d) || (!_M0FP38username5mbtpp2tt13starts__upper(d) || _M0MPC16string6String8contains(d, _M0FP38username5mbtpp2tt18mbt__data__problemN6recordS11369)))) {
     return `${d} cannot be the name of a generated MoonBit type (use #mbt(\"name\") for an existing one)`;
   }
   if (di.is_error) {
-    return _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS10690;
+    return _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS11370;
   }
   if (di.is_prop) {
-    return _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS10691;
+    return _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS11371;
   }
   if (di.nindices > 0) {
-    return _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS10692;
+    return _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS11372;
   }
   const _p$2 = _M0MPB3Map3getGsRP38username5mbtpp2tt6GEntryE(_M0FP38username5mbtpp2tt7globals, d);
   let _tmp$9;
@@ -30096,7 +32052,7 @@ function _M0FP38username5mbtpp2tt18mbt__data__problem(d) {
           }
           break _L;
         }
-        return _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS10693;
+        return _M0FP38username5mbtpp2tt18mbt__data__problemN6constrS11373;
       }
       _tmp$10 = _ + 1 | 0;
       continue;
@@ -30225,7 +32181,7 @@ function _M0FP38username5mbtpp2tt19mbt__trait__problem(tr) {
     const _p$2 = _p;
     info = _p$2;
   }
-  if (info.defined && (_M0MPC15array5Array8containsGsE(_M0FP38username5mbtpp2tt13mbt__reserved, tr) || (!_M0FP38username5mbtpp2tt13starts__upper(tr) || _M0MPC16string6String8contains(tr, _M0FP38username5mbtpp2tt19mbt__trait__problemN6recordS10733)))) {
+  if (info.defined && (_M0MPC15array5Array8containsGsE(_M0FP38username5mbtpp2tt13mbt__reserved, tr) || (!_M0FP38username5mbtpp2tt13starts__upper(tr) || _M0MPC16string6String8contains(tr, _M0FP38username5mbtpp2tt19mbt__trait__problemN6recordS11413)))) {
     return `${tr} cannot be the name of a generated MoonBit trait (use #mbt(\"name\") for an existing one)`;
   }
   _L: {
@@ -30250,7 +32206,7 @@ function _M0FP38username5mbtpp2tt19mbt__trait__problem(tr) {
       }
       break _L;
     }
-    return _M0FP38username5mbtpp2tt19mbt__trait__problemN6constrS10734;
+    return _M0FP38username5mbtpp2tt19mbt__trait__problemN6constrS11414;
   }
   const _bind$18 = _M0FP38username5mbtpp2tt13trait__supers(tr);
   const _bind$19 = _bind$18.length;
@@ -30390,7 +32346,7 @@ function _M0FP38username5mbtpp2tt18mbt__impl__problem(name, tr) {
           }
           break _L;
         }
-        return _M0FP38username5mbtpp2tt18mbt__impl__problemN6constrS10760;
+        return _M0FP38username5mbtpp2tt18mbt__impl__problemN6constrS11440;
       }
       t = _b;
       continue;
@@ -30415,7 +32371,7 @@ function _M0FP38username5mbtpp2tt18mbt__impl__problem(name, tr) {
       }
       break _L;
     }
-    return _M0FP38username5mbtpp2tt18mbt__impl__problemN6constrS10761;
+    return _M0FP38username5mbtpp2tt18mbt__impl__problemN6constrS11441;
   }
   _L$2: {
     _L$3: {
@@ -30600,7 +32556,7 @@ function _M0FP38username5mbtpp2tt16mbt__fn__problem(f) {
   const _bind$18 = _M0MPB3Map3getGsRP38username5mbtpp2tt6GEntryE(_M0FP38username5mbtpp2tt7globals, f);
   let g;
   if (_bind$18 === undefined) {
-    return _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS10833;
+    return _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS11513;
   } else {
     const _Some = _bind$18;
     g = _Some;
@@ -30622,7 +32578,7 @@ function _M0FP38username5mbtpp2tt16mbt__fn__problem(f) {
       }
       break _L;
     }
-    return _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS10834;
+    return _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS11514;
   }
   const _p = _M0MPB3Map3getGssE(_M0FP38username5mbtpp2tt8mbt__fns, f);
   let mname;
@@ -30633,9 +32589,9 @@ function _M0FP38username5mbtpp2tt16mbt__fn__problem(f) {
     mname = _p$2;
   }
   if (f === "main") {
-    return _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS10835;
+    return _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS11515;
   }
-  const _bind$19 = _M0MPC16string6String4find(mname, _M0FP38username5mbtpp2tt16mbt__fn__problemN6recordS10836);
+  const _bind$19 = _M0MPC16string6String4find(mname, _M0FP38username5mbtpp2tt16mbt__fn__problemN6recordS11516);
   if (_bind$19 === undefined) {
     if (!_M0FP38username5mbtpp2tt14is__mbt__ident(mname)) {
       return `${mname} is not a MoonBit function name`;
@@ -30665,7 +32621,7 @@ function _M0FP38username5mbtpp2tt16mbt__fn__problem(f) {
         }
         break _L$2;
       }
-      return _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS10837;
+      return _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS11517;
     }
     if (!_M0FP38username5mbtpp2tt14is__mbt__ident(m)) {
       return `${m} is not a MoonBit function name`;
@@ -30699,7 +32655,7 @@ function _M0FP38username5mbtpp2tt16mbt__fn__problem(f) {
       }
     }
     if (_tmp$9) {
-      return _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS10838;
+      return _M0FP38username5mbtpp2tt16mbt__fn__problemN6constrS11518;
     }
   }
   const ctx = [];
@@ -30830,7 +32786,7 @@ function _M0FP38username5mbtpp2tt17mbt__method__name(tr, m) {
   } else {
     const _Some = _bind$18;
     const _ms = _Some;
-    return _M0MPC16option6Option10unwrap__orGsE(_M0MPB3Map3getGssE(_ms, m), m);
+    return _M0MPC16option6Option10unwrap__orGRP38username5mbtpp6parser4ExprE(_M0MPB3Map3getGssE(_ms, m), m);
   }
 }
 function _M0FP38username5mbtpp2tt12clear__infos() {
@@ -31053,7 +33009,7 @@ function _M0FP38username5mbtpp2tt20elab__tagged__params(fname, c1, bs1, bs2, ps)
             const _Some = _x;
             const _e = _Some;
             const helper = `${fname}$default$${p.name}`;
-            const unit_bs = [_M0FP38username5mbtpp2tt20elab__tagged__paramsN5tupleS10945];
+            const unit_bs = [_M0FP38username5mbtpp2tt20elab__tagged__paramsN5tupleS11625];
             const hbs = _M0FP38username5mbtpp2tt6concatGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt4IcitEE(_M0FP38username5mbtpp2tt6concatGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt4IcitEE(bs1, _M0MPC15array9ArrayView9to__ownedGRP38username5mbtpp2tt2TmE(_M0MPC15array5Array21clamped__view_2einnerGRP38username5mbtpp2tt2TmE(bs2, 0, k))), unit_bs);
             const cu = _M0MP38username5mbtpp2tt3Cxt4bind(c, "_", new _M0DTP38username5mbtpp2tt3Val5VData("Unit", []));
             const _bind$19 = _M0FP38username5mbtpp2tt5check(_M0MP38username5mbtpp2tt3Cxt2at(cu, _M0MP38username5mbtpp6parser4Expr3pos(_e)), _e, _M0MP38username5mbtpp2tt3Cxt4eval(c, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(bs2, k)._2));
@@ -31134,7 +33090,7 @@ function _M0FP38username5mbtpp2tt13elab__fn__sig(fd) {
         }
         break _L;
       }
-      ret = _M0FP38username5mbtpp2tt13elab__fn__sigN6constrS10968;
+      ret = _M0FP38username5mbtpp2tt13elab__fn__sigN6constrS11648;
     }
   } else {
     const _Some = _bind$22;
@@ -31292,38 +33248,26 @@ function _M0FP38username5mbtpp2tt14elab__fn__body(fd) {
   const _cxt = _bind$20._0;
   const _bs = _bind$20._1;
   const _rty = _bind$20._2;
-  let body_ty;
-  let can_raise;
-  _L: {
-    const _bind$21 = _M0FP38username5mbtpp2tt5force(_rty);
-    if (_bind$21.$tag === 11) {
-      const _VRaises = _bind$21;
-      const _a = _VRaises._0;
-      body_ty = _a;
-      can_raise = true;
-      break _L;
-    } else {
-      body_ty = _bind$21;
-      can_raise = false;
-      break _L;
-    }
-  }
-  const bc = new _M0TP38username5mbtpp2tt3Cxt(_cxt.env, _cxt.names, _cxt.types, _cxt.bound, _cxt.muts, _cxt.lvl, _cxt.pos, can_raise, body_ty, _cxt.in_loop);
-  const _bind$21 = _M0FP38username5mbtpp2tt5check(bc, body, body_ty);
+  const _bind$21 = _M0FP38username5mbtpp2tt13body__effects(_rty);
+  const _body_ty = _bind$21._0;
+  const _can_raise = _bind$21._1;
+  const _can_async = _bind$21._2;
+  const bc = new _M0TP38username5mbtpp2tt3Cxt(_cxt.env, _cxt.names, _cxt.types, _cxt.bound, _cxt.muts, _cxt.lvl, _cxt.pos, _can_raise, _can_async, _body_ty, _cxt.in_loop);
+  const _bind$22 = _M0FP38username5mbtpp2tt5check(bc, body, _body_ty);
   let t;
-  if (_bind$21.$tag === 1) {
-    const _ok = _bind$21;
-    t = _ok._0;
-  } else {
-    return _bind$21;
-  }
-  const _bind$22 = _M0FP38username5mbtpp2tt14finish_2einner(_cxt, fd.name, [_M0FP38username5mbtpp2tt10wrap__lams(_bs, t), g.ty], 0);
-  let res;
   if (_bind$22.$tag === 1) {
     const _ok = _bind$22;
-    res = _ok._0;
+    t = _ok._0;
   } else {
     return _bind$22;
+  }
+  const _bind$23 = _M0FP38username5mbtpp2tt14finish_2einner(_cxt, fd.name, [_M0FP38username5mbtpp2tt10wrap__lams(_bs, t), g.ty], 0);
+  let res;
+  if (_bind$23.$tag === 1) {
+    const _ok = _bind$23;
+    res = _ok._0;
+  } else {
+    return _bind$23;
   }
   _M0MPB3Map3setGsRP38username5mbtpp2tt6GEntryE(_M0FP38username5mbtpp2tt7globals, fd.name, new _M0TP38username5mbtpp2tt6GEntry(fd.name, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(res, 1), _M0FP38username5mbtpp2tt4eval([], _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(res, 1)), g.kind));
   return new _M0DTPC16result6ResultGuRP38username5mbtpp2tt9ElabErrorE2Ok(_M0FP38username5mbtpp2tt9set__body(fd.name, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(res, 0), n));
@@ -31423,7 +33367,7 @@ function _M0FP38username5mbtpp2tt15elab__def__body(pos, name, body) {
   const _cxt = _bind$20._0;
   const _bs = _bind$20._1;
   const _rty = _bind$20._2;
-  const _bind$21 = _M0FP38username5mbtpp2tt5check(new _M0TP38username5mbtpp2tt3Cxt(_cxt.env, _cxt.names, _cxt.types, _cxt.bound, _cxt.muts, _cxt.lvl, _cxt.pos, _cxt.can_raise, _rty, _cxt.in_loop), body, _rty);
+  const _bind$21 = _M0FP38username5mbtpp2tt5check(new _M0TP38username5mbtpp2tt3Cxt(_cxt.env, _cxt.names, _cxt.types, _cxt.bound, _cxt.muts, _cxt.lvl, _cxt.pos, _cxt.can_raise, _cxt.can_async, _rty, _cxt.in_loop), body, _rty);
   let t;
   if (_bind$21.$tag === 1) {
     const _ok = _bind$21;
@@ -31715,7 +33659,7 @@ function _M0FP38username5mbtpp2tt11elab__trait(td) {
       } else {
         return _bind$21;
       }
-      _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(ftys, new _M0DTP38username5mbtpp2tt2Tm3App(new _M0DTP38username5mbtpp2tt2Tm6Global(s), _M0FP38username5mbtpp2tt11elab__traitN6constrS11086, 0));
+      _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(ftys, new _M0DTP38username5mbtpp2tt2Tm3App(new _M0DTP38username5mbtpp2tt2Tm6Global(s), _M0FP38username5mbtpp2tt11elab__traitN6constrS11764, 0));
       _tmp$14 = _ + 1 | 0;
       continue;
     } else {
@@ -31853,14 +33797,14 @@ function _M0FP38username5mbtpp2tt11elab__trait(td) {
     }
     fbs = _p$10;
   }
-  const con_ty = new _M0DTP38username5mbtpp2tt2Tm2Pi("Self", 1, false, kind, _M0FP38username5mbtpp2tt3pis(fbs, _M0FP38username5mbtpp2tt9tm__shift(new _M0DTP38username5mbtpp2tt2Tm3App(new _M0DTP38username5mbtpp2tt2Tm6Global(tr), _M0FP38username5mbtpp2tt11elab__traitN6constrS11087, 0), fields.length, 0)));
+  const con_ty = new _M0DTP38username5mbtpp2tt2Tm2Pi("Self", 1, false, kind, _M0FP38username5mbtpp2tt3pis(fbs, _M0FP38username5mbtpp2tt9tm__shift(new _M0DTP38username5mbtpp2tt2Tm3App(new _M0DTP38username5mbtpp2tt2Tm6Global(tr), _M0FP38username5mbtpp2tt11elab__traitN6constrS11765, 0), fields.length, 0)));
   _M0FP38username5mbtpp2tt8register(`${tr}::mk`, con_ty, new _M0DTP38username5mbtpp2tt5GKind4GCon(new _M0TP38username5mbtpp2tt7ConInfo(`${tr}::mk`, tr, 1, fields.length, 0)));
   const n = fields.length;
   let _tmp$16 = 0;
   while (true) {
     const k = _tmp$16;
     if (k < n) {
-      const aty = new _M0DTP38username5mbtpp2tt2Tm2Pi("Self", 1, false, kind, new _M0DTP38username5mbtpp2tt2Tm2Pi("inst", 2, false, new _M0DTP38username5mbtpp2tt2Tm3App(new _M0DTP38username5mbtpp2tt2Tm6Global(tr), _M0FP38username5mbtpp2tt11elab__traitN6constrS11088, 0), _M0FP38username5mbtpp2tt9tm__shift(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(ftys, k), 1, 0)));
+      const aty = new _M0DTP38username5mbtpp2tt2Tm2Pi("Self", 1, false, kind, new _M0DTP38username5mbtpp2tt2Tm2Pi("inst", 2, false, new _M0DTP38username5mbtpp2tt2Tm3App(new _M0DTP38username5mbtpp2tt2Tm6Global(tr), _M0FP38username5mbtpp2tt11elab__traitN6constrS11766, 0), _M0FP38username5mbtpp2tt9tm__shift(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(ftys, k), 1, 0)));
       const _p$11 = new Array(fields.length);
       const _p$12 = fields.length;
       let _tmp$17 = 0;
@@ -31876,7 +33820,7 @@ function _M0FP38username5mbtpp2tt11elab__trait(td) {
         }
       }
       const vars = _p$11;
-      const body = new _M0DTP38username5mbtpp2tt2Tm3Lam("Self", 1, false, new _M0DTP38username5mbtpp2tt2Tm3Lam("inst", 2, false, new _M0DTP38username5mbtpp2tt2Tm5Match([_M0FP38username5mbtpp2tt11elab__traitN6constrS11089], [new _M0TP38username5mbtpp2tt6Clause([new _M0DTP38username5mbtpp2tt4CPat5CPCon(`${tr}::mk`, vars)], new _M0DTP38username5mbtpp2tt2Tm3Var((n - 1 | 0) - k | 0))])));
+      const body = new _M0DTP38username5mbtpp2tt2Tm3Lam("Self", 1, false, new _M0DTP38username5mbtpp2tt2Tm3Lam("inst", 2, false, new _M0DTP38username5mbtpp2tt2Tm5Match([_M0FP38username5mbtpp2tt11elab__traitN6constrS11767], [new _M0TP38username5mbtpp2tt6Clause([new _M0DTP38username5mbtpp2tt4CPat5CPCon(`${tr}::mk`, vars)], undefined, new _M0DTP38username5mbtpp2tt2Tm3Var((n - 1 | 0) - k | 0))])));
       _M0FP38username5mbtpp2tt8register(`${tr}::${_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(fields, k)}`, aty, new _M0DTP38username5mbtpp2tt5GKind5GFunc(body, false, 2));
       _tmp$16 = k + 1 | 0;
       continue;
@@ -32091,7 +34035,7 @@ function _M0FP38username5mbtpp2tt16elab__impl__body(name, ds) {
         }
       }
       let arg;
-      if (_M0MPC16string6String11has__prefix(f, _M0FP38username5mbtpp2tt16elab__impl__bodyN6recordS11150)) {
+      if (_M0MPC16string6String11has__prefix(f, _M0FP38username5mbtpp2tt16elab__impl__bodyN6recordS11828)) {
         const _bind$25 = _M0FP38username5mbtpp2tt16search__instance(_cxt, fty, 0);
         let _bind$26;
         if (_bind$25.$tag === 1) {
@@ -32190,7 +34134,7 @@ function _M0FP38username5mbtpp2tt13builtin__data(name, ty, nparams, is_error) {
   _M0FP38username5mbtpp2tt8register(name, ty, new _M0DTP38username5mbtpp2tt5GKind5GData(new _M0TP38username5mbtpp2tt8DataInfo(name, nparams, 0, [], false, _M0DTPC16option6OptionGRPB5ArrayGsEE4None__, false, is_error, true)));
 }
 function _M0FP38username5mbtpp2tt8con__pat(c, xs) {
-  return xs.length === 0 ? c : `${c}(${_M0MPC15array5Array4joinGsE(xs, _M0FP38username5mbtpp2tt8con__patN6recordS11214)})`;
+  return xs.length === 0 ? c : `${c}(${_M0MPC15array5Array4joinGsE(xs, _M0FP38username5mbtpp2tt8con__patN6recordS11892)})`;
 }
 function _M0FP38username5mbtpp2tt10hash__fold(start, xs) {
   let code = start;
@@ -32246,7 +34190,7 @@ function _M0FP38username5mbtpp2tt4vars(x, n) {
     return _p;
   }
 }
-function _M0FP38username5mbtpp2tt10enum__bodyN3tagS11232(cons, v) {
+function _M0FP38username5mbtpp2tt10enum__bodyN3tagS11910(cons, v) {
   let _tmp$9;
   let _p;
   _L: {
@@ -32274,7 +34218,7 @@ function _M0FP38username5mbtpp2tt10enum__bodyN3tagS11232(cons, v) {
     }
     _tmp$9 = _p;
   }
-  return `match ${v} { ${_M0MPC15array5Array4joinGsE(_tmp$9, _M0FP38username5mbtpp2tt10enum__bodyN6recordS11238)} }`;
+  return `match ${v} { ${_M0MPC15array5Array4joinGsE(_tmp$9, _M0FP38username5mbtpp2tt10enum__bodyN6recordS11916)} }`;
 }
 function _M0FP38username5mbtpp2tt10enum__body(tr, cons) {
   switch (tr) {
@@ -32309,7 +34253,7 @@ function _M0FP38username5mbtpp2tt10enum__body(tr, cons) {
         }
         arms = _p;
       }
-      return `hash(self) { match self { ${_M0MPC15array5Array4joinGsE(arms, _M0FP38username5mbtpp2tt10enum__bodyN6recordS11233)} } }`;
+      return `hash(self) { match self { ${_M0MPC15array5Array4joinGsE(arms, _M0FP38username5mbtpp2tt10enum__bodyN6recordS11911)} } }`;
     }
     case "Show": {
       const _p$2 = new Array(cons.length);
@@ -32342,7 +34286,7 @@ function _M0FP38username5mbtpp2tt10enum__body(tr, cons) {
                 break;
               }
             }
-            _p$10 = `${_tmp$10} + ${_M0MPC15array5Array4joinGsE(_p$11, _M0FP38username5mbtpp2tt10enum__bodyN6recordS11234)} + \")\"`;
+            _p$10 = `${_tmp$10} + ${_M0MPC15array5Array4joinGsE(_p$11, _M0FP38username5mbtpp2tt10enum__bodyN6recordS11912)} + \")\"`;
           }
           _p$2[_p$4] = `${_M0FP38username5mbtpp2tt8con__pat(_p$6, _p$9)} => ${_p$10}`;
           _tmp$9 = _p$4 + 1 | 0;
@@ -32352,7 +34296,7 @@ function _M0FP38username5mbtpp2tt10enum__body(tr, cons) {
         }
       }
       const arms$2 = _p$2;
-      return `to_string(self) { match self { ${_M0MPC15array5Array4joinGsE(arms$2, _M0FP38username5mbtpp2tt10enum__bodyN6recordS11235)} } }`;
+      return `to_string(self) { match self { ${_M0MPC15array5Array4joinGsE(arms$2, _M0FP38username5mbtpp2tt10enum__bodyN6recordS11913)} } }`;
     }
     case "Eq": {
       const _p$4 = new Array(cons.length);
@@ -32397,7 +34341,7 @@ function _M0FP38username5mbtpp2tt10enum__body(tr, cons) {
               }
               _tmp$11 = _p$13;
             }
-            _p$12 = _M0MPC15array5Array4joinGsE(_tmp$11, _M0FP38username5mbtpp2tt10enum__bodyN6recordS11236);
+            _p$12 = _M0MPC15array5Array4joinGsE(_tmp$11, _M0FP38username5mbtpp2tt10enum__bodyN6recordS11914);
           }
           _p$4[_p$6] = `(${_M0FP38username5mbtpp2tt8con__pat(_p$8, _p$10)}, ${_M0FP38username5mbtpp2tt8con__pat(_p$8, _p$11)}) => ${_p$12}`;
           _tmp$10 = _p$6 + 1 | 0;
@@ -32410,7 +34354,7 @@ function _M0FP38username5mbtpp2tt10enum__body(tr, cons) {
       const _self = [];
       _M0MPC15array5Array10push__iterGRP38username5mbtpp6parser4StmtE(_self, _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(arms$3));
       _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_self, "_ => false");
-      return `op_equal(a, b) { match (a, b) { ${_M0MPC15array5Array4joinGsE(_self, _M0FP38username5mbtpp2tt10enum__bodyN6recordS11237)} } }`;
+      return `op_equal(a, b) { match (a, b) { ${_M0MPC15array5Array4joinGsE(_self, _M0FP38username5mbtpp2tt10enum__bodyN6recordS11915)} } }`;
     }
     default: {
       const _p$6 = new Array(cons.length);
@@ -32434,8 +34378,8 @@ function _M0FP38username5mbtpp2tt10enum__body(tr, cons) {
       const arms$4 = _p$6;
       const _self$2 = [];
       _M0MPC15array5Array10push__iterGRP38username5mbtpp6parser4StmtE(_self$2, _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(arms$4));
-      _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_self$2, `_ => { let ta = ${_M0FP38username5mbtpp2tt10enum__bodyN3tagS11232(cons, "a")}; let tb = ${_M0FP38username5mbtpp2tt10enum__bodyN3tagS11232(cons, "b")}; ta.compare(tb) }`);
-      return `compare(a, b) { match (a, b) { ${_M0MPC15array5Array4joinGsE(_self$2, _M0FP38username5mbtpp2tt10enum__bodyN6recordS11239)} } }`;
+      _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_self$2, `_ => { let ta = ${_M0FP38username5mbtpp2tt10enum__bodyN3tagS11910(cons, "a")}; let tb = ${_M0FP38username5mbtpp2tt10enum__bodyN3tagS11910(cons, "b")}; ta.compare(tb) }`);
+      return `compare(a, b) { match (a, b) { ${_M0MPC15array5Array4joinGsE(_self$2, _M0FP38username5mbtpp2tt10enum__bodyN6recordS11917)} } }`;
     }
   }
 }
@@ -32449,7 +34393,7 @@ function _M0FP38username5mbtpp2tt15imported__trait(short) {
       const _Some = _bind$18;
       const _x = _Some;
       const _name = _x._0;
-      if (_M0MPC16string6String11has__prefix(_name, _M0FP38username5mbtpp2tt15imported__traitN6recordS11277)) {
+      if (_M0MPC16string6String11has__prefix(_name, _M0FP38username5mbtpp2tt15imported__traitN6recordS11955)) {
         const _bind$19 = `.${short}`;
         if (_M0MPC16string6String11has__suffix(_name, new _M0TPC16string10StringView(_bind$19, 0, _bind$19.length))) {
           _L: {
@@ -32721,8 +34665,8 @@ function _M0FP38username5mbtpp2tt12mbt__derived(cx, p, tr, name, ts, head, is_mb
   const _m = _bind$22._0;
   const _params = _bind$22._1;
   const _args = _bind$22._2;
-  const ext = `mbtpp_derived_${tr}_${_M0MPC16string6String12replace__all(name, _M0FP38username5mbtpp2tt12mbt__derivedN6recordS11336, _M0FP38username5mbtpp2tt12mbt__derivedN6recordS11337)}`;
-  const tparams = ts.length === 0 ? "" : `[${_M0MPC15array5Array4joinGsE(ts, _M0FP38username5mbtpp2tt12mbt__derivedN6recordS11338)}]`;
+  const ext = `mbtpp_derived_${tr}_${_M0MPC16string6String12replace__all(name, _M0FP38username5mbtpp2tt12mbt__derivedN6recordS12014, _M0FP38username5mbtpp2tt12mbt__derivedN6recordS12015)}`;
+  const tparams = ts.length === 0 ? "" : `[${_M0MPC15array5Array4joinGsE(ts, _M0FP38username5mbtpp2tt12mbt__derivedN6recordS12016)}]`;
   let bounds;
   if (ts.length === 0) {
     bounds = "";
@@ -32741,7 +34685,7 @@ function _M0FP38username5mbtpp2tt12mbt__derived(cx, p, tr, name, ts, head, is_mb
         break;
       }
     }
-    bounds = `[${_M0MPC15array5Array4joinGsE(_p, _M0FP38username5mbtpp2tt12mbt__derivedN6recordS11339)}]`;
+    bounds = `[${_M0MPC15array5Array4joinGsE(_p, _M0FP38username5mbtpp2tt12mbt__derivedN6recordS12017)}]`;
   }
   const src = `fn${tparams} ${ext}${_params} = \"@mbt:trait:${_mbt_name}::${_m}\"; impl${bounds} ${_trait_name} for ${head} with ${_m}(${_args}) { ${ext}(${_args}) }`;
   _M0MPC15array5Array4pushGiE(_M0FP38username5mbtpp2tt14derived__lines, p.line);
@@ -32835,7 +34779,7 @@ function _M0FP38username5mbtpp2tt12struct__body(tr, fields) {
       _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_self, "\"{\"");
       _M0MPC15array5Array10push__iterGRP38username5mbtpp6parser4StmtE(_self, _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(parts));
       _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_self, "\"}\"");
-      return `to_string(self) { ${_M0MPC15array5Array4joinGsE(_self, _M0FP38username5mbtpp2tt12struct__bodyN6recordS11381)} }`;
+      return `to_string(self) { ${_M0MPC15array5Array4joinGsE(_self, _M0FP38username5mbtpp2tt12struct__bodyN6recordS12059)} }`;
     }
     case "Eq": {
       let eq;
@@ -32856,7 +34800,7 @@ function _M0FP38username5mbtpp2tt12struct__body(tr, fields) {
             break;
           }
         }
-        eq = _M0MPC15array5Array4joinGsE(_p$4, _M0FP38username5mbtpp2tt12struct__bodyN6recordS11382);
+        eq = _M0MPC15array5Array4joinGsE(_p$4, _M0FP38username5mbtpp2tt12struct__bodyN6recordS12060);
       }
       return `op_equal(a, b) { ${eq} }`;
     }
@@ -32896,7 +34840,7 @@ function _M0FP38username5mbtpp2tt12struct__body(tr, fields) {
 function _M0FP38username5mbtpp2tt14derived__impls(d, p, tr, is_mbt) {
   const cx = _M0FP38username5mbtpp2tt10empty__cxt(p);
   if (!_M0MPC15array5Array8containsGsE(_M0FP38username5mbtpp2tt9derivable, tr)) {
-    const _bind$18 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cx, `derive(${tr}) is not supported (only ${_M0MPC15array5Array4joinGsE(_M0FP38username5mbtpp2tt9derivable, _M0FP38username5mbtpp2tt14derived__implsN6recordS11395)})`);
+    const _bind$18 = _M0MP38username5mbtpp2tt3Cxt4failGuE(cx, `derive(${tr}) is not supported (only ${_M0MPC15array5Array4joinGsE(_M0FP38username5mbtpp2tt9derivable, _M0FP38username5mbtpp2tt14derived__implsN6recordS12073)})`);
     if (_bind$18.$tag === 1) {
       const _ok = _bind$18;
       _ok._0;
@@ -33043,7 +34987,7 @@ function _M0FP38username5mbtpp2tt14derived__impls(d, p, tr, is_mbt) {
     }
   }
   const ts = _p;
-  const head = ts.length === 0 ? _name$3 : `${_name$3}[${_M0MPC15array5Array4joinGsE(ts, _M0FP38username5mbtpp2tt14derived__implsN6recordS11396)}]`;
+  const head = ts.length === 0 ? _name$3 : `${_name$3}[${_M0MPC15array5Array4joinGsE(ts, _M0FP38username5mbtpp2tt14derived__implsN6recordS12074)}]`;
   let bounds;
   if (ts.length === 0) {
     bounds = "";
@@ -33062,7 +35006,7 @@ function _M0FP38username5mbtpp2tt14derived__impls(d, p, tr, is_mbt) {
         break;
       }
     }
-    bounds = `[${_M0MPC15array5Array4joinGsE(_p$3, _M0FP38username5mbtpp2tt14derived__implsN6recordS11397)}]`;
+    bounds = `[${_M0MPC15array5Array4joinGsE(_p$3, _M0FP38username5mbtpp2tt14derived__implsN6recordS12075)}]`;
   }
   if (_M0MPC15array5Array8containsGsE(_M0FP38username5mbtpp2tt14mbt__derivable, tr)) {
     const _bind$22 = _M0FP38username5mbtpp2tt12mbt__derived(cx, p, tr, _name$3, ts, head, is_mbt);
@@ -33291,7 +35235,7 @@ function _M0FP38username5mbtpp2tt15expand__derives(decls) {
   }
   return new _M0DTPC16result6ResultGRPB5ArrayGRP38username5mbtpp6parser4DeclERP38username5mbtpp2tt9ElabErrorE2Ok(out);
 }
-function _M0FP38username5mbtpp2tt17record__decl__posN3setS11502(n, p, kind) {
+function _M0FP38username5mbtpp2tt17record__decl__posN3setS12180(n, p, kind) {
   if (p.line >= 1000000) {
     _M0MPB3Map3setGsRP38username5mbtpp6parser3PosE(_M0FP38username5mbtpp2tt9decl__pos, n, p);
     _M0MPB3Map3setGssE(_M0FP38username5mbtpp2tt11decl__kinds, n, kind);
@@ -33305,27 +35249,27 @@ function _M0FP38username5mbtpp2tt17record__decl__pos(d) {
     case 0: {
       const _DFn = d;
       const _fd = _DFn._0;
-      _M0FP38username5mbtpp2tt17record__decl__posN3setS11502(_fd.name, _fd.pos, _fd.is_lemma ? "lemma" : "fn");
+      _M0FP38username5mbtpp2tt17record__decl__posN3setS12180(_fd.name, _fd.pos, _fd.is_lemma ? "lemma" : "fn");
       return;
     }
     case 1: {
       const _DDef = d;
       const _p = _DDef._0;
       const _n = _DDef._1;
-      _M0FP38username5mbtpp2tt17record__decl__posN3setS11502(_n, _p, "let");
+      _M0FP38username5mbtpp2tt17record__decl__posN3setS12180(_n, _p, "let");
       return;
     }
     case 6: {
       const _DOpaque = d;
       const _p$2 = _DOpaque._0;
       const _n$2 = _DOpaque._1;
-      _M0FP38username5mbtpp2tt17record__decl__posN3setS11502(_n$2, _p$2, "type");
+      _M0FP38username5mbtpp2tt17record__decl__posN3setS12180(_n$2, _p$2, "type");
       return;
     }
     case 2: {
       const _DEnum = d;
       const _ed = _DEnum._0;
-      _M0FP38username5mbtpp2tt17record__decl__posN3setS11502(_ed.name, _ed.pos, "enum");
+      _M0FP38username5mbtpp2tt17record__decl__posN3setS12180(_ed.name, _ed.pos, "enum");
       const _bind$18 = _ed.cons;
       const _bind$19 = _bind$18.length;
       let _tmp$9 = 0;
@@ -33333,7 +35277,7 @@ function _M0FP38username5mbtpp2tt17record__decl__pos(d) {
         const _ = _tmp$9;
         if (_ < _bind$19) {
           const c = _bind$18[_];
-          _M0FP38username5mbtpp2tt17record__decl__posN3setS11502(`${_ed.name}::${c.name}`, c.pos, "constructor");
+          _M0FP38username5mbtpp2tt17record__decl__posN3setS12180(`${_ed.name}::${c.name}`, c.pos, "constructor");
           _tmp$9 = _ + 1 | 0;
           continue;
         } else {
@@ -33344,7 +35288,7 @@ function _M0FP38username5mbtpp2tt17record__decl__pos(d) {
     case 3: {
       const _DStruct = d;
       const _sd = _DStruct._0;
-      _M0FP38username5mbtpp2tt17record__decl__posN3setS11502(_sd.name, _sd.pos, "struct");
+      _M0FP38username5mbtpp2tt17record__decl__posN3setS12180(_sd.name, _sd.pos, "struct");
       const _bind$20 = _sd.fields;
       const _bind$21 = _bind$20.length;
       let _tmp$10 = 0;
@@ -33352,7 +35296,7 @@ function _M0FP38username5mbtpp2tt17record__decl__pos(d) {
         const _ = _tmp$10;
         if (_ < _bind$21) {
           const f = _bind$20[_];
-          _M0FP38username5mbtpp2tt17record__decl__posN3setS11502(`${_sd.name}::${f._1}`, f._0, "field");
+          _M0FP38username5mbtpp2tt17record__decl__posN3setS12180(`${_sd.name}::${f._1}`, f._0, "field");
           _tmp$10 = _ + 1 | 0;
           continue;
         } else {
@@ -33363,7 +35307,7 @@ function _M0FP38username5mbtpp2tt17record__decl__pos(d) {
     case 4: {
       const _DTrait = d;
       const _td = _DTrait._0;
-      _M0FP38username5mbtpp2tt17record__decl__posN3setS11502(_td.name, _td.pos, "trait");
+      _M0FP38username5mbtpp2tt17record__decl__posN3setS12180(_td.name, _td.pos, "trait");
       const _bind$22 = _td.methods;
       const _bind$23 = _bind$22.length;
       let _tmp$11 = 0;
@@ -33371,7 +35315,7 @@ function _M0FP38username5mbtpp2tt17record__decl__pos(d) {
         const _ = _tmp$11;
         if (_ < _bind$23) {
           const m = _bind$22[_];
-          _M0FP38username5mbtpp2tt17record__decl__posN3setS11502(`${_td.name}::${m.name}`, m.pos, "method");
+          _M0FP38username5mbtpp2tt17record__decl__posN3setS12180(`${_td.name}::${m.name}`, m.pos, "method");
           _tmp$11 = _ + 1 | 0;
           continue;
         } else {
@@ -33527,7 +35471,7 @@ function _M0FP38username5mbtpp2tt20check__decls_2einner(decls0, lenient, skipped
               case 0: {
                 const _DFn = inner;
                 const _fd = _DFn._0;
-                _M0MPB3Map3setGssE(_M0FP38username5mbtpp2tt8mbt__fns, _fd.name, _M0MPC16option6Option10unwrap__orGsE(_mbt_name, _fd.name));
+                _M0MPB3Map3setGssE(_M0FP38username5mbtpp2tt8mbt__fns, _fd.name, _M0MPC16option6Option10unwrap__orGRP38username5mbtpp6parser4ExprE(_mbt_name, _fd.name));
                 _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(mbt_fn_decls, { _0: _pos, _1: _fd.name });
                 _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(decls, inner);
                 break _L;
@@ -33540,7 +35484,7 @@ function _M0FP38username5mbtpp2tt20check__decls_2einner(decls0, lenient, skipped
               _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(decls, inner);
               break _L;
             }
-            _M0MPB3Map3setGsRP38username5mbtpp2tt7MbtInfoE(_M0FP38username5mbtpp2tt10mbt__types, n, new _M0TP38username5mbtpp2tt7MbtInfo(_M0MPC16option6Option10unwrap__orGsE(_mbt_name, n), _mbt_name === undefined, _read_only));
+            _M0MPB3Map3setGsRP38username5mbtpp2tt7MbtInfoE(_M0FP38username5mbtpp2tt10mbt__types, n, new _M0TP38username5mbtpp2tt7MbtInfo(_M0MPC16option6Option10unwrap__orGRP38username5mbtpp6parser4ExprE(_mbt_name, n), _mbt_name === undefined, _read_only));
             _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(marked, { _0: _pos, _1: n });
             _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(decls, inner);
             break;
@@ -33561,7 +35505,7 @@ function _M0FP38username5mbtpp2tt20check__decls_2einner(decls0, lenient, skipped
   const steps = [];
   const _bind$20 = [];
   const impl_groups = _M0MPB3Map3MapGsRPB5ArrayGRP38username5mbtpp6parser8ImplDeclEE(new _M0TPB9ArrayViewGUsRPB5ArrayGRP38username5mbtpp6parser8ImplDeclEEE(_bind$20, 0, 0), undefined);
-  const nowhere = _M0FP38username5mbtpp2tt10empty__cxt(_M0FP38username5mbtpp2tt20check__decls_2einnerN6recordS11536);
+  const nowhere = _M0FP38username5mbtpp2tt10empty__cxt(_M0FP38username5mbtpp2tt20check__decls_2einnerN6recordS12214);
   const _bind$21 = decls.length;
   let _tmp$10 = 0;
   while (true) {
@@ -34104,7 +36048,9 @@ function _M0FP38username5mbtpp2tt10check__src(file, src) {
   let decls$2;
   if (file === "<prelude>") {
     const _self = [];
-    _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_self, _M0FP38username5mbtpp2tt10check__srcN6constrS11703);
+    _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_self, _M0FP38username5mbtpp2tt10check__srcN6constrS12381);
+    _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_self, _M0FP38username5mbtpp2tt10check__srcN6constrS12383);
+    _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_self, _M0FP38username5mbtpp2tt10check__srcN6constrS12385);
     _M0MPC15array5Array10push__iterGRP38username5mbtpp6parser4StmtE(_self, _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(decls));
     decls$2 = _self;
   } else {
@@ -34133,13 +36079,13 @@ function _M0FP38username5mbtpp2tt14is__type__like(n) {
   let base;
   _L: {
     _L$2: {
-      const _bind$18 = _M0MPC16string6String9rev__find(n, _M0FP38username5mbtpp2tt14is__type__likeN6recordS11719);
+      const _bind$18 = _M0MPC16string6String9rev__find(n, _M0FP38username5mbtpp2tt14is__type__likeN6recordS12401);
       if (_bind$18 === undefined) {
         break _L$2;
       } else {
         const _Some = _bind$18;
         const _k = _Some;
-        if (_M0MPC16string6String11has__prefix(n, _M0FP38username5mbtpp2tt14is__type__likeN6recordS11720)) {
+        if (_M0MPC16string6String11has__prefix(n, _M0FP38username5mbtpp2tt14is__type__likeN6recordS12402)) {
           base = n.substring(_k + 1 | 0, n.length);
         } else {
           break _L$2;
@@ -34155,7 +36101,7 @@ function _M0FP38username5mbtpp2tt14is__type__like(n) {
   } else {
     const _Some = _bind$18;
     const _c = _Some;
-    return _c >= 65 && (_c <= 90 && !_M0MPC16string6String8contains(base, _M0FP38username5mbtpp2tt14is__type__likeN6recordS11721));
+    return _c >= 65 && (_c <= 90 && !_M0MPC16string6String8contains(base, _M0FP38username5mbtpp2tt14is__type__likeN6recordS12403));
   }
 }
 function _M0FP38username5mbtpp2tt9reexports(usings, decls) {
@@ -34386,7 +36332,7 @@ function _M0FP38username5mbtpp2tt13load__imports(imports) {
     }
   }
   const decls = [];
-  const view_aliases = [new _M0DTP38username5mbtpp6parser4Decl4DDef(_M0FP38username5mbtpp2tt13load__importsN2p0S11795, "StringView", [], _M0FP38username5mbtpp2tt13load__importsN6constrS11797, _M0FP38username5mbtpp2tt13load__importsN6constrS11798), new _M0DTP38username5mbtpp6parser4Decl4DDef(_M0FP38username5mbtpp2tt13load__importsN2p0S11795, "ArrayView", [new _M0TP38username5mbtpp6parser6Binder(_M0FP38username5mbtpp2tt13load__importsN2p0S11795, "T", undefined, _M0DTP38username5mbtpp6parser9ParamKind10Positional__)], _M0FP38username5mbtpp2tt13load__importsN6constrS11800, new _M0DTP38username5mbtpp6parser4Expr4EApp(_M0FP38username5mbtpp2tt13load__importsN2p0S11795, _M0FP38username5mbtpp2tt13load__importsN6constrS11801, new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4Some([_M0FP38username5mbtpp2tt13load__importsN6constrS11802]), _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__))];
+  const view_aliases = [new _M0DTP38username5mbtpp6parser4Decl4DDef(_M0FP38username5mbtpp2tt13load__importsN2p0S12477, "StringView", [], _M0FP38username5mbtpp2tt13load__importsN6constrS12479, _M0FP38username5mbtpp2tt13load__importsN6constrS12480), new _M0DTP38username5mbtpp6parser4Decl4DDef(_M0FP38username5mbtpp2tt13load__importsN2p0S12477, "ArrayView", [new _M0TP38username5mbtpp6parser6Binder(_M0FP38username5mbtpp2tt13load__importsN2p0S12477, "T", undefined, _M0DTP38username5mbtpp6parser9ParamKind10Positional__)], _M0FP38username5mbtpp2tt13load__importsN6constrS12482, new _M0DTP38username5mbtpp6parser4Expr4EApp(_M0FP38username5mbtpp2tt13load__importsN2p0S12477, _M0FP38username5mbtpp2tt13load__importsN6constrS12483, new _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4Some([_M0FP38username5mbtpp2tt13load__importsN6constrS12484]), _M0DTPC16option6OptionGRPB5ArrayGRP38username5mbtpp6parser4ExprEE4None__))];
   const _bind$20 = view_aliases.length;
   let _tmp$10 = 0;
   while (true) {
@@ -34519,7 +36465,7 @@ function _M0FP38username5mbtpp2tt13load__imports(imports) {
       break;
     }
   }
-  const _bind$25 = _M0FP38username5mbtpp6parser15external__impls(impls, traits, (tr, m) => _M0MPB3Map8containsGsRPB3MapGssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traits, tr) ? { _0: tr, _1: _M0FP38username5mbtpp2tt17mbt__method__name(tr, m) } : _M0MPC16string6String11has__prefix(tr, _M0FP38username5mbtpp2tt13load__importsN6recordS11803) ? { _0: tr, _1: m } : undefined);
+  const _bind$25 = _M0FP38username5mbtpp6parser15external__impls(impls, traits, (tr, m) => _M0MPB3Map8containsGsRPB3MapGssEE(_M0FP38username5mbtpp2tt20mbt__builtin__traits, tr) ? { _0: tr, _1: _M0FP38username5mbtpp2tt17mbt__method__name(tr, m) } : _M0MPC16string6String11has__prefix(tr, _M0FP38username5mbtpp2tt13load__importsN6recordS12485) ? { _0: tr, _1: m } : undefined);
   const _ext_decls = _bind$25._0;
   const _ext_skipped = _bind$25._1;
   const _bind$26 = _ext_decls.length;
@@ -34637,7 +36583,7 @@ function _M0FP38username5mbtpp2tt13load__imports(imports) {
     const _p$3 = _tmp$17;
     if (_p$3 < _p$2) {
       const _p$4 = bounds[_p$3];
-      _p[_p$3] = new _M0DTP38username5mbtpp6parser4Decl6DTrait(new _M0TP38username5mbtpp6parser9TraitDecl(_M0FP38username5mbtpp2tt13load__importsN6recordS11804, _p$4, undefined, [], []));
+      _p[_p$3] = new _M0DTP38username5mbtpp6parser4Decl6DTrait(new _M0TP38username5mbtpp6parser9TraitDecl(_M0FP38username5mbtpp2tt13load__importsN6recordS12486, _p$4, undefined, [], []));
       _tmp$17 = _p$3 + 1 | 0;
       continue;
     } else {
@@ -34701,7 +36647,7 @@ function _M0FP38username5mbtpp2tt13load__imports(imports) {
       const _x = _Some;
       const _n = _x._0;
       const _k = _x._1;
-      _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(stubs, new _M0DTP38username5mbtpp6parser4Decl7DOpaque(_M0FP38username5mbtpp2tt13load__importsN6recordS11805, _n, _k));
+      _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(stubs, new _M0DTP38username5mbtpp6parser4Decl7DOpaque(_M0FP38username5mbtpp2tt13load__importsN6recordS12487, _n, _k));
       continue;
     }
   }
@@ -35002,103 +36948,197 @@ function _M0FP38username5mbtpp2tt13param__labels(name) {
     return _M0DTPC16option6OptionGRPB5ArrayGOUsbEEE4None__;
   }
 }
-function _M0IP38username5mbtpp7codegen3NTyPB2Eq5equal(_x_1500, _x_1501) {
-  let _tmp$9 = _x_1500;
-  let _tmp$10 = _x_1501;
-  _L: while (true) {
-    const _x_1500$2 = _tmp$9;
-    const _x_1501$2 = _tmp$10;
-    switch (_x_1500$2.$tag) {
+function _M0FP38username5mbtpp2tt10tm__effect(e) {
+  _L: {
+    let err;
+    _L$2: {
+      if (e.$tag === 5) {
+        const _App = e;
+        const _x = _App._0;
+        if (_x.$tag === 1) {
+          const _Global = _x;
+          const _x$2 = _Global._0;
+          if (_x$2 === "%Async") {
+            const _x$3 = _App._1;
+            if (_x$3.$tag === 1) {
+              const _Global$2 = _x$3;
+              const _x$4 = _Global$2._0;
+              if (_x$4 === "%NoRaise") {
+                return { _0: true, _1: undefined };
+              } else {
+                err = _x$3;
+                break _L$2;
+              }
+            } else {
+              err = _x$3;
+              break _L$2;
+            }
+          } else {
+            break _L;
+          }
+        } else {
+          break _L;
+        }
+      } else {
+        break _L;
+      }
+    }
+    return { _0: true, _1: err };
+  }
+  return { _0: false, _1: e };
+}
+function _M0FP38username5mbtpp2tt17is__async__global(name) {
+  const _bind$18 = _M0MPB3Map3getGsRP38username5mbtpp2tt6GEntryE(_M0FP38username5mbtpp2tt7globals, name);
+  if (_bind$18 === undefined) {
+    return false;
+  } else {
+    const _Some = _bind$18;
+    const _g = _Some;
+    let n;
+    const _bind$19 = _g.kind;
+    switch (_bind$19.$tag) {
       case 0: {
-        if (_x_1501$2.$tag === 0) {
+        const _GFunc = _bind$19;
+        const _n = _GFunc._2;
+        n = _n;
+        break;
+      }
+      case 3: {
+        const _GPrim = _bind$19;
+        const _n$2 = _GPrim._1;
+        n = _n$2;
+        break;
+      }
+      default: {
+        return false;
+      }
+    }
+    let t = _g.ty;
+    let _tmp$9 = 0;
+    while (true) {
+      const _ = _tmp$9;
+      if (_ < n) {
+        const _bind$20 = t;
+        if (_bind$20.$tag === 6) {
+          const _Pi = _bind$20;
+          const _b = _Pi._4;
+          t = _b;
+        } else {
+          return false;
+        }
+        _tmp$9 = _ + 1 | 0;
+        continue;
+      } else {
+        break;
+      }
+    }
+    const _bind$20 = t;
+    if (_bind$20.$tag === 12) {
+      const _Raises = _bind$20;
+      const _e = _Raises._1;
+      return _M0FP38username5mbtpp2tt10tm__effect(_e)._0;
+    } else {
+      return false;
+    }
+  }
+}
+function _M0IP38username5mbtpp7codegen3NTyPB2Eq5equal(_x_1587, _x_1588) {
+  let _tmp$9 = _x_1587;
+  let _tmp$10 = _x_1588;
+  _L: while (true) {
+    const _x_1587$2 = _tmp$9;
+    const _x_1588$2 = _tmp$10;
+    switch (_x_1587$2.$tag) {
+      case 0: {
+        if (_x_1588$2.$tag === 0) {
           return true;
         } else {
           return false;
         }
       }
       case 1: {
-        if (_x_1501$2.$tag === 1) {
+        if (_x_1588$2.$tag === 1) {
           return true;
         } else {
           return false;
         }
       }
       case 2: {
-        if (_x_1501$2.$tag === 2) {
+        if (_x_1588$2.$tag === 2) {
           return true;
         } else {
           return false;
         }
       }
       case 3: {
-        if (_x_1501$2.$tag === 3) {
+        if (_x_1588$2.$tag === 3) {
           return true;
         } else {
           return false;
         }
       }
       case 4: {
-        if (_x_1501$2.$tag === 4) {
+        if (_x_1588$2.$tag === 4) {
           return true;
         } else {
           return false;
         }
       }
       case 5: {
-        if (_x_1501$2.$tag === 5) {
+        if (_x_1588$2.$tag === 5) {
           return true;
         } else {
           return false;
         }
       }
       case 6: {
-        const _NEnum = _x_1500$2;
-        const _$42$x0_1502 = _NEnum._0;
-        const _$42$x1_1503 = _NEnum._1;
-        if (_x_1501$2.$tag === 6) {
-          const _NEnum$2 = _x_1501$2;
-          const _$42$y0_1504 = _NEnum$2._0;
-          const _$42$y1_1505 = _NEnum$2._1;
-          return _$42$x0_1502 === _$42$y0_1504 && _M0IPC15array5ArrayPB2Eq5equalGRP38username5mbtpp7codegen3NTyE(_$42$x1_1503, _$42$y1_1505);
+        const _NEnum = _x_1587$2;
+        const _$42$x0_1589 = _NEnum._0;
+        const _$42$x1_1590 = _NEnum._1;
+        if (_x_1588$2.$tag === 6) {
+          const _NEnum$2 = _x_1588$2;
+          const _$42$y0_1591 = _NEnum$2._0;
+          const _$42$y1_1592 = _NEnum$2._1;
+          return _$42$x0_1589 === _$42$y0_1591 && _M0IPC15array5ArrayPB2Eq5equalGRP38username5mbtpp7codegen3NTyE(_$42$x1_1590, _$42$y1_1592);
         } else {
           return false;
         }
       }
       case 7: {
-        const _NForeign = _x_1500$2;
-        const _$42$x0_1506 = _NForeign._0;
-        const _$42$x1_1507 = _NForeign._1;
-        if (_x_1501$2.$tag === 7) {
-          const _NForeign$2 = _x_1501$2;
-          const _$42$y0_1508 = _NForeign$2._0;
-          const _$42$y1_1509 = _NForeign$2._1;
-          return _$42$x0_1506 === _$42$y0_1508 && _M0IPC15array5ArrayPB2Eq5equalGRP38username5mbtpp7codegen3NTyE(_$42$x1_1507, _$42$y1_1509);
+        const _NForeign = _x_1587$2;
+        const _$42$x0_1593 = _NForeign._0;
+        const _$42$x1_1594 = _NForeign._1;
+        if (_x_1588$2.$tag === 7) {
+          const _NForeign$2 = _x_1588$2;
+          const _$42$y0_1595 = _NForeign$2._0;
+          const _$42$y1_1596 = _NForeign$2._1;
+          return _$42$x0_1593 === _$42$y0_1595 && _M0IPC15array5ArrayPB2Eq5equalGRP38username5mbtpp7codegen3NTyE(_$42$x1_1594, _$42$y1_1596);
         } else {
           return false;
         }
       }
       case 8: {
-        const _NVar = _x_1500$2;
-        const _$42$x0_1510 = _NVar._0;
-        if (_x_1501$2.$tag === 8) {
-          const _NVar$2 = _x_1501$2;
-          const _$42$y0_1511 = _NVar$2._0;
-          return _$42$x0_1510 === _$42$y0_1511;
+        const _NVar = _x_1587$2;
+        const _$42$x0_1597 = _NVar._0;
+        if (_x_1588$2.$tag === 8) {
+          const _NVar$2 = _x_1588$2;
+          const _$42$y0_1598 = _NVar$2._0;
+          return _$42$x0_1597 === _$42$y0_1598;
         } else {
           return false;
         }
       }
       case 9: {
-        const _NFun = _x_1500$2;
-        const _$42$x0_1512 = _NFun._0;
-        const _$42$x1_1513 = _NFun._1;
-        if (_x_1501$2.$tag === 9) {
-          const _NFun$2 = _x_1501$2;
-          const _$42$y0_1514 = _NFun$2._0;
-          const _$42$y1_1515 = _NFun$2._1;
-          if (_M0IPC15array5ArrayPB2Eq5equalGRP38username5mbtpp7codegen3NTyE(_$42$x0_1512, _$42$y0_1514)) {
-            _tmp$9 = _$42$x1_1513;
-            _tmp$10 = _$42$y1_1515;
+        const _NFun = _x_1587$2;
+        const _$42$x0_1599 = _NFun._0;
+        const _$42$x1_1600 = _NFun._1;
+        if (_x_1588$2.$tag === 9) {
+          const _NFun$2 = _x_1588$2;
+          const _$42$y0_1601 = _NFun$2._0;
+          const _$42$y1_1602 = _NFun$2._1;
+          if (_M0IPC15array5ArrayPB2Eq5equalGRP38username5mbtpp7codegen3NTyE(_$42$x0_1599, _$42$y0_1601)) {
+            _tmp$9 = _$42$x1_1600;
+            _tmp$10 = _$42$y1_1602;
             continue _L;
           } else {
             return false;
@@ -35108,14 +37148,33 @@ function _M0IP38username5mbtpp7codegen3NTyPB2Eq5equal(_x_1500, _x_1501) {
         }
       }
       case 10: {
-        if (_x_1501$2.$tag === 10) {
+        const _NAsyncFun = _x_1587$2;
+        const _$42$x0_1603 = _NAsyncFun._0;
+        const _$42$x1_1604 = _NAsyncFun._1;
+        if (_x_1588$2.$tag === 10) {
+          const _NAsyncFun$2 = _x_1588$2;
+          const _$42$y0_1605 = _NAsyncFun$2._0;
+          const _$42$y1_1606 = _NAsyncFun$2._1;
+          if (_M0IPC15array5ArrayPB2Eq5equalGRP38username5mbtpp7codegen3NTyE(_$42$x0_1603, _$42$y0_1605)) {
+            _tmp$9 = _$42$x1_1604;
+            _tmp$10 = _$42$y1_1606;
+            continue _L;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      }
+      case 11: {
+        if (_x_1588$2.$tag === 11) {
           return true;
         } else {
           return false;
         }
       }
       default: {
-        if (_x_1501$2.$tag === 11) {
+        if (_x_1588$2.$tag === 12) {
           return true;
         } else {
           return false;
@@ -35132,11 +37191,11 @@ function _M0FP38username5mbtpp7codegen5tpush(env, l) {
 function _M0FP38username5mbtpp7codegen10unify__nty(a, b) {
   let t;
   _L: {
-    if (a.$tag === 10) {
+    if (a.$tag === 11) {
       t = b;
       break _L;
     } else {
-      if (b.$tag === 10) {
+      if (b.$tag === 11) {
         t = a;
         break _L;
       } else {
@@ -35173,17 +37232,17 @@ function _M0FP38username5mbtpp7codegen10subst__nty(t, args) {
       }
       return new _M0DTP38username5mbtpp7codegen3NTy5NEnum(_d, _p);
     }
-    case 9: {
-      const _NFun = t;
-      const _ps = _NFun._0;
-      const _r = _NFun._1;
-      const _p$3 = new Array(_ps.length);
-      const _p$4 = _ps.length;
+    case 7: {
+      const _NForeign = t;
+      const _d$2 = _NForeign._0;
+      const _xs$2 = _NForeign._1;
+      const _p$3 = new Array(_xs$2.length);
+      const _p$4 = _xs$2.length;
       let _tmp$10 = 0;
       while (true) {
         const _p$5 = _tmp$10;
         if (_p$5 < _p$4) {
-          const _p$6 = _ps[_p$5];
+          const _p$6 = _xs$2[_p$5];
           _p$3[_p$5] = _M0FP38username5mbtpp7codegen10subst__nty(_p$6, args);
           _tmp$10 = _p$5 + 1 | 0;
           continue;
@@ -35191,7 +37250,47 @@ function _M0FP38username5mbtpp7codegen10subst__nty(t, args) {
           break;
         }
       }
-      return new _M0DTP38username5mbtpp7codegen3NTy4NFun(_p$3, _M0FP38username5mbtpp7codegen10subst__nty(_r, args));
+      return new _M0DTP38username5mbtpp7codegen3NTy8NForeign(_d$2, _p$3);
+    }
+    case 9: {
+      const _NFun = t;
+      const _ps = _NFun._0;
+      const _r = _NFun._1;
+      const _p$5 = new Array(_ps.length);
+      const _p$6 = _ps.length;
+      let _tmp$11 = 0;
+      while (true) {
+        const _p$7 = _tmp$11;
+        if (_p$7 < _p$6) {
+          const _p$8 = _ps[_p$7];
+          _p$5[_p$7] = _M0FP38username5mbtpp7codegen10subst__nty(_p$8, args);
+          _tmp$11 = _p$7 + 1 | 0;
+          continue;
+        } else {
+          break;
+        }
+      }
+      return new _M0DTP38username5mbtpp7codegen3NTy4NFun(_p$5, _M0FP38username5mbtpp7codegen10subst__nty(_r, args));
+    }
+    case 10: {
+      const _NAsyncFun = t;
+      const _ps$2 = _NAsyncFun._0;
+      const _r$2 = _NAsyncFun._1;
+      const _p$7 = new Array(_ps$2.length);
+      const _p$8 = _ps$2.length;
+      let _tmp$12 = 0;
+      while (true) {
+        const _p$9 = _tmp$12;
+        if (_p$9 < _p$8) {
+          const _p$10 = _ps$2[_p$9];
+          _p$7[_p$9] = _M0FP38username5mbtpp7codegen10subst__nty(_p$10, args);
+          _tmp$12 = _p$9 + 1 | 0;
+          continue;
+        } else {
+          break;
+        }
+      }
+      return new _M0DTP38username5mbtpp7codegen3NTy9NAsyncFun(_p$7, _M0FP38username5mbtpp7codegen10subst__nty(_r$2, args));
     }
     default: {
       return t;
@@ -35202,59 +37301,85 @@ function _M0FP38username5mbtpp7codegen8has__var(t) {
   let _tmp$9 = t;
   _L: while (true) {
     const t$2 = _tmp$9;
-    switch (t$2.$tag) {
-      case 8: {
-        return true;
-      }
-      case 6: {
-        const _NEnum = t$2;
-        const _xs = _NEnum._1;
-        const _p = _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(_xs);
-        while (true) {
-          const _p$2 = _M0MPB4Iter4nextGRP38username5mbtpp2tt2TmE(_p);
-          if (_p$2 === undefined) {
+    let ps;
+    let r;
+    _L$2: {
+      let xs;
+      _L$3: {
+        switch (t$2.$tag) {
+          case 8: {
+            return true;
+          }
+          case 6: {
+            const _NEnum = t$2;
+            const _xs = _NEnum._1;
+            xs = _xs;
+            break _L$3;
+          }
+          case 7: {
+            const _NForeign = t$2;
+            const _xs$2 = _NForeign._1;
+            xs = _xs$2;
+            break _L$3;
+          }
+          case 9: {
+            const _NFun = t$2;
+            const _ps = _NFun._0;
+            const _r = _NFun._1;
+            ps = _ps;
+            r = _r;
+            break _L$2;
+          }
+          case 10: {
+            const _NAsyncFun = t$2;
+            const _ps$2 = _NAsyncFun._0;
+            const _r$2 = _NAsyncFun._1;
+            ps = _ps$2;
+            r = _r$2;
+            break _L$2;
+          }
+          default: {
             return false;
-          } else {
-            const _p$3 = _p$2;
-            const _p$4 = _p$3;
-            if (_M0FP38username5mbtpp7codegen8has__var(_p$4)) {
-              return true;
-            }
-            continue;
           }
         }
       }
-      case 9: {
-        const _NFun = t$2;
-        const _ps = _NFun._0;
-        const _r = _NFun._1;
-        const _p$2 = _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(_ps);
-        let _tmp$10;
-        while (true) {
-          const _p$3 = _M0MPB4Iter4nextGRP38username5mbtpp2tt2TmE(_p$2);
-          if (_p$3 === undefined) {
-            _tmp$10 = false;
-            break;
-          } else {
-            const _p$4 = _p$3;
-            const _p$5 = _p$4;
-            if (_M0FP38username5mbtpp7codegen8has__var(_p$5)) {
-              _tmp$10 = true;
-              break;
-            }
-            continue;
-          }
-        }
-        if (_tmp$10) {
-          return true;
+      const _p = _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(xs);
+      while (true) {
+        const _p$2 = _M0MPB4Iter4nextGRP38username5mbtpp2tt2TmE(_p);
+        if (_p$2 === undefined) {
+          return false;
         } else {
-          _tmp$9 = _r;
-          continue _L;
+          const _p$3 = _p$2;
+          const _p$4 = _p$3;
+          if (_M0FP38username5mbtpp7codegen8has__var(_p$4)) {
+            return true;
+          }
+          continue;
         }
       }
-      default: {
-        return false;
+    }
+    const _p = _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(ps);
+    let _tmp$10;
+    while (true) {
+      const _p$2 = _M0MPB4Iter4nextGRP38username5mbtpp2tt2TmE(_p);
+      if (_p$2 === undefined) {
+        _tmp$10 = false;
+        break;
+      } else {
+        const _p$3 = _p$2;
+        const _p$4 = _p$3;
+        if (_M0FP38username5mbtpp7codegen8has__var(_p$4)) {
+          _tmp$10 = true;
+          break;
+        }
+        continue;
       }
+    }
+    if (_tmp$10) {
+      return true;
+    } else {
+      _tmp$9 = r;
+      continue;
     }
   }
 }
@@ -35262,61 +37387,87 @@ function _M0FP38username5mbtpp7codegen9has__tvar(t, k) {
   let _tmp$9 = t;
   _L: while (true) {
     const t$2 = _tmp$9;
-    switch (t$2.$tag) {
-      case 8: {
-        const _NVar = t$2;
-        const _j = _NVar._0;
-        return _j === k;
-      }
-      case 6: {
-        const _NEnum = t$2;
-        const _xs = _NEnum._1;
-        const _p = _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(_xs);
-        while (true) {
-          const _p$2 = _M0MPB4Iter4nextGRP38username5mbtpp2tt2TmE(_p);
-          if (_p$2 === undefined) {
+    let ps;
+    let r;
+    _L$2: {
+      let xs;
+      _L$3: {
+        switch (t$2.$tag) {
+          case 8: {
+            const _NVar = t$2;
+            const _j = _NVar._0;
+            return _j === k;
+          }
+          case 6: {
+            const _NEnum = t$2;
+            const _xs = _NEnum._1;
+            xs = _xs;
+            break _L$3;
+          }
+          case 7: {
+            const _NForeign = t$2;
+            const _xs$2 = _NForeign._1;
+            xs = _xs$2;
+            break _L$3;
+          }
+          case 9: {
+            const _NFun = t$2;
+            const _ps = _NFun._0;
+            const _r = _NFun._1;
+            ps = _ps;
+            r = _r;
+            break _L$2;
+          }
+          case 10: {
+            const _NAsyncFun = t$2;
+            const _ps$2 = _NAsyncFun._0;
+            const _r$2 = _NAsyncFun._1;
+            ps = _ps$2;
+            r = _r$2;
+            break _L$2;
+          }
+          default: {
             return false;
-          } else {
-            const _p$3 = _p$2;
-            const _p$4 = _p$3;
-            if (_M0FP38username5mbtpp7codegen9has__tvar(_p$4, k)) {
-              return true;
-            }
-            continue;
           }
         }
       }
-      case 9: {
-        const _NFun = t$2;
-        const _ps = _NFun._0;
-        const _r = _NFun._1;
-        const _p$2 = _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(_ps);
-        let _tmp$10;
-        while (true) {
-          const _p$3 = _M0MPB4Iter4nextGRP38username5mbtpp2tt2TmE(_p$2);
-          if (_p$3 === undefined) {
-            _tmp$10 = false;
-            break;
-          } else {
-            const _p$4 = _p$3;
-            const _p$5 = _p$4;
-            if (_M0FP38username5mbtpp7codegen9has__tvar(_p$5, k)) {
-              _tmp$10 = true;
-              break;
-            }
-            continue;
-          }
-        }
-        if (_tmp$10) {
-          return true;
+      const _p = _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(xs);
+      while (true) {
+        const _p$2 = _M0MPB4Iter4nextGRP38username5mbtpp2tt2TmE(_p);
+        if (_p$2 === undefined) {
+          return false;
         } else {
-          _tmp$9 = _r;
-          continue _L;
+          const _p$3 = _p$2;
+          const _p$4 = _p$3;
+          if (_M0FP38username5mbtpp7codegen9has__tvar(_p$4, k)) {
+            return true;
+          }
+          continue;
         }
       }
-      default: {
-        return false;
+    }
+    const _p = _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(ps);
+    let _tmp$10;
+    while (true) {
+      const _p$2 = _M0MPB4Iter4nextGRP38username5mbtpp2tt2TmE(_p);
+      if (_p$2 === undefined) {
+        _tmp$10 = false;
+        break;
+      } else {
+        const _p$3 = _p$2;
+        const _p$4 = _p$3;
+        if (_M0FP38username5mbtpp7codegen9has__tvar(_p$4, k)) {
+          _tmp$10 = true;
+          break;
+        }
+        continue;
       }
+    }
+    if (_tmp$10) {
+      return true;
+    } else {
+      _tmp$9 = r;
+      continue;
     }
   }
 }
@@ -35429,7 +37580,7 @@ function _M0MP38username5mbtpp7codegen3Gen8enum__ok(self, d) {
   } else {
     const _Some = _bind$19;
     const _di = _Some;
-    ok = !_di.builtin && (!_di.is_prop && (!_di.is_trait && (!_di.is_error && ((!_M0MPC16string6String11has__prefix(d, _M0MP38username5mbtpp7codegen3Gen8enum__okN6recordS12171) || _M0FP38username5mbtpp7codegen13is__mbt__type(d)) && (_di.cons.length > 0 && _M0FP38username5mbtpp7codegen24data__params__are__types(d, _di.nparams))))));
+    ok = !_di.builtin && (!_di.is_prop && (!_di.is_trait && ((!_M0MPC16string6String11has__prefix(d, _M0MP38username5mbtpp7codegen3Gen8enum__okN6recordS12919) || _M0FP38username5mbtpp7codegen13is__mbt__type(d)) && (_di.cons.length > 0 && _M0FP38username5mbtpp7codegen24data__params__are__types(d, _di.nparams)))));
   }
   if (!ok) {
     _M0MPB3Map3setGsbE(self.enums_ok, d, false);
@@ -35639,21 +37790,30 @@ function _M0MP38username5mbtpp7codegen3Gen14native__ty__in(self, ctx, t) {
               }
               break;
             }
-            const _bind$18 = cur;
             let r;
-            if (_bind$18.$tag === 12) {
-              const _Raises = _bind$18;
-              r = _Raises._0;
-            } else {
-              r = cur;
+            let is_async;
+            _L$3: {
+              const _bind$18 = cur;
+              if (_bind$18.$tag === 12) {
+                const _Raises = _bind$18;
+                const _r = _Raises._0;
+                const _e = _Raises._1;
+                r = _r;
+                is_async = _M0FP38username5mbtpp2tt10tm__effect(_e)._0;
+                break _L$3;
+              } else {
+                r = cur;
+                is_async = false;
+                break _L$3;
+              }
             }
-            const _bind$19 = _M0MP38username5mbtpp7codegen3Gen14native__ty__in(self, ctx2, r);
-            if (_bind$19 === undefined) {
+            const _bind$18 = _M0MP38username5mbtpp7codegen3Gen14native__ty__in(self, ctx2, r);
+            if (_bind$18 === undefined) {
               return undefined;
             } else {
-              const _Some = _bind$19;
+              const _Some = _bind$18;
               const _nr = _Some;
-              return new _M0DTP38username5mbtpp7codegen3NTy4NFun(ps, _nr);
+              return is_async ? new _M0DTP38username5mbtpp7codegen3NTy9NAsyncFun(ps, _nr) : new _M0DTP38username5mbtpp7codegen3NTy4NFun(ps, _nr);
             }
           } else {
             break _L;
@@ -35853,7 +38013,7 @@ function _M0FP38username5mbtpp7codegen8enum__fn(d, what) {
   return `${buf.val}_${what}`;
 }
 function _M0FP38username5mbtpp7codegen10short__con(c) {
-  const _bind$18 = _M0MPC16string6String9rev__find(c, _M0FP38username5mbtpp7codegen10short__conN6recordS12289);
+  const _bind$18 = _M0MPC16string6String9rev__find(c, _M0FP38username5mbtpp7codegen10short__conN6recordS13041);
   if (_bind$18 === undefined) {
     return c;
   } else {
@@ -35891,6 +38051,18 @@ function _M0FP38username5mbtpp7codegen10data__name(d) {
     const _Some = _bind$18;
     const _info = _Some;
     return _info.name;
+  }
+}
+function _M0FP38username5mbtpp7codegen10unit__only(ps) {
+  if (ps.length === 1) {
+    const _x = ps[0];
+    if (_x.$tag === 5) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
   }
 }
 function _M0FP38username5mbtpp7codegen15is__mbt__struct(d) {
@@ -35956,10 +38128,10 @@ function _M0FP38username5mbtpp7codegen9con__expr(d, c, args) {
       }
       _tmp$10 = _p;
     }
-    return `${_tmp$9}::{ ${_M0MPC15array5Array4joinGsE(_tmp$10, _M0FP38username5mbtpp7codegen9con__exprN6recordS12311)} }`;
+    return `${_tmp$9}::{ ${_M0MPC15array5Array4joinGsE(_tmp$10, _M0FP38username5mbtpp7codegen9con__exprN6recordS13065)} }`;
   } else {
     const cn = _M0FP38username5mbtpp7codegen13is__mbt__type(d) ? _M0FP38username5mbtpp7codegen10short__con(c) : _M0FP38username5mbtpp7codegen11native__con(c);
-    return `${_M0FP38username5mbtpp7codegen10data__name(d)}::${cn}${args.length === 0 ? "" : `(${_M0MPC15array5Array4joinGsE(args, _M0FP38username5mbtpp7codegen9con__exprN6recordS12312)})`}`;
+    return `${_M0FP38username5mbtpp7codegen10data__name(d)}::${cn}${args.length === 0 ? "" : `(${_M0MPC15array5Array4joinGsE(args, _M0FP38username5mbtpp7codegen9con__exprN6recordS13066)})`}`;
   }
 }
 function _M0FP38username5mbtpp7codegen8con__pat(d, c, subs) {
@@ -35995,7 +38167,7 @@ function _M0FP38username5mbtpp7codegen8con__pat(d, c, subs) {
     }
     _M0MPC15array5Array10push__iterGRP38username5mbtpp6parser4StmtE(_self, _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(_tmp$9));
     _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_self, "..");
-    return `{ ${_M0MPC15array5Array4joinGsE(_self, _M0FP38username5mbtpp7codegen8con__patN6recordS12320)} }`;
+    return `{ ${_M0MPC15array5Array4joinGsE(_self, _M0FP38username5mbtpp7codegen8con__patN6recordS13074)} }`;
   } else {
     return _M0FP38username5mbtpp7codegen9con__expr(d, c, subs);
   }
@@ -36060,7 +38232,7 @@ function _M0MP38username5mbtpp7codegen3Gen4ctor(self, c) {
   }
   const id = new _M0TPB8MutLocalGsE(buf.val);
   while (true) {
-    if (_M0MPC16string6String11has__suffix(id.val, _M0MP38username5mbtpp7codegen3Gen4ctorN6recordS12328)) {
+    if (_M0MPC16string6String11has__suffix(id.val, _M0MP38username5mbtpp7codegen3Gen4ctorN6recordS13082)) {
       id.val = id.val.substring(0, id.val.length - 1 | 0);
       continue;
     } else {
@@ -36125,7 +38297,7 @@ function _M0MP38username5mbtpp7codegen3Gen4ctor(self, c) {
 function _M0MP38username5mbtpp7codegen3Gen9con__code(self, c, args) {
   const _bind$18 = _M0MP38username5mbtpp7codegen3Gen4ctor(self, c);
   const _id = _bind$18._0;
-  return args.length === 0 ? _id : `${_id}(${_M0MPC15array5Array4joinGsE(args, _M0MP38username5mbtpp7codegen3Gen9con__codeN6recordS12357)})`;
+  return args.length === 0 ? _id : `${_id}(${_M0MPC15array5Array4joinGsE(args, _M0MP38username5mbtpp7codegen3Gen9con__codeN6recordS13111)})`;
 }
 function _M0MP38username5mbtpp7codegen3Gen17data__convertible(self, d, into, seen) {
   if (_M0MPC15array5Array8containsGsE(seen, d)) {
@@ -36302,6 +38474,9 @@ function _M0MP38username5mbtpp7codegen3Gen11convertible(self, t, into) {
         const _args$2 = _NForeign._1;
         return _args$2.length === 0;
       }
+      case 10: {
+        return false;
+      }
       default: {
         return true;
       }
@@ -36333,7 +38508,7 @@ function _M0FP38username5mbtpp7codegen9out__file(src) {
       break;
     }
   }
-  if (_M0MPC16string6String11has__suffix(base, _M0FP38username5mbtpp7codegen9out__fileN6recordS12407)) {
+  if (_M0MPC16string6String11has__suffix(base, _M0FP38username5mbtpp7codegen9out__fileN6recordS13161)) {
     base = base.substring(0, base.length - 6 | 0);
   }
   return `${base}.mbt`;
@@ -36344,7 +38519,7 @@ function _M0MP38username5mbtpp7codegen3Gen8file__of(self, name) {
     const name$2 = _tmp$9;
     const _bind$18 = _M0MPB3Map3getGssE(_M0FP38username5mbtpp2tt13global__files, name$2);
     if (_bind$18 === undefined) {
-      const _bind$19 = _M0MPC16string6String4find(name$2, _M0MP38username5mbtpp7codegen3Gen8file__ofN6recordS12418);
+      const _bind$19 = _M0MPC16string6String4find(name$2, _M0MP38username5mbtpp7codegen3Gen8file__ofN6recordS13172);
       if (_bind$19 === undefined) {
         return _M0FP38username5mbtpp7codegen13imports__file;
       } else {
@@ -36448,7 +38623,7 @@ function _M0MP38username5mbtpp7codegen3Gen4name(self, base) {
   if (_tmp$10) {
     b$2 = "v";
   } else {
-    b$2 = _M0MPC16string6String11has__prefix(b, _M0MP38username5mbtpp7codegen3Gen4nameN6recordS12431) ? `v${b}` : b;
+    b$2 = _M0MPC16string6String11has__prefix(b, _M0MP38username5mbtpp7codegen3Gen4nameN6recordS13185) ? `v${b}` : b;
   }
   return `${b$2}_${_M0MPC13int3Int18to__string_2einner(self.fresh, 10)}`;
 }
@@ -36486,10 +38661,10 @@ function _M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, t) {
     case 5: {
       return "Unit";
     }
-    case 10: {
+    case 11: {
       return "Unit";
     }
-    case 11: {
+    case 12: {
       return "Self";
     }
     case 8: {
@@ -36501,21 +38676,13 @@ function _M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, t) {
       const _NFun = t;
       const _ps = _NFun._0;
       const _r = _NFun._1;
-      const _p = new Array(_ps.length);
-      const _p$2 = _ps.length;
-      let _tmp$9 = 0;
-      while (true) {
-        const _p$3 = _tmp$9;
-        if (_p$3 < _p$2) {
-          const _p$4 = _ps[_p$3];
-          _p[_p$3] = _M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, _p$4);
-          _tmp$9 = _p$3 + 1 | 0;
-          continue;
-        } else {
-          break;
-        }
-      }
-      return `(${_M0MPC15array5Array4joinGsE(_p, _M0MP38username5mbtpp7codegen3Gen7mbt__tyN6recordS12453)}) -> ${_M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, _r)} raise`;
+      return `(${_M0MP38username5mbtpp7codegen3Gen11mbt__params(self, _ps)}) -> ${_M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, _r)} raise`;
+    }
+    case 10: {
+      const _NAsyncFun = t;
+      const _ps$2 = _NAsyncFun._0;
+      const _r$2 = _NAsyncFun._1;
+      return `async (${_M0MP38username5mbtpp7codegen3Gen11mbt__params(self, _ps$2)}) -> ${_M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, _r$2)} raise`;
     }
     case 6: {
       const _NEnum = t;
@@ -36525,22 +38692,22 @@ function _M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, t) {
       if (_args.length === 0) {
         return _M0FP38username5mbtpp7codegen10data__name(_d);
       } else {
-        const _tmp$10 = _M0FP38username5mbtpp7codegen10data__name(_d);
-        const _p$3 = new Array(_args.length);
-        const _p$4 = _args.length;
-        let _tmp$11 = 0;
+        const _tmp$9 = _M0FP38username5mbtpp7codegen10data__name(_d);
+        const _p = new Array(_args.length);
+        const _p$2 = _args.length;
+        let _tmp$10 = 0;
         while (true) {
-          const _p$5 = _tmp$11;
-          if (_p$5 < _p$4) {
-            const _p$6 = _args[_p$5];
-            _p$3[_p$5] = _M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, _p$6);
-            _tmp$11 = _p$5 + 1 | 0;
+          const _p$3 = _tmp$10;
+          if (_p$3 < _p$2) {
+            const _p$4 = _args[_p$3];
+            _p[_p$3] = _M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, _p$4);
+            _tmp$10 = _p$3 + 1 | 0;
             continue;
           } else {
             break;
           }
         }
-        return `${_tmp$10}[${_M0MPC15array5Array4joinGsE(_p$3, _M0MP38username5mbtpp7codegen3Gen7mbt__tyN6recordS12454)}]`;
+        return `${_tmp$9}[${_M0MPC15array5Array4joinGsE(_p, _M0MP38username5mbtpp7codegen3Gen7mbt__tyN6recordS13207)}]`;
       }
     }
     default: {
@@ -36550,23 +38717,44 @@ function _M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, t) {
       if (_args$2.length === 0) {
         return _d$2;
       } else {
-        const _p$3 = new Array(_args$2.length);
-        const _p$4 = _args$2.length;
-        let _tmp$10 = 0;
+        const _p = new Array(_args$2.length);
+        const _p$2 = _args$2.length;
+        let _tmp$9 = 0;
         while (true) {
-          const _p$5 = _tmp$10;
-          if (_p$5 < _p$4) {
-            const _p$6 = _args$2[_p$5];
-            _p$3[_p$5] = _M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, _p$6);
-            _tmp$10 = _p$5 + 1 | 0;
+          const _p$3 = _tmp$9;
+          if (_p$3 < _p$2) {
+            const _p$4 = _args$2[_p$3];
+            _p[_p$3] = _M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, _p$4);
+            _tmp$9 = _p$3 + 1 | 0;
             continue;
           } else {
             break;
           }
         }
-        return `${_d$2}[${_M0MPC15array5Array4joinGsE(_p$3, _M0MP38username5mbtpp7codegen3Gen7mbt__tyN6recordS12455)}]`;
+        return `${_d$2}[${_M0MPC15array5Array4joinGsE(_p, _M0MP38username5mbtpp7codegen3Gen7mbt__tyN6recordS13208)}]`;
       }
     }
+  }
+}
+function _M0MP38username5mbtpp7codegen3Gen11mbt__params(self, ps) {
+  if (_M0FP38username5mbtpp7codegen10unit__only(ps)) {
+    return "";
+  } else {
+    const _p = new Array(ps.length);
+    const _p$2 = ps.length;
+    let _tmp$9 = 0;
+    while (true) {
+      const _p$3 = _tmp$9;
+      if (_p$3 < _p$2) {
+        const _p$4 = ps[_p$3];
+        _p[_p$3] = _M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, _p$4);
+        _tmp$9 = _p$3 + 1 | 0;
+        continue;
+      } else {
+        break;
+      }
+    }
+    return _M0MPC15array5Array4joinGsE(_p, _M0MP38username5mbtpp7codegen3Gen11mbt__paramsN6recordS13227);
   }
 }
 function _M0MP38username5mbtpp7codegen3Gen10need__enum(self, d) {
@@ -36595,7 +38783,7 @@ function _M0MP38username5mbtpp7codegen3Gen10need__enum(self, d) {
       break;
     }
   }
-  const gen = n === 0 ? "" : `[${_M0MPC15array5Array4joinGsE(tvs, _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS12472)}]`;
+  const gen = n === 0 ? "" : `[${_M0MPC15array5Array4joinGsE(tvs, _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS13231)}]`;
   const en = `${_M0FP38username5mbtpp7codegen10data__name(d)}${gen}`;
   let to_convs;
   let _p$2;
@@ -36721,12 +38909,12 @@ function _M0MP38username5mbtpp7codegen3Gen10need__enum(self, d) {
   const _self = [];
   _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_self, `x : ${en}`);
   _M0MPC15array5Array10push__iterGRP38username5mbtpp6parser4StmtE(_self, _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(to_params));
-  _M0IPB13StringBuilderPB6Logger13write__string(to, `\nfn${gen} ${_tmp$10}(${_M0MPC15array5Array4joinGsE(_self, _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS12473)}) -> Value {\n  match x {\n`);
+  _M0IPB13StringBuilderPB6Logger13write__string(to, `\nfn${gen} ${_tmp$10}(${_M0MPC15array5Array4joinGsE(_self, _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS13232)}) -> Value {\n  match x {\n`);
   const _tmp$11 = _M0FP38username5mbtpp7codegen8enum__fn(d, "of_value");
   const _self$2 = [];
   _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_self$2, "v : Value");
   _M0MPC15array5Array10push__iterGRP38username5mbtpp6parser4StmtE(_self$2, _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(of_params));
-  _M0IPB13StringBuilderPB6Logger13write__string(of, `\nfn${gen} ${_tmp$11}(${_M0MPC15array5Array4joinGsE(_self$2, _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS12474)}) -> ${en} raise {\n  match v {\n`);
+  _M0IPB13StringBuilderPB6Logger13write__string(of, `\nfn${gen} ${_tmp$11}(${_M0MPC15array5Array4joinGsE(_self$2, _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS13233)}) -> ${en} raise {\n  match v {\n`);
   const _bind$19 = di.cons;
   const _bind$20 = _bind$19.length;
   let _tmp$12 = 0;
@@ -36775,7 +38963,7 @@ function _M0MP38username5mbtpp7codegen3Gen10need__enum(self, d) {
             break;
           }
         }
-        args = `(${_M0MPC15array5Array4joinGsE(_p$6, _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS12475)})`;
+        args = `(${_M0MPC15array5Array4joinGsE(_p$6, _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS13234)})`;
       }
       if (is_struct) {
         const names = _M0FP38username5mbtpp7codegen14struct__fields(d);
@@ -36809,7 +38997,7 @@ function _M0MP38username5mbtpp7codegen3Gen10need__enum(self, d) {
               break;
             }
           }
-          _tmp$14 = `(${_M0MPC15array5Array4joinGsE(_p$6, _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS12476)})`;
+          _tmp$14 = `(${_M0MPC15array5Array4joinGsE(_p$6, _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS13235)})`;
         }
         _M0IPB13StringBuilderPB6Logger13write__string(decl, `  ${cn}${_tmp$14}\n`);
       }
@@ -36866,7 +39054,7 @@ function _M0MP38username5mbtpp7codegen3Gen10need__enum(self, d) {
     }
   }
   const derives = _M0MPC16option6Option10unwrap__orGRPB5ArrayGRP38username5mbtpp6parser6BinderEE(_M0MPB3Map3getGsRPB5ArrayGsEE(_M0FP38username5mbtpp2tt12mbt__derives, d), []);
-  _M0IPB13StringBuilderPB6Logger13write__string(decl, derives.length === 0 ? "}\n" : `} derive(${_M0MPC15array5Array4joinGsE(derives, _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS12477)})\n`);
+  _M0IPB13StringBuilderPB6Logger13write__string(decl, derives.length === 0 ? "}\n" : `} derive(${_M0MPC15array5Array4joinGsE(derives, _M0MP38username5mbtpp7codegen3Gen10need__enumN6recordS13236)})\n`);
   _M0IPB13StringBuilderPB6Logger13write__string(to, "  }\n}\n");
   _M0IPB13StringBuilderPB6Logger13write__string(of, `    _ => rt_fail(\"expected a ${d}, got \" + show_value(v))\n  }\n}\n`);
   const into = _M0MP38username5mbtpp7codegen3Gen17data__convertible(self, d, true, []);
@@ -36893,10 +39081,10 @@ function _M0MP38username5mbtpp7codegen3Gen9of__value(self, t, e, convs) {
       case 5: {
         break _L;
       }
-      case 10: {
+      case 11: {
         break _L;
       }
-      case 11: {
+      case 12: {
         return e;
       }
       case 8: {
@@ -36909,6 +39097,9 @@ function _M0MP38username5mbtpp7codegen3Gen9of__value(self, t, e, convs) {
         } else {
           return e;
         }
+      }
+      case 10: {
+        return "abort(\"an async function from a Value\")";
       }
       case 9: {
         const _NFun = t;
@@ -36941,7 +39132,10 @@ function _M0MP38username5mbtpp7codegen3Gen9of__value(self, t, e, convs) {
             break;
           }
         }
-        return `{\nlet ${f} = ${e}\n(${_M0MPC15array5Array4joinGsE(xs, _M0MP38username5mbtpp7codegen3Gen9of__valueN6recordS12535)}) => ${_M0MP38username5mbtpp7codegen3Gen9of__value(self, _r, call, convs)}\n}`;
+        if (_M0FP38username5mbtpp7codegen10unit__only(_ps)) {
+          call = `apply(${f}, VUnit)`;
+        }
+        return `{\nlet ${f} = ${e}\n(${_M0FP38username5mbtpp7codegen10unit__only(_ps) ? "" : _M0MPC15array5Array4joinGsE(xs, _M0MP38username5mbtpp7codegen3Gen9of__valueN6recordS13294)}) => ${_M0MP38username5mbtpp7codegen3Gen9of__value(self, _r, call, convs)}\n}`;
       }
       case 6: {
         const _NEnum = t;
@@ -36969,7 +39163,7 @@ function _M0MP38username5mbtpp7codegen3Gen9of__value(self, t, e, convs) {
         const _self = [];
         _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_self, e);
         _M0MPC15array5Array10push__iterGRP38username5mbtpp6parser4StmtE(_self, _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(fs));
-        return `${_tmp$12}(${_M0MPC15array5Array4joinGsE(_self, _M0MP38username5mbtpp7codegen3Gen9of__valueN6recordS12536)})`;
+        return `${_tmp$12}(${_M0MPC15array5Array4joinGsE(_self, _M0MP38username5mbtpp7codegen3Gen9of__valueN6recordS13295)})`;
       }
       default: {
         const ty = _M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, t);
@@ -37000,10 +39194,10 @@ function _M0MP38username5mbtpp7codegen3Gen9to__value(self, t, e, convs) {
       case 5: {
         break _L;
       }
-      case 10: {
+      case 11: {
         break _L;
       }
-      case 11: {
+      case 12: {
         return e;
       }
       case 8: {
@@ -37016,6 +39210,9 @@ function _M0MP38username5mbtpp7codegen3Gen9to__value(self, t, e, convs) {
         } else {
           return e;
         }
+      }
+      case 10: {
+        return "abort(\"an async function as a Value\")";
       }
       case 9: {
         const _NFun = t;
@@ -37037,33 +39234,39 @@ function _M0MP38username5mbtpp7codegen3Gen9to__value(self, t, e, convs) {
         }
         const xs = _p;
         let _tmp$10;
-        let _p$3;
-        _L$2: {
-          _L$3: {
-            if (_ps.length === 0) {
-              _p$3 = [];
-              break _L$3;
-            }
-            const _p$4 = new Array(_ps.length);
-            const _p$5 = _ps.length;
-            let _tmp$11 = 0;
-            while (true) {
-              const _p$6 = _tmp$11;
-              if (_p$6 < _p$5) {
-                const _p$7 = _ps[_p$6];
-                _p$4[_p$6] = _M0MP38username5mbtpp7codegen3Gen9of__value(self, _p$7, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(xs, _p$6), convs);
-                _tmp$11 = _p$6 + 1 | 0;
-                continue;
-              } else {
-                break;
+        if (_M0FP38username5mbtpp7codegen10unit__only(_ps)) {
+          _tmp$10 = "";
+        } else {
+          let _tmp$11;
+          let _p$3;
+          _L$2: {
+            _L$3: {
+              if (_ps.length === 0) {
+                _p$3 = [];
+                break _L$3;
               }
+              const _p$4 = new Array(_ps.length);
+              const _p$5 = _ps.length;
+              let _tmp$12 = 0;
+              while (true) {
+                const _p$6 = _tmp$12;
+                if (_p$6 < _p$5) {
+                  const _p$7 = _ps[_p$6];
+                  _p$4[_p$6] = _M0MP38username5mbtpp7codegen3Gen9of__value(self, _p$7, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(xs, _p$6), convs);
+                  _tmp$12 = _p$6 + 1 | 0;
+                  continue;
+                } else {
+                  break;
+                }
+              }
+              _tmp$11 = _p$4;
+              break _L$2;
             }
-            _tmp$10 = _p$4;
-            break _L$2;
+            _tmp$11 = _p$3;
           }
-          _tmp$10 = _p$3;
+          _tmp$10 = _M0MPC15array5Array4joinGsE(_tmp$11, _M0MP38username5mbtpp7codegen3Gen9to__valueN6recordS13323);
         }
-        const call = `${f}(${_M0MPC15array5Array4joinGsE(_tmp$10, _M0MP38username5mbtpp7codegen3Gen9to__valueN6recordS12564)})`;
+        const call = `${f}(${_tmp$10})`;
         let code = _M0MP38username5mbtpp7codegen3Gen9to__value(self, _r, call, convs);
         let _tmp$11 = xs.length - 1 | 0;
         while (true) {
@@ -37083,28 +39286,28 @@ function _M0MP38username5mbtpp7codegen3Gen9to__value(self, t, e, convs) {
         const _d = _NEnum._0;
         const _args = _NEnum._1;
         _M0MP38username5mbtpp7codegen3Gen10need__enum(self, _d);
-        const _p$4 = new Array(_args.length);
-        const _p$5 = _args.length;
+        const _p$3 = new Array(_args.length);
+        const _p$4 = _args.length;
         let _tmp$12 = 0;
         while (true) {
-          const _p$6 = _tmp$12;
-          if (_p$6 < _p$5) {
-            const _p$7 = _args[_p$6];
-            const _p$8 = _M0MP38username5mbtpp7codegen3Gen4name(self, "x");
-            const _p$9 = _M0MP38username5mbtpp7codegen3Gen9to__value(self, _p$7, _p$8, convs);
-            _p$4[_p$6] = _p$9 === _p$8 ? "value_id" : `(${_p$8} => ${_p$9})`;
-            _tmp$12 = _p$6 + 1 | 0;
+          const _p$5 = _tmp$12;
+          if (_p$5 < _p$4) {
+            const _p$6 = _args[_p$5];
+            const _p$7 = _M0MP38username5mbtpp7codegen3Gen4name(self, "x");
+            const _p$8 = _M0MP38username5mbtpp7codegen3Gen9to__value(self, _p$6, _p$7, convs);
+            _p$3[_p$5] = _p$8 === _p$7 ? "value_id" : `(${_p$7} => ${_p$8})`;
+            _tmp$12 = _p$5 + 1 | 0;
             continue;
           } else {
             break;
           }
         }
-        const fs = _p$4;
+        const fs = _p$3;
         const _tmp$13 = _M0FP38username5mbtpp7codegen8enum__fn(_d, "to_value");
         const _self = [];
         _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_self, e);
         _M0MPC15array5Array10push__iterGRP38username5mbtpp6parser4StmtE(_self, _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(fs));
-        return `${_tmp$13}(${_M0MPC15array5Array4joinGsE(_self, _M0MP38username5mbtpp7codegen3Gen9to__valueN6recordS12565)})`;
+        return `${_tmp$13}(${_M0MPC15array5Array4joinGsE(_self, _M0MP38username5mbtpp7codegen3Gen9to__valueN6recordS13324)})`;
       }
       default: {
         return `VForeign(${_M0MP38username5mbtpp7codegen3Gen16foreign__variant(self, _M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, t))}(${e}))`;
@@ -37457,7 +39660,7 @@ function _M0FP38username5mbtpp7codegen9is__ident(s) {
 }
 function _M0FP38username5mbtpp7codegen12source__name(n) {
   _L: {
-    const _bind$18 = _M0MPC16string6String9rev__find(n, _M0FP38username5mbtpp7codegen12source__nameN6recordS12693);
+    const _bind$18 = _M0MPC16string6String9rev__find(n, _M0FP38username5mbtpp7codegen12source__nameN6recordS13452);
     if (_bind$18 === undefined) {
       break _L;
     } else {
@@ -37538,7 +39741,7 @@ function _M0MP38username5mbtpp7codegen3Gen7explain(self, env, t) {
             case 0: {
               _L$3: {
                 _L$4: {
-                  const _bind$20 = _M0MPC16string6String9rev__find(_g, _M0MP38username5mbtpp7codegen3Gen7explainN6recordS12699);
+                  const _bind$20 = _M0MPC16string6String9rev__find(_g, _M0MP38username5mbtpp7codegen3Gen7explainN6recordS13458);
                   if (_bind$20 === undefined) {
                     break _L$4;
                   } else {
@@ -37574,7 +39777,7 @@ function _M0MP38username5mbtpp7codegen3Gen7explain(self, env, t) {
             case 3: {
               const _GPrim = _x$2;
               const _p$3 = _GPrim._0;
-              if (!_M0MPC16string6String11has__prefix(_p$3, _M0MP38username5mbtpp7codegen3Gen7explainN6recordS12700)) {
+              if (!_M0MPC16string6String11has__prefix(_p$3, _M0MP38username5mbtpp7codegen3Gen7explainN6recordS13459)) {
                 why = `the primitive ${_g} has no native translation`;
               } else {
                 break _L$2;
@@ -37615,7 +39818,7 @@ function _M0FP38username5mbtpp7codegen9char__lit(c) {
   let n = c;
   let hex = "";
   while (true) {
-    const _p = _M0MPC16string6String9get__char(_M0FP38username5mbtpp7codegen9char__litN6digitsS12740, n % 16 | 0);
+    const _p = _M0MPC16string6String9get__char(_M0FP38username5mbtpp7codegen9char__litN6digitsS13499, n % 16 | 0);
     hex = `${_M0IPC14char4CharPB4Show10to__string(_p === -1 ? $panic() : _p)}${hex}`;
     n = n / 16 | 0;
     if (n === 0) {
@@ -37627,7 +39830,7 @@ function _M0FP38username5mbtpp7codegen9char__lit(c) {
 }
 function _M0FP38username5mbtpp7codegen11double__lit(d) {
   const s = String(d);
-  return s === "Infinity" ? "(1.0 / 0.0)" : s === "-Infinity" ? "(-1.0 / 0.0)" : s === "NaN" ? "(0.0 / 0.0)" : _M0MPC16string6String8contains(s, _M0FP38username5mbtpp7codegen11double__litN6recordS12745) || _M0MPC16string6String8contains(s, _M0FP38username5mbtpp7codegen11double__litN6recordS12746) ? s : `${s}.0`;
+  return s === "Infinity" ? "(1.0 / 0.0)" : s === "-Infinity" ? "(-1.0 / 0.0)" : s === "NaN" ? "(0.0 / 0.0)" : _M0MPC16string6String8contains(s, _M0FP38username5mbtpp7codegen11double__litN6recordS13504) || _M0MPC16string6String8contains(s, _M0FP38username5mbtpp7codegen11double__litN6recordS13505) ? s : `${s}.0`;
 }
 function _M0FP38username5mbtpp7codegen13has__continue(t) {
   let _tmp$9 = t;
@@ -37778,41 +39981,56 @@ function _M0FP38username5mbtpp7codegen9if__parts(ss, cls) {
                 const _LBool = _x$4;
                 const _x$5 = _LBool._0;
                 if (_x$5 === true) {
-                  const _a = _x.body;
-                  const _x$6 = cls[1];
-                  const _x$7 = _x$6.pats;
-                  if (_x$7.length === 1) {
-                    const _x$8 = _x$7[0];
-                    switch (_x$8.$tag) {
-                      case 1: {
-                        const _b = _x$6.body;
-                        c = _c;
-                        a = _a;
-                        b = _b;
-                        break _L$2;
-                      }
-                      case 3: {
-                        const _CPLit$2 = _x$8;
-                        const _x$9 = _CPLit$2._0;
-                        if (_x$9.$tag === 3) {
-                          const _LBool$2 = _x$9;
-                          const _x$10 = _LBool$2._0;
-                          if (_x$10 === false) {
-                            const _b$2 = _x$6.body;
+                  const _x$6 = _x.cond;
+                  if (_x$6 === undefined) {
+                    const _a = _x.body;
+                    const _x$7 = cls[1];
+                    const _x$8 = _x$7.pats;
+                    if (_x$8.length === 1) {
+                      const _x$9 = _x$8[0];
+                      switch (_x$9.$tag) {
+                        case 1: {
+                          const _x$10 = _x$7.cond;
+                          if (_x$10 === undefined) {
+                            const _b = _x$7.body;
                             c = _c;
                             a = _a;
-                            b = _b$2;
+                            b = _b;
                             break _L$2;
                           } else {
                             break _L;
                           }
-                        } else {
+                        }
+                        case 3: {
+                          const _CPLit$2 = _x$9;
+                          const _x$11 = _CPLit$2._0;
+                          if (_x$11.$tag === 3) {
+                            const _LBool$2 = _x$11;
+                            const _x$12 = _LBool$2._0;
+                            if (_x$12 === false) {
+                              const _x$13 = _x$7.cond;
+                              if (_x$13 === undefined) {
+                                const _b = _x$7.body;
+                                c = _c;
+                                a = _a;
+                                b = _b;
+                                break _L$2;
+                              } else {
+                                break _L;
+                              }
+                            } else {
+                              break _L;
+                            }
+                          } else {
+                            break _L;
+                          }
+                        }
+                        default: {
                           break _L;
                         }
                       }
-                      default: {
-                        break _L;
-                      }
+                    } else {
+                      break _L;
                     }
                   } else {
                     break _L;
@@ -37925,7 +40143,7 @@ function _M0FP38username5mbtpp7codegen4stmt(code, t) {
       case 5: {
         break _L;
       }
-      case 10: {
+      case 11: {
         break _L;
       }
       default: {
@@ -37961,7 +40179,7 @@ function _M0FP38username5mbtpp7codegen13binder__icits(ty, n) {
   return out;
 }
 function _M0FP38username5mbtpp7codegen10method__of(n) {
-  const _bind$18 = _M0MPC16string6String9rev__find(n, _M0FP38username5mbtpp7codegen10method__ofN6recordS12839);
+  const _bind$18 = _M0MPC16string6String9rev__find(n, _M0FP38username5mbtpp7codegen10method__ofN6recordS13601);
   if (_bind$18 === undefined) {
     return undefined;
   } else {
@@ -38004,7 +40222,7 @@ function _M0MP38username5mbtpp7codegen3Gen3gid(self, name) {
   const _bind$18 = _M0MPB3Map3getGssE(self.ids, name);
   if (_bind$18 === undefined) {
     const buf = _M0MPB13StringBuilder21StringBuilder_2einner(8);
-    const _bind$19 = _M0MPC16string6String9rev__find(name, _M0MP38username5mbtpp7codegen3Gen3gidN6recordS12855);
+    const _bind$19 = _M0MPC16string6String9rev__find(name, _M0MP38username5mbtpp7codegen3Gen3gidN6recordS13617);
     const short = _bind$19 === undefined ? name : name;
     const _bind$20 = short.length;
     let _tmp$9 = 0;
@@ -38045,7 +40263,7 @@ function _M0MP38username5mbtpp7codegen3Gen3gid(self, name) {
             _M0IPB13StringBuilderPB6Logger11write__char(buf, _decoded_char + 32 | 0);
           } else {
             if (_decoded_char === 58 || (_decoded_char === 46 || (_decoded_char === 36 || _decoded_char === 95))) {
-              if (!_M0MPC16string6String11has__suffix(buf.val, _M0MP38username5mbtpp7codegen3Gen3gidN6recordS12856)) {
+              if (!_M0MPC16string6String11has__suffix(buf.val, _M0MP38username5mbtpp7codegen3Gen3gidN6recordS13618)) {
                 _M0IPB13StringBuilderPB6Logger11write__char(buf, 95);
               }
             }
@@ -38180,7 +40398,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             return true;
           }
           case 2: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12874)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13636)) {
               d = tr;
               break _L;
             } else {
@@ -38188,7 +40406,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 3: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12875)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13637)) {
               d = tr;
               break _L;
             } else {
@@ -38196,7 +40414,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 5: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12876)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13638)) {
               d = tr;
               break _L;
             } else {
@@ -38217,7 +40435,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             return true;
           }
           case 4: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12877)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13639)) {
               d = tr;
               break _L;
             } else {
@@ -38225,7 +40443,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 2: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12878)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13640)) {
               d = tr;
               break _L;
             } else {
@@ -38233,7 +40451,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 3: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12879)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13641)) {
               d = tr;
               break _L;
             } else {
@@ -38241,7 +40459,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 5: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12880)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13642)) {
               d = tr;
               break _L;
             } else {
@@ -38262,7 +40480,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             return true;
           }
           case 4: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12881)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13643)) {
               d = tr;
               break _L;
             } else {
@@ -38270,7 +40488,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 2: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12882)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13644)) {
               d = tr;
               break _L;
             } else {
@@ -38278,7 +40496,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 3: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12883)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13645)) {
               d = tr;
               break _L;
             } else {
@@ -38286,7 +40504,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 5: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12884)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13646)) {
               d = tr;
               break _L;
             } else {
@@ -38307,7 +40525,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             return true;
           }
           case 4: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12885)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13647)) {
               d = tr;
               break _L;
             } else {
@@ -38315,7 +40533,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 2: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12886)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13648)) {
               d = tr;
               break _L;
             } else {
@@ -38323,7 +40541,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 3: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12887)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13649)) {
               d = tr;
               break _L;
             } else {
@@ -38331,7 +40549,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 5: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12888)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13650)) {
               d = tr;
               break _L;
             } else {
@@ -38352,7 +40570,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             return true;
           }
           case 4: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12889)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13651)) {
               d = tr;
               break _L;
             } else {
@@ -38360,7 +40578,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 2: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12890)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13652)) {
               d = tr;
               break _L;
             } else {
@@ -38368,7 +40586,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 3: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12891)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13653)) {
               d = tr;
               break _L;
             } else {
@@ -38376,7 +40594,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 5: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12892)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13654)) {
               d = tr;
               break _L;
             } else {
@@ -38394,7 +40612,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             return true;
           }
           case 1: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12893)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13655)) {
               d = tr;
               break _L;
             } else {
@@ -38402,7 +40620,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 4: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12894)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13656)) {
               d = tr;
               break _L;
             } else {
@@ -38410,7 +40628,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 2: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12895)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13657)) {
               d = tr;
               break _L;
             } else {
@@ -38418,7 +40636,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 3: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12896)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13658)) {
               d = tr;
               break _L;
             } else {
@@ -38426,7 +40644,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 5: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12897)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13659)) {
               d = tr;
               break _L;
             } else {
@@ -38456,7 +40674,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             return true;
           }
           case 3: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12898)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13660)) {
               d = tr;
               break _L;
             } else {
@@ -38474,7 +40692,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             return true;
           }
           case 1: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12899)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13661)) {
               d = tr;
               break _L;
             } else {
@@ -38482,7 +40700,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 4: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12900)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13662)) {
               d = tr;
               break _L;
             } else {
@@ -38490,7 +40708,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 2: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12901)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13663)) {
               d = tr;
               break _L;
             } else {
@@ -38498,7 +40716,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 3: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12902)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13664)) {
               d = tr;
               break _L;
             } else {
@@ -38506,7 +40724,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 5: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12903)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13665)) {
               d = tr;
               break _L;
             } else {
@@ -38524,7 +40742,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             return true;
           }
           case 1: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12904)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13666)) {
               d = tr;
               break _L;
             } else {
@@ -38532,7 +40750,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 4: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12905)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13667)) {
               d = tr;
               break _L;
             } else {
@@ -38540,7 +40758,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 2: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12906)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13668)) {
               d = tr;
               break _L;
             } else {
@@ -38548,7 +40766,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 3: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12907)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13669)) {
               d = tr;
               break _L;
             } else {
@@ -38556,7 +40774,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 5: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12908)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13670)) {
               d = tr;
               break _L;
             } else {
@@ -38574,7 +40792,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             return true;
           }
           case 1: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12909)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13671)) {
               d = tr;
               break _L;
             } else {
@@ -38582,7 +40800,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 4: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12910)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13672)) {
               d = tr;
               break _L;
             } else {
@@ -38590,7 +40808,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 2: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12911)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13673)) {
               d = tr;
               break _L;
             } else {
@@ -38598,7 +40816,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 3: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12912)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13674)) {
               d = tr;
               break _L;
             } else {
@@ -38606,7 +40824,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 5: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12913)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13675)) {
               d = tr;
               break _L;
             } else {
@@ -38624,7 +40842,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             return true;
           }
           case 1: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12914)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13676)) {
               d = tr;
               break _L;
             } else {
@@ -38632,7 +40850,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 4: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12915)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13677)) {
               d = tr;
               break _L;
             } else {
@@ -38640,7 +40858,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 2: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12916)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13678)) {
               d = tr;
               break _L;
             } else {
@@ -38648,7 +40866,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 3: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12917)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13679)) {
               d = tr;
               break _L;
             } else {
@@ -38656,7 +40874,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 5: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12918)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13680)) {
               d = tr;
               break _L;
             } else {
@@ -38674,7 +40892,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             return true;
           }
           case 1: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12919)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13681)) {
               d = tr;
               break _L;
             } else {
@@ -38682,7 +40900,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 4: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12920)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13682)) {
               d = tr;
               break _L;
             } else {
@@ -38690,7 +40908,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 2: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12921)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13683)) {
               d = tr;
               break _L;
             } else {
@@ -38698,7 +40916,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 3: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12922)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13684)) {
               d = tr;
               break _L;
             } else {
@@ -38706,7 +40924,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 5: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12923)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13685)) {
               d = tr;
               break _L;
             } else {
@@ -38781,7 +40999,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
       default: {
         switch (t.$tag) {
           case 0: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12924)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13686)) {
               d = tr;
               break _L;
             } else {
@@ -38789,7 +41007,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 1: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12925)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13687)) {
               d = tr;
               break _L;
             } else {
@@ -38797,7 +41015,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 4: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12926)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13688)) {
               d = tr;
               break _L;
             } else {
@@ -38805,7 +41023,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 2: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12927)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13689)) {
               d = tr;
               break _L;
             } else {
@@ -38813,7 +41031,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 3: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12928)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13690)) {
               d = tr;
               break _L;
             } else {
@@ -38821,7 +41039,7 @@ function _M0FP38username5mbtpp7codegen17builtin__instance(t, tr) {
             }
           }
           case 5: {
-            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS12929)) {
+            if (_M0MPC16string6String11has__suffix(tr, _M0FP38username5mbtpp7codegen17builtin__instanceN6recordS13691)) {
               d = tr;
               break _L;
             } else {
@@ -39162,7 +41380,7 @@ function _M0MP38username5mbtpp7codegen3Gen11need__trait(self, tr) {
     const _p$5 = _p$4;
     _tmp$10 = _p$5;
   }
-  _M0IPB13StringBuilderPB6Logger13write__string(buf, `\n/// MoonBit++ trait ${tr}\npub(open) trait ${_tmp$10.name}${supers.length === 0 ? "" : ` : ${_M0MPC15array5Array4joinGsE(supers, _M0MP38username5mbtpp7codegen3Gen11need__traitN6recordS13030)}`} {\n`);
+  _M0IPB13StringBuilderPB6Logger13write__string(buf, `\n/// MoonBit++ trait ${tr}\npub(open) trait ${_tmp$10.name}${supers.length === 0 ? "" : ` : ${_M0MPC15array5Array4joinGsE(supers, _M0MP38username5mbtpp7codegen3Gen11need__traitN6recordS13792)}`} {\n`);
   const _bind$18 = _M0FP38username5mbtpp2tt20trait__method__names(tr);
   const _bind$19 = _bind$18.length;
   let _tmp$11 = 0;
@@ -39197,7 +41415,7 @@ function _M0MP38username5mbtpp7codegen3Gen11need__trait(self, tr) {
                 break;
               }
             }
-            params = _M0MPC15array5Array4joinGsE(_p$5, _M0MP38username5mbtpp7codegen3Gen11need__traitN6recordS13031);
+            params = _M0MPC15array5Array4joinGsE(_p$5, _M0MP38username5mbtpp7codegen3Gen11need__traitN6recordS13793);
           }
           _M0IPB13StringBuilderPB6Logger13write__string(buf, `  ${m}(${params}) -> ${_M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, _r)} raise\n`);
         }
@@ -39233,111 +41451,126 @@ function _M0MP38username5mbtpp7codegen3Gen19tvars__with__bounds(self, n, bounds)
         }
       }
       const trs = _p$2;
-      _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(tvs, trs.length === 0 ? _M0FP38username5mbtpp7codegen4tvar(k) : `${_M0FP38username5mbtpp7codegen4tvar(k)} : ${_M0MPC15array5Array4joinGsE(trs, _M0MP38username5mbtpp7codegen3Gen19tvars__with__boundsN6recordS13050)}`);
+      _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(tvs, trs.length === 0 ? _M0FP38username5mbtpp7codegen4tvar(k) : `${_M0FP38username5mbtpp7codegen4tvar(k)} : ${_M0MPC15array5Array4joinGsE(trs, _M0MP38username5mbtpp7codegen3Gen19tvars__with__boundsN6recordS13812)}`);
       _tmp$9 = k + 1 | 0;
       continue;
     } else {
       break;
     }
   }
-  return _M0MPC15array5Array4joinGsE(tvs, _M0MP38username5mbtpp7codegen3Gen19tvars__with__boundsN6recordS13051);
+  return _M0MPC15array5Array4joinGsE(tvs, _M0MP38username5mbtpp7codegen3Gen19tvars__with__boundsN6recordS13813);
 }
 function _M0FP38username5mbtpp7codegen9mbt__only(t) {
   let _tmp$9 = t;
   _L: while (true) {
     const t$2 = _tmp$9;
-    switch (t$2.$tag) {
-      case 6: {
-        const _NEnum = t$2;
-        const _d = _NEnum._0;
-        const _args = _NEnum._1;
-        if (_M0FP38username5mbtpp7codegen13is__mbt__type(_d)) {
-          const _p = _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(_args);
-          let _tmp$10;
+    let ps;
+    let r;
+    _L$2: {
+      switch (t$2.$tag) {
+        case 6: {
+          const _NEnum = t$2;
+          const _d = _NEnum._0;
+          const _args = _NEnum._1;
+          if (_M0FP38username5mbtpp7codegen13is__mbt__type(_d)) {
+            const _p = _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(_args);
+            let _tmp$10;
+            while (true) {
+              const _p$2 = _M0MPB4Iter4nextGRP38username5mbtpp2tt2TmE(_p);
+              if (_p$2 === undefined) {
+                _tmp$10 = true;
+                break;
+              } else {
+                const _p$3 = _p$2;
+                const _p$4 = _p$3;
+                if (_M0FP38username5mbtpp7codegen9mbt__only(_p$4)) {
+                } else {
+                  _tmp$10 = false;
+                  break;
+                }
+                continue;
+              }
+            }
+            return _tmp$10;
+          } else {
+            return false;
+          }
+        }
+        case 7: {
+          const _NForeign = t$2;
+          const _args$2 = _NForeign._1;
+          const _p = _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(_args$2);
           while (true) {
             const _p$2 = _M0MPB4Iter4nextGRP38username5mbtpp2tt2TmE(_p);
             if (_p$2 === undefined) {
-              _tmp$10 = true;
-              break;
+              return true;
             } else {
               const _p$3 = _p$2;
               const _p$4 = _p$3;
               if (_M0FP38username5mbtpp7codegen9mbt__only(_p$4)) {
               } else {
-                _tmp$10 = false;
-                break;
+                return false;
               }
               continue;
             }
           }
-          return _tmp$10;
+        }
+        case 9: {
+          const _NFun = t$2;
+          const _ps = _NFun._0;
+          const _r = _NFun._1;
+          ps = _ps;
+          r = _r;
+          break _L$2;
+        }
+        case 10: {
+          const _NAsyncFun = t$2;
+          const _ps$2 = _NAsyncFun._0;
+          const _r$2 = _NAsyncFun._1;
+          ps = _ps$2;
+          r = _r$2;
+          break _L$2;
+        }
+        default: {
+          return true;
+        }
+      }
+    }
+    const _p = _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(ps);
+    let _tmp$10;
+    while (true) {
+      const _p$2 = _M0MPB4Iter4nextGRP38username5mbtpp2tt2TmE(_p);
+      if (_p$2 === undefined) {
+        _tmp$10 = true;
+        break;
+      } else {
+        const _p$3 = _p$2;
+        const _p$4 = _p$3;
+        if (_M0FP38username5mbtpp7codegen9mbt__only(_p$4)) {
         } else {
-          return false;
+          _tmp$10 = false;
+          break;
         }
+        continue;
       }
-      case 7: {
-        const _NForeign = t$2;
-        const _args$2 = _NForeign._1;
-        const _p = _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(_args$2);
-        while (true) {
-          const _p$2 = _M0MPB4Iter4nextGRP38username5mbtpp2tt2TmE(_p);
-          if (_p$2 === undefined) {
-            return true;
-          } else {
-            const _p$3 = _p$2;
-            const _p$4 = _p$3;
-            if (_M0FP38username5mbtpp7codegen9mbt__only(_p$4)) {
-            } else {
-              return false;
-            }
-            continue;
-          }
-        }
-      }
-      case 9: {
-        const _NFun = t$2;
-        const _ps = _NFun._0;
-        const _r = _NFun._1;
-        const _p$2 = _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(_ps);
-        let _tmp$10;
-        while (true) {
-          const _p$3 = _M0MPB4Iter4nextGRP38username5mbtpp2tt2TmE(_p$2);
-          if (_p$3 === undefined) {
-            _tmp$10 = true;
-            break;
-          } else {
-            const _p$4 = _p$3;
-            const _p$5 = _p$4;
-            if (_M0FP38username5mbtpp7codegen9mbt__only(_p$5)) {
-            } else {
-              _tmp$10 = false;
-              break;
-            }
-            continue;
-          }
-        }
-        if (_tmp$10) {
-          _tmp$9 = _r;
-          continue _L;
-        } else {
-          return false;
-        }
-      }
-      default: {
-        return true;
-      }
+    }
+    if (_tmp$10) {
+      _tmp$9 = r;
+      continue;
+    } else {
+      return false;
     }
   }
 }
 function _M0MP38username5mbtpp7codegen3Gen9ffi__call(self, target, conv) {
   let call;
-  if (_M0MPC16string6String11has__prefix(target, _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13072)) {
-    call = `${target.substring(6, target.length)}(${_M0MPC15array5Array4joinGsE(conv, _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13073)})`;
+  if (_M0MPC16string6String11has__prefix(target, _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13840)) {
+    call = `${target.substring(6, target.length)}(${_M0MPC15array5Array4joinGsE(conv, _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13841)})`;
   } else {
-    if (_M0MPC16string6String11has__prefix(target, _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13074) || !_M0MPC16string6String8contains(target, _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13075)) {
+    if (_M0MPC16string6String11has__prefix(target, _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13842) || !_M0MPC16string6String8contains(target, _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13843)) {
       _L: {
         _L$2: {
-          const _bind$18 = _M0MPC16string6String4find(target, _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13077);
+          const _bind$18 = _M0MPC16string6String4find(target, _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13845);
           if (_bind$18 === undefined) {
             break _L$2;
           } else {
@@ -39345,17 +41578,17 @@ function _M0MP38username5mbtpp7codegen3Gen9ffi__call(self, target, conv) {
             const _i = _Some;
             if (conv.length > 0) {
               const m = target.substring(_i + 2 | 0, target.length);
-              call = `${_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(conv, 0)}.${m}(${_M0MPC15array5Array4joinGsE(_M0MPC15array9ArrayView9to__ownedGRP38username5mbtpp2tt2TmE(_M0MPC15array5Array21clamped__view_2einnerGRP38username5mbtpp2tt2TmE(conv, 1, undefined)), _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13078)})`;
+              call = `${_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(conv, 0)}.${m}(${_M0MPC15array5Array4joinGsE(_M0MPC15array9ArrayView9to__ownedGRP38username5mbtpp2tt2TmE(_M0MPC15array5Array21clamped__view_2einnerGRP38username5mbtpp2tt2TmE(conv, 1, undefined)), _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13846)})`;
             } else {
               break _L$2;
             }
           }
           break _L;
         }
-        return _M0MP38username5mbtpp7codegen3Gen9ffi__callN6constrS13076;
+        return _M0MP38username5mbtpp7codegen3Gen9ffi__callN6constrS13844;
       }
     } else {
-      const _p = _M0MPC16string6String9rev__find(target, _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13079);
+      const _p = _M0MPC16string6String9rev__find(target, _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13847);
       let dot;
       if (_p === undefined) {
         dot = $panic();
@@ -39373,21 +41606,21 @@ function _M0MP38username5mbtpp7codegen3Gen9ffi__call(self, target, conv) {
         const _Some = _bind$18;
         alias = _Some;
       }
-      const _bind$19 = _M0MPC16string6String4find(fname, _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13080);
+      const _bind$19 = _M0MPC16string6String4find(fname, _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13848);
       if (_bind$19 === undefined) {
-        call = `@${alias}.${fname}(${_M0MPC15array5Array4joinGsE(conv, _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13084)})`;
+        call = `@${alias}.${fname}(${_M0MPC15array5Array4joinGsE(conv, _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13852)})`;
       } else {
         const _Some = _bind$19;
         const _i = _Some;
         const tname = fname.substring(0, _i);
         const m = fname.substring(_i + 2 | 0, fname.length);
         if (_M0MPB3Map8containsGsRP38username5mbtpp2tt6GEntryE(_M0FP38username5mbtpp2tt7globals, `@${alias}.${tname}`)) {
-          call = `@${alias}.${fname}(${_M0MPC15array5Array4joinGsE(conv, _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13081)})`;
+          call = `@${alias}.${fname}(${_M0MPC15array5Array4joinGsE(conv, _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13849)})`;
         } else {
           if (conv.length > 0) {
-            call = `${_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(conv, 0)}.${m}(${_M0MPC15array5Array4joinGsE(_M0MPC15array9ArrayView9to__ownedGRP38username5mbtpp2tt2TmE(_M0MPC15array5Array21clamped__view_2einnerGRP38username5mbtpp2tt2TmE(conv, 1, undefined)), _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13082)})`;
+            call = `${_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(conv, 0)}.${m}(${_M0MPC15array5Array4joinGsE(_M0MPC15array9ArrayView9to__ownedGRP38username5mbtpp2tt2TmE(_M0MPC15array5Array21clamped__view_2einnerGRP38username5mbtpp2tt2TmE(conv, 1, undefined)), _M0MP38username5mbtpp7codegen3Gen9ffi__callN6recordS13850)})`;
           } else {
-            return _M0MP38username5mbtpp7codegen3Gen9ffi__callN6constrS13083;
+            return _M0MP38username5mbtpp7codegen3Gen9ffi__callN6constrS13851;
           }
         }
       }
@@ -39493,7 +41726,7 @@ function _M0MP38username5mbtpp7codegen3Gen10typed__pat(self, p, ty, names) {
             break;
           }
         }
-        subs.length === 0 ? "" : `(${_M0MPC15array5Array4joinGsE(subs, _M0MP38username5mbtpp7codegen3Gen10typed__patN6recordS13110)})`;
+        subs.length === 0 ? "" : `(${_M0MPC15array5Array4joinGsE(subs, _M0MP38username5mbtpp7codegen3Gen10typed__patN6recordS13878)})`;
         return new _M0DTPC16result6ResultGsRP38username5mbtpp7codegen8NotTypedE2Ok(`(${_M0FP38username5mbtpp7codegen8con__pat(_d, _c, subs)}${_M0FP38username5mbtpp7codegen10as__marker}${n$3}${_M0FP38username5mbtpp7codegen11end__marker})`);
       } else {
         return new _M0DTPC16result6ResultGsRP38username5mbtpp7codegen8NotTypedE3Err(_M0DTPC15error5Error48username_2fmbtpp_2fcodegen_2eNotTyped_2eNotTyped__);
@@ -39596,101 +41829,169 @@ function _M0MP38username5mbtpp7codegen3Gen11typed__args(self, env, args, tys) {
 }
 function _M0MP38username5mbtpp7codegen3Gen12typed__check(self, env, t, ty) {
   _L: {
-    if (t.$tag === 4) {
-      const _Lam = t;
-      const _x = _Lam._1;
-      if (_x === 0) {
-        if (ty.$tag === 9) {
-          const _NFun = ty;
-          const _ps = _NFun._0;
-          const _r = _NFun._1;
-          let e = env;
-          const xs = [];
-          let b = t;
-          const _bind$18 = _ps.length;
-          let _tmp$9 = 0;
-          while (true) {
-            const _ = _tmp$9;
-            if (_ < _bind$18) {
-              const p = _ps[_];
-              _L$2: {
-                _L$3: {
-                  const _bind$19 = b;
-                  if (_bind$19.$tag === 4) {
-                    const _Lam$2 = _bind$19;
-                    const _x$2 = _Lam$2._0;
-                    const _x$3 = _Lam$2._1;
-                    if (_x$3 === 0) {
-                      const _rest = _Lam$2._3;
-                      const n = _M0MP38username5mbtpp7codegen3Gen4name(self, _x$2);
-                      _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(xs, n);
-                      e = _M0FP38username5mbtpp7codegen5tpush(e, new _M0DTP38username5mbtpp7codegen6TLocal4TVar(n, p));
-                      b = _rest;
-                    } else {
-                      break _L$3;
-                    }
-                  } else {
-                    break _L$3;
-                  }
-                  break _L$2;
-                }
-                return new _M0DTPC16result6ResultGsRP38username5mbtpp7codegen8NotTypedE3Err(_M0DTPC15error5Error48username_2fmbtpp_2fcodegen_2eNotTyped_2eNotTyped__);
-              }
-              _tmp$9 = _ + 1 | 0;
-              continue;
-            } else {
-              break;
-            }
-          }
-          const saved = self.cur_result;
-          self.cur_result = _r;
-          let res;
-          let _try_err;
-          _L$2: {
-            _L$3: {
-              const _bind$19 = _M0MP38username5mbtpp7codegen3Gen5typed(self, e, b);
-              let _tmp$10;
-              if (_bind$19.$tag === 1) {
-                const _ok = _bind$19;
-                _tmp$10 = _ok._0;
-              } else {
-                const _err = _bind$19;
-                _try_err = _err._0;
-                break _L$3;
-              }
-              res = new _M0DTPB6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok(_tmp$10);
+    let ps;
+    let r;
+    _L$2: {
+      if (t.$tag === 4) {
+        const _Lam = t;
+        const _x = _Lam._1;
+        if (_x === 0) {
+          switch (ty.$tag) {
+            case 9: {
+              const _NFun = ty;
+              const _ps = _NFun._0;
+              const _r = _NFun._1;
+              ps = _ps;
+              r = _r;
               break _L$2;
             }
-            res = new _M0DTPB6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE3Err(_try_err);
+            case 10: {
+              const _NAsyncFun = ty;
+              const _ps$2 = _NAsyncFun._0;
+              const _r$2 = _NAsyncFun._1;
+              ps = _ps$2;
+              r = _r$2;
+              break _L$2;
+            }
+            default: {
+              break _L;
+            }
           }
-          self.cur_result = saved;
-          let _bind$19;
-          if (res.$tag === 1) {
-            const _Ok = res;
-            _bind$19 = _Ok._0;
-          } else {
-            return new _M0DTPC16result6ResultGsRP38username5mbtpp7codegen8NotTypedE3Err(_M0DTPC15error5Error48username_2fmbtpp_2fcodegen_2eNotTyped_2eNotTyped__);
-          }
-          const _cb = _bind$19._0;
-          const _tb = _bind$19._1;
-          const _bind$20 = _M0FP38username5mbtpp7codegen8unify__t(_tb, _r);
-          if (_bind$20.$tag === 1) {
-            const _ok = _bind$20;
-            _ok._0;
-          } else {
-            return _bind$20;
-          }
-          const cb = _M0FP38username5mbtpp7codegen9is__ident(_cb) ? `(${_cb})` : _cb;
-          return new _M0DTPC16result6ResultGsRP38username5mbtpp7codegen8NotTypedE2Ok(`(${_M0MPC15array5Array4joinGsE(xs, _M0MP38username5mbtpp7codegen3Gen12typed__checkN6recordS13156)}) => {\n${cb}\n}`);
         } else {
           break _L;
         }
       } else {
         break _L;
       }
-    } else {
-      break _L;
     }
+    let is_async;
+    if (ty.$tag === 10) {
+      is_async = true;
+    } else {
+      is_async = false;
+    }
+    let e = env;
+    const xs = [];
+    let b = t;
+    const _bind$18 = ps.length;
+    let _tmp$9 = 0;
+    while (true) {
+      const _ = _tmp$9;
+      if (_ < _bind$18) {
+        const p = ps[_];
+        _L$3: {
+          _L$4: {
+            const _bind$19 = b;
+            if (_bind$19.$tag === 4) {
+              const _Lam = _bind$19;
+              const _x = _Lam._0;
+              const _x$2 = _Lam._1;
+              if (_x$2 === 0) {
+                const _rest = _Lam._3;
+                const n = _M0MP38username5mbtpp7codegen3Gen4name(self, _x);
+                _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(xs, n);
+                e = _M0FP38username5mbtpp7codegen5tpush(e, new _M0DTP38username5mbtpp7codegen6TLocal4TVar(n, p));
+                b = _rest;
+              } else {
+                break _L$4;
+              }
+            } else {
+              break _L$4;
+            }
+            break _L$3;
+          }
+          return new _M0DTPC16result6ResultGsRP38username5mbtpp7codegen8NotTypedE3Err(_M0DTPC15error5Error48username_2fmbtpp_2fcodegen_2eNotTyped_2eNotTyped__);
+        }
+        _tmp$9 = _ + 1 | 0;
+        continue;
+      } else {
+        break;
+      }
+    }
+    const saved = self.cur_result;
+    self.cur_result = r;
+    let res;
+    let _try_err;
+    _L$3: {
+      _L$4: {
+        const _bind$19 = _M0MP38username5mbtpp7codegen3Gen5typed(self, e, b);
+        let _tmp$10;
+        if (_bind$19.$tag === 1) {
+          const _ok = _bind$19;
+          _tmp$10 = _ok._0;
+        } else {
+          const _err = _bind$19;
+          _try_err = _err._0;
+          break _L$4;
+        }
+        res = new _M0DTPB6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok(_tmp$10);
+        break _L$3;
+      }
+      res = new _M0DTPB6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE3Err(_try_err);
+    }
+    self.cur_result = saved;
+    let _bind$19;
+    if (res.$tag === 1) {
+      const _Ok = res;
+      _bind$19 = _Ok._0;
+    } else {
+      return new _M0DTPC16result6ResultGsRP38username5mbtpp7codegen8NotTypedE3Err(_M0DTPC15error5Error48username_2fmbtpp_2fcodegen_2eNotTyped_2eNotTyped__);
+    }
+    const _cb = _bind$19._0;
+    const _tb = _bind$19._1;
+    const _bind$20 = _M0FP38username5mbtpp7codegen8unify__t(_tb, r);
+    if (_bind$20.$tag === 1) {
+      const _ok = _bind$20;
+      _ok._0;
+    } else {
+      return _bind$20;
+    }
+    const cb = _M0FP38username5mbtpp7codegen9is__ident(_cb) ? `(${_cb})` : _cb;
+    let xs$2;
+    let cb$2;
+    _L$4: {
+      if (_M0FP38username5mbtpp7codegen10unit__only(ps)) {
+        xs$2 = [];
+        cb$2 = `let ${_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(xs, 0)} = ()\n${cb}`;
+        break _L$4;
+      } else {
+        xs$2 = xs;
+        cb$2 = cb;
+        break _L$4;
+      }
+    }
+    const ps$2 = _M0FP38username5mbtpp7codegen10unit__only(ps) ? [] : ps;
+    if (is_async) {
+      let typed_ps;
+      let _p;
+      _L$5: {
+        _L$6: {
+          if (xs$2.length === 0) {
+            _p = [];
+            break _L$6;
+          }
+          const _p$2 = new Array(xs$2.length);
+          const _p$3 = xs$2.length;
+          let _tmp$10 = 0;
+          while (true) {
+            const _p$4 = _tmp$10;
+            if (_p$4 < _p$3) {
+              const _p$5 = xs$2[_p$4];
+              _p$2[_p$4] = `${_p$5} : ${_M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(ps$2, _p$4))}`;
+              _tmp$10 = _p$4 + 1 | 0;
+              continue;
+            } else {
+              break;
+            }
+          }
+          typed_ps = _p$2;
+          break _L$5;
+        }
+        typed_ps = _p;
+      }
+      return new _M0DTPC16result6ResultGsRP38username5mbtpp7codegen8NotTypedE2Ok(`async fn(${_M0MPC15array5Array4joinGsE(typed_ps, _M0MP38username5mbtpp7codegen3Gen12typed__checkN6recordS13924)}) -> ${_M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, r)} raise {\n${cb$2}\n}`);
+    }
+    return new _M0DTPC16result6ResultGsRP38username5mbtpp7codegen8NotTypedE2Ok(`(${_M0MPC15array5Array4joinGsE(xs$2, _M0MP38username5mbtpp7codegen3Gen12typed__checkN6recordS13925)}) => {\n${cb$2}\n}`);
   }
   const _bind$18 = _M0MP38username5mbtpp7codegen3Gen5typed(self, env, t);
   let _bind$19;
@@ -39737,10 +42038,11 @@ function _M0MP38username5mbtpp7codegen3Gen5typed(self, env, t) {
 function _M0MP38username5mbtpp7codegen3Gen11typed__term(self, env, t) {
   let v;
   let x;
+  let ty;
   let b;
   _L: {
     let v$2;
-    let ty;
+    let ty$2;
     let b$2;
     _L$2: {
       switch (t.$tag) {
@@ -39748,7 +42050,7 @@ function _M0MP38username5mbtpp7codegen3Gen11typed__term(self, env, t) {
           const _Var = t;
           const _ix = _Var._0;
           let n;
-          let ty$2;
+          let ty$3;
           _L$3: {
             const _bind$18 = _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(env, (env.length - 1 | 0) - _ix | 0);
             switch (_bind$18.$tag) {
@@ -39757,7 +42059,7 @@ function _M0MP38username5mbtpp7codegen3Gen11typed__term(self, env, t) {
                 const _n = _TVar._0;
                 const _ty = _TVar._1;
                 n = _n;
-                ty$2 = _ty;
+                ty$3 = _ty;
                 break _L$3;
               }
               case 1: {
@@ -39765,7 +42067,7 @@ function _M0MP38username5mbtpp7codegen3Gen11typed__term(self, env, t) {
                 const _n$2 = _TMut._0;
                 const _ty$2 = _TMut._1;
                 n = _n$2;
-                ty$2 = _ty$2;
+                ty$3 = _ty$2;
                 break _L$3;
               }
               default: {
@@ -39773,7 +42075,7 @@ function _M0MP38username5mbtpp7codegen3Gen11typed__term(self, env, t) {
               }
             }
           }
-          return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok({ _0: n, _1: ty$2 });
+          return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok({ _0: n, _1: ty$3 });
         }
         case 10: {
           const _Lit = t;
@@ -39823,7 +42125,7 @@ function _M0MP38username5mbtpp7codegen3Gen11typed__term(self, env, t) {
           const _b$2 = _Let._3;
           if (_M0FP38username5mbtpp2tt14is__prop__head(_ty)) {
             v$2 = _v;
-            ty = _ty;
+            ty$2 = _ty;
             b$2 = _b$2;
             break _L$2;
           } else {
@@ -39833,18 +42135,20 @@ function _M0MP38username5mbtpp7codegen3Gen11typed__term(self, env, t) {
               const _g = _Global._0;
               if (_M0FP38username5mbtpp2tt17is__proof__global(_g)) {
                 v$2 = _v;
-                ty = _ty;
+                ty$2 = _ty;
                 b$2 = _b$2;
                 break _L$2;
               } else {
                 v = _v;
                 x = _x$2;
+                ty = _ty;
                 b = _b$2;
                 break _L;
               }
             } else {
               v = _v;
               x = _x$2;
+              ty = _ty;
               b = _b$2;
               break _L;
             }
@@ -39924,7 +42228,7 @@ function _M0MP38username5mbtpp7codegen3Gen11typed__term(self, env, t) {
           const _cb$2 = _bind$24._0;
           const _tb$2 = _bind$24._1;
           const err = _M0MP38username5mbtpp7codegen3Gen4name(self, "err");
-          let ty$3 = _tb$2;
+          let ty$4 = _tb$2;
           const arms = [];
           const _bind$25 = _cls.length;
           let _tmp$9 = 0;
@@ -39932,98 +42236,185 @@ function _M0MP38username5mbtpp7codegen3Gen11typed__term(self, env, t) {
             const _ = _tmp$9;
             if (_ < _bind$25) {
               const cl = _cls[_];
+              const lets = _M0MPB13StringBuilder21StringBuilder_2einner(8);
               let cond;
               let env2;
               _L$4: {
                 _L$5: {
-                  const _bind$26 = cl.pats;
-                  if (_bind$26.length === 1) {
-                    const _x$4 = _bind$26[0];
-                    switch (_x$4.$tag) {
-                      case 1: {
-                        cond = "true";
-                        env2 = env;
-                        break _L$4;
-                      }
-                      case 0: {
-                        cond = "true";
-                        env2 = _M0FP38username5mbtpp7codegen5tpush(env, _M0DTP38username5mbtpp7codegen6TLocal5TNone__);
-                        break _L$4;
-                      }
-                      case 2: {
-                        const _CPCon = _x$4;
-                        const _c$2 = _CPCon._0;
-                        const _ps = _CPCon._1;
-                        const _p = _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(_ps);
-                        let _tmp$10;
-                        while (true) {
-                          const _p$2 = _M0MPB4Iter4nextGRP38username5mbtpp2tt2TmE(_p);
-                          if (_p$2 === undefined) {
-                            _tmp$10 = true;
-                            break;
-                          } else {
-                            const _p$3 = _p$2;
-                            const _p$4 = _p$3;
-                            let _tmp$11;
-                            if (_p$4.$tag === 1) {
-                              _tmp$11 = true;
-                            } else {
-                              _tmp$11 = false;
-                            }
-                            if (_tmp$11) {
-                            } else {
-                              _tmp$10 = false;
+                  _L$6: {
+                    const _bind$26 = cl.pats;
+                    if (_bind$26.length === 1) {
+                      const _x$4 = _bind$26[0];
+                      switch (_x$4.$tag) {
+                        case 1: {
+                          break _L$6;
+                        }
+                        case 0: {
+                          break _L$6;
+                        }
+                        case 2: {
+                          const _CPCon = _x$4;
+                          const _c$2 = _CPCon._0;
+                          const _ps = _CPCon._1;
+                          const _p = _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(_ps);
+                          let _tmp$10;
+                          while (true) {
+                            const _p$2 = _M0MPB4Iter4nextGRP38username5mbtpp2tt2TmE(_p);
+                            if (_p$2 === undefined) {
+                              _tmp$10 = true;
                               break;
+                            } else {
+                              const _p$3 = _p$2;
+                              const _p$4 = _p$3;
+                              let _tmp$11;
+                              switch (_p$4.$tag) {
+                                case 1: {
+                                  _tmp$11 = true;
+                                  break;
+                                }
+                                case 0: {
+                                  _tmp$11 = true;
+                                  break;
+                                }
+                                default: {
+                                  _tmp$11 = false;
+                                }
+                              }
+                              if (_tmp$11) {
+                              } else {
+                                _tmp$10 = false;
+                                break;
+                              }
+                              continue;
                             }
-                            continue;
+                          }
+                          if (_tmp$10) {
+                            const _bind$27 = _M0MP38username5mbtpp7codegen3Gen11con__fields(self, _c$2);
+                            let fields;
+                            if (_bind$27.$tag === 1) {
+                              const _Some = _bind$27;
+                              fields = _Some._0;
+                            } else {
+                              return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE3Err(_M0DTPC15error5Error48username_2fmbtpp_2fcodegen_2eNotTyped_2eNotTyped__);
+                            }
+                            let env2$2 = _M0FP38username5mbtpp7codegen5tpush(env, _M0DTP38username5mbtpp7codegen6TLocal5TNone__);
+                            let k = 0;
+                            let _tmp$11 = 0;
+                            while (true) {
+                              const j = _tmp$11;
+                              if (j < _ps.length) {
+                                const erased = _M0MP38username5mbtpp7codegen7Erasure11con__erased(self.er, _c$2, j);
+                                _L$7: {
+                                  _L$8: {
+                                    const _bind$28 = _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_ps, j);
+                                    const _bind$29 = _M0MPC15array5Array2atGORP38username5mbtpp2tt3ValE(fields, j);
+                                    if (_bind$28.$tag === 0) {
+                                      const _CPVar = _bind$28;
+                                      const _x$5 = _CPVar._0;
+                                      if (_bind$29 === undefined) {
+                                        break _L$8;
+                                      } else {
+                                        const _Some = _bind$29;
+                                        const _ft = _Some;
+                                        if (!erased) {
+                                          const n$3 = _M0MP38username5mbtpp7codegen3Gen4name(self, _x$5);
+                                          _M0IPB13StringBuilderPB6Logger13write__string(lets, `let ${n$3} = ${_M0MP38username5mbtpp7codegen3Gen9of__value(self, _ft, `con_fields(${err})[${_M0MPC13int3Int18to__string_2einner(k, 10)}]`, _M0DTPC16option6OptionGRPB5ArrayGsEE4None__)}\n`);
+                                          env2$2 = _M0FP38username5mbtpp7codegen5tpush(env2$2, new _M0DTP38username5mbtpp7codegen6TLocal4TVar(n$3, _ft));
+                                        } else {
+                                          break _L$8;
+                                        }
+                                      }
+                                    } else {
+                                      break _L$8;
+                                    }
+                                    break _L$7;
+                                  }
+                                  env2$2 = _M0FP38username5mbtpp7codegen5tpush(env2$2, _M0DTP38username5mbtpp7codegen6TLocal5TNone__);
+                                }
+                                if (!erased) {
+                                  k = k + 1 | 0;
+                                }
+                                _tmp$11 = j + 1 | 0;
+                                continue;
+                              } else {
+                                break;
+                              }
+                            }
+                            cond = `con_name(${err}) == Some(${_M0MPC16string6String14escape_2einner(_c$2, true)})`;
+                            env2 = env2$2;
+                            break _L$4;
+                          } else {
+                            break _L$5;
                           }
                         }
-                        if (_tmp$10) {
-                          cond = `con_name(${err}) == Some(${_M0MPC16string6String14escape_2einner(_c$2, true)})`;
-                          env2 = env;
-                          break _L$4;
-                        } else {
+                        default: {
                           break _L$5;
                         }
                       }
-                      default: {
-                        break _L$5;
-                      }
+                    } else {
+                      break _L$5;
                     }
-                  } else {
-                    break _L$5;
                   }
+                  cond = "true";
+                  env2 = _M0FP38username5mbtpp7codegen5tpush(env, _M0DTP38username5mbtpp7codegen6TLocal5TNone__);
+                  break _L$4;
                 }
                 return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE3Err(_M0DTPC15error5Error48username_2fmbtpp_2fcodegen_2eNotTyped_2eNotTyped__);
               }
-              const _bind$26 = _M0MP38username5mbtpp7codegen3Gen5typed(self, env2, cl.body);
-              let _bind$27;
-              if (_bind$26.$tag === 1) {
-                const _ok = _bind$26;
-                _bind$27 = _ok._0;
+              const _bind$26 = cl.cond;
+              let cond$2;
+              if (_bind$26 === undefined) {
+                cond$2 = cond;
               } else {
-                return _bind$26;
+                const _Some = _bind$26;
+                const _g = _Some;
+                const _bind$27 = _M0MP38username5mbtpp7codegen3Gen5typed(self, env2, _g);
+                let _bind$28;
+                if (_bind$27.$tag === 1) {
+                  const _ok = _bind$27;
+                  _bind$28 = _ok._0;
+                } else {
+                  return _bind$27;
+                }
+                const _cg = _bind$28._0;
+                const _tg = _bind$28._1;
+                const _bind$29 = _M0FP38username5mbtpp7codegen8unify__t(_tg, _M0DTP38username5mbtpp7codegen3NTy5NBool__);
+                if (_bind$29.$tag === 1) {
+                  const _ok = _bind$29;
+                  _ok._0;
+                } else {
+                  return _bind$29;
+                }
+                cond$2 = `${cond} && {\n${lets.val}${_cg}\n}`;
               }
-              const _code = _bind$27._0;
-              const _t = _bind$27._1;
-              const _bind$28 = _M0FP38username5mbtpp7codegen8unify__t(ty$3, _t);
+              const _bind$27 = _M0MP38username5mbtpp7codegen3Gen5typed(self, env2, cl.body);
+              let _bind$28;
+              if (_bind$27.$tag === 1) {
+                const _ok = _bind$27;
+                _bind$28 = _ok._0;
+              } else {
+                return _bind$27;
+              }
+              const _code = _bind$28._0;
+              const _t = _bind$28._1;
+              const _bind$29 = _M0FP38username5mbtpp7codegen8unify__t(ty$4, _t);
               let _tmp$10;
-              if (_bind$28.$tag === 1) {
-                const _ok = _bind$28;
+              if (_bind$29.$tag === 1) {
+                const _ok = _bind$29;
                 _tmp$10 = _ok._0;
               } else {
-                return _bind$28;
+                return _bind$29;
               }
-              ty$3 = _tmp$10;
-              _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(arms, `if ${cond} {\n${_code}\n}`);
+              ty$4 = _tmp$10;
+              _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(arms, `if ${cond$2} {\n${lets.val}${_code}\n}`);
               _tmp$9 = _ + 1 | 0;
               continue;
             } else {
               break;
             }
           }
-          const handler = arms.length === 0 ? `raise CRaise(${err})` : `${_M0MPC15array5Array4joinGsE(arms, _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13199)} else {\nraise CRaise(${err})\n}`;
-          return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok({ _0: `(try {\n${_cb$2}\n} catch {\nCRaise(${err}) => ${handler}\ne => raise e\n})`, _1: ty$3 });
+          const handler = arms.length === 0 ? `raise CRaise(${err})` : `${_M0MPC15array5Array4joinGsE(arms, _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13982)} else {\nraise CRaise(${err})\n}`;
+          return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok({ _0: `(try {\n${_cb$2}\n} catch {\nCRaise(${err}) => ${handler}\ne => raise e\n})`, _1: ty$4 });
         }
         case 11: {
           const _Match = t;
@@ -40072,10 +42463,10 @@ function _M0MP38username5mbtpp7codegen3Gen11typed__term(self, env, t) {
                   break;
                 }
               }
-              subject = `(${_M0MPC15array5Array4joinGsE(_p, _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13202)})`;
+              subject = `(${_M0MPC15array5Array4joinGsE(_p, _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13985)})`;
             }
             _M0IPB13StringBuilderPB6Logger13write__string(buf, `match ${subject} {\n`);
-            let ty$4 = _M0DTP38username5mbtpp7codegen3NTy4NAny__;
+            let ty$5 = _M0DTP38username5mbtpp7codegen3NTy4NAny__;
             const _bind$28 = _cls$2.length;
             let _tmp$11 = 0;
             while (true) {
@@ -40127,7 +42518,7 @@ function _M0MP38username5mbtpp7codegen3Gen11typed__term(self, env, t) {
                 }
                 const _cb$3 = _bind$31._0;
                 const _tb$3 = _bind$31._1;
-                const _bind$32 = _M0FP38username5mbtpp7codegen8unify__t(ty$4, _tb$3);
+                const _bind$32 = _M0FP38username5mbtpp7codegen8unify__t(ty$5, _tb$3);
                 let _tmp$14;
                 if (_bind$32.$tag === 1) {
                   const _ok = _bind$32;
@@ -40135,9 +42526,35 @@ function _M0MP38username5mbtpp7codegen3Gen11typed__term(self, env, t) {
                 } else {
                   return _bind$32;
                 }
-                ty$4 = _tmp$14;
-                const lhs = ps.length === 1 ? _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(ps, 0) : `(${_M0MPC15array5Array4joinGsE(ps, _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13203)})`;
-                _M0IPB13StringBuilderPB6Logger13write__string(buf, `${_M0FP38username5mbtpp7codegen17resolve__bindings(lhs, _cb$3)} => ${_cb$3}\n`);
+                ty$5 = _tmp$14;
+                const _bind$33 = cl.cond;
+                let when;
+                if (_bind$33 === undefined) {
+                  when = "";
+                } else {
+                  const _Some = _bind$33;
+                  const _g = _Some;
+                  const _bind$34 = _M0MP38username5mbtpp7codegen3Gen5typed(self, env2, _g);
+                  let _bind$35;
+                  if (_bind$34.$tag === 1) {
+                    const _ok = _bind$34;
+                    _bind$35 = _ok._0;
+                  } else {
+                    return _bind$34;
+                  }
+                  const _cg = _bind$35._0;
+                  const _tg = _bind$35._1;
+                  const _bind$36 = _M0FP38username5mbtpp7codegen8unify__t(_tg, _M0DTP38username5mbtpp7codegen3NTy5NBool__);
+                  if (_bind$36.$tag === 1) {
+                    const _ok = _bind$36;
+                    _ok._0;
+                  } else {
+                    return _bind$36;
+                  }
+                  when = ` if ${_cg}`;
+                }
+                const lhs = ps.length === 1 ? _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(ps, 0) : `(${_M0MPC15array5Array4joinGsE(ps, _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13986)})`;
+                _M0IPB13StringBuilderPB6Logger13write__string(buf, `${_M0FP38username5mbtpp7codegen17resolve__bindings(lhs, `${_cb$3}${when}`)}${when} => ${_cb$3}\n`);
                 _tmp$11 = _ + 1 | 0;
                 continue;
               } else {
@@ -40145,7 +42562,7 @@ function _M0MP38username5mbtpp7codegen3Gen11typed__term(self, env, t) {
               }
             }
             _M0IPB13StringBuilderPB6Logger13write__string(buf, "_ => rt_fail(\"no match\")\n}");
-            return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok({ _0: buf.val, _1: ty$4 });
+            return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok({ _0: buf.val, _1: ty$5 });
           } else {
             const _Some = _bind$26;
             const _x$4 = _Some;
@@ -40169,7 +42586,7 @@ function _M0MP38username5mbtpp7codegen3Gen11typed__term(self, env, t) {
             } else {
               return _bind$29;
             }
-            const cc = _M0MPC16string6String11has__prefix(_cc, _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13200) || _M0MPC16string6String11has__prefix(_cc, _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13201) ? `(${_cc})` : _cc;
+            const cc = _M0MPC16string6String11has__prefix(_cc, _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13983) || _M0MPC16string6String11has__prefix(_cc, _M0MP38username5mbtpp7codegen3Gen11typed__termN6recordS13984) ? `(${_cc})` : _cc;
             const env2 = _M0FP38username5mbtpp7codegen5tpush(env, _M0DTP38username5mbtpp7codegen6TLocal5TNone__);
             const _bind$30 = _M0MP38username5mbtpp7codegen3Gen5typed(self, env2, _a);
             let _bind$31;
@@ -40303,11 +42720,10 @@ function _M0MP38username5mbtpp7codegen3Gen11typed__term(self, env, t) {
           }
           return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok({ _0: `return ${_cv$2}`, _1: _M0DTP38username5mbtpp7codegen3NTy4NAny__ });
         }
-        case 22: {
-          const _Seq = t;
-          const _a = _Seq._0;
-          const _b$6 = _Seq._1;
-          const _bind$37 = _M0MP38username5mbtpp7codegen3Gen5typed(self, env, _a);
+        case 19: {
+          const _Raise = t;
+          const _v$5 = _Raise._0;
+          const _bind$37 = _M0MP38username5mbtpp7codegen3Gen5typed(self, env, _v$5);
           let _bind$38;
           if (_bind$37.$tag === 1) {
             const _ok = _bind$37;
@@ -40315,9 +42731,18 @@ function _M0MP38username5mbtpp7codegen3Gen11typed__term(self, env, t) {
           } else {
             return _bind$37;
           }
-          const _ca = _bind$38._0;
-          const _ta = _bind$38._1;
-          const _bind$39 = _M0MP38username5mbtpp7codegen3Gen5typed(self, env, _b$6);
+          const _cv$3 = _bind$38._0;
+          const _tv$3 = _bind$38._1;
+          if (!_M0MP38username5mbtpp7codegen3Gen11convertible(self, _tv$3, false)) {
+            return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE3Err(_M0DTPC15error5Error48username_2fmbtpp_2fcodegen_2eNotTyped_2eNotTyped__);
+          }
+          return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok({ _0: `raise CRaise(${_M0MP38username5mbtpp7codegen3Gen9to__value(self, _tv$3, _cv$3, _M0DTPC16option6OptionGRPB5ArrayGsEE4None__)})`, _1: _M0DTP38username5mbtpp7codegen3NTy4NAny__ });
+        }
+        case 22: {
+          const _Seq = t;
+          const _a = _Seq._0;
+          const _b$6 = _Seq._1;
+          const _bind$39 = _M0MP38username5mbtpp7codegen3Gen5typed(self, env, _a);
           let _bind$40;
           if (_bind$39.$tag === 1) {
             const _ok = _bind$39;
@@ -40325,8 +42750,18 @@ function _M0MP38username5mbtpp7codegen3Gen11typed__term(self, env, t) {
           } else {
             return _bind$39;
           }
-          const _cb$4 = _bind$40._0;
-          const _tb$4 = _bind$40._1;
+          const _ca = _bind$40._0;
+          const _ta = _bind$40._1;
+          const _bind$41 = _M0MP38username5mbtpp7codegen3Gen5typed(self, env, _b$6);
+          let _bind$42;
+          if (_bind$41.$tag === 1) {
+            const _ok = _bind$41;
+            _bind$42 = _ok._0;
+          } else {
+            return _bind$41;
+          }
+          const _cb$4 = _bind$42._0;
+          const _tb$4 = _bind$42._1;
           return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok({ _0: `{\n${_M0FP38username5mbtpp7codegen4stmt(_ca, _ta)}\n${_cb$4}\n}`, _1: _tb$4 });
         }
         default: {
@@ -40336,27 +42771,59 @@ function _M0MP38username5mbtpp7codegen3Gen11typed__term(self, env, t) {
     }
     return _M0MP38username5mbtpp7codegen3Gen5typed(self, _M0FP38username5mbtpp7codegen5tpush(env, _M0DTP38username5mbtpp7codegen6TLocal5TNone__), b$2);
   }
-  const _bind$18 = _M0MP38username5mbtpp7codegen3Gen5typed(self, env, v);
-  let _bind$19;
-  if (_bind$18.$tag === 1) {
-    const _ok = _bind$18;
-    _bind$19 = _ok._0;
-  } else {
-    return _bind$18;
+  let _bind$18;
+  _L$2: {
+    _L$3: {
+      if (v.$tag === 4) {
+        const _Lam = v;
+        const _x = _Lam._1;
+        if (_x === 0) {
+          const _bind$19 = _M0MP38username5mbtpp7codegen3Gen9type__arg(self, env, ty);
+          let nt;
+          if (_bind$19.$tag === 1) {
+            const _ok = _bind$19;
+            nt = _ok._0;
+          } else {
+            return _bind$19;
+          }
+          const _bind$20 = _M0MP38username5mbtpp7codegen3Gen12typed__check(self, env, v, nt);
+          let _tmp$9;
+          if (_bind$20.$tag === 1) {
+            const _ok = _bind$20;
+            _tmp$9 = _ok._0;
+          } else {
+            return _bind$20;
+          }
+          _bind$18 = { _0: _tmp$9, _1: nt };
+        } else {
+          break _L$3;
+        }
+      } else {
+        break _L$3;
+      }
+      break _L$2;
+    }
+    const _bind$19 = _M0MP38username5mbtpp7codegen3Gen5typed(self, env, v);
+    if (_bind$19.$tag === 1) {
+      const _ok = _bind$19;
+      _bind$18 = _ok._0;
+    } else {
+      return _bind$19;
+    }
   }
-  const _cv = _bind$19._0;
-  const _tv = _bind$19._1;
+  const _cv = _bind$18._0;
+  const _tv = _bind$18._1;
   const n = _M0MP38username5mbtpp7codegen3Gen4name(self, x);
-  const _bind$20 = _M0MP38username5mbtpp7codegen3Gen5typed(self, _M0FP38username5mbtpp7codegen5tpush(env, new _M0DTP38username5mbtpp7codegen6TLocal4TVar(n, _tv)), b);
-  let _bind$21;
-  if (_bind$20.$tag === 1) {
-    const _ok = _bind$20;
-    _bind$21 = _ok._0;
+  const _bind$19 = _M0MP38username5mbtpp7codegen3Gen5typed(self, _M0FP38username5mbtpp7codegen5tpush(env, new _M0DTP38username5mbtpp7codegen6TLocal4TVar(n, _tv)), b);
+  let _bind$20;
+  if (_bind$19.$tag === 1) {
+    const _ok = _bind$19;
+    _bind$20 = _ok._0;
   } else {
-    return _bind$20;
+    return _bind$19;
   }
-  const _cb = _bind$21._0;
-  const _tb = _bind$21._1;
+  const _cb = _bind$20._0;
+  const _tb = _bind$20._1;
   return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok({ _0: `{\nlet ${n} : ${_M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, _tv)} = ${_cv}\n${_cb}\n}`, _1: _tb });
 }
 function _M0MP38username5mbtpp7codegen3Gen10typed__app(self, env, t) {
@@ -40388,29 +42855,51 @@ function _M0MP38username5mbtpp7codegen3Gen10typed__app(self, env, t) {
         if (i < _args.length) {
           _L: {
             _L$2: {
-              const _bind$21 = ty;
-              if (_bind$21.$tag === 9) {
-                const _NFun = _bind$21;
-                const _ps = _NFun._0;
-                const _r = _NFun._1;
-                if ((i + _ps.length | 0) <= _args.length) {
-                  const _bind$22 = _M0MP38username5mbtpp7codegen3Gen11typed__args(self, env, _M0MPC15array9ArrayView9to__ownedGRP38username5mbtpp2tt2TmE(_M0MPC15array5Array21clamped__view_2einnerGRP38username5mbtpp2tt2TmE(_args, i, i + _ps.length | 0)), _ps);
-                  let cs;
-                  if (_bind$22.$tag === 1) {
-                    const _ok = _bind$22;
-                    cs = _ok._0;
-                  } else {
-                    return _bind$22;
+              let ps;
+              let r;
+              _L$3: {
+                const _bind$21 = ty;
+                switch (_bind$21.$tag) {
+                  case 9: {
+                    const _NFun = _bind$21;
+                    const _ps = _NFun._0;
+                    const _r = _NFun._1;
+                    if ((i + _ps.length | 0) <= _args.length) {
+                      ps = _ps;
+                      r = _r;
+                      break _L$3;
+                    } else {
+                      break _L$2;
+                    }
                   }
-                  code = `${code}(${_M0MPC15array5Array4joinGsE(cs, _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS13380)})`;
-                  ty = _r;
-                  i = i + _ps.length | 0;
-                } else {
-                  break _L$2;
+                  case 10: {
+                    const _NAsyncFun = _bind$21;
+                    const _ps$2 = _NAsyncFun._0;
+                    const _r$2 = _NAsyncFun._1;
+                    if ((i + _ps$2.length | 0) <= _args.length) {
+                      ps = _ps$2;
+                      r = _r$2;
+                      break _L$3;
+                    } else {
+                      break _L$2;
+                    }
+                  }
+                  default: {
+                    break _L$2;
+                  }
                 }
-              } else {
-                break _L$2;
               }
+              const _bind$21 = _M0MP38username5mbtpp7codegen3Gen11typed__args(self, env, _M0MPC15array9ArrayView9to__ownedGRP38username5mbtpp2tt2TmE(_M0MPC15array5Array21clamped__view_2einnerGRP38username5mbtpp2tt2TmE(_args, i, i + ps.length | 0)), ps);
+              let cs;
+              if (_bind$21.$tag === 1) {
+                const _ok = _bind$21;
+                cs = _ok._0;
+              } else {
+                return _bind$21;
+              }
+              code = _M0FP38username5mbtpp7codegen10unit__only(ps) && _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(cs, 0) === "()" ? `${code}()` : _M0FP38username5mbtpp7codegen10unit__only(ps) ? `{\nignore(${_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(cs, 0)})\n${code}()\n}` : `${code}(${_M0MPC15array5Array4joinGsE(cs, _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS14205)})`;
+              ty = r;
+              i = i + ps.length | 0;
               break _L;
             }
             return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE3Err(_M0DTPC15error5Error48username_2fmbtpp_2fcodegen_2eNotTyped_2eNotTyped__);
@@ -40499,7 +42988,7 @@ function _M0MP38username5mbtpp7codegen3Gen10typed__app(self, env, t) {
         const _GPrim = _bind$22;
         const _p = _GPrim._0;
         const _k = _GPrim._1;
-        if (_args.length === _k && _M0MPC16string6String11has__prefix(_p, _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS13381)) {
+        if (_args.length === _k && _M0MPC16string6String11has__prefix(_p, _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS14206)) {
           return _M0MP38username5mbtpp7codegen3Gen10typed__ffi(self, env, n, _p, g.ty, _args);
         } else {
           if (_args.length === _k) {
@@ -40544,7 +43033,7 @@ function _M0MP38username5mbtpp7codegen3Gen10typed__app(self, env, t) {
               const _p$5 = _tmp$12;
               if (_p$5 < _p$4) {
                 const _p$6 = _p$2[_p$5];
-                _p$3[_p$5] = _M0MPC16string6String11has__prefix(_p$6, _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS13382) || _M0MPC16string6String11has__prefix(_p$6, _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS13383) ? `(${_p$6})` : _p$6;
+                _p$3[_p$5] = _M0MPC16string6String11has__prefix(_p$6, _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS14207) || _M0MPC16string6String11has__prefix(_p$6, _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS14208) ? `(${_p$6})` : _p$6;
                 _tmp$12 = _p$5 + 1 | 0;
                 continue;
               } else {
@@ -40587,7 +43076,7 @@ function _M0MP38username5mbtpp7codegen3Gen10typed__app(self, env, t) {
                       } else {
                         return _bind$27;
                       }
-                      _M0MPC15array5Array3setGURP38username5mbtpp6parser3PosORPB5ArrayGRP38username5mbtpp2tt8GoalInfoEEE(inst, _k$2, _tmp$12);
+                      _M0MPC15array5Array3setGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt4IcitEE(inst, _k$2, _tmp$12);
                     }
                     _tmp$11 = i$2 + 1 | 0;
                     continue;
@@ -40645,12 +43134,12 @@ function _M0MP38username5mbtpp7codegen3Gen10typed__app(self, env, t) {
                   if (_M0MPC15array5Array8containsGRP38username5mbtpp7codegen3NTyE(inst, _M0DTP38username5mbtpp7codegen3NTy4NAny__)) {
                     return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE3Err(_M0DTPC15error5Error48username_2fmbtpp_2fcodegen_2eNotTyped_2eNotTyped__);
                   }
-                  return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok({ _0: `(${id}_t(${_M0MPC15array5Array4joinGsE(cs$2, _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS13384)}) : ${_M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, res)})`, _1: res });
+                  return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok({ _0: `(${id}_t(${_M0MPC15array5Array4joinGsE(cs$2, _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS14209)}) : ${_M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, res)})`, _1: res });
                 } else {
                   if (_M0MPC15array5Array8containsGsE(self.typed_set, n)) {
-                    return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok({ _0: `${id}_t(${_M0MPC15array5Array4joinGsE(cs$2, _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS13385)})`, _1: res });
+                    return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok({ _0: `${id}_t(${_M0MPC15array5Array4joinGsE(cs$2, _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS14210)})`, _1: res });
                   } else {
-                    if (!_M0MP38username5mbtpp7codegen3Gen9wrappable(self, _sig)) {
+                    if (!_M0MP38username5mbtpp7codegen3Gen9wrappable(self, _sig) || _M0FP38username5mbtpp2tt17is__async__global(n)) {
                       return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE3Err(_M0DTPC15error5Error48username_2fmbtpp_2fcodegen_2eNotTyped_2eNotTyped__);
                     } else {
                       let _tmp$14;
@@ -40706,7 +43195,7 @@ function _M0MP38username5mbtpp7codegen3Gen10typed__app(self, env, t) {
                         }
                         vs = _p$2;
                       }
-                      return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok({ _0: _M0MP38username5mbtpp7codegen3Gen9of__value(self, res, `${id}(${_M0MPC15array5Array4joinGsE(vs, _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS13386)})`, _M0DTPC16option6OptionGRPB5ArrayGsEE4None__), _1: res });
+                      return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok({ _0: _M0MP38username5mbtpp7codegen3Gen9of__value(self, res, `${id}(${_M0MPC15array5Array4joinGsE(vs, _M0MP38username5mbtpp7codegen3Gen10typed__appN6recordS14211)})`, _M0DTPC16option6OptionGRPB5ArrayGsEE4None__), _1: res });
                     }
                   }
                 }
@@ -40754,10 +43243,10 @@ function _M0MP38username5mbtpp7codegen3Gen9satisfies(self, t, tr) {
         }
       }
     }
-    case 11: {
+    case 12: {
       return false;
     }
-    case 10: {
+    case 11: {
       return false;
     }
     default: {
@@ -40968,7 +43457,7 @@ function _M0MP38username5mbtpp7codegen3Gen10impl__code(self, i) {
                 if (j < fields.length) {
                   _L$4: {
                     const m = _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(fields, j);
-                    if (_M0MPC16string6String11has__prefix(m, _M0MP38username5mbtpp7codegen3Gen10impl__codeN6recordS13505)) {
+                    if (_M0MPC16string6String11has__prefix(m, _M0MP38username5mbtpp7codegen3Gen10impl__codeN6recordS14336)) {
                       break _L$4;
                     }
                     let fty;
@@ -41040,13 +43529,13 @@ function _M0MP38username5mbtpp7codegen3Gen10impl__code(self, i) {
                         names = _p$2;
                       }
                     }
-                    const call = `(${code})(${unit ? "()" : _M0MPC15array5Array4joinGsE(names, _M0MP38username5mbtpp7codegen3Gen10impl__codeN6recordS13506)})`;
+                    const call = `(${code})(${unit ? "" : _M0MPC15array5Array4joinGsE(names, _M0MP38username5mbtpp7codegen3Gen10impl__codeN6recordS14337)})`;
                     const call$2 = _M0FP38username5mbtpp7codegen19mbt__method__raises(_tr, m) ? call : `try {\n${call}\n} catch {\n_ => abort(${_M0MPC16string6String14escape_2einner(`error in ${_tr}::${m}`, true)})\n}`;
                     if (_tr === "Hash") {
                       _M0IPB13StringBuilderPB6Logger13write__string(out, `${header}hash_combine(a0, hasher) {\nhasher.combine_int(${call$2})\n}\n`);
                       break _L$4;
                     }
-                    _M0IPB13StringBuilderPB6Logger13write__string(out, `${header}${_M0FP38username5mbtpp2tt17mbt__method__name(_tr, m)}(${_M0MPC15array5Array4joinGsE(names, _M0MP38username5mbtpp7codegen3Gen10impl__codeN6recordS13507)}) {\n${call$2}\n}\n`);
+                    _M0IPB13StringBuilderPB6Logger13write__string(out, `${header}${_M0FP38username5mbtpp2tt17mbt__method__name(_tr, m)}(${_M0MPC15array5Array4joinGsE(names, _M0MP38username5mbtpp7codegen3Gen10impl__codeN6recordS14338)}) {\n${call$2}\n}\n`);
                     break _L$4;
                   }
                   _tmp$14 = j + 1 | 0;
@@ -41075,10 +43564,10 @@ function _M0MP38username5mbtpp7codegen3Gen10impl__code(self, i) {
   }
   return undefined;
 }
-function _M0MP38username5mbtpp7codegen3Gen10typed__ffiN8decl__tyS13574(_env, a) {
+function _M0MP38username5mbtpp7codegen3Gen10typed__ffiN8decl__tyS14405(_env, a) {
   const self = _env._2;
-  const ctx = _env._1;
-  const inst = _env._0;
+  const inst = _env._1;
+  const ctx = _env._0;
   _L: {
     const _bind$18 = _M0MP38username5mbtpp7codegen3Gen14native__ty__in(self, ctx, a);
     if (_bind$18 === undefined) {
@@ -41102,7 +43591,7 @@ function _M0MP38username5mbtpp7codegen3Gen10typed__ffi(self, env, name, prim, ty
   const conv = [];
   let t = ty;
   let expl = 0;
-  const _env = { _0: inst, _1: ctx, _2: self };
+  const _env = { _0: ctx, _1: inst, _2: self };
   let _tmp$9 = 0;
   while (true) {
     const i = _tmp$9;
@@ -41226,7 +43715,7 @@ function _M0MP38username5mbtpp7codegen3Gen10typed__ffi(self, env, name, prim, ty
                                   }
                                   case "Option::Some": {
                                     if (_xs.length === 2) {
-                                      const _bind$20 = _M0MP38username5mbtpp7codegen3Gen10typed__ffiN8decl__tyS13574(_env, inner);
+                                      const _bind$20 = _M0MP38username5mbtpp7codegen3Gen10typed__ffiN8decl__tyS14405(_env, inner);
                                       let nt;
                                       if (_bind$20 === undefined) {
                                         return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE3Err(_M0DTPC15error5Error48username_2fmbtpp_2fcodegen_2eNotTyped_2eNotTyped__);
@@ -41289,7 +43778,7 @@ function _M0MP38username5mbtpp7codegen3Gen10typed__ffi(self, env, name, prim, ty
                         }
                         break _L$6;
                       }
-                      const _bind$19 = _M0MP38username5mbtpp7codegen3Gen10typed__ffiN8decl__tyS13574(_env, _a$2);
+                      const _bind$19 = _M0MP38username5mbtpp7codegen3Gen10typed__ffiN8decl__tyS14405(_env, _a$2);
                       if (_bind$19 === undefined) {
                         return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE3Err(_M0DTPC15error5Error48username_2fmbtpp_2fcodegen_2eNotTyped_2eNotTyped__);
                       } else {
@@ -41340,8 +43829,10 @@ function _M0MP38username5mbtpp7codegen3Gen10typed__ffi(self, env, name, prim, ty
     if (_bind$18.$tag === 12) {
       const _Raises = _bind$18;
       const _r = _Raises._0;
+      const _e = _Raises._1;
+      const _bind$19 = _M0FP38username5mbtpp2tt10tm__effect(_e)._1;
       res_tm = _r;
-      raises = true;
+      raises = !(_bind$19 === undefined);
       break _L;
     } else {
       res_tm = t;
@@ -41376,7 +43867,7 @@ function _M0MP38username5mbtpp7codegen3Gen10typed__ffi(self, env, name, prim, ty
         break _L$3;
       }
     }
-    const _bind$19 = _M0MP38username5mbtpp7codegen3Gen10typed__ffiN8decl__tyS13574(_env, res_tm);
+    const _bind$19 = _M0MP38username5mbtpp7codegen3Gen10typed__ffiN8decl__tyS14405(_env, res_tm);
     if (_bind$19 === undefined) {
       return new _M0DTPC16result6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE3Err(_M0DTPC15error5Error48username_2fmbtpp_2fcodegen_2eNotTyped_2eNotTyped__);
     } else {
@@ -41431,7 +43922,7 @@ function _M0MP38username5mbtpp7codegen3Gen13typed__method(self, env, tr, m, args
             return _bind$20;
           }
         }
-        const call = `(${_M0MP38username5mbtpp7codegen3Gen11trait__name(self, tr)}::${_M0FP38username5mbtpp2tt17mbt__method__name(tr, m)}(${_M0MPC15array5Array4joinGsE(cs, _M0MP38username5mbtpp7codegen3Gen13typed__methodN6recordS13668)}) : ${_M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, _r)})`;
+        const call = `(${_M0MP38username5mbtpp7codegen3Gen11trait__name(self, tr)}::${_M0FP38username5mbtpp2tt17mbt__method__name(tr, m)}(${_M0MPC15array5Array4joinGsE(cs, _M0MP38username5mbtpp7codegen3Gen13typed__methodN6recordS14501)}) : ${_M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, _r)})`;
         let _tmp$9;
         let _tmp$10;
         const _p = _M0FP38username5mbtpp2tt9mbt__info(tr);
@@ -41569,7 +44060,7 @@ function _M0MP38username5mbtpp7codegen3Gen9typed__fn(self, name) {
     } else {
       const id = _M0MP38username5mbtpp7codegen3Gen3gid(self, name);
       const gen = sig.ntvars === 0 ? "" : `[${_M0MP38username5mbtpp7codegen3Gen19tvars__with__bounds(self, sig.ntvars, sig.bounds)}]`;
-      return `fn${gen} ${id}_t(${_M0MPC15array5Array4joinGsE(params, _M0MP38username5mbtpp7codegen3Gen9typed__fnN6recordS13685)}) -> ${_M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, sig.result)} raise {\n${_code}\n}\n`;
+      return `${_M0FP38username5mbtpp2tt17is__async__global(name) ? "async fn" : "fn"}${gen} ${id}_t(${_M0MPC15array5Array4joinGsE(params, _M0MP38username5mbtpp7codegen3Gen9typed__fnN6recordS14518)}) -> ${_M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, sig.result)} raise {\n${_code}\n}\n`;
     }
   } else {
     return undefined;
@@ -41632,8 +44123,8 @@ function _M0MP38username5mbtpp7codegen3Gen10typed__def(self, name) {
       break;
     }
   }
-  const call = _M0MP38username5mbtpp7codegen3Gen9to__value(self, sig.result, `${id}_t(${_M0MPC15array5Array4joinGsE(conv, _M0MP38username5mbtpp7codegen3Gen10typed__defN6recordS13731)})`, _M0DTPC16option6OptionGRPB5ArrayGsEE4None__);
-  return `\n/// ${name}\n${code}\nfn ${id}(${_M0MPC15array5Array4joinGsE(params, _M0MP38username5mbtpp7codegen3Gen10typed__defN6recordS13732)}) -> Value raise {\n  ${call}\n}\n\nfn ${id}_v() -> Value {\n  ${_M0FP38username5mbtpp7codegen7curried(n, `${id}(${_M0MPC15array5Array4joinGsE(pass, _M0MP38username5mbtpp7codegen3Gen10typed__defN6recordS13733)})`)}\n}\n`;
+  const call = _M0MP38username5mbtpp7codegen3Gen9to__value(self, sig.result, `${id}_t(${_M0MPC15array5Array4joinGsE(conv, _M0MP38username5mbtpp7codegen3Gen10typed__defN6recordS14564)})`, _M0DTPC16option6OptionGRPB5ArrayGsEE4None__);
+  return `\n/// ${name}\n${code}\nfn ${id}(${_M0MPC15array5Array4joinGsE(params, _M0MP38username5mbtpp7codegen3Gen10typed__defN6recordS14565)}) -> Value raise {\n  ${call}\n}\n\nfn ${id}_v() -> Value {\n  ${_M0FP38username5mbtpp7codegen7curried(n, `${id}(${_M0MPC15array5Array4joinGsE(pass, _M0MP38username5mbtpp7codegen3Gen10typed__defN6recordS14566)})`)}\n}\n`;
 }
 function _M0FP38username5mbtpp7codegen13impl__allowed(tr, self_t) {
   _L: {
@@ -41863,11 +44354,11 @@ function _M0MP38username5mbtpp7codegen3Gen10value__ext(self, file) {
             break;
           }
         }
-        _tmp$11 = `(${_M0MPC15array5Array4joinGsE(_p$2, _M0MP38username5mbtpp7codegen3Gen10value__extN6recordS13811)})`;
+        _tmp$11 = `(${_M0MPC15array5Array4joinGsE(_p$2, _M0MP38username5mbtpp7codegen3Gen10value__extN6recordS14644)})`;
       }
       _M0IPB13StringBuilderPB6Logger13write__string(decl, `  /// ${c}\n  ${_id}${_tmp$11}\n`);
-      const pat = _n === 0 ? _id : `${_id}(${_M0MPC15array5Array4joinGsE(xs, _M0MP38username5mbtpp7codegen3Gen10value__extN6recordS13812)})`;
-      _M0IPB13StringBuilderPB6Logger13write__string(dec, `    ${pat} => Some((${_M0MPC16string6String14escape_2einner(c, true)}, [${_M0MPC15array5Array4joinGsE(xs, _M0MP38username5mbtpp7codegen3Gen10value__extN6recordS13813)}]))\n`);
+      const pat = _n === 0 ? _id : `${_id}(${_M0MPC15array5Array4joinGsE(xs, _M0MP38username5mbtpp7codegen3Gen10value__extN6recordS14645)})`;
+      _M0IPB13StringBuilderPB6Logger13write__string(dec, `    ${pat} => Some((${_M0MPC16string6String14escape_2einner(c, true)}, [${_M0MPC15array5Array4joinGsE(xs, _M0MP38username5mbtpp7codegen3Gen10value__extN6recordS14646)}]))\n`);
       _tmp$9 = _ + 1 | 0;
       continue;
     } else {
@@ -41984,7 +44475,7 @@ function _M0MP38username5mbtpp7codegen3Gen13output__files(self) {
     const _p$3 = _tmp$11;
     if (_p$3 < _p$2) {
       const _p$4 = order[_p$3];
-      const _p$5 = _M0MPC16option6Option10unwrap__orGsE(_M0MPC16option6Option3mapGRPB13StringBuildersE(_M0MPB3Map3getGsRPB13StringBuilderE(self.files, _p$4), (_p$6) => _p$6.val), "");
+      const _p$5 = _M0MPC16option6Option10unwrap__orGRP38username5mbtpp6parser4ExprE(_M0MPC16option6Option3mapGRPB13StringBuildersE(_M0MPB3Map3getGsRPB13StringBuilderE(self.files, _p$4), (_p$6) => _p$6.val), "");
       const _p$6 = _M0MPB3Map3getGssE(srcs, _p$4);
       let _tmp$12;
       if (_p$6 === undefined) {
@@ -42056,7 +44547,7 @@ function _M0MP38username5mbtpp7codegen3Gen14ffi__mbt__type(self, stack, t) {
       const _p$4 = stack[_p$3];
       let _tmp$10;
       if (_p$4 === 0) {
-        _tmp$10 = _M0MP38username5mbtpp7codegen3Gen14ffi__mbt__typeN6constrS13877;
+        _tmp$10 = _M0MP38username5mbtpp7codegen3Gen14ffi__mbt__typeN6constrS14710;
       } else {
         _tmp$10 = _M0DTP38username5mbtpp7codegen5TyCtx7TyOther__;
       }
@@ -42152,7 +44643,7 @@ function _M0MP38username5mbtpp7codegen3Gen13foreign__type(self, stack, t) {
                 break;
               }
             }
-            ty = `${_n}[${_M0MPC15array5Array4joinGsE(_p, _M0MP38username5mbtpp7codegen3Gen13foreign__typeN6recordS13889)}]`;
+            ty = `${_n}[${_M0MPC15array5Array4joinGsE(_p, _M0MP38username5mbtpp7codegen3Gen13foreign__typeN6recordS14722)}]`;
           }
           if (!_M0MPB3Map8containsGssE(self.foreign, ty)) {
             const _tmp$10 = self.foreign;
@@ -42258,7 +44749,7 @@ function _M0MP38username5mbtpp7codegen3Gen9from__mbt(self, stack, t, e) {
           const _x$3 = _bind$18._1;
           if (_x$3.length === 1) {
             const _a = _x$3[0];
-            _tmp$9 = new _M0DTP38username5mbtpp2tt2Tm3App(_M0MP38username5mbtpp7codegen3Gen9from__mbtN6constrS13918, _a, 1);
+            _tmp$9 = new _M0DTP38username5mbtpp2tt2Tm3App(_M0MP38username5mbtpp7codegen3Gen9from__mbtN6constrS14751, _a, 1);
             _tmp$10 = `${e$2}.to_array()`;
             continue _L;
           }
@@ -42577,6 +45068,10 @@ function _M0FP38username5mbtpp7codegen11apply__rest(code, rest) {
   }
   return c;
 }
+function _M0MP38username5mbtpp7codegen3Gen10async__use(self, f) {
+  _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(self.async_misuse, { _0: f, _1: self.cur_global });
+  return "abort(\"async function used outside of native code\")";
+}
 function _M0MP38username5mbtpp7codegen3Gen10prim__call(self, p, args) {
   _L: {
     const _bind$18 = _M0MPB3Map3getGssE(_M0FP38username5mbtpp7codegen13inline__prims, p);
@@ -42595,7 +45090,7 @@ function _M0MP38username5mbtpp7codegen3Gen10prim__call(self, p, args) {
         } else {
           const _p$3 = _p$2;
           const _p$4 = _p$3;
-          if (!_M0MPC16string6String8contains(_p$4, _M0MP38username5mbtpp7codegen3Gen10prim__callN6recordS14019)) {
+          if (!_M0MPC16string6String8contains(_p$4, _M0MP38username5mbtpp7codegen3Gen10prim__callN6recordS14854)) {
           } else {
             _tmp$9 = false;
             break;
@@ -42610,9 +45105,12 @@ function _M0MP38username5mbtpp7codegen3Gen10prim__call(self, p, args) {
       }
     }
   }
-  return `prim(${_M0MPC16string6String14escape_2einner(p, true)}, [${_M0MPC15array5Array4joinGsE(args, _M0MP38username5mbtpp7codegen3Gen10prim__callN6recordS14018)}])`;
+  return `prim(${_M0MPC16string6String14escape_2einner(p, true)}, [${_M0MPC15array5Array4joinGsE(args, _M0MP38username5mbtpp7codegen3Gen10prim__callN6recordS14853)}])`;
 }
 function _M0MP38username5mbtpp7codegen3Gen13global__value(self, n) {
+  if (_M0FP38username5mbtpp2tt17is__async__global(n)) {
+    return _M0MP38username5mbtpp7codegen3Gen10async__use(self, n);
+  }
   _L: {
     const _bind$18 = _M0MPB3Map3getGsRP38username5mbtpp2tt6GEntryE(_M0FP38username5mbtpp2tt7globals, n);
     if (_bind$18 === undefined) {
@@ -42725,7 +45223,7 @@ function _M0FP38username5mbtpp7codegen9pat__code(p) {
           break;
         }
       }
-      return `PCon(${_tmp$9}, [${_M0MPC15array5Array4joinGsE(_p, _M0FP38username5mbtpp7codegen9pat__codeN6recordS14052)}])`;
+      return `PCon(${_tmp$9}, [${_M0MPC15array5Array4joinGsE(_p, _M0FP38username5mbtpp7codegen9pat__codeN6recordS14887)}])`;
     }
     default: {
       const _CPLit = p;
@@ -43032,7 +45530,7 @@ function _M0MP38username5mbtpp7codegen3Gen2tm(self, env, t) {
             break;
           }
         }
-        return `VArr([${_M0MPC15array5Array4joinGsE(_p$2, _M0MP38username5mbtpp7codegen3Gen2tmN6recordS14085)}])`;
+        return `VArr([${_M0MPC15array5Array4joinGsE(_p$2, _M0MP38username5mbtpp7codegen3Gen2tmN6recordS14920)}])`;
       }
       default: {
         const _Seq = t$2;
@@ -43047,6 +45545,13 @@ function _M0MP38username5mbtpp7codegen3Gen3app(self, env, t) {
   const _bind$18 = _M0FP38username5mbtpp7codegen12flatten__app(t);
   const _h = _bind$18._0;
   const _args = _bind$18._1;
+  if (_h.$tag === 1) {
+    const _Global = _h;
+    const _n = _Global._0;
+    if (_M0FP38username5mbtpp2tt17is__async__global(_n)) {
+      return _M0MP38username5mbtpp7codegen3Gen10async__use(self, _n);
+    }
+  }
   if (_h.$tag === 1) {
     const _Global = _h;
     const _n = _Global._0;
@@ -43094,7 +45599,7 @@ function _M0MP38username5mbtpp7codegen3Gen3app(self, env, t) {
                 }
               }
               const rest = _p$2;
-              return _M0FP38username5mbtpp7codegen11apply__rest(`${_M0MP38username5mbtpp7codegen3Gen3gid(self, _n)}(${_M0MPC15array5Array4joinGsE(direct, _M0MP38username5mbtpp7codegen3Gen3appN6recordS14158)})`, rest);
+              return _M0FP38username5mbtpp7codegen11apply__rest(`${_M0MP38username5mbtpp7codegen3Gen3gid(self, _n)}(${_M0MPC15array5Array4joinGsE(direct, _M0MP38username5mbtpp7codegen3Gen3appN6recordS14993)})`, rest);
             }
           }
           break;
@@ -43142,7 +45647,7 @@ function _M0MP38username5mbtpp7codegen3Gen3app(self, env, t) {
           const _GPrim = _bind$20;
           const _p = _GPrim._0;
           const _k = _GPrim._1;
-          if (_args.length >= _k && !_M0MPC16string6String11has__prefix(_p, _M0MP38username5mbtpp7codegen3Gen3appN6recordS14159)) {
+          if (_args.length >= _k && !_M0MPC16string6String11has__prefix(_p, _M0MP38username5mbtpp7codegen3Gen3appN6recordS14994)) {
             const icits = _M0FP38username5mbtpp7codegen13binder__icits(_g.ty, _k);
             const expl = [];
             let _tmp$9 = 0;
@@ -43250,27 +45755,50 @@ function _M0MP38username5mbtpp7codegen3Gen11match__code(self, env, scruts, cls, 
       }
     }
     if (_tmp$11) {
-      let _tmp$12;
-      if (cls.length === 0) {
-        _tmp$12 = "abort(\"unreachable: a proof of an empty proposition\")";
-      } else {
-        const _cl = cls[0];
-        let env2 = env;
-        const _bind$18 = _M0FP38username5mbtpp2tt11pats__slots(_cl.pats);
-        let _tmp$13 = 0;
-        while (true) {
-          const _ = _tmp$13;
-          if (_ < _bind$18) {
-            env2 = _M0FP38username5mbtpp7codegen11push__local(env2, _M0DTP38username5mbtpp7codegen5Local7LErased__);
-            _tmp$13 = _ + 1 | 0;
-            continue;
-          } else {
-            break;
+      const buf = _M0MPB13StringBuilder21StringBuilder_2einner(8);
+      const _bind$18 = cls.length;
+      let _tmp$12 = 0;
+      while (true) {
+        const _ = _tmp$12;
+        if (_ < _bind$18) {
+          const cl = cls[_];
+          let env2 = env;
+          const _bind$19 = _M0FP38username5mbtpp2tt11pats__slots(cl.pats);
+          let _tmp$13 = 0;
+          while (true) {
+            const _$2 = _tmp$13;
+            if (_$2 < _bind$19) {
+              env2 = _M0FP38username5mbtpp7codegen11push__local(env2, _M0DTP38username5mbtpp7codegen5Local7LErased__);
+              _tmp$13 = _$2 + 1 | 0;
+              continue;
+            } else {
+              break;
+            }
           }
+          const _bind$20 = cl.cond;
+          if (_bind$20 === undefined) {
+            const body = _M0MP38username5mbtpp7codegen3Gen2tm(self, env2, cl.body);
+            if (buf.val === "") {
+              return body;
+            }
+            _M0IPB13StringBuilderPB6Logger13write__string(buf, `{\n${body}\n}`);
+            return buf.val;
+          } else {
+            const _Some = _bind$20;
+            const _g = _Some;
+            _M0IPB13StringBuilderPB6Logger13write__string(buf, `if truthy(${_M0MP38username5mbtpp7codegen3Gen2tm(self, env2, _g)}) {\n${_M0MP38username5mbtpp7codegen3Gen2tm(self, env2, cl.body)}\n} else `);
+          }
+          _tmp$12 = _ + 1 | 0;
+          continue;
+        } else {
+          break;
         }
-        _tmp$12 = _M0MP38username5mbtpp7codegen3Gen2tm(self, env2, _cl.body);
       }
-      return _tmp$12;
+      if (cls.length === 0) {
+        return "abort(\"unreachable: a proof of an empty proposition\")";
+      }
+      _M0IPB13StringBuilderPB6Logger13write__string(buf, `{\n${fallback}\n}`);
+      return buf.val;
     }
     const _p$5 = _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(cls);
     let _tmp$12;
@@ -43345,9 +45873,9 @@ function _M0MP38username5mbtpp7codegen3Gen11match__code(self, env, scruts, cls, 
     }
   }
   if (_tmp$11) {
-    return _M0MP38username5mbtpp7codegen3Gen16clauses__dynamic(self, env, `[${_M0MPC15array5Array4joinGsE(scruts, _M0MP38username5mbtpp7codegen3Gen11match__codeN6recordS14198)}]`, cls, fallback);
+    return _M0MP38username5mbtpp7codegen3Gen16clauses__dynamic(self, env, `[${_M0MPC15array5Array4joinGsE(scruts, _M0MP38username5mbtpp7codegen3Gen11match__codeN6recordS15035)}]`, cls, fallback);
   }
-  const subject = scruts.length === 1 ? _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(scruts, 0) : `(${_M0MPC15array5Array4joinGsE(scruts, _M0MP38username5mbtpp7codegen3Gen11match__codeN6recordS14199)})`;
+  const subject = scruts.length === 1 ? _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(scruts, 0) : `(${_M0MPC15array5Array4joinGsE(scruts, _M0MP38username5mbtpp7codegen3Gen11match__codeN6recordS15036)})`;
   const buf = _M0MPB13StringBuilder21StringBuilder_2einner(8);
   _M0IPB13StringBuilderPB6Logger13write__string(buf, `match ${subject} {\n`);
   const _bind$18 = cls.length;
@@ -43417,9 +45945,18 @@ function _M0MP38username5mbtpp7codegen3Gen11match__code(self, env, scruts, cls, 
           break;
         }
       }
-      const lhs = ps.length === 1 ? _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(ps, 0) : `(${_M0MPC15array5Array4joinGsE(ps, _M0MP38username5mbtpp7codegen3Gen11match__codeN6recordS14200)})`;
+      const lhs = ps.length === 1 ? _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(ps, 0) : `(${_M0MPC15array5Array4joinGsE(ps, _M0MP38username5mbtpp7codegen3Gen11match__codeN6recordS15037)})`;
       const body = _M0MP38username5mbtpp7codegen3Gen2tm(self, env2, cl.body);
-      _M0IPB13StringBuilderPB6Logger13write__string(buf, `${_M0FP38username5mbtpp7codegen17resolve__bindings(lhs, body)} => (${body})\n`);
+      const _bind$20 = cl.cond;
+      let when;
+      if (_bind$20 === undefined) {
+        when = "";
+      } else {
+        const _Some = _bind$20;
+        const _g = _Some;
+        when = ` if truthy(${_M0MP38username5mbtpp7codegen3Gen2tm(self, env2, _g)})`;
+      }
+      _M0IPB13StringBuilderPB6Logger13write__string(buf, `${_M0FP38username5mbtpp7codegen17resolve__bindings(lhs, `${body}${when}`)}${when} => (${body})\n`);
       _tmp$12 = _ + 1 | 0;
       continue;
     } else {
@@ -43454,6 +45991,15 @@ function _M0MP38username5mbtpp7codegen3Gen16clauses__dynamic(self, env, scruts, 
           break;
         }
       }
+      const _bind$19 = cl.cond;
+      let when;
+      if (_bind$19 === undefined) {
+        when = "";
+      } else {
+        const _Some = _bind$19;
+        const _g = _Some;
+        when = ` && truthy({\n${binds.val}${_M0MP38username5mbtpp7codegen3Gen2tm(self, env2, _g)}\n})`;
+      }
       const _p = cl.pats;
       const _p$2 = new Array(_p.length);
       const _p$3 = _p.length;
@@ -43469,7 +46015,7 @@ function _M0MP38username5mbtpp7codegen3Gen16clauses__dynamic(self, env, scruts, 
           break;
         }
       }
-      _M0IPB13StringBuilderPB6Logger13write__string(buf, `if match_pats([${_M0MPC15array5Array4joinGsE(_p$2, _M0MP38username5mbtpp7codegen3Gen16clauses__dynamicN6recordS14238)}], ${scruts}, ${out}) {\n`);
+      _M0IPB13StringBuilderPB6Logger13write__string(buf, `if match_pats([${_M0MPC15array5Array4joinGsE(_p$2, _M0MP38username5mbtpp7codegen3Gen16clauses__dynamicN6recordS15087)}], ${scruts}, ${out})${when} {\n`);
       _M0IPB13StringBuilderPB6Logger13write__string(buf, binds.val);
       _M0IPB13StringBuilderPB6Logger13write__string(buf, `(${_M0MP38username5mbtpp7codegen3Gen2tm(self, env2, cl.body)})`);
       _M0IPB13StringBuilderPB6Logger13write__string(buf, "\n} else ");
@@ -43497,7 +46043,7 @@ function _M0MP38username5mbtpp7codegen3Gen7to__mbt(self, stack, t, e) {
         return `as_str(${e})[:]`;
       }
       default: {
-        if (_M0MPC16string6String11has__prefix(_x, _M0MP38username5mbtpp7codegen3Gen7to__mbtN6recordS14255)) {
+        if (_M0MPC16string6String11has__prefix(_x, _M0MP38username5mbtpp7codegen3Gen7to__mbtN6recordS15108)) {
           const _bind$18 = _M0MP38username5mbtpp7codegen3Gen12dyn__wrapper(self, _x.substring(1, _x.length));
           let _tmp$9;
           if (_bind$18 === undefined) {
@@ -43540,7 +46086,7 @@ function _M0MP38username5mbtpp7codegen3Gen7to__mbt(self, stack, t, e) {
         const _x$3 = _bind$18._1;
         if (_x$3.length === 1) {
           const _a = _x$3[0];
-          const _bind$19 = _M0MP38username5mbtpp7codegen3Gen7to__mbt(self, stack, new _M0DTP38username5mbtpp2tt2Tm3App(_M0MP38username5mbtpp7codegen3Gen7to__mbtN6constrS14256, _a, 1), e);
+          const _bind$19 = _M0MP38username5mbtpp7codegen3Gen7to__mbt(self, stack, new _M0DTP38username5mbtpp2tt2Tm3App(_M0MP38username5mbtpp7codegen3Gen7to__mbtN6constrS15109, _a, 1), e);
           if (_bind$19 === undefined) {
             return undefined;
           } else {
@@ -43720,7 +46266,7 @@ function _M0MP38username5mbtpp7codegen3Gen7to__mbt(self, stack, t, e) {
           const _Some = _bind$21;
           res = _Some;
         }
-        return `(fn(${_M0MPC15array5Array4joinGsE(params, _M0MP38username5mbtpp7codegen3Gen7to__mbtN6recordS14257)}) { try { ${res} } catch { err => abort(\"error in a callback: \" + err.to_string()) } })`;
+        return `(fn(${_M0MPC15array5Array4joinGsE(params, _M0MP38username5mbtpp7codegen3Gen7to__mbtN6recordS15110)}) { try { ${res} } catch { err => abort(\"error in a callback: \" + err.to_string()) } })`;
       } else {
         break _L;
       }
@@ -43866,7 +46412,7 @@ function _M0MP38username5mbtpp7codegen3Gen12dyn__wrapper(self, tr) {
               break;
             }
           }
-          const env = [_M0MP38username5mbtpp7codegen3Gen12dyn__wrapperN6constrS14332];
+          const env = [_M0MP38username5mbtpp7codegen3Gen12dyn__wrapperN6constrS15185];
           const _p$2 = vals.length;
           let env$2;
           let _tmp$12 = 0;
@@ -43900,7 +46446,7 @@ function _M0MP38username5mbtpp7codegen3Gen12dyn__wrapper(self, tr) {
             const _self = [];
             _M0MPC15array5Array4pushGRP38username5mbtpp6parser3ArmE(_self, "self");
             _M0MPC15array5Array10push__iterGRP38username5mbtpp6parser4StmtE(_self, _M0MPC15array5Array4iterGRP38username5mbtpp2tt2TmE(names));
-            _M0IPB13StringBuilderPB6Logger13write__string(code, `\nimpl ${tm} for ${w} with ${mname}(${_M0MPC15array5Array4joinGsE(_self, _M0MP38username5mbtpp7codegen3Gen12dyn__wrapperN6recordS14333)}) {\n${body}\n}\n`);
+            _M0IPB13StringBuilderPB6Logger13write__string(code, `\nimpl ${tm} for ${w} with ${mname}(${_M0MPC15array5Array4joinGsE(_self, _M0MP38username5mbtpp7codegen3Gen12dyn__wrapperN6recordS15186)}) {\n${body}\n}\n`);
           }
           _tmp$10 = _ + 1 | 0;
           continue;
@@ -43966,7 +46512,7 @@ function _M0MP38username5mbtpp7codegen3Gen9ffi__body(self, name, prim, ty, arity
                 return new _M0DTPB6ResultGssE3Err(`the bound ${_tr} cannot be satisfied by compiled values`);
               }
             } else {
-              return _M0MP38username5mbtpp7codegen3Gen9ffi__bodyN6constrS14408;
+              return _M0MP38username5mbtpp7codegen3Gen9ffi__bodyN6constrS15261;
             }
             _M0MPC15array5Array4pushGRP38username5mbtpp7codegen6BinderE(stack, 1);
             t = _b$2;
@@ -44020,7 +46566,7 @@ function _M0MP38username5mbtpp7codegen3Gen9ffi__body(self, name, prim, ty, arity
           }
         }
       } else {
-        return _M0MP38username5mbtpp7codegen3Gen9ffi__bodyN6constrS14409;
+        return _M0MP38username5mbtpp7codegen3Gen9ffi__bodyN6constrS15262;
       }
       k = k + 1 | 0;
       continue;
@@ -44081,7 +46627,7 @@ function _M0MP38username5mbtpp7codegen3Gen7ffi__fn(self, name, prim, ty, arity) 
 }
 function _M0FP38username5mbtpp7codegen12runtime__fns() {
   const out = [];
-  const _it = _M0MPC16string6String5split(_M0FP38username5mbtpp7codegen12runtime__src, _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS14474);
+  const _it = _M0MPC16string6String5split(_M0FP38username5mbtpp7codegen12runtime__src, _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS15327);
   while (true) {
     const _bind$18 = _M0MPB4Iter4nextGRP38username5mbtpp2tt2TmE(_it);
     if (_bind$18 === undefined) {
@@ -44091,8 +46637,8 @@ function _M0FP38username5mbtpp7codegen12runtime__fns() {
       const _line = _Some;
       const l = _M0MPC16string10StringView9to__owned(_line);
       let rest;
-      if (_M0MPC16string6String11has__prefix(l, _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS14475)) {
-        const _bind$19 = _M0MPC16string6String4find(l, _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS14476);
+      if (_M0MPC16string6String11has__prefix(l, _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS15328)) {
+        const _bind$19 = _M0MPC16string6String4find(l, _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS15329);
         if (_bind$19 === undefined) {
           continue;
         } else {
@@ -44101,13 +46647,13 @@ function _M0FP38username5mbtpp7codegen12runtime__fns() {
           rest = l.substring(_i + 2 | 0, l.length);
         }
       } else {
-        if (_M0MPC16string6String11has__prefix(l, _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS14477)) {
+        if (_M0MPC16string6String11has__prefix(l, _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS15330)) {
           rest = l.substring(3, l.length);
         } else {
           continue;
         }
       }
-      const _bind$19 = _M0MPC16string6String4find(rest, _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS14478);
+      const _bind$19 = _M0MPC16string6String4find(rest, _M0FP38username5mbtpp7codegen12runtime__fnsN6recordS15331);
       if (_bind$19 === undefined) {
       } else {
         const _Some$2 = _bind$19;
@@ -44186,7 +46732,10 @@ function _M0FP38username5mbtpp7codegen14result__raises(ty, n) {
   }
   const _bind$18 = t;
   if (_bind$18.$tag === 12) {
-    return true;
+    const _Raises = _bind$18;
+    const _e = _Raises._1;
+    const _bind$19 = _M0FP38username5mbtpp2tt10tm__effect(_e)._1;
+    return !(_bind$19 === undefined);
   } else {
     return false;
   }
@@ -44354,9 +46903,157 @@ function _M0MP38username5mbtpp7codegen3Gen10export__fn(self, name, sig) {
   }
   const raises = _M0FP38username5mbtpp7codegen14result__raises(g.ty, n);
   const gen = sig.ntvars === 0 ? "" : `[${_M0MP38username5mbtpp7codegen3Gen19tvars__with__bounds(self, sig.ntvars, sig.bounds)}]`;
-  const call = `${_M0MP38username5mbtpp7codegen3Gen3gid(self, name)}_t(${_M0MPC15array5Array4joinGsE(args, _M0MP38username5mbtpp7codegen3Gen10export__fnN6recordS14517)})`;
+  const call = `${_M0MP38username5mbtpp7codegen3Gen3gid(self, name)}_t(${_M0MPC15array5Array4joinGsE(args, _M0MP38username5mbtpp7codegen3Gen10export__fnN6recordS15373)})`;
   const body_code = raises ? call : `try {\n${call}\n} catch {\nCAbort(m) => abort(m)\ne => abort(e.to_string())\n}`;
-  _M0MP38username5mbtpp7codegen3Gen9write__to(self, _M0MP38username5mbtpp7codegen3Gen8file__of(self, name), `\n///|\n/// MoonBit++ ${name}\npub fn${gen} ${mname}(${_M0MPC15array5Array4joinGsE(decls, _M0MP38username5mbtpp7codegen3Gen10export__fnN6recordS14518)}) -> ${_M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, sig.result)}${raises ? " raise" : ""} {\n${body_code}\n}\n`);
+  _M0MP38username5mbtpp7codegen3Gen9write__to(self, _M0MP38username5mbtpp7codegen3Gen8file__of(self, name), `\n///|\n/// MoonBit++ ${name}\npub ${_M0FP38username5mbtpp2tt17is__async__global(name) ? "async fn" : "fn"}${gen} ${mname}(${_M0MPC15array5Array4joinGsE(decls, _M0MP38username5mbtpp7codegen3Gen10export__fnN6recordS15374)}) -> ${_M0MP38username5mbtpp7codegen3Gen7mbt__ty(self, sig.result)}${raises ? " raise" : ""} {\n${body_code}\n}\n`);
+}
+function _M0MP38username5mbtpp7codegen3Gen16why__not__native(self, f) {
+  const _bind$18 = _M0MP38username5mbtpp7codegen3Gen11native__sig(self, f);
+  if (_bind$18 === undefined) {
+    return "its type has no native MoonBit translation (like a type computed from a parameter, or a type parameter with a bound that occurs in no parameter and not in the result type)";
+  } else {
+    self.diagnose = true;
+    self.culprit = undefined;
+    _M0MP38username5mbtpp7codegen3Gen9typed__fn(self, f);
+    self.diagnose = false;
+    const _bind$19 = self.culprit;
+    if (_bind$19 === undefined) {
+      return "its body is not in the native fragment";
+    } else {
+      const _Some = _bind$19;
+      const _c = _Some;
+      return `its body is not in the native fragment: ${_c}`;
+    }
+  }
+}
+function _M0MP38username5mbtpp7codegen3Gen17check__async__fns(self) {
+  const _it = _M0MPB3Map5iter2GssE(_M0FP38username5mbtpp2tt7globals);
+  while (true) {
+    const _bind$18 = _M0MPB5Iter24nextGssE(_it);
+    if (_bind$18 === undefined) {
+      break;
+    } else {
+      const _Some = _bind$18;
+      const _x = _Some;
+      const _f = _x._0;
+      const _g = _x._1;
+      let _tmp$9;
+      if (_f === "main") {
+        _tmp$9 = true;
+      } else {
+        let _tmp$10;
+        const _bind$19 = _g.kind;
+        let _tmp$11;
+        if (_bind$19.$tag === 0) {
+          const _GFunc = _bind$19;
+          const _x$2 = _GFunc._0;
+          _tmp$11 = !(_x$2 === undefined);
+        } else {
+          _tmp$11 = false;
+        }
+        if (!_tmp$11) {
+          _tmp$10 = true;
+        } else {
+          _tmp$10 = !_M0FP38username5mbtpp2tt17is__async__global(_f) || _M0MPC15array5Array8containsGsE(self.typed_set, _f);
+        }
+        _tmp$9 = _tmp$10;
+      }
+      if (_tmp$9) {
+        continue;
+      }
+      return new _M0DTPC16result6ResultGuRP38username5mbtpp7codegen12CodegenErrorE3Err(new _M0DTPC15error5Error56username_2fmbtpp_2fcodegen_2eCodegenError_2eCodegenError(`async fn ${_f} cannot be compiled to MoonBit: ${_M0MP38username5mbtpp7codegen3Gen16why__not__native(self, _f)}`));
+    }
+  }
+  return new _M0DTPC16result6ResultGuRP38username5mbtpp7codegen12CodegenErrorE2Ok(undefined);
+}
+function _M0MP38username5mbtpp7codegen3Gen11async__main(self) {
+  let body;
+  _L: {
+    _L$2: {
+      const _bind$18 = _M0MPB3Map3getGsRP38username5mbtpp2tt6GEntryE(_M0FP38username5mbtpp2tt7globals, "main");
+      if (_bind$18 === undefined) {
+        break _L$2;
+      } else {
+        const _Some = _bind$18;
+        const _x = _Some;
+        const _x$2 = _x.kind;
+        if (_x$2.$tag === 0) {
+          const _GFunc = _x$2;
+          const _x$3 = _GFunc._0;
+          if (_x$3 === undefined) {
+            break _L$2;
+          } else {
+            const _Some$2 = _x$3;
+            body = _Some$2;
+          }
+        } else {
+          break _L$2;
+        }
+      }
+      break _L;
+    }
+    return new _M0DTPC16result6ResultGsRP38username5mbtpp7codegen12CodegenErrorE3Err(new _M0DTPC15error5Error56username_2fmbtpp_2fcodegen_2eCodegenError_2eCodegenError("main has no definition"));
+  }
+  self.cur_global = "main";
+  self.cur_result = _M0DTP38username5mbtpp7codegen3NTy5NUnit__;
+  let res;
+  let _try_err;
+  _L$2: {
+    _L$3: {
+      const _bind$18 = _M0MP38username5mbtpp7codegen3Gen5typed(self, [], body);
+      let _tmp$9;
+      if (_bind$18.$tag === 1) {
+        const _ok = _bind$18;
+        _tmp$9 = _ok._0;
+      } else {
+        const _err = _bind$18;
+        _try_err = _err._0;
+        break _L$3;
+      }
+      res = new _M0DTPB6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok(_tmp$9);
+      break _L$2;
+    }
+    res = new _M0DTPB6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE3Err(_try_err);
+  }
+  self.cur_result = undefined;
+  if (res.$tag === 1) {
+    const _Ok = res;
+    const _x = _Ok._0;
+    const _code = _x._0;
+    return new _M0DTPC16result6ResultGsRP38username5mbtpp7codegen12CodegenErrorE2Ok(`\n///|\nasync fn main {\n  (try {\n    ignore(${_code})\n  } catch {\n    e => report_error(e)\n  })\n  rt_flush()\n}\n`);
+  } else {
+    self.diagnose = true;
+    self.culprit = undefined;
+    let _try_err$2;
+    _L$3: {
+      _L$4: {
+        const _bind$18 = _M0MP38username5mbtpp7codegen3Gen5typed(self, [], body);
+        let _tmp$9;
+        if (_bind$18.$tag === 1) {
+          const _ok = _bind$18;
+          _tmp$9 = _ok._0;
+        } else {
+          const _err = _bind$18;
+          _try_err$2 = _err._0;
+          break _L$4;
+        }
+        new _M0DTPB6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE2Ok(_tmp$9);
+        break _L$3;
+      }
+      new _M0DTPB6ResultGUsRP38username5mbtpp7codegen3NTyERP38username5mbtpp7codegen8NotTypedE3Err(_try_err$2);
+    }
+    self.diagnose = false;
+    const _bind$18 = self.culprit;
+    let _tmp$9;
+    if (_bind$18 === undefined) {
+      _tmp$9 = "";
+    } else {
+      const _Some = _bind$18;
+      const _c = _Some;
+      _tmp$9 = `: ${_c}`;
+    }
+    return new _M0DTPC16result6ResultGsRP38username5mbtpp7codegen12CodegenErrorE3Err(new _M0DTPC15error5Error56username_2fmbtpp_2fcodegen_2eCodegenError_2eCodegenError(`async fn main cannot be compiled to MoonBit: its body is not in the native fragment${_tmp$9}`));
+  }
 }
 function _M0MP38username5mbtpp7codegen7Erasure4mark(self, o) {
   switch (o.$tag) {
@@ -44444,7 +47141,7 @@ function _M0MP38username5mbtpp7codegen7Erasure3pat(self, p, slot, env) {
   }
   return e;
 }
-function _M0MP38username5mbtpp7codegen7Erasure4walkN3allS14600(p, e) {
+function _M0MP38username5mbtpp7codegen7Erasure4walkN3allS15494(p, e) {
   if (p.$tag === 2) {
     const _CPCon = p;
     const _c = _CPCon._0;
@@ -44454,7 +47151,7 @@ function _M0MP38username5mbtpp7codegen7Erasure4walkN3allS14600(p, e) {
       const j = _tmp$9;
       if (j < _ps.length) {
         _M0MP38username5mbtpp7codegen7Erasure4mark(e, new _M0DTP38username5mbtpp7codegen5Owner4OCon(_c, j));
-        _M0MP38username5mbtpp7codegen7Erasure4walkN3allS14600(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_ps, j), e);
+        _M0MP38username5mbtpp7codegen7Erasure4walkN3allS15494(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(_ps, j), e);
         _tmp$9 = j + 1 | 0;
         continue;
       } else {
@@ -44654,7 +47351,7 @@ function _M0MP38username5mbtpp7codegen7Erasure4walk(self, env, t, rel) {
                     const _$2 = _tmp$16;
                     if (_$2 < _bind$23) {
                       const p = _bind$22[_$2];
-                      _M0MP38username5mbtpp7codegen7Erasure4walkN3allS14600(p, self);
+                      _M0MP38username5mbtpp7codegen7Erasure4walkN3allS15494(p, self);
                       _tmp$16 = _$2 + 1 | 0;
                       continue;
                     } else {
@@ -44676,6 +47373,13 @@ function _M0MP38username5mbtpp7codegen7Erasure4walk(self, env, t, rel) {
                   } else {
                     break;
                   }
+                }
+                const _bind$24 = cl.cond;
+                if (_bind$24 === undefined) {
+                } else {
+                  const _Some = _bind$24;
+                  const _g = _Some;
+                  _M0MP38username5mbtpp7codegen7Erasure4walk(self, e, _g, true);
                 }
                 _M0MP38username5mbtpp7codegen7Erasure4walk(self, e, cl.body, rel$2);
                 _tmp$14 = _ + 1 | 0;
@@ -44710,6 +47414,13 @@ function _M0MP38username5mbtpp7codegen7Erasure4walk(self, env, t, rel) {
                   } else {
                     break;
                   }
+                }
+                const _bind$25 = cl.cond;
+                if (_bind$25 === undefined) {
+                } else {
+                  const _Some = _bind$25;
+                  const _g = _Some;
+                  _M0MP38username5mbtpp7codegen7Erasure4walk(self, e, _g, true);
                 }
                 _M0MP38username5mbtpp7codegen7Erasure4walk(self, e, cl.body, rel$2);
                 _tmp$15 = _ + 1 | 0;
@@ -45059,7 +47770,7 @@ function _M0MP38username5mbtpp7codegen3Gen11uniform__fn(self, name, id, body, n)
       break;
     }
   }
-  const sig = _M0MPC15array5Array4joinGsE(_p$3, _M0MP38username5mbtpp7codegen3Gen11uniform__fnN6recordS14797);
+  const sig = _M0MPC15array5Array4joinGsE(_p$3, _M0MP38username5mbtpp7codegen3Gen11uniform__fnN6recordS15697);
   const pass = [];
   let _tmp$12 = 0;
   while (true) {
@@ -45086,7 +47797,7 @@ function _M0MP38username5mbtpp7codegen3Gen11uniform__fn(self, name, id, body, n)
   _M0IPB13StringBuilderPB6Logger13write__string(_string_builder, "\n}\n\nfn ");
   _M0MPB13StringBuilder13write__objectGsE(_string_builder, id);
   _M0IPB13StringBuilderPB6Logger13write__string(_string_builder, "_v() -> Value {\n  ");
-  _M0MPB13StringBuilder13write__objectGsE(_string_builder, _M0FP38username5mbtpp7codegen7curried(n, `${id}(${_M0MPC15array5Array4joinGsE(pass, _M0MP38username5mbtpp7codegen3Gen11uniform__fnN6recordS14798)})`));
+  _M0MPB13StringBuilder13write__objectGsE(_string_builder, _M0FP38username5mbtpp7codegen7curried(n, `${id}(${_M0MPC15array5Array4joinGsE(pass, _M0MP38username5mbtpp7codegen3Gen11uniform__fnN6recordS15698)})`));
   _M0IPB13StringBuilderPB6Logger13write__string(_string_builder, "\n}\n");
   _M0MP38username5mbtpp7codegen3Gen5write(self, _string_builder.val);
 }
@@ -45100,6 +47811,45 @@ function _M0MP38username5mbtpp7codegen3Gen11global__def(self, name) {
     g = _Some;
   }
   const id = _M0MP38username5mbtpp7codegen3Gen3gid(self, name);
+  if (_M0FP38username5mbtpp2tt17is__async__global(name)) {
+    _L: {
+      _L$2: {
+        const _bind$19 = g.kind;
+        if (_bind$19.$tag === 0) {
+          const _GFunc = _bind$19;
+          const _x = _GFunc._0;
+          if (_x === undefined) {
+            break _L$2;
+          } else {
+            if (_M0MPC15array5Array8containsGsE(self.typed_set, name)) {
+              const _p = _M0MP38username5mbtpp7codegen3Gen9typed__fn(self, name);
+              let _tmp$9;
+              if (_p === undefined) {
+                _tmp$9 = $panic();
+              } else {
+                const _p$2 = _p;
+                _tmp$9 = _p$2;
+              }
+              _M0MP38username5mbtpp7codegen3Gen5write(self, `\n/// ${name}\n${_tmp$9}`);
+              const _p$2 = _M0MP38username5mbtpp7codegen3Gen11native__sig(self, name);
+              let _tmp$10;
+              if (_p$2 === undefined) {
+                _tmp$10 = $panic();
+              } else {
+                const _p$3 = _p$2;
+                _tmp$10 = _p$3;
+              }
+              _M0MP38username5mbtpp7codegen3Gen10export__fn(self, name, _tmp$10);
+            }
+          }
+        } else {
+          break _L$2;
+        }
+        break _L;
+      }
+    }
+    return new _M0DTPC16result6ResultGuRP38username5mbtpp7codegen12CodegenErrorE2Ok(undefined);
+  }
   const _bind$19 = g.kind;
   switch (_bind$19.$tag) {
     case 0: {
@@ -45242,7 +47992,7 @@ function _M0MP38username5mbtpp7codegen3Gen11global__def(self, name) {
         }
       }
       let call;
-      if (_M0MPC16string6String11has__prefix(_p, _M0MP38username5mbtpp7codegen3Gen11global__defN6recordS14824)) {
+      if (_M0MPC16string6String11has__prefix(_p, _M0MP38username5mbtpp7codegen3Gen11global__defN6recordS15724)) {
         const _bind$20 = _M0MP38username5mbtpp7codegen3Gen7ffi__fn(self, name, _p, g.ty, _arity);
         let _tmp$11;
         if (_bind$20.$tag === 1) {
@@ -45251,7 +48001,7 @@ function _M0MP38username5mbtpp7codegen3Gen11global__def(self, name) {
         } else {
           return _bind$20;
         }
-        call = `${_tmp$11}([${_M0MPC15array5Array4joinGsE(all, _M0MP38username5mbtpp7codegen3Gen11global__defN6recordS14825)}])`;
+        call = `${_tmp$11}([${_M0MPC15array5Array4joinGsE(all, _M0MP38username5mbtpp7codegen3Gen11global__defN6recordS15725)}])`;
       } else {
         const icits = _M0FP38username5mbtpp7codegen13binder__icits(g.ty, _arity);
         const expl = [];
@@ -45277,6 +48027,7 @@ function _M0MP38username5mbtpp7codegen3Gen11global__def(self, name) {
 function _M0MP38username5mbtpp7codegen3Gen6global(self, name) {
   const saved = self.cur_file;
   self.cur_file = _M0MP38username5mbtpp7codegen3Gen8file__of(self, name);
+  self.cur_global = name;
   let _try_err;
   _L: {
     _L$2: {
@@ -45322,7 +48073,7 @@ function _M0MP38username5mbtpp7codegen3Gen3new(imports) {
   const _tmp$23 = [];
   const _tmp$24 = [];
   const _bind$25 = [];
-  const g = new _M0TP38username5mbtpp7codegen3Gen(_tmp$9, _tmp$10, _tmp$11, _M0FP38username5mbtpp7codegen13imports__file, _tmp$12, _tmp$13, _tmp$14, _tmp$15, _tmp$16, 0, _tmp$17, _tmp$18, _tmp$19, undefined, false, _tmp$20, _tmp$21, _tmp$22, _tmp$23, _tmp$24, false, undefined, _M0MPB3Map3MapGsUsiEE(new _M0TPB9ArrayViewGUsUsiEEE(_bind$25, 0, 0), undefined), []);
+  const g = new _M0TP38username5mbtpp7codegen3Gen(_tmp$9, _tmp$10, _tmp$11, _M0FP38username5mbtpp7codegen13imports__file, _tmp$12, _tmp$13, _tmp$14, _tmp$15, _tmp$16, 0, _tmp$17, _tmp$18, _tmp$19, undefined, false, _tmp$20, _tmp$21, _tmp$22, _tmp$23, _tmp$24, false, undefined, _M0MPB3Map3MapGsUsiEE(new _M0TPB9ArrayViewGUsUsiEEE(_bind$25, 0, 0), undefined), [], "", []);
   const _bind$26 = imports.length;
   let _tmp$25 = 0;
   while (true) {
@@ -45352,28 +48103,47 @@ function _M0FP38username5mbtpp7codegen15generate__files(imports) {
   } else {
     return _bind$18;
   }
+  const _bind$19 = _M0MP38username5mbtpp7codegen3Gen17check__async__fns(g);
+  if (_bind$19.$tag === 1) {
+    const _ok = _bind$19;
+    _ok._0;
+  } else {
+    return _bind$19;
+  }
   g.dry = false;
-  const main_value = _M0MP38username5mbtpp7codegen3Gen13global__value(g, "main");
+  const main_async = _M0FP38username5mbtpp2tt17is__async__global("main");
+  let main_code;
+  if (main_async) {
+    const _bind$20 = _M0MP38username5mbtpp7codegen3Gen11async__main(g);
+    if (_bind$20.$tag === 1) {
+      const _ok = _bind$20;
+      main_code = _ok._0;
+    } else {
+      return _bind$20;
+    }
+  } else {
+    main_code = `\n///|\nfn main {\n  run_main(() => ${_M0MP38username5mbtpp7codegen3Gen13global__value(g, "main")})\n}\n`;
+  }
   const _it = _M0MPB3Map5iter2GssE(_M0FP38username5mbtpp2tt8mbt__fns);
   while (true) {
-    const _bind$19 = _M0MPB5Iter24nextGssE(_it);
-    if (_bind$19 === undefined) {
+    const _bind$20 = _M0MPB5Iter24nextGssE(_it);
+    if (_bind$20 === undefined) {
       break;
     } else {
-      const _Some = _bind$19;
+      const _Some = _bind$20;
       const _x = _Some;
       const _f = _x._0;
       _M0MP38username5mbtpp7codegen3Gen3gid(g, _f);
       continue;
     }
   }
-  const _bind$19 = _M0MPC15array5Array4copyGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt4IcitEE(g.mbt_impls);
-  const _bind$20 = _bind$19.length;
+  const _bind$20 = _M0MPC15array5Array4copyGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt4IcitEE(g.mbt_impls);
+  const _bind$21 = _bind$20.length;
   let _tmp$9 = 0;
   while (true) {
     const _ = _tmp$9;
-    if (_ < _bind$20) {
-      const i = _bind$19[_];
+    if (_ < _bind$21) {
+      const i = _bind$20[_];
       _M0MP38username5mbtpp7codegen3Gen10need__impl(g, i);
       _tmp$9 = _ + 1 | 0;
       continue;
@@ -45391,19 +48161,27 @@ function _M0FP38username5mbtpp7codegen15generate__files(imports) {
         const _p$2 = _p;
         n = _p$2;
       }
-      const _bind$21 = _M0MP38username5mbtpp7codegen3Gen6global(g, n);
-      if (_bind$21.$tag === 1) {
-        const _ok = _bind$21;
+      const _bind$22 = _M0MP38username5mbtpp7codegen3Gen6global(g, n);
+      if (_bind$22.$tag === 1) {
+        const _ok = _bind$22;
         _ok._0;
       } else {
-        return _bind$21;
+        return _bind$22;
       }
       continue;
     } else {
       break;
     }
   }
-  _M0MP38username5mbtpp7codegen3Gen9write__to(g, _M0MP38username5mbtpp7codegen3Gen8file__of(g, "main"), `\n///|\nfn main {\n  run_main(() => ${main_value})\n}\n`);
+  _M0MP38username5mbtpp7codegen3Gen9write__to(g, _M0MP38username5mbtpp7codegen3Gen8file__of(g, "main"), main_code);
+  const _bind$22 = g.async_misuse;
+  if (_bind$22.length === 0) {
+  } else {
+    const _x = _bind$22[0];
+    const _f = _x._0;
+    const _user = _x._1;
+    return new _M0DTPC16result6ResultGRPB5ArrayGUssEERP38username5mbtpp7codegen12CodegenErrorE3Err(new _M0DTPC15error5Error56username_2fmbtpp_2fcodegen_2eCodegenError_2eCodegenError(`async fn ${_f} is used by ${_user}, which is not compiled to native MoonBit code (async functions can only be used from native code)`));
+  }
   return _M0MP38username5mbtpp7codegen3Gen13output__files(g);
 }
 function _M0FP38username5mbtpp7codegen8generate(imports) {
@@ -45429,7 +48207,7 @@ function _M0FP38username5mbtpp7codegen8generate(imports) {
       break;
     }
   }
-  return new _M0DTPC16result6ResultGsRP38username5mbtpp7codegen12CodegenErrorE2Ok(_M0MPC15array5Array4joinGsE(_p$2, _M0FP38username5mbtpp7codegen8generateN6recordS14905));
+  return new _M0DTPC16result6ResultGsRP38username5mbtpp7codegen12CodegenErrorE2Ok(_M0MPC15array5Array4joinGsE(_p$2, _M0FP38username5mbtpp7codegen8generateN6recordS15814));
 }
 function _M0FP38username5mbtpp6interp6lookup(env, ix) {
   let e = env;
@@ -45491,7 +48269,7 @@ function _M0FP38username5mbtpp6interp10show__rval(v) {
       const _RCon = v;
       const _c$2 = _RCon._0;
       const _args = _RCon._1;
-      const _bind$18 = _M0MPC16string6String9rev__find(_c$2, _M0FP38username5mbtpp6interp10show__rvalN6recordS14917);
+      const _bind$18 = _M0MPC16string6String9rev__find(_c$2, _M0FP38username5mbtpp6interp10show__rvalN6recordS15826);
       let short;
       if (_bind$18 === undefined) {
         short = _c$2;
@@ -45517,7 +48295,7 @@ function _M0FP38username5mbtpp6interp10show__rval(v) {
             break;
           }
         }
-        return `${short}(${_M0MPC15array5Array4joinGsE(_p, _M0FP38username5mbtpp6interp10show__rvalN6recordS14918)})`;
+        return `${short}(${_M0MPC15array5Array4joinGsE(_p, _M0FP38username5mbtpp6interp10show__rvalN6recordS15827)})`;
       }
     }
     case 4: {
@@ -45537,7 +48315,7 @@ function _M0FP38username5mbtpp6interp10show__rval(v) {
           break;
         }
       }
-      return `[${_M0MPC15array5Array4joinGsE(_p, _M0FP38username5mbtpp6interp10show__rvalN6recordS14919)}]`;
+      return `[${_M0MPC15array5Array4joinGsE(_p, _M0FP38username5mbtpp6interp10show__rvalN6recordS15828)}]`;
     }
     case 3: {
       return "<function>";
@@ -45586,7 +48364,7 @@ function _M0MP38username5mbtpp6interp7Machine4prim(self, p, args) {
                 _func(_s);
                 return new _M0DTPC16result6ResultGRP38username5mbtpp6interp4RValRP38username5mbtpp6interp3CtlE2Ok(new _M0DTP38username5mbtpp6interp4RVal4RLit(_M0DTP38username5mbtpp6parser3Lit5LUnit__));
               } else {
-                if (_M0MPC16string6String11has__prefix(p, _M0MP38username5mbtpp6interp7Machine4primN6recordS14948)) {
+                if (_M0MPC16string6String11has__prefix(p, _M0MP38username5mbtpp6interp7Machine4primN6recordS15857)) {
                   p$2 = p;
                   break _L$2;
                 } else {
@@ -45594,7 +48372,7 @@ function _M0MP38username5mbtpp6interp7Machine4prim(self, p, args) {
                 }
               }
             } else {
-              if (_M0MPC16string6String11has__prefix(p, _M0MP38username5mbtpp6interp7Machine4primN6recordS14949)) {
+              if (_M0MPC16string6String11has__prefix(p, _M0MP38username5mbtpp6interp7Machine4primN6recordS15858)) {
                 p$2 = p;
                 break _L$2;
               } else {
@@ -45602,7 +48380,7 @@ function _M0MP38username5mbtpp6interp7Machine4prim(self, p, args) {
               }
             }
           } else {
-            if (_M0MPC16string6String11has__prefix(p, _M0MP38username5mbtpp6interp7Machine4primN6recordS14950)) {
+            if (_M0MPC16string6String11has__prefix(p, _M0MP38username5mbtpp6interp7Machine4primN6recordS15859)) {
               p$2 = p;
               break _L$2;
             } else {
@@ -45615,7 +48393,7 @@ function _M0MP38username5mbtpp6interp7Machine4prim(self, p, args) {
             const _e = args[0];
             return new _M0DTPC16result6ResultGRP38username5mbtpp6interp4RValRP38username5mbtpp6interp3CtlE2Ok(new _M0DTP38username5mbtpp6interp4RVal4RLit(new _M0DTP38username5mbtpp6parser3Lit4LStr(_M0FP38username5mbtpp6interp10show__rval(_e))));
           } else {
-            if (_M0MPC16string6String11has__prefix(p, _M0MP38username5mbtpp6interp7Machine4primN6recordS14951)) {
+            if (_M0MPC16string6String11has__prefix(p, _M0MP38username5mbtpp6interp7Machine4primN6recordS15860)) {
               p$2 = p;
               break _L$2;
             } else {
@@ -45624,7 +48402,7 @@ function _M0MP38username5mbtpp6interp7Machine4prim(self, p, args) {
           }
         }
         default: {
-          if (_M0MPC16string6String11has__prefix(p, _M0MP38username5mbtpp6interp7Machine4primN6recordS14952)) {
+          if (_M0MPC16string6String11has__prefix(p, _M0MP38username5mbtpp6interp7Machine4primN6recordS15861)) {
             p$2 = p;
             break _L$2;
           } else {
@@ -45736,7 +48514,7 @@ function _M0MP38username5mbtpp6interp7Machine4prim(self, p, args) {
                         const _i = _LInt._0;
                         const _x$4 = args[2];
                         if (_i >= 0 && _i < _xs.length) {
-                          _M0MPC15array5Array3setGURP38username5mbtpp6parser3PosORPB5ArrayGRP38username5mbtpp2tt8GoalInfoEEE(_xs, _i, _x$4);
+                          _M0MPC15array5Array3setGURP38username5mbtpp2tt2TmRP38username5mbtpp2tt4IcitEE(_xs, _i, _x$4);
                           return new _M0DTPC16result6ResultGRP38username5mbtpp6interp4RValRP38username5mbtpp6interp3CtlE2Ok(new _M0DTP38username5mbtpp6interp4RVal4RLit(_M0DTP38username5mbtpp6parser3Lit5LUnit__));
                         } else {
                           return new _M0DTPC16result6ResultGRP38username5mbtpp6interp4RValRP38username5mbtpp6interp3CtlE3Err(new _M0DTPC15error5Error40username_2fmbtpp_2finterp_2eCtl_2eCAbort(`index out of bounds: ${_M0MPC13int3Int18to__string_2einner(_i, 10)}`));
@@ -46109,7 +48887,7 @@ function _M0MP38username5mbtpp6interp7Machine4eval(self, env, t) {
                   break;
                 }
               }
-              return new _M0DTPC16result6ResultGRP38username5mbtpp6interp4RValRP38username5mbtpp6interp3CtlE3Err(new _M0DTPC15error5Error40username_2fmbtpp_2finterp_2eCtl_2eCAbort(`no match for ${_M0MPC15array5Array4joinGsE(_p$2, _M0MP38username5mbtpp6interp7Machine4evalN6recordS15052)}`));
+              return new _M0DTPC16result6ResultGRP38username5mbtpp6interp4RValRP38username5mbtpp6interp3CtlE3Err(new _M0DTPC15error5Error40username_2fmbtpp_2finterp_2eCtl_2eCAbort(`no match for ${_M0MPC15array5Array4joinGsE(_p$2, _M0MP38username5mbtpp6interp7Machine4evalN6recordS15961)}`));
             } else {
               const _Some = _bind$23;
               const _v$3 = _Some;
@@ -46467,32 +49245,71 @@ function _M0MP38username5mbtpp6interp7Machine12run__clauses(self, env, vs, cls) 
     const _ = _tmp$9;
     if (_ < _bind$18) {
       const cl = cls[_];
-      const out = [];
-      let ok = true;
-      let _tmp$10 = 0;
-      while (true) {
-        const k = _tmp$10;
-        if (k < cl.pats.length) {
-          if (!_M0FP38username5mbtpp6interp6rmatch(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(cl.pats, k), _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(vs, k), out)) {
-            ok = false;
+      _L: {
+        const out = [];
+        let ok = true;
+        let _tmp$10 = 0;
+        while (true) {
+          const k = _tmp$10;
+          if (k < cl.pats.length) {
+            if (!_M0FP38username5mbtpp6interp6rmatch(_M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(cl.pats, k), _M0MPC15array5Array2atGRP38username5mbtpp2tt2TmE(vs, k), out)) {
+              ok = false;
+              break;
+            }
+            _tmp$10 = k + 1 | 0;
+            continue;
+          } else {
             break;
           }
-          _tmp$10 = k + 1 | 0;
-          continue;
-        } else {
-          break;
         }
-      }
-      if (ok) {
-        const _bind$19 = _M0MP38username5mbtpp6interp7Machine4eval(self, _M0FP38username5mbtpp6interp9push__env(env, out), cl.body);
-        let _tmp$11;
-        if (_bind$19.$tag === 1) {
-          const _ok = _bind$19;
-          _tmp$11 = _ok._0;
-        } else {
-          return _bind$19;
+        if (ok) {
+          const env2 = _M0FP38username5mbtpp6interp9push__env(env, out);
+          const _bind$19 = cl.cond;
+          if (_bind$19 === undefined) {
+          } else {
+            const _Some = _bind$19;
+            const _g = _Some;
+            const _bind$20 = _M0MP38username5mbtpp6interp7Machine4eval(self, env2, _g);
+            let _bind$21;
+            if (_bind$20.$tag === 1) {
+              const _ok = _bind$20;
+              _bind$21 = _ok._0;
+            } else {
+              return _bind$20;
+            }
+            let _tmp$11;
+            if (_bind$21.$tag === 0) {
+              const _RLit = _bind$21;
+              const _x = _RLit._0;
+              if (_x.$tag === 3) {
+                const _LBool = _x;
+                const _x$2 = _LBool._0;
+                if (_x$2 === true) {
+                  _tmp$11 = true;
+                } else {
+                  _tmp$11 = false;
+                }
+              } else {
+                _tmp$11 = false;
+              }
+            } else {
+              _tmp$11 = false;
+            }
+            if (!_tmp$11) {
+              break _L;
+            }
+          }
+          const _bind$20 = _M0MP38username5mbtpp6interp7Machine4eval(self, env2, cl.body);
+          let _tmp$11;
+          if (_bind$20.$tag === 1) {
+            const _ok = _bind$20;
+            _tmp$11 = _ok._0;
+          } else {
+            return _bind$20;
+          }
+          return new _M0DTPC16result6ResultGORP38username5mbtpp6interp4RValRP38username5mbtpp6interp3CtlE2Ok(_tmp$11);
         }
-        return new _M0DTPC16result6ResultGORP38username5mbtpp6interp4RValRP38username5mbtpp6interp3CtlE2Ok(_tmp$11);
+        break _L;
       }
       _tmp$9 = _ + 1 | 0;
       continue;

@@ -569,8 +569,12 @@ fn app_core(
       }
       // Lambdas are checked last, so that the other arguments can
       // determine the types of their parameters.
-      let deferred : Array[(Tm, @parser.Expr, Val)] = []
+      // A lambda the rest of the type does not depend on is put in place
+      // afterwards; otherwise it is a meta, solved by the lambda (which
+      // must then not be imperative).
+      let deferred : Array[(Int32, Tm?, @parser.Expr, Val)] = []
       let expl_terms : Array[(Tm, Icit)] = []
+      let t0 = t
       for a in args {
         match force(ty) {
           VPi(_, _, _, dom, cl) => {
@@ -580,11 +584,15 @@ fn app_core(
                   Global(helper),
                   concat(concat(impl_terms, expl_terms), [(Lit(LUnit), Expl)]),
                 )
-              AE(ELam(_, _, ps, _, _) as e) if ps.iter().any(p => p.ty is None) => {
-                let m = cxt.fresh_meta()
-                deferred.push((m, e, dom))
-                m
-              }
+              AE(ELam(_, _, ps, _, _) as e) if ps.iter().any(p => p.ty is None) =>
+                if tm_occurs(cl.body, 0) {
+                  let m = cxt.fresh_meta()
+                  deferred.push((expl_terms.length(), Some(m), e, dom))
+                  m
+                } else {
+                  deferred.push((expl_terms.length(), None, e, dom))
+                  Lit(LUnit)
+                }
               _ => check_arg(cxt, a, dom)
             }
             expl_terms.push((arg, Expl))
@@ -594,14 +602,26 @@ fn app_core(
           _ => cxt.fail("not a function")
         }
       }
-      for d in deferred {
-        let (m, e, dom) = d
-        let lt = check(cxt, e, dom)
-        cxt.unify(cxt.eval(m), cxt.eval(lt))
+      if deferred.length() > 0 {
+        for d in deferred {
+          let (k, m, e, dom) = d
+          let lt = check(cxt, e, dom)
+          match m {
+            Some(m) => cxt.unify(cxt.eval(m), cxt.eval(lt))
+            None => expl_terms[k] = (lt, Expl)
+          }
+        }
+        t = apps(t0, expl_terms)
       }
       match force(ty) {
-        VRaises(r, _) => {
-          if !cxt.can_raise {
+        VRaises(r, e) => {
+          let (is_async, err) = effect_of(e)
+          if is_async && !cxt.can_async {
+            cxt.fail(
+              "this calls an async function, which can only be done in an async function",
+            )
+          }
+          if err is Some(_) && !cxt.can_raise {
             cxt.fail(
               "this call may raise an error; use it inside `try` or in a function declared with `raise`",
             )
@@ -876,8 +896,8 @@ fn bool_ty() -> Val {
 ///|
 fn if_tm(c : Tm, t : Tm, e : Tm) -> Tm {
   Match([c], [
-    { pats: [CPLit(LBool(true))], body: t, },
-    { pats: [CPWild], body: e, },
+    { pats: [CPLit(LBool(true))], cond: None, body: t, },
+    { pats: [CPWild], cond: None, body: e, },
   ])
 }
 
@@ -961,6 +981,9 @@ fn nat_tm(n : Int32) -> Tm {
 
 ///|
 pub fn check(cxt0 : Cxt, e : @parser.Expr, ty0 : Val) -> Tm raise ElabError {
+  if sugar(e) is Some(e2) {
+    return check(cxt0, e2, ty0)
+  }
   let cxt = cxt0.at(e.pos())
   let ty = force(ty0)
   match (e, ty) {
@@ -1097,7 +1120,7 @@ pub fn check(cxt0 : Cxt, e : @parser.Expr, ty0 : Val) -> Tm raise ElabError {
         Continue
       }
     }
-    (ETry(_, body, arms), _) => elab_try(cxt, body, arms, Some(ty)).0
+    (ETry(_, body, arms, _), _) => elab_try(cxt, body, arms, Some(ty)).0
     (EMonad(_, b), _) => check(cxt, desugar_monad(b), ty)
     (EProof(_, tacs), _) => run_tactics(cxt, tacs, ty)
     _ => {
@@ -1190,11 +1213,14 @@ fn check_lam(
     Some(r) => cxt.unify(cxt.eval(check_type(cxt, r)), ty)
     None => ()
   }
-  let (body_ty, can_raise) = match ty {
-    VRaises(a, _) => (a, true)
-    _ => (ty, false)
+  let (body_ty, can_raise, can_async) = body_effects(ty)
+  let bc = {
+    ..cxt,
+    can_raise,
+    can_async,
+    ret_ty: Some(body_ty),
+    in_loop: false,
   }
-  let bc = { ..cxt, can_raise, ret_ty: Some(body_ty), in_loop: false, }
   lams(wrap, check(bc, body, body_ty))
 }
 
@@ -1233,6 +1259,9 @@ fn infer_lam_type(
 
 ///|
 pub fn infer(cxt0 : Cxt, e : @parser.Expr) -> (Tm, Val) raise ElabError {
+  if sugar(e) is Some(e2) {
+    return infer(cxt0, e2)
+  }
   let cxt = cxt0.at(e.pos())
   match e {
     EVar(_, _) => {
@@ -1322,7 +1351,7 @@ pub fn infer(cxt0 : Cxt, e : @parser.Expr) -> (Tm, Val) raise ElabError {
       (ArrayLit(ts), VData("Array", [(a, Impl)]))
     }
     EStruct(_, fields) => elab_struct(cxt, fields, None)
-    ETry(_, body, arms) => elab_try(cxt, body, arms, None)
+    ETry(_, body, arms, _) => elab_try(cxt, body, arms, None)
     ETryQ(_, x) => {
       let (t, ty) = infer_ins({ ..cxt, can_raise: true, }, x)
       let err = VData("Error", [])
@@ -1338,7 +1367,7 @@ pub fn infer(cxt0 : Cxt, e : @parser.Expr) -> (Tm, Val) raise ElabError {
         (Global("Error"), Impl),
         (Var(0), Expl),
       ])
-      (Try(ok, [{ pats: [CPVar("e")], body: errv, }]), res_ty)
+      (Try(ok, [{ pats: [CPVar("e")], cond: None, body: errv, }]), res_ty)
     }
     ERaise(_, _)
     | EReturn(_, _)
@@ -1353,6 +1382,9 @@ pub fn infer(cxt0 : Cxt, e : @parser.Expr) -> (Tm, Val) raise ElabError {
     ETagged(_, x, _, _) =>
       cxt.fail("labelled argument " + x + "= can only appear in a call")
     ERange(_, _, _, _) => cxt.fail("a range can only be used in a for loop")
+    // handled by `sugar`
+    EIs(_, _, _) => cxt.fail("unexpected pattern test")
+    EEff(_, t, eff) => (Raises(check_type(cxt, t), check_type(cxt, eff)), VU)
   }
 }
 

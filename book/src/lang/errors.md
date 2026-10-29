@@ -33,3 +33,45 @@ fn main {
 
 `raise`、`try` 与可变状态一样，使函数在类型检查时不展开（见
 [可变状态与循环](mutation.md)）。
+
+## 不写 `try` 的 `catch` 与 `noraise`
+
+```moonbit
+suberror Oops {
+  Oops(Int)
+}
+
+fn risky(n : Int) -> Int raise Oops {
+  if n < 0 {
+    raise Oops(n)
+  } else {
+    n * 2
+  }
+}
+
+fn safe(n : Int) -> Int {
+  risky(n) catch {
+    Oops(k) => k
+  }
+}
+
+fn describe(n : Int) -> String {
+  try risky(n) catch {
+    Oops(k) if k < -5 => "very bad"
+    _ => "bad"
+  } noraise {
+    v => "ok \{v}"
+  }
+}
+
+fn main {
+  println(safe(-3))
+  println(describe(4))
+  println(describe(-9))
+}
+```
+
+- `e catch { … }` 等同于 `try e catch { … }`，`catch` 要和 `e` 写在同一行。
+- `noraise { 模式 => … }` 处理没有出错时的结果。`catch` 和 `noraise` 分支中抛出的错误不会被同一个
+  `try` 捕获。
+- `catch` 的分支可以使用或模式、`as` 和守卫。

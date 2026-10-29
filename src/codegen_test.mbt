@@ -12,6 +12,13 @@ fn signatures(src : String) -> String {
   let out : Array[String] = []
   for line in code.split("\n") {
     let l = line.to_string()
+    // `async fn f` is shown as such, and filtered as `fn f`
+    let is_async = l.has_prefix("async fn")
+    let l = if is_async {
+      l.unsafe_substring(start=6, end=l.length())
+    } else {
+      l
+    }
     if (
         l.has_prefix("fn") &&
         !l.contains("_v()") &&
@@ -49,7 +56,7 @@ fn signatures(src : String) -> String {
           i = i + 1
         }
       }
-      out.push(buf.to_string())
+      out.push((if is_async { "async " } else { "" }) + buf.to_string())
     }
   }
   out.join("\n")
@@ -388,6 +395,42 @@ test "codegen: proofs are erased" {
       #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
       #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
       #|fn f_show_to_string(inst : Value) -> Value raise {
+    ),
+  )
+}
+
+///|
+test "codegen: async functions are native" {
+  inspect(
+    signatures(
+      (
+        #|async fn twice(f : async () -> Int) -> Int { f() + f() }
+        #|async fn one() -> Int noraise { 1 }
+        #|async fn main { println(twice(fn() { one() })) }
+      ),
+    ),
+    content=(
+      #|async fn f_twice_t(f : async () -> Int raise) -> Int raise {
+      #|async fn f_one_t(v : Unit) -> Int raise {
+      #|async fn main {
+      #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
+      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
+      #|fn f_show_to_string(inst : Value) -> Value raise {
+    ),
+  )
+  inspect(
+    signatures(
+      (
+        #|fn NAry(n : Nat) -> Type { match n { Z => Int; S(k) => (Int) -> NAry(k) } }
+        #|fn z(n : Nat) -> NAry(n) {
+        #|  match n as m return NAry(m) { Z => 0; S(k) => _ => z(k) }
+        #|}
+        #|async fn g(n : Nat) -> NAry(n) { z(n) }
+        #|async fn main { println(1) }
+      ),
+    ),
+    content=(
+      #|async fn g cannot be compiled to MoonBit: its type has no native MoonBit translation (like a type computed from a parameter, or a type parameter with a bound that occurs in no parameter and not in the result type)
     ),
   )
 }

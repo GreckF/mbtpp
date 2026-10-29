@@ -22,6 +22,8 @@ pub fn check_program(String, String, prelude? : Bool, imports? : Array[Import]) 
 
 pub fn clause_body_val(Array[Val], Int32, Clause) -> Val
 
+pub fn clause_guard_val(Array[Val], Int32, Clause) -> Val?
+
 pub fn con_info(String) -> ConInfo?
 
 pub fn[T] concat(Array[T], Array[T]) -> Array[T]
@@ -33,6 +35,8 @@ pub let decl_kinds : Map[String, String]
 pub let decl_pos : Map[String, @parser.Pos]
 
 pub let derived_lines : Array[Int32]
+
+pub fn effect_of(Val) -> (Bool, Val?)
 
 pub fn empty_cxt(@parser.Pos) -> Cxt
 
@@ -63,6 +67,8 @@ pub fn infer(Cxt, @parser.Expr) -> (Tm, Val) raise ElabError
 pub fn inst(Closure, Val) -> Val
 
 pub fn instances_of(String) -> Array[String]
+
+pub fn is_async_global(String) -> Bool
 
 pub fn is_foreign_type(String) -> Bool
 
@@ -148,6 +154,8 @@ pub let source_files : Array[String]
 
 pub fn split_pos(@parser.Pos) -> (Int32, Int32)
 
+pub fn tm_effect(Tm) -> (Bool, Tm?)
+
 pub fn trait_method_names(String) -> Array[String]
 
 pub fn trait_method_type(String, String) -> Tm?
@@ -189,8 +197,10 @@ pub(all) enum CPat {
 
 pub(all) struct Clause {
   pats : Array[CPat]
+  cond : Tm?
   body : Tm
 } derive(Show)
+pub fn Clause::map(Self, (Tm) -> Tm) -> Self
 
 pub(all) struct Closure {
   env : Array[Val]
@@ -214,6 +224,7 @@ pub(all) struct Cxt {
   lvl : Int32
   pos : @parser.Pos
   can_raise : Bool
+  can_async : Bool
   ret_ty : Val?
   in_loop : Bool
 }

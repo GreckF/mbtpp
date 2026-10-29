@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-aec47b78.js";
+            window.path_to_searchindex_js = "searchindex-2b6d7b0f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-1277b054.js"></script>
+        <script src="toc-ec08c6a2.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -193,7 +193,7 @@
 <h2 id="imports"><a class="header" href="#imports">Imports</a></h2>
 <ul>
 <li>The interpreter cannot run imported MoonBit functions; they can only be called after compilation.</li>
-<li>MoonBit’s <code>async</code> (<code>async fn</code>, <code>async</code> function types) is not supported.</li>
+<li>The interpreter runs async functions synchronously, without concurrency; async functions are only compiled to native code (see <a href="lang/async.html">async Functions</a>).</li>
 <li>Generic <code>impl</code>s, trait objects, and similar items in imported packages are not imported (see <a href="interop/types.html">Type mapping and items not imported</a>).</li>
 </ul>
 <h2 id="compiler"><a class="header" href="#compiler">Compiler</a></h2>

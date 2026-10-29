@@ -36,10 +36,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-19c48d11.js";
+            window.path_to_searchindex_js = "../searchindex-5ff180b8.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-73e1d097.js"></script>
+        <script src="../toc-77b35725.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -214,6 +214,46 @@ fn main {
 </ul>
 <p><code>raise</code>、<code>try</code> 与可变状态一样，使函数在类型检查时不展开（见
 <a href="mutation.html">可变状态与循环</a>）。</p>
+<h2 id="不写-try-的-catch-与-noraise"><a class="header" href="#不写-try-的-catch-与-noraise">不写 <code>try</code> 的 <code>catch</code> 与 <code>noraise</code></a></h2>
+<pre><code class="language-moonbit">suberror Oops {
+  Oops(Int)
+}
+
+fn risky(n : Int) -&gt; Int raise Oops {
+  if n &lt; 0 {
+    raise Oops(n)
+  } else {
+    n * 2
+  }
+}
+
+fn safe(n : Int) -&gt; Int {
+  risky(n) catch {
+    Oops(k) =&gt; k
+  }
+}
+
+fn describe(n : Int) -&gt; String {
+  try risky(n) catch {
+    Oops(k) if k &lt; -5 =&gt; "very bad"
+    _ =&gt; "bad"
+  } noraise {
+    v =&gt; "ok \{v}"
+  }
+}
+
+fn main {
+  println(safe(-3))
+  println(describe(4))
+  println(describe(-9))
+}
+</code></pre>
+<ul>
+<li><code>e catch { … }</code> 等同于 <code>try e catch { … }</code>，<code>catch</code> 要和 <code>e</code> 写在同一行。</li>
+<li><code>noraise { 模式 =&gt; … }</code> 处理没有出错时的结果。<code>catch</code> 和 <code>noraise</code> 分支中抛出的错误不会被同一个
+<code>try</code> 捕获。</li>
+<li><code>catch</code> 的分支可以使用或模式、<code>as</code> 和守卫。</li>
+</ul>
 
                     </main>
 
@@ -223,7 +263,7 @@ fn main {
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="../lang/prelude.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../lang/async.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -237,7 +277,7 @@ fn main {
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="../lang/prelude.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../lang/async.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>

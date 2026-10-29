@@ -36,10 +36,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-aec47b78.js";
+            window.path_to_searchindex_js = "../searchindex-2b6d7b0f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-1277b054.js"></script>
+        <script src="../toc-ec08c6a2.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -235,10 +235,11 @@ and MoonBit fills them in in the compiled program. The location is the one in th
 </ul>
 <p>The traits of <code>@builtin</code> (<code>pub using @builtin {trait Show}</code>) are the Prelude’s; other trait
 re-exports are not imported.</p>
+<p><code>async</code> functions are imported as MoonBit++ async functions, and so are <code>async</code> function types in
+parameters (see <a href="../lang/async.html">async Functions</a>); the <code>nocancel</code> mark is ignored.</p>
 <h2 id="skipped-items"><a class="header" href="#skipped-items">Skipped items</a></h2>
 <p>The following items are skipped; <code>moonpp check --verbose</code> lists them:</p>
 <ul>
-<li><code>async</code> functions, and <code>async</code> function types in parameters;</li>
 <li><code>impl</code>s of traits that are neither Prelude traits nor imported traits (e.g. <code>@debug.Debug</code>
 when <code>moonbitlang/core/debug</code> is not imported);</li>
 <li><code>#deprecated</code> items;</li>

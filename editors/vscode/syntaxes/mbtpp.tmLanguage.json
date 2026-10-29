@@ -135,11 +135,11 @@
       "patterns": [
         {
           "name": "keyword.control.mbtpp",
-          "match": "\\b(if|else|match|while|for|in|return|break|continue|raise|try|catch|noraise|loop|as)\\b"
+          "match": "\\b(if|else|match|while|for|in|return|break|continue|raise|try|catch|noraise|loop|as|is|guard)\\b"
         },
         {
           "name": "keyword.declaration.mbtpp",
-          "match": "\\b(fn|let|mut|enum|struct|trait|impl|lemma|suberror|derive|pub|priv|with|monad|proof|forall)\\b"
+          "match": "\\b(fn|async|let|mut|enum|struct|trait|impl|lemma|suberror|derive|pub|priv|with|monad|proof|forall)\\b"
         },
         {
           "name": "constant.language.boolean.mbtpp",

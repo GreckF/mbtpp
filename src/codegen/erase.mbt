@@ -185,6 +185,9 @@ fn Erasure::walk(
         for p in cl.pats {
           e = self.pat(p, ONone, e)
         }
+        if cl.cond is Some(g) {
+          self.walk(e, g, true)
+        }
         self.walk(e, cl.body, rel)
       }
     }
@@ -194,6 +197,9 @@ fn Erasure::walk(
         let mut e = env
         for p in cl.pats {
           e = self.pat(p, ONone, e)
+        }
+        if cl.cond is Some(g) {
+          self.walk(e, g, true)
         }
         self.walk(e, cl.body, rel)
       }

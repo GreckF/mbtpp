@@ -25,6 +25,7 @@ pub suberror ParseError {
 pub(all) struct Arm {
   pos : Pos
   pat : Pat
+  cond : Expr?
   rhs : Expr?
 } derive(Show)
 
@@ -88,7 +89,7 @@ pub(all) enum Expr {
   ETuple(Pos, Array[Expr])
   EArray(Pos, Array[Expr])
   EStruct(Pos, Array[(String, Expr)])
-  ETry(Pos, Expr, Array[Arm])
+  ETry(Pos, Expr, Array[Arm], Array[Arm]?)
   ETryQ(Pos, Expr)
   ERaise(Pos, Expr)
   EMonad(Pos, Expr)
@@ -99,6 +100,8 @@ pub(all) enum Expr {
   EContinue(Pos)
   ERange(Pos, Expr, Expr, Bool)
   ETagged(Pos, String, Expr, Bool)
+  EIs(Pos, Expr, Pat)
+  EEff(Pos, Expr, Expr)
 } derive(Show)
 pub fn Expr::pos(Self) -> Pos
 
@@ -185,6 +188,8 @@ pub(all) enum Pat {
   PCon(Pos, String, Array[Pat]?, Array[Pat])
   PLit(Pos, Lit)
   PTuple(Pos, Array[Pat])
+  POr(Pos, Pat, Pat)
+  PAs(Pos, Pat, String)
 } derive(Show)
 pub fn Pat::pos(Self) -> Pos
 
@@ -204,6 +209,7 @@ pub(all) enum Stmt {
   SFor(Pos, Array[(String, Expr)], Expr?, Array[(String, Expr)], Expr)
   SForIn(Pos, String, Expr, Expr)
   SExpr(Pos, Expr)
+  SGuard(Pos, Expr, Expr?)
 } derive(Show)
 
 pub(all) enum StrPart {

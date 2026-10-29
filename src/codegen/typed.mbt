@@ -29,6 +29,9 @@ priv enum NTy {
   NVar(Int32)
   /// A function type `(A, B) -> C` (one argument group).
   NFun(Array[NTy], NTy)
+  /// An async function type `async (A, B) -> C`: native only (`Value`
+  /// functions are synchronous).
+  NAsyncFun(Array[NTy], NTy)
   /// The type of `break`, `continue`, `return`, ... (any type).
   NAny
   /// `Self` in a trait declaration.
@@ -83,7 +86,10 @@ fn subst_nty(t : NTy, args : Array[NTy]) -> NTy {
   match t {
     NVar(k) => if k < args.length() { args[k] } else { t }
     NEnum(d, xs) => NEnum(d, xs.map(x => subst_nty(x, args)))
+    NForeign(d, xs) => NForeign(d, xs.map(x => subst_nty(x, args)))
     NFun(ps, r) => NFun(ps.map(x => subst_nty(x, args)), subst_nty(r, args))
+    NAsyncFun(ps, r) =>
+      NAsyncFun(ps.map(x => subst_nty(x, args)), subst_nty(r, args))
     _ => t
   }
 }
@@ -92,8 +98,8 @@ fn subst_nty(t : NTy, args : Array[NTy]) -> NTy {
 fn has_var(t : NTy) -> Bool {
   match t {
     NVar(_) => true
-    NEnum(_, xs) => xs.iter().any(has_var)
-    NFun(ps, r) => ps.iter().any(has_var) || has_var(r)
+    NEnum(_, xs) | NForeign(_, xs) => xs.iter().any(has_var)
+    NFun(ps, r) | NAsyncFun(ps, r) => ps.iter().any(has_var) || has_var(r)
     _ => false
   }
 }
@@ -103,8 +109,9 @@ fn has_var(t : NTy) -> Bool {
 fn has_tvar(t : NTy, k : Int32) -> Bool {
   match t {
     NVar(j) => j == k
-    NEnum(_, xs) => xs.iter().any(x => has_tvar(x, k))
-    NFun(ps, r) => ps.iter().any(x => has_tvar(x, k)) || has_tvar(r, k)
+    NEnum(_, xs) | NForeign(_, xs) => xs.iter().any(x => has_tvar(x, k))
+    NFun(ps, r) | NAsyncFun(ps, r) =>
+      ps.iter().any(x => has_tvar(x, k)) || has_tvar(r, k)
     _ => false
   }
 }
@@ -121,7 +128,6 @@ fn Gen::enum_ok(self : Gen, d : String) -> Bool {
       !di.builtin &&
       !di.is_prop &&
       !di.is_trait &&
-      !di.is_error &&
       (!d.has_prefix("@") || is_mbt_type(d)) &&
       di.cons.length() > 0 &&
       data_params_are_types(d, di.nparams)
@@ -229,11 +235,12 @@ fn Gen::native_ty_in(self : Gen, ctx : Array[TyCtx], t : @tt.Tm) -> NTy? {
         ctx2.push(TyOther)
         cur = b
       }
-      let r = match cur {
-        Raises(r, _) => r
-        _ => cur
+      let (r, is_async) = match cur {
+        Raises(r, e) => (r, @tt.tm_effect(e).0)
+        _ => (cur, false)
       }
       match self.native_ty_in(ctx2, r) {
+        Some(nr) if is_async => Some(NAsyncFun(ps, nr))
         Some(nr) => Some(NFun(ps, nr))
         None => None
       }
@@ -332,11 +339,9 @@ fn Gen::mbt_ty(self : Gen, t : NTy) -> String {
     NSelf => "Self"
     NVar(k) => tvar(k)
     NFun(ps, r) =>
-      "(" +
-      ps.map(p => self.mbt_ty(p)).join(", ") +
-      ") -> " +
-      self.mbt_ty(r) +
-      " raise"
+      "(" + self.mbt_params(ps) + ") -> " + self.mbt_ty(r) + " raise"
+    NAsyncFun(ps, r) =>
+      "async (" + self.mbt_params(ps) + ") -> " + self.mbt_ty(r) + " raise"
     NEnum(d, args) => {
       self.need_enum(d)
       if args.length() == 0 {
@@ -387,13 +392,19 @@ fn Gen::to_value(
         Some(cs) => cs[k] + "(" + e + ")"
         None => e
       }
+    // not convertible (see `convertible`)
+    NAsyncFun(_, _) => "abort(\"an async function as a Value\")"
     NFun(ps, r) => {
       // a curried Value function calling the native one
       let f = self.name("f")
       let xs = ps.map(_ => self.name("a"))
       let call = f +
         "(" +
-        ps.mapi((i, p) => self.of_value(p, xs[i], convs)).join(", ") +
+        (if unit_only(ps) {
+          ""
+        } else {
+          ps.mapi((i, p) => self.of_value(p, xs[i], convs)).join(", ")
+        }) +
         ")"
       let mut code = self.to_value(r, call, convs)
       for i = xs.length() - 1; i >= 0; i = i - 1 {
@@ -442,6 +453,7 @@ fn Gen::of_value(
         Some(cs) => cs[k] + "(" + e + ")"
         None => e
       }
+    NAsyncFun(_, _) => "abort(\"an async function from a Value\")"
     NFun(ps, r) => {
       // a native function applying the Value function
       let f = self.name("f")
@@ -450,12 +462,16 @@ fn Gen::of_value(
       for i = 0; i < xs.length(); i = i + 1 {
         call = "apply(" + call + ", " + self.to_value(ps[i], xs[i], convs) + ")"
       }
+      // `() -> T`: the argument is `()`
+      if unit_only(ps) {
+        call = "apply(" + f + ", VUnit)"
+      }
       "{\nlet " +
       f +
       " = " +
       e +
       "\n(" +
-      xs.join(", ") +
+      (if unit_only(ps) { "" } else { xs.join(", ") }) +
       ") => " +
       self.of_value(r, call, convs) +
       "\n}"
@@ -806,7 +822,8 @@ fn Gen::typed_check(
   ty : NTy,
 ) -> String raise NotTyped {
   match (t, ty) {
-    (Lam(_, Expl, _, _), NFun(ps, r)) => {
+    (Lam(_, Expl, _, _), NFun(ps, r) | NAsyncFun(ps, r)) => {
+      let is_async = ty is NAsyncFun(_, _)
       let mut e = env
       let xs : Array[String] = []
       let mut b = t
@@ -833,6 +850,24 @@ fn Gen::typed_check(
       ignore(unify_t(tb, r))
       // `{ x }` would be a record
       let cb = if is_ident(cb) { "(" + cb + ")" } else { cb }
+      // `() -> T`: no parameter in MoonBit, the variable is `()`
+      let (xs, cb) = if unit_only(ps) {
+        ([], "let " + xs[0] + " = ()\n" + cb)
+      } else {
+        (xs, cb)
+      }
+      let ps = if unit_only(ps) { [] } else { ps }
+      if is_async {
+        // an async closure (arrow functions cannot be async)
+        let typed_ps = xs.mapi((i, x) => x + " : " + self.mbt_ty(ps[i]))
+        return "async fn(" +
+          typed_ps.join(", ") +
+          ") -> " +
+          self.mbt_ty(r) +
+          " raise {\n" +
+          cb +
+          "\n}"
+      }
       "(" + xs.join(", ") + ") => {\n" + cb + "\n}"
     }
     _ => {
@@ -860,13 +895,19 @@ fn Gen::typed_app(
       let mut i = 0
       while i < args.length() {
         match ty {
-          NFun(ps, r) if i + ps.length() <= args.length() => {
+          NFun(ps, r) | NAsyncFun(ps, r) if i + ps.length() <= args.length() => {
             let cs = self.typed_args(
               env,
               args[i:i + ps.length()].to_array(),
               ps,
             )
-            code = code + "(" + cs.join(", ") + ")"
+            code = if unit_only(ps) && cs[0] == "()" {
+              code + "()"
+            } else if unit_only(ps) {
+              "{\nignore(" + cs[0] + ")\n" + code + "()\n}"
+            } else {
+              code + "(" + cs.join(", ") + ")"
+            }
             ty = r
             i = i + ps.length()
           }
@@ -975,7 +1016,8 @@ fn Gen::typed_app(
             )
           } else if self.typed_set.contains(n) {
             (id + "_t(" + cs.join(", ") + ")", res)
-          } else if !self.wrappable(sig) {
+          } else if !self.wrappable(sig) || @tt.is_async_global(n) {
+            // (an async function has no uniform version)
             raise NotTyped
           } else {
             // through the uniform version: only with concrete types
@@ -1088,7 +1130,7 @@ fn Gen::typed_ffi(
     }
   }
   let (res_tm, raises) = match t {
-    Raises(r, _) => (r, true)
+    Raises(r, e) => (r, @tt.tm_effect(e).1 is Some(_))
     _ => (t, false)
   }
   let target = prim.unsafe_substring(start=5, end=prim.length())
@@ -1235,8 +1277,14 @@ fn Gen::typed_term(
     Let(_, ty, v, b) if @tt.is_prop_head(ty) ||
       (flatten_app(v).0 is Global(g) && @tt.is_proof_global(g)) =>
       self.typed(tpush(env, TNone), b)
-    Let(x, _, v, b) => {
-      let (cv, tv) = self.typed(env, v)
+    Let(x, ty, v, b) => {
+      // a lambda gets its parameter types from the type of the `let`
+      let (cv, tv) = if v is Lam(_, Expl, _, _) {
+        let nt = self.type_arg(env, ty)
+        (self.typed_check(env, v, nt), nt)
+      } else {
+        self.typed(env, v)
+      }
       let n = self.name(x)
       let (cb, tb) = self.typed(tpush(env, TVar(n, tv)), b)
       (
@@ -1270,24 +1318,65 @@ fn Gen::typed_term(
         }
         _ => raise NotTyped
       }
-    // `try { e } catch { C(_) => ...; _ => ... }`: errors are `CRaise(v)`;
-    // a clause may test the constructor of the error, not bind its fields
+    // `try { e } catch { C(x, _) => ...; _ => ... }`: errors are
+    // `CRaise(v)`; a clause tests the constructor of the error and binds
+    // its fields (from the `Value`)
     Try(b, cls) => {
       let (cb, tb) = self.typed(env, b)
       let err = self.name("err")
       let mut ty = tb
       let arms : Array[String] = []
       for cl in cls {
+        let lets = StringBuilder::new()
         let (cond, env2) = match cl.pats {
-          [CPWild] => ("true", env)
-          [CPVar(_)] => ("true", tpush(env, TNone))
-          [CPCon(c, ps)] if ps.iter().all(p => p is CPWild) =>
-            ("con_name(" + err + ") == Some(" + c.escape() + ")", env)
+          [CPWild | CPVar(_)] => ("true", tpush(env, TNone))
+          [CPCon(c, ps)] if ps.iter().all(p => p is (CPWild | CPVar(_))) => {
+            let fields = match self.con_fields(c) {
+              Some(f) => f
+              None => raise NotTyped
+            }
+            let mut env2 = tpush(env, TNone)
+            // the index of the field among the fields of the `Value`
+            let mut k = 0
+            for j = 0; j < ps.length(); j = j + 1 {
+              let erased = self.er.con_erased(c, j)
+              match (ps[j], fields[j]) {
+                (CPVar(x), Some(ft)) if !erased => {
+                  let n = self.name(x)
+                  lets.write_string(
+                    "let " +
+                    n +
+                    " = " +
+                    self.of_value(
+                      ft,
+                      "con_fields(" + err + ")[" + k.to_string() + "]",
+                      None,
+                    ) +
+                    "\n",
+                  )
+                  env2 = tpush(env2, TVar(n, ft))
+                }
+                _ => env2 = tpush(env2, TNone)
+              }
+              if !erased {
+                k = k + 1
+              }
+            }
+            ("con_name(" + err + ") == Some(" + c.escape() + ")", env2)
+          }
           _ => raise NotTyped
+        }
+        let cond = match cl.cond {
+          Some(g) => {
+            let (cg, tg) = self.typed(env2, g)
+            ignore(unify_t(tg, NBool))
+            cond + " && {\n" + lets.to_string() + cg + "\n}"
+          }
+          None => cond
         }
         let (code, t) = self.typed(env2, cl.body)
         ty = unify_t(ty, t)
-        arms.push("if " + cond + " {\n" + code + "\n}")
+        arms.push("if " + cond + " {\n" + lets.to_string() + code + "\n}")
       }
       let handler = if arms.length() == 0 {
         "raise CRaise(" + err + ")"
@@ -1349,12 +1438,22 @@ fn Gen::typed_term(
             }
             let (cb, tb) = self.typed(env2, cl.body)
             ty = unify_t(ty, tb)
+            let when = match cl.cond {
+              Some(g) => {
+                let (cg, tg) = self.typed(env2, g)
+                ignore(unify_t(tg, NBool))
+                " if " + cg
+              }
+              None => ""
+            }
             let lhs = if ps.length() == 1 {
               ps[0]
             } else {
               "(" + ps.join(", ") + ")"
             }
-            buf.write_string(resolve_bindings(lhs, cb) + " => " + cb + "\n")
+            buf.write_string(
+              resolve_bindings(lhs, cb + when) + when + " => " + cb + "\n",
+            )
           }
           buf.write_string("_ => rt_fail(\"no match\")\n}")
           (buf.to_string(), ty)
@@ -1383,6 +1482,14 @@ fn Gen::typed_term(
         None => raise NotTyped
       }
       ("return " + cv, NAny)
+    }
+    // errors are `Value`s (`CRaise(v)`), as in uniform code
+    Raise(v) => {
+      let (cv, tv) = self.typed(env, v)
+      if !self.convertible(tv, false) {
+        raise NotTyped
+      }
+      ("raise CRaise(" + self.to_value(tv, cv, None) + ")", NAny)
     }
     Seq(a, b) => {
       let (ca, ta) = self.typed(env, a)
@@ -1455,7 +1562,7 @@ fn Gen::typed_fn(self : Gen, name : String) -> String? {
             "[" + self.tvars_with_bounds(sig.ntvars, sig.bounds) + "]"
           }
           Some(
-            "fn" +
+            (if @tt.is_async_global(name) { "async fn" } else { "fn" }) +
             gen +
             " " +
             id +
@@ -1565,5 +1672,22 @@ fn Gen::compute_typed(self : Gen) -> Unit {
     for i in keep_impls {
       self.mbt_impls.push(i)
     }
+  }
+}
+
+///|
+/// A function type of one `Unit` parameter is a MoonBit function without
+/// parameters (MoonBit++ `() -> T` is `(Unit) -> T`).
+fn unit_only(ps : Array[NTy]) -> Bool {
+  ps is [NUnit]
+}
+
+///|
+/// The parameter types of a native function type.
+fn Gen::mbt_params(self : Gen, ps : Array[NTy]) -> String {
+  if unit_only(ps) {
+    ""
+  } else {
+    ps.map(p => self.mbt_ty(p)).join(", ")
   }
 }

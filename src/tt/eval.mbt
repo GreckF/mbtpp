@@ -295,6 +295,15 @@ pub fn match_vals_opt(env : Env, vs : Array[Val], cls : Array[Clause]) -> Val? {
         for v in out {
           env2.push(v)
         }
+        match cl.cond {
+          Some(g) =>
+            match force(eval(env2, g)) {
+              VLit(LBool(true)) => ()
+              VLit(LBool(false)) => continue
+              _ => return None
+            }
+          None => ()
+        }
         return Some(eval(env2, cl.body))
       }
       Failed => continue
@@ -340,6 +349,12 @@ pub fn clause_body_val(env : Env, lvl : Int32, cl : Clause) -> Val {
 }
 
 ///|
+/// Evaluate the guard of a clause of a blocked match under fresh variables.
+pub fn clause_guard_val(env : Env, lvl : Int32, cl : Clause) -> Val? {
+  cl.cond.map(g => eval(concat(env, fresh_vars(lvl, pats_slots(cl.pats))), g))
+}
+
+///|
 pub fn quote(lvl : Int32, v : Val) -> Tm {
   quote_with(lvl, v, false)
 }
@@ -367,8 +382,12 @@ fn quote_with(lvl : Int32, v : Val, full : Bool) -> Tm {
     VRaises(a, e) => Raises(q(lvl, a), q(lvl, e))
     VMatch(env, vs, cls, sp) => {
       let cls2 = cls.map(cl => {
-        pats: cl.pats,
-        body: q(lvl + pats_slots(cl.pats), clause_body_val(env, lvl, cl)),
+        let l2 = lvl + pats_slots(cl.pats)
+        {
+          pats: cl.pats,
+          cond: clause_guard_val(env, lvl, cl).map(g => q(l2, g)),
+          body: q(l2, clause_body_val(env, lvl, cl)),
+        }
       })
       quote_sp(lvl, Match(vs.map(x => q(lvl, x)), cls2), sp, full)
     }

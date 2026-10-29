@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-19c48d11.js";
+            window.path_to_searchindex_js = "searchindex-5ff180b8.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-73e1d097.js"></script>
+        <script src="toc-77b35725.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -193,7 +193,7 @@
 <h2 id="导入"><a class="header" href="#导入">导入</a></h2>
 <ul>
 <li>解释器不能运行导入的 MoonBit 函数，只能在编译后调用。</li>
-<li>不支持 MoonBit 的 <code>async</code>（<code>async fn</code>、<code>async</code> 函数类型）。</li>
+<li>解释器同步执行 async 函数，没有并发；async 函数只编译成原生代码（见 <a href="lang/async.html">async 函数</a>）。</li>
 <li>导入包中的泛型 <code>impl</code>、trait 对象等不导入（见<a href="interop/types.html">类型对应与不导入的项</a>）。</li>
 </ul>
 <h2 id="编译器"><a class="header" href="#编译器">编译器</a></h2>

@@ -28,8 +28,17 @@ pub(all) enum CPat {
 ///|
 pub(all) struct Clause {
   pats : Array[CPat]
+  /// `p if cond => ...`: the clause is skipped when the condition is false.
+  /// Like the body, it is under the slots of the patterns.
+  cond : Tm?
   body : Tm
 } derive(Show)
+
+///|
+/// Apply `f` to the guard and the body of a clause.
+pub fn Clause::map(self : Clause, f : (Tm) -> Tm) -> Clause {
+  { pats: self.pats, cond: self.cond.map(f), body: f(self.body), }
+}
 
 ///|
 pub(all) enum Tm {

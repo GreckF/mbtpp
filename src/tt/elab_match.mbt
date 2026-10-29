@@ -31,6 +31,7 @@ fn check_pat(
   index_unify : Bool,
   scrut : Val?,
   refine_scrut : Bool,
+  as_name~ : String = "_",
 ) -> PatOut raise ElabError {
   let cxt = cxt0.at(p.pos())
   let ty = force(cxt.subst(ty0))
@@ -44,15 +45,32 @@ fn check_pat(
   match p {
     PVar(_, x) => simple(x, CPVar(x))
     PWild(_) => simple("_", CPWild)
+    // `p as x`: `x` names the slot of `p` (variables are handled by
+    // `expand_arms`)
+    PAs(_, PWild(q), x) =>
+      check_pat(cxt, PVar(q, x), ty, index_unify, scrut, refine_scrut)
+    PAs(q, PVar(_, _) | PAs(_, _, _), _) =>
+      cxt.at(q).fail("a variable cannot be named twice here")
+    PAs(_, inner, x) =>
+      check_pat(cxt, inner, ty, index_unify, scrut, refine_scrut, as_name=x)
+    POr(q, _, _) => cxt.at(q).fail("an or-pattern cannot be used here")
     PLit(q, LInt(n)) if head_name(ty) == Some("Nat") =>
       if n < 0 {
         cxt.fail("negative natural number")
       } else {
-        check_pat(cxt, nat_pat(q, n), ty, index_unify, scrut, refine_scrut)
+        check_pat(
+          cxt,
+          nat_pat(q, n),
+          ty,
+          index_unify,
+          scrut,
+          refine_scrut,
+          as_name~,
+        )
       }
     PLit(_, l) => {
       cxt.unify(ty, lit_type(l))
-      simple("_", CPLit(l))
+      simple(as_name, CPLit(l))
     }
     PTuple(q, ps) =>
       check_pat(
@@ -62,6 +80,7 @@ fn check_pat(
         index_unify,
         scrut,
         refine_scrut,
+        as_name~,
       )
     PCon(cpos, name, impl_ps, expl_ps) => {
       let (d, sp) = match ty {
@@ -91,7 +110,7 @@ fn check_pat(
         )
       }
       let s = cxt.lvl
-      let mut cur = cxt.bind("_", ty)
+      let mut cur = cxt.bind(as_name, ty)
       let mut cty = global_entry(cxt, c).vty
       let args : Spine = []
       for k = 0; k < ci.nparams; k = k + 1 {
@@ -229,6 +248,17 @@ fn is_subsingleton(cxt : Cxt, d : String) -> Bool raise ElabError {
 }
 
 ///|
+/// Does a pattern look at the constructor of the value?
+fn splits(p : @parser.Pat) -> Bool {
+  match p {
+    PCon(_, _, _, _) | PTuple(_, _) | PLit(_, _) => true
+    PAs(_, q, _) => splits(q)
+    POr(_, a, b) => splits(a) || splits(b)
+    PVar(_, _) | PWild(_) => false
+  }
+}
+
+///|
 fn check_prop_elim(
   cxt : Cxt,
   tys : Array[Val],
@@ -240,9 +270,7 @@ fn check_prop_elim(
       VData(d, _) =>
         match data_info(d) {
           Some(di) if di.is_prop => {
-            let splits = arms
-              .iter()
-              .any(ps => ps[k] is (PCon(_, _, _, _) | PTuple(_, _)))
+            let splits = arms.iter().any(ps => splits(ps[k]))
             if splits &&
               !is_prop_type(cxt.ltypes(), goal) &&
               !is_subsingleton(cxt, d) {
@@ -268,6 +296,7 @@ fn elab_match(
   arms : Array[@parser.Arm],
   goal : Val?,
 ) -> (Tm, Val) raise ElabError {
+  let arms = expand_arms(cxt, arms)
   // `match (a, b) { (p, q) => ... }` matches on several scrutinees
   let scrs = match scr {
     ETuple(_, es) if ret is None &&
@@ -323,12 +352,15 @@ fn elab_match(
         match (conflict, arm.rhs) {
           (true, _) => ()
           (false, None) =>
-            if !has_empty_var(cur) {
+            if arm.cond is Some(_) {
+              cur.fail("an impossible pattern cannot have a guard")
+            } else if !has_empty_var(cur) {
               cur.fail("this pattern is not impossible")
             }
           (false, Some(rhs)) => {
+            let cond = arm.cond.map(g => check(cur, g, bool_ty()))
             let body = check(cur, rhs, cur.subst(goal))
-            clauses.push({ pats: cps, body, })
+            clauses.push({ pats: cps, cond, body, })
           }
         }
       }
@@ -448,6 +480,7 @@ fn elab_match_ret(
     None => ()
   }
   let clauses : Array[Clause] = []
+  let arms = expand_arms(cxt, arms)
   for arm in arms {
     let out = check_pat(cxt.at(arm.pos), arm.pat, a, false, Some(sval), false)
     if out.conflict {
@@ -464,7 +497,8 @@ fn elab_match_ret(
     }
     let env = concat(concat(out.cxt.env[0:cxt.lvl].to_array(), idx), [xv])
     let g = out.cxt.subst(eval(env, r))
-    clauses.push({ pats: [out.pat], body: check(out.cxt, rhs, g), })
+    let cond = arm.cond.map(e => check(out.cxt, e, bool_ty()))
+    clauses.push({ pats: [out.pat], cond, body: check(out.cxt, rhs, g), })
   }
   check_prop_elim(cxt, [a], arms.map(x => [x.pat]), res_ty)
   // coverage over a generalised scrutinee
@@ -631,6 +665,10 @@ fn cover(
     return
   }
   for cl in clauses {
+    // a guarded clause may not match
+    if cl.cond is Some(_) {
+      continue
+    }
     let rs : Array[Cov] = []
     for k = 0; k < problem.length(); k = k + 1 {
       rs.push(cov_pat(cxt, cl.pats[k], problem[k]))
@@ -712,9 +750,13 @@ fn elab_try(
     None => infer_ins(bc, body)
   }
   let clauses : Array[Clause] = []
-  for arm in arms {
+  for arm in expand_arms(cxt, arms) {
     let c = cxt.at(arm.pos)
-    let ety = match arm.pat {
+    let mut head = arm.pat
+    while head is PAs(_, q, _) {
+      head = q
+    }
+    let ety = match head {
       PCon(_, name, _, _) => {
         let con = resolve_name(c, name, false, None)
         match con_info(con) {
@@ -729,7 +771,8 @@ fn elab_try(
       Some(x) => x
       None => c.fail("missing handler body")
     }
-    clauses.push({ pats: [out.pat], body: check(out.cxt, rhs, ty), })
+    let cond = arm.cond.map(e => check(out.cxt, e, bool_ty()))
+    clauses.push({ pats: [out.pat], cond, body: check(out.cxt, rhs, ty), })
   }
   (Try(tb, clauses), ty)
 }

@@ -152,7 +152,7 @@ fn result_raises(ty : @tt.Tm, n : Int32) -> Bool {
       _ => return false
     }
   }
-  t is Raises(_, _)
+  t is Raises(_, e) && @tt.tm_effect(e).1 is Some(_)
 }
 
 ///|
@@ -244,7 +244,8 @@ fn Gen::export_fn(self : Gen, name : String, sig : TSig) -> Unit {
     self.file_of(name),
     "\n///|\n/// MoonBit++ " +
     name +
-    "\npub fn" +
+    "\npub " +
+    (if @tt.is_async_global(name) { "async fn" } else { "fn" }) +
     gen +
     " " +
     mname +
@@ -257,4 +258,83 @@ fn Gen::export_fn(self : Gen, name : String, sig : TSig) -> Unit {
     body_code +
     "\n}\n",
   )
+}
+
+///|
+/// Async functions must be native, like `#mbt` functions: the uniform
+/// representation is synchronous.
+fn Gen::check_async_fns(self : Gen) -> Unit raise CodegenError {
+  for f, g in @tt.globals {
+    if f == "main" ||
+      !(g.kind is GFunc(Some(_), _, _)) ||
+      !@tt.is_async_global(f) ||
+      self.typed_set.contains(f) {
+      continue
+    }
+    raise CodegenError(
+      "async fn " +
+      f +
+      " cannot be compiled to MoonBit: " +
+      self.why_not_native(f),
+    )
+  }
+}
+
+///|
+/// Why function `f` has no native translation.
+fn Gen::why_not_native(self : Gen, f : String) -> String {
+  match self.native_sig(f) {
+    None =>
+      "its type has no native MoonBit translation (like a type computed from a parameter, or a type parameter with a bound that occurs in no parameter and not in the result type)"
+    Some(_) => {
+      self.diagnose = true
+      self.culprit = None
+      ignore(self.typed_fn(f))
+      self.diagnose = false
+      match self.culprit {
+        Some(c) => "its body is not in the native fragment: " + c
+        None => "its body is not in the native fragment"
+      }
+    }
+  }
+}
+
+///|
+/// A use of the async function `f` in uniform code: an error, reported
+/// after the generation.
+fn Gen::async_use(self : Gen, f : String) -> String {
+  self.async_misuse.push((f, self.cur_global))
+  "abort(\"async function used outside of native code\")"
+}
+
+///|
+/// `async fn main`: its body must be native.
+fn Gen::async_main(self : Gen) -> String raise CodegenError {
+  let body = match @tt.globals.get("main") {
+    Some({ kind: GFunc(Some(b), _, _), .. }) => b
+    _ => raise CodegenError("main has no definition")
+  }
+  self.cur_global = "main"
+  self.cur_result = Some(NUnit)
+  let res = Ok(self.typed([], body)) catch { err => Err(err) }
+  self.cur_result = None
+  match res {
+    Ok((code, _)) =>
+      "\n///|\nasync fn main {\n  (try {\n    ignore(" +
+      code +
+      ")\n  } catch {\n    e => report_error(e)\n  })\n  rt_flush()\n}\n"
+    Err(_) => {
+      self.diagnose = true
+      self.culprit = None
+      ignore(Ok(self.typed([], body)) catch { err => Err(err) })
+      self.diagnose = false
+      raise CodegenError(
+        "async fn main cannot be compiled to MoonBit: its body is not in the native fragment" +
+        (match self.culprit {
+          Some(c) => ": " + c
+          None => ""
+        }),
+      )
+    }
+  }
 }

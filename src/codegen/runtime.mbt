@@ -426,6 +426,14 @@ let runtime_src : String =
   #|  try {
   #|    ignore(f())
   #|  } catch {
+  #|    e => report_error(e)
+  #|  }
+  #|  rt_flush()
+  #|}
+  #|
+  #|/// Report an error that escaped `main`.
+  #|fn report_error(e : Error) -> Unit {
+  #|  match e {
   #|    CReturn(_) => ()
   #|    CRaise(e) => {
   #|      rt_flush()

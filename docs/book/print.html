@@ -37,10 +37,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-19c48d11.js";
+            window.path_to_searchindex_js = "searchindex-5ff180b8.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-73e1d097.js"></script>
+        <script src="toc-77b35725.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -274,7 +274,7 @@ fn main {
 <h2 id="关键字"><a class="header" href="#关键字">关键字</a></h2>
 <pre><code class="language-text">fn let mut if else match enum struct trait impl for in with while return break
 continue raise try catch true false Type Prop forall lemma proof monad as suberror
-derive pub priv noraise loop
+derive pub priv noraise loop is guard async
 </code></pre>
 <p><code>pub</code>、<code>priv</code>、<code>derive(...)</code> 可以写，但被忽略：一个包是一个作用域，没有可见性。</p>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -650,6 +650,77 @@ fn main {
 <li>分支按顺序匹配，可以重叠，第一个匹配的分支生效。</li>
 <li><strong>构造子的隐式参数</strong>可以在模式中绑定或忽略：<code>If[t](c, a, b)</code>、<code>IZ[_, a] =&gt; a</code>。</li>
 <li><strong><code>let</code> 模式</strong>：<code>let (a, b) = pair</code>。</li>
+</ul>
+<h2 id="或模式as-与守卫"><a class="header" href="#或模式as-与守卫">或模式、<code>as</code> 与守卫</a></h2>
+<pre><code class="language-moonbit">enum Shape {
+  Circle(Int)
+  Rect(Int, Int)
+  Square(Int)
+}
+
+fn kind(s : Shape) -&gt; String {
+  match s {
+    Rect(_, _) | Square(_) =&gt; "polygon"
+    Circle(r) if r &gt; 10 =&gt; "big circle"
+    Circle(_) =&gt; "circle"
+  }
+}
+
+fn widest(s : Shape) -&gt; Shape {
+  match s {
+    Rect(w, _) | Square(w) as big if w &gt; 100 =&gt; big
+    other =&gt; other
+  }
+}
+
+fn main {
+  println(kind(Circle(11)))
+  println(widest(Square(200)) is Square(_))
+}
+</code></pre>
+<ul>
+<li><strong>或模式</strong> <code>p | q</code>：可以嵌套（<code>Some(1 | 2)</code>），各个选项必须绑定相同的变量。检查器把它展开成多个
+分支，每个分支各自做依赖匹配。</li>
+<li><strong><code>p as x</code></strong>：<code>x</code> 是整个被匹配的值。<code>as</code> 结合得最松，<code>A | B as x</code> 中的 <code>x</code> 是 <code>A | B</code> 匹配到的值。</li>
+<li><strong>守卫</strong> <code>p if cond =&gt; …</code>：条件为假时继续尝试后面的分支，条件中可以使用模式绑定的变量。带守卫的
+分支不计入覆盖检查。</li>
+</ul>
+<h2 id="is-与-guard"><a class="header" href="#is-与-guard"><code>is</code> 与 <code>guard</code></a></h2>
+<pre><code class="language-moonbit">fn get(o : Option[Int]) -&gt; Int {
+  if o is Some(x) &amp;&amp; x &gt; 5 {
+    x
+  } else {
+    0
+  }
+}
+
+fn length(xs : List[Int]) -&gt; Int {
+  let mut cur = xs
+  let mut n = 0
+  while cur is Cons(_, rest) {
+    n = n + 1
+    cur = rest
+  }
+  n
+}
+
+fn head_or(xs : List[Int], d : Int) -&gt; Int {
+  guard xs is Cons(h, _) else { return d }
+  h
+}
+
+fn main {
+  println(get(Some(9)))
+  println(length(Cons(1, Cons(2, Nil))))
+  println(head_or(Nil, 42))
+}
+</code></pre>
+<ul>
+<li><strong><code>e is p</code></strong> 的值是 <code>Bool</code>。在 <code>if</code>、<code>while</code>、<code>guard</code> 的条件中，<code>p</code> 绑定的变量在 <code>&amp;&amp;</code> 链的后续
+部分和条件成立时执行的代码中可见。</li>
+<li><strong><code>guard cond else { … }</code></strong>：条件不成立时执行 <code>else</code> 块，块中通常是 <code>return</code>、<code>break</code> 或
+<code>abort(…)</code>。之后的语句可以使用 <code>cond</code> 绑定的变量。省略 <code>else</code> 时，条件不成立会中止程序。</li>
+<li>条件中有 <code>is</code> 时，<code>else</code> 分支在每个 <code>is</code> 失败的地方各展开一次，代码会重复。</li>
 </ul>
 <p>MoonBit++ 的模式匹配是依赖的：</p>
 <ul>
@@ -1248,6 +1319,113 @@ fn main {
 </ul>
 <p><code>raise</code>、<code>try</code> 与可变状态一样，使函数在类型检查时不展开（见
 <a href="#可变状态与循环">可变状态与循环</a>）。</p>
+<h2 id="不写-try-的-catch-与-noraise"><a class="header" href="#不写-try-的-catch-与-noraise">不写 <code>try</code> 的 <code>catch</code> 与 <code>noraise</code></a></h2>
+<pre><code class="language-moonbit">suberror Oops {
+  Oops(Int)
+}
+
+fn risky(n : Int) -&gt; Int raise Oops {
+  if n &lt; 0 {
+    raise Oops(n)
+  } else {
+    n * 2
+  }
+}
+
+fn safe(n : Int) -&gt; Int {
+  risky(n) catch {
+    Oops(k) =&gt; k
+  }
+}
+
+fn describe(n : Int) -&gt; String {
+  try risky(n) catch {
+    Oops(k) if k &lt; -5 =&gt; "very bad"
+    _ =&gt; "bad"
+  } noraise {
+    v =&gt; "ok \{v}"
+  }
+}
+
+fn main {
+  println(safe(-3))
+  println(describe(4))
+  println(describe(-9))
+}
+</code></pre>
+<ul>
+<li><code>e catch { … }</code> 等同于 <code>try e catch { … }</code>，<code>catch</code> 要和 <code>e</code> 写在同一行。</li>
+<li><code>noraise { 模式 =&gt; … }</code> 处理没有出错时的结果。<code>catch</code> 和 <code>noraise</code> 分支中抛出的错误不会被同一个
+<code>try</code> 捕获。</li>
+<li><code>catch</code> 的分支可以使用或模式、<code>as</code> 和守卫。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="async-函数"><a class="header" href="#async-函数">async 函数</a></h1>
+<p>MoonBit++ 支持 MoonBit 的 <code>async</code> 函数：</p>
+<pre><code class="language-moonbit">async fn twice(f : async (Int) -&gt; Int, x : Int) -&gt; Int {
+  f(f(x))
+}
+
+async fn inc(x : Int) -&gt; Int noraise {
+  x + 1
+}
+
+async fn main {
+  let g = async fn(x : Int) -&gt; Int { inc(x) * 2 }
+  println(twice(g, 1))
+  println(twice(x =&gt; inc(x), 5))
+}
+</code></pre>
+<ul>
+<li><strong>写法</strong>：顶层和局部函数写 <code>async fn name(…)</code>，匿名函数写 <code>async fn(…) { … }</code>，函数类型写
+<code>async (A) -&gt; B</code>。</li>
+<li><strong>错误</strong>：与 MoonBit 相同，async 函数默认可以抛出任何错误（相当于 <code>raise Error</code>）。<code>raise E</code>
+限定错误类型，<code>noraise</code> 表示不抛出。</li>
+<li><strong>调用</strong>：async 函数只能在 async 函数中调用。期望类型是 async 函数类型时，匿名函数（包括
+<code>x =&gt; …</code>）就是 async 的，例如上面传给 <code>twice</code> 的第二个参数。同步函数可以把 async 函数当作值
+传递，但不能调用它。</li>
+<li><strong><code>async fn main</code></strong>：程序入口可以是 async 的。</li>
+<li><strong>解释器</strong>：<code>moonpp run</code> 按顺序同步执行 async 函数，没有并发。导入的 MoonBit async 函数和其他
+导入函数一样，只能在编译后调用。</li>
+</ul>
+<h2 id="使用-moonbitlangasync"><a class="header" href="#使用-moonbitlangasync">使用 moonbitlang/async</a></h2>
+<p>用 <code>moonpp add moonbitlang/async</code> 添加依赖，并在包的 <code>moon.pkg</code> 中导入后，就可以使用它的任务组、
+定时器和 IO：</p>
+<pre><code class="language-moonbit">// requires moonbitlang/async
+async fn tick(name : String, n : Int, delay : Int) -&gt; Unit {
+  for i = 0; i &lt; n; i = i + 1 {
+    @async.sleep(delay)
+    println(name + " " + i.to_string())
+  }
+}
+
+async fn main {
+  @async.with_task_group(fn(g) {
+    g.spawn_bg(fn() { tick("a", 3, 30) })
+    g.spawn_bg(fn() { tick("b", 2, 45) })
+  })
+  println("done")
+}
+</code></pre>
+<p><code>moonpp run --compiled</code> 的输出中，两个任务交替运行：</p>
+<pre><code class="language-text">a 0
+b 0
+a 1
+b 1
+a 2
+done
+</code></pre>
+<p><code>async</code> 是关键字，但仍然可以作为包的别名：<code>@async.sleep</code>。</p>
+<h2 id="编译"><a class="header" href="#编译">编译</a></h2>
+<ul>
+<li>async 函数只编译成原生 MoonBit 代码，因为统一表示中的函数是同步的。它的签名和函数体必须在原生
+片段中，否则编译报错并指出第一个不在原生片段中的项，规则与 <a href="#mbt-函数"><code>#mbt</code> 函数</a>
+相同。</li>
+<li>async 函数也只能被原生代码使用。如果统一表示的代码引用了 async 函数，例如一个不在原生片段中的
+同步函数返回了 async 匿名函数，编译会报错。</li>
+<li><code>async fn main</code> 编译成 MoonBit 的 <code>async fn main</code>；<code>#mbt async fn</code> 导出为 <code>pub async fn</code>。</li>
+<li><code>moonbitlang/async</code> 支持 native、JS 和 wasm 目标，不支持 wasm-gc。</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="prelude"><a class="header" href="#prelude">Prelude</a></h1>
 <p>每个程序都自动加载 Prelude（<code>moonpp --no-prelude</code> 可以关闭）。</p>
@@ -1648,10 +1826,11 @@ MoonBit 填入。填入的位置是生成的 <code>.mbt</code> 中的位置。</
 </ul>
 <p><code>@builtin</code> 的 trait（<code>pub using @builtin {trait Show}</code>）就是 Prelude 中的 trait；其他 trait 的
 重新导出不导入。</p>
+<p><code>async</code> 函数导入为 MoonBit++ 的 async 函数，参数中的 <code>async</code> 函数类型也一样（见
+<a href="#async-函数">async 函数</a>），<code>nocancel</code> 标记被忽略。</p>
 <h2 id="不导入的项"><a class="header" href="#不导入的项">不导入的项</a></h2>
 <p>下面的项会被跳过，<code>moonpp check --verbose</code> 会列出它们：</p>
 <ul>
-<li><code>async</code> 函数，以及参数中的 <code>async</code> 函数类型；</li>
 <li>trait 既不是 Prelude trait、也不是导入的 trait 的 <code>impl</code>（例如没有导入 <code>moonbitlang/core/debug</code>
 时的 <code>@debug.Debug</code>）；</li>
 <li><code>#deprecated</code> 的项；</li>
@@ -1925,7 +2104,7 @@ or a bound that is not #mbt)
 <h2 id="导入"><a class="header" href="#导入">导入</a></h2>
 <ul>
 <li>解释器不能运行导入的 MoonBit 函数，只能在编译后调用。</li>
-<li>不支持 MoonBit 的 <code>async</code>（<code>async fn</code>、<code>async</code> 函数类型）。</li>
+<li>解释器同步执行 async 函数，没有并发；async 函数只编译成原生代码（见 <a href="#async-函数">async 函数</a>）。</li>
 <li>导入包中的泛型 <code>impl</code>、trait 对象等不导入（见<a href="#类型对应与不导入的项">类型对应与不导入的项</a>）。</li>
 </ul>
 <h2 id="编译器"><a class="header" href="#编译器">编译器</a></h2>

@@ -36,10 +36,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-19c48d11.js";
+            window.path_to_searchindex_js = "../searchindex-5ff180b8.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-73e1d097.js"></script>
+        <script src="../toc-77b35725.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -232,10 +232,11 @@ MoonBit 填入。填入的位置是生成的 <code>.mbt</code> 中的位置。</
 </ul>
 <p><code>@builtin</code> 的 trait（<code>pub using @builtin {trait Show}</code>）就是 Prelude 中的 trait；其他 trait 的
 重新导出不导入。</p>
+<p><code>async</code> 函数导入为 MoonBit++ 的 async 函数，参数中的 <code>async</code> 函数类型也一样（见
+<a href="../lang/async.html">async 函数</a>），<code>nocancel</code> 标记被忽略。</p>
 <h2 id="不导入的项"><a class="header" href="#不导入的项">不导入的项</a></h2>
 <p>下面的项会被跳过，<code>moonpp check --verbose</code> 会列出它们：</p>
 <ul>
-<li><code>async</code> 函数，以及参数中的 <code>async</code> 函数类型；</li>
 <li>trait 既不是 Prelude trait、也不是导入的 trait 的 <code>impl</code>（例如没有导入 <code>moonbitlang/core/debug</code>
 时的 <code>@debug.Debug</code>）；</li>
 <li><code>#deprecated</code> 的项；</li>

@@ -773,3 +773,60 @@ test "trait objects: object safety" {
     ),
   )
 }
+
+///|
+test "or-pattern alternatives bind different variables" {
+  inspect(
+    check(
+      (
+        #|fn f(o : Option[Int]) -> Int {
+        #|  match o { Some(x) | None => 0 }
+        #|}
+      ),
+    ),
+    content="t.mbtpp:2:21: error: the alternatives of an or-pattern must bind the same variables",
+  )
+}
+
+///|
+test "guarded clauses do not count for coverage" {
+  inspect(
+    check(
+      (
+        #|fn f(n : Int) -> Int {
+        #|  match n { x if x > 0 => 1 }
+        #|}
+      ),
+    ),
+    content=(
+      #|t.mbtpp:2:3: error: match is not exhaustive; missing case(s):
+      #|  n
+    ),
+  )
+}
+
+///|
+test "async functions are called in async functions" {
+  inspect(
+    check(
+      (
+        #|async fn inc(x : Int) -> Int noraise { x + 1 }
+        #|fn bad() -> Int { inc(1) }
+      ),
+    ),
+    content="t.mbtpp:2:22: error: this calls an async function, which can only be done in an async function",
+  )
+  inspect(
+    check(
+      (
+        #|async fn inc(x : Int) -> Int noraise { x + 1 }
+        #|fn f() -> Int { let g : Int = inc; 0 }
+      ),
+    ),
+    content=(
+      #|t.mbtpp:2:31: error: type mismatch
+      #|  expected: Int
+      #|  actual:   async (x : Int) -> Int noraise
+    ),
+  )
+}

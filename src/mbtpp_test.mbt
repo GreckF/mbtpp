@@ -204,3 +204,46 @@ test "example trait_objects" {
     ),
   )
 }
+
+///|
+test "example patterns" {
+  inspect(
+    run_example("patterns.mbtpp"),
+    content=(
+      #|polygon, big circle, circle
+      #|true
+      #|true false
+      #|9 0 0
+      #|3
+      #|42 5
+      #|tiny seven other
+      #|6 -3
+      #|ok 8, bad, very bad
+      #|3
+      #|
+    ),
+  )
+}
+
+///|
+test "async functions run in the interpreter" {
+  inspect(
+    run_source(
+      "t.mbtpp",
+      (
+        #|async fn twice(f : async (Int) -> Int, x : Int) -> Int { f(f(x)) }
+        #|async fn inc(x : Int) -> Int noraise { x + 1 }
+        #|async fn main {
+        #|  let g = async fn(x : Int) -> Int { inc(x) * 2 }
+        #|  println(twice(g, 1))
+        #|  println(twice(x => inc(x), 5))
+        #|}
+      ),
+    ),
+    content=(
+      #|10
+      #|7
+      #|
+    ),
+  )
+}

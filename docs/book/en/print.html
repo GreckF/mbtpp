@@ -1,0 +1,1881 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>MoonBit++ Manual</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-e96d0476.css">
+        <link rel="stylesheet" href="css/chrome-d279d366.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/moonbit-420fabb4.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-5dce499f.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-f86c1434.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">MoonBit++ Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/GreckF/mbtpp" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="the-moonbit-manual"><a class="header" href="#the-moonbit-manual">The MoonBit++ Manual</a></h1>
+<p align="center"><img src="images/mascot.jpg" alt="MoonBit++ mascot: a magenta rabbit in a white lab coat and goggles, laughing hard" width="320"></p>
+
+<p>MoonBit++ is a dependently typed language with MoonBit syntax: the same <code>fn</code>, <code>enum</code>, <code>struct</code>, <code>trait</code>,
+<code>match</code>, <code>let mut</code>, <code>for</code>, and <code>raise</code>, plus dependent types, indexed types, dependent pattern matching, propositions, and proofs.</p>
+<p>It includes:</p>
+<ul>
+<li><strong>A type checker</strong>: dependent types, unification, dependent pattern matching with coverage checking, instance search, and simple tactics.</li>
+<li><strong>An interpreter</strong>: runs type-checked programs directly.</li>
+<li><strong>A compiler</strong>: translates programs to MoonBit, generating native code for the parts expressible in MoonBit types.</li>
+<li><strong><code>moonpp</code></strong>: a <code>moon</code>-like command-line tool for managing projects, dependencies, and builds.</li>
+</ul>
+<blockquote>
+<p>This is a purely vibe-coded fun project. Please don’t take it seriously.</p>
+</blockquote>
+<p>This manual has three parts:</p>
+<ul>
+<li><strong>Language</strong>: one chapter per feature, from lexical structure to proofs, traits, and effects.</li>
+<li><strong>moonpp</strong>: installation, project layout, commands, dependencies, and build output.</li>
+<li><strong>Interop with MoonBit</strong>: importing MoonBit packages, compiling to MoonBit, <code>#mbt</code> declarations, and using compiled output from MoonBit.</li>
+</ul>
+<p>Examples with <code>fn main</code> have a ▶ button in the top-right corner that opens them in the <a href="https://greckf.github.io/mbtpp/">Playground</a>
+to run. Source code and examples are on <a href="https://github.com/GreckF/mbtpp">GitHub</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="quick-start"><a class="header" href="#quick-start">Quick Start</a></h1>
+<p>After installing <code>moonpp</code> (see <a href="#installation">Installation</a>):</p>
+<pre><code class="language-bash">moonpp new hello
+cd hello
+moonpp run                # run src/main with the interpreter
+moonpp check              # type check
+moonpp run --compiled     # compile to MoonBit, then run
+moonpp build              # compile into the MoonBit project mbtpp_out/main
+</code></pre>
+<p>The <code>src/main/main.mbtpp</code> generated by <code>moonpp new</code> looks like this:</p>
+<pre><code class="language-moonbit">enum Vector[T] : Nat -&gt; Type {
+  Nil : Vector[T](0)
+  Cons[n : Nat](T, Vector[T](n)) : Vector[T](S(n))
+}
+
+// Accepts only non-empty vectors: no Nil branch needed
+fn[T, n : Nat] Vector::head(self : Vector[T](S(n))) -&gt; T {
+  match self {
+    Cons(x, _) =&gt; x
+  }
+}
+
+fn main {
+  let v : Vector[String](2) = Cons("Hello", Cons("MoonBit++", Nil))
+  println(v.head())
+}
+</code></pre>
+<ul>
+<li><code>Vector[T](n)</code> is a vector of length <code>n</code>: <code>T</code> is a parameter and <code>n</code> is an index (see
+<a href="#enum-and-indexed-types">enum and indexed types</a>).</li>
+<li><code>head</code> only accepts vectors of type <code>Vector[T](S(n))</code>, so <code>Nil</code> cannot occur and the <code>match</code> needs no branch for it
+(see <a href="#coverage-checking-and-impossible-branches">Coverage checking and impossible branches</a>).</li>
+<li><code>v.head()</code> calls the method <code>Vector::head</code>.</li>
+</ul>
+<p>You can also try it without installing anything in the <a href="https://greckf.github.io/mbtpp/">Playground</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="lexical-structure"><a class="header" href="#lexical-structure">Lexical Structure</a></h1>
+<ul>
+<li><strong>Comments</strong>: <code>// …</code> to the end of the line. There are no block comments.</li>
+<li><strong>Identifiers</strong>: letters, digits, and <code>_</code>, not starting with a digit. By convention, types, constructors, and traits start with an uppercase letter; everything else is lowercase.</li>
+<li><strong>Statement separators</strong>: newline or <code>;</code>.</li>
+</ul>
+<h2 id="literals"><a class="header" href="#literals">Literals</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Literal</th><th>Examples</th><th>Type</th></tr>
+</thead>
+<tbody>
+<tr><td>Integer</td><td><code>0</code>, <code>42</code>, <code>1_000</code>, <code>-1</code></td><td><code>Int</code>; expands to <code>S(…S(Z))</code> when the expected type is <code>Nat</code></td></tr>
+<tr><td>Floating point</td><td><code>1.5</code>, <code>2.0</code></td><td><code>Double</code></td></tr>
+<tr><td>Character</td><td><code>'a'</code>, <code>'\n'</code></td><td><code>Char</code></td></tr>
+<tr><td>String</td><td><code>"hello"</code></td><td><code>String</code></td></tr>
+<tr><td>Boolean</td><td><code>true</code>, <code>false</code></td><td><code>Bool</code></td></tr>
+<tr><td>Unit</td><td><code>()</code></td><td><code>Unit</code></td></tr>
+<tr><td>Array</td><td><code>[1, 2, 3]</code></td><td><code>Array[Int]</code></td></tr>
+<tr><td>Tuple</td><td><code>(1, "a")</code></td><td><code>(Int, String)</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Escapes: <code>\n \t \r \\ \" \' \0</code>.</p>
+<p>String interpolation <code>"\{e}"</code> inserts the <code>Show</code> result of <code>e</code> into the string:</p>
+<pre><code class="language-moonbit">fn main {
+  let n = 3
+  let xs = [1, 2, 3]
+  println("n = \{n}, xs = \{xs}, next = \{n + 1}")
+}
+</code></pre>
+<h2 id="keywords"><a class="header" href="#keywords">Keywords</a></h2>
+<pre><code class="language-text">fn let mut if else match enum struct trait impl for in with while return break
+continue raise try catch true false Type Prop forall lemma proof monad as suberror
+derive pub priv noraise loop
+</code></pre>
+<p><code>pub</code>, <code>priv</code>, and <code>derive(...)</code> are accepted but ignored: a package is a single scope with no visibility control.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="expressions-and-statements"><a class="header" href="#expressions-and-statements">Expressions and Statements</a></h1>
+<p>Expressions and statements are the same as in MoonBit:</p>
+<pre><code class="language-moonbit">fn demo(xs : Array[Int]) -&gt; Int {
+  let a = 1                       // immutable binding
+  let mut total = a               // mutable binding
+  total = total + 2               // assignment
+  for x in xs {
+    total = total + x
+  }
+  let f = (x : Int) =&gt; x * 2      // lambda; also x =&gt; e, (x, y) =&gt; e
+  let g = fn(x : Int) { x + 1 }   // anonymous function
+  let s = if total &gt; 10 { "big" } else { "small" }
+  println(s)
+  total |&gt; f |&gt; g                 // pipe
+}
+
+fn main {
+  println(demo([1, 2, 3]))
+}
+</code></pre>
+<ul>
+<li><strong>Blocks</strong>: the value of <code>{ s1; s2; e }</code> is the last expression.</li>
+<li><strong><code>let</code></strong>: <code>let x = e</code>, <code>let x : T = e</code>; pattern bindings <code>let (a, b) = pair</code> (coverage checked).</li>
+<li><strong><code>if</code></strong>: <code>if c { a } else { b }</code> is an expression; without <code>else</code> its value is <code>()</code>.</li>
+<li><strong>Lambdas</strong>: <code>x =&gt; e</code>, <code>(x, y) =&gt; e</code>, <code>(x : Int) =&gt; e</code>, <code>fn(x : Int) { … }</code>.</li>
+<li><strong>Pipes</strong>: <code>e |&gt; f</code> means <code>f(e)</code>, and <code>e |&gt; f(a)</code> means <code>f(e, a)</code>.</li>
+<li><strong>Type annotations</strong>: <code>(e : T)</code>.</li>
+<li><strong>Holes</strong>: <code>_</code> is inferred by unification and can appear in both expressions and types, e.g. <code>Cons(_, xs)</code>, <code>f[_, Int](x)</code>.</li>
+<li><strong>Local functions</strong>: you can write <code>fn name(x : T) -&gt; R { … }</code> inside a block, but it cannot be recursive.</li>
+<li><strong>Arrays</strong>: <code>xs[i]</code> reads an element and <code>xs[i] = v</code> assigns one.</li>
+</ul>
+<p>There are three kinds of equals sign: <code>=</code> defines, <code>==</code> is boolean equality (result <code>Bool</code>), and <code>===</code> is propositional equality (result <code>Prop</code>; see
+<a href="#propositional-equality">Propositional equality</a>).</p>
+<p>For loops, <code>return</code>, <code>break</code>, and <code>continue</code>, see <a href="#mutable-state-and-loops">Mutable state and loops</a>; for <code>raise</code> and <code>try</code>, see
+<a href="#error-handling">Error handling</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="functions"><a class="header" href="#functions">Functions</a></h1>
+<pre><code class="language-moonbit">fn add(x : Int, y : Int) -&gt; Int {
+  x + y
+}
+
+fn[T] twice(f : (T) -&gt; T, x : T) -&gt; T {   // [T]: implicit parameter
+  f(f(x))
+}
+
+fn answer() -&gt; Int { 42 }                 // function with no parameters
+
+fn main {
+  println(add(1, 2))
+  println(twice(x =&gt; x + 1, 0))
+  println(twice[Int](x =&gt; x * 2, 1))      // pass the implicit parameter explicitly
+  println(answer())
+}
+</code></pre>
+<h2 id="no-currying"><a class="header" href="#no-currying">No currying</a></h2>
+<p>A function takes a group of parameters: <code>(Int, Int) -&gt; Int</code> takes two parameters and is a different type from
+<code>(Int) -&gt; (Int) -&gt; Int</code>, which returns a function. Partial application is not allowed.</p>
+<p>A function with no parameters (<code>fn answer()</code>) is represented internally as taking a single <code>Unit</code> parameter.</p>
+<h2 id="implicit-parameters"><a class="header" href="#implicit-parameters">Implicit parameters</a></h2>
+<p>Implicit parameters go in <code>[...]</code> after <code>fn</code>:</p>
+<pre><code class="language-moonbit">fn[T] count(xs : Array[T], extra : Nat) -&gt; Nat {
+  plus(xs.size(), extra)
+}
+
+fn main {
+  println(count([1, 2], 3).to_int())
+}
+</code></pre>
+<ul>
+<li><code>[T]</code> means <code>[T : Type]</code>. For an implicit parameter without a type, the type is inferred from its uses, defaulting to <code>Type</code> if it cannot be inferred.</li>
+<li>At call sites they are usually inferred by unification. You can also give them positionally with <code>f[a, b](x)</code>: you may give only a prefix, and you may write <code>_</code>.</li>
+<li>Implicit parameters can only be written after <code>fn</code>; <code>fn f[T](...)</code> is not supported.</li>
+</ul>
+<h2 id="other-forms"><a class="header" href="#other-forms">Other forms</a></h2>
+<ul>
+<li><strong>Methods</strong>: <code>fn Type::m(self : Type, …)</code>; see <a href="#methods-and-operators">Methods and operators</a>.</li>
+<li><strong>Labelled arguments</strong>: <code>x~ : T</code>, <code>x? : T</code>; see <a href="#labelled-arguments">Labelled arguments</a>.</li>
+<li><strong>lemma</strong>: a function whose result is a proposition; see <a href="#lemma">lemma</a>.</li>
+<li><strong>External primitives</strong>: <code>fn f(x : Int) -&gt; Int = "%prim_name"</code>, used only in the Prelude.</li>
+<li><strong><code>main</code></strong>: <code>fn main { … }</code>, the program entry point.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="labelled-arguments"><a class="header" href="#labelled-arguments">Labelled Arguments</a></h1>
+<p>Same as in MoonBit:</p>
+<pre><code class="language-moonbit">fn greet(name~ : String, greeting~ : String = "Hello", title? : String) -&gt; String {
+  match title {
+    Some(t) =&gt; greeting + ", " + t + " " + name
+    None =&gt; greeting + ", " + name
+  }
+}
+
+fn main {
+  println(greet(name="Alice"))
+  println(greet(greeting="Hi", name="Bob", title="Dr."))
+  let name = "Carol"
+  println(greet(name~))            // name~ means name=name
+  let t : String? = None
+  println(greet(name~, title?=t))  // title?= passes an Option directly
+}
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Declaration</th><th>Call</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>x~ : T</code></td><td><code>f(x=e)</code>, <code>f(x~)</code></td><td>Required</td></tr>
+<tr><td><code>x~ : T = d</code></td><td>May be omitted</td><td>The default <code>d</code> may refer to earlier parameters and is evaluated on each call</td></tr>
+<tr><td><code>x? : T</code></td><td><code>f(x=e)</code>, <code>f(x?=opt)</code>, omitted</td><td>Has type <code>T?</code> in the body; <code>None</code> when omitted</td></tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>Labelled arguments can be passed in any order and interleaved with positional arguments.</li>
+<li>Only top-level functions (including methods) can have labelled arguments; lambdas and local functions cannot.</li>
+<li>When a function is used as a value, its function type lists only the parameters in declaration order, without labels.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="methods-and-operators"><a class="header" href="#methods-and-operators">Methods and Operators</a></h1>
+<h2 id="methods"><a class="header" href="#methods">Methods</a></h2>
+<p><code>fn Type::m(self : Type, …)</code> defines a method on type <code>Type</code>. <code>x.m(a)</code> calls <code>T::m(x, a)</code>, where <code>T</code> is the head of <code>x</code>’s
+type; you can also write <code>Type::m(x, a)</code>.</p>
+<pre><code class="language-moonbit">enum Color {
+  Red
+  Green
+}
+
+fn Color::name(self : Color) -&gt; String {
+  match self {
+    Red =&gt; "red"
+    Green =&gt; "green"
+  }
+}
+
+fn main {
+  println(Red.name())
+  println(Color::name(Green))
+}
+</code></pre>
+<p><code>x.m()</code> looks for the type’s own methods first, then trait methods (see <a href="#traits">trait</a>).</p>
+<h2 id="operators"><a class="header" href="#operators">Operators</a></h2>
+<p>Operators resolve to methods, so defining the corresponding methods on your own type lets you use them:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Operator</th><th>Method</th></tr>
+</thead>
+<tbody>
+<tr><td><code>a + b</code>, <code>a - b</code>, <code>a * b</code>, <code>a / b</code>, <code>a % b</code></td><td><code>op_add</code>, <code>op_sub</code>, <code>op_mul</code>, <code>op_div</code>, <code>op_mod</code></td></tr>
+<tr><td><code>-a</code></td><td><code>op_neg</code></td></tr>
+<tr><td><code>a == b</code>, <code>a != b</code></td><td><code>op_equal</code></td></tr>
+<tr><td><code>a &lt; b</code>, <code>a &lt;= b</code>, <code>a &gt; b</code>, <code>a &gt;= b</code></td><td><code>op_lt</code>, <code>op_le</code>, <code>op_gt</code>, <code>op_ge</code></td></tr>
+</tbody>
+</table>
+</div>
+<pre><code class="language-moonbit">struct Money {
+  cents : Int
+}
+
+fn Money::op_add(self : Money, other : Money) -&gt; Money {
+  { cents: self.cents + other.cents }
+}
+
+fn Money::op_lt(self : Money, other : Money) -&gt; Bool {
+  self.cents &lt; other.cents
+}
+
+fn main {
+  let a : Money = { cents: 150 }
+  let b : Money = { cents: 75 }
+  println((a + b).cents)
+  println(b &lt; a)
+}
+</code></pre>
+<p><code>!</code>, <code>&amp;&amp;</code>, and <code>||</code> work only on <code>Bool</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="types"><a class="header" href="#types">Types</a></h1>
+<h2 id="universes"><a class="header" href="#universes">Universes</a></h2>
+<ul>
+<li><code>Type : Type</code>: types are values, and the type of a type is <code>Type</code> (which makes the system inconsistent; see the disclaimer in the <a href="README.html">introduction</a>).</li>
+<li><code>Prop : Type</code>: the universe of propositions. Values of types in <code>Prop</code> are proofs; proofs are irrelevant, so any two proofs of the same type are considered equal.
+See <a href="#propositions-and-proofs">Propositions and proofs</a>.</li>
+</ul>
+<h2 id="function-types"><a class="header" href="#function-types">Function types</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Syntax</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><code>(Int, Int) -&gt; Int</code></td><td>A function taking two parameters</td></tr>
+<tr><td><code>(Int) -&gt; (Int) -&gt; Int</code></td><td>A function returning a function</td></tr>
+<tr><td><code>(n : Nat, v : Vector[Int](n)) -&gt; Int</code></td><td>Dependent function type: later types may refer to earlier parameters</td></tr>
+<tr><td><code>forall x : A, P(x)</code></td><td>Means <code>(x : A) -&gt; P(x)</code>; <code>forall x y : A, …</code> binds several</td></tr>
+<tr><td><code>[T](x : T) -&gt; T</code></td><td>One parameter group, implicit first, explicit after</td></tr>
+<tr><td><code>[T] -&gt; Type</code></td><td>A group with only implicit parameters</td></tr>
+<tr><td><code>(A) -&gt; B raise E</code></td><td>A function that may raise error <code>E</code></td></tr>
+</tbody>
+</table>
+</div>
+<pre><code class="language-moonbit">fn types_demo() -&gt; Int {
+  let f : (Int, Int) -&gt; Int = (a, b) =&gt; a + b       // two parameters
+  let g : (Int) -&gt; (Int) -&gt; Int = a =&gt; b =&gt; a + b   // function returning a function
+  f(1, 2) + g(1)(2)
+}
+
+fn main {
+  println(types_demo())
+}
+</code></pre>
+<h2 id="application-and-shorthands"><a class="header" href="#application-and-shorthands">Application and shorthands</a></h2>
+<ul>
+<li>Types are functions too: <code>Array[Int]</code>, <code>Vector[T](n)</code>, and <code>Id[T](x)(y)</code> are all ordinary applications, where <code>[...]</code> gives implicit
+arguments and <code>(...)</code> gives explicit ones.</li>
+<li><code>T?</code> means <code>Option[T]</code>; <code>(A, B)</code> is a pair type.</li>
+<li>A function returning <code>Type</code> is a type-level function; see <a href="#type-level-computation">Type-level computation</a>.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="type-level-computation"><a class="header" href="#type-level-computation">Type-Level Computation</a></h1>
+<p>Types are values, so you can compute types with ordinary functions, and the type checker normalizes (evaluates) them:</p>
+<pre><code class="language-moonbit">// The type of functions that take n Int arguments and return Int
+fn NAry(n : Nat) -&gt; Type {
+  match n {
+    Z =&gt; Int
+    S(k) =&gt; (Int) -&gt; NAry(k)
+  }
+}
+
+fn sum_n(n : Nat, acc : Int) -&gt; NAry(n) {
+  match n as m return NAry(m) {
+    Z =&gt; acc
+    S(k) =&gt; x =&gt; sum_n(k, acc + x)
+  }
+}
+
+fn main {
+  println(sum_n(3, 0)(1)(2)(3))   // 6
+}
+</code></pre>
+<p>The type of <code>sum_n(3, 0)</code>, <code>NAry(3)</code>, is computed during type checking to <code>(Int) -&gt; (Int) -&gt; (Int) -&gt; Int</code>.
+Here a <a href="#the-return-clause">return clause</a> gives the motive of the match.</p>
+<p>Only pure functions are unfolded during type checking: functions that use mutable state, loops, or exceptions are not unfolded (see
+<a href="#mutable-state-and-loops">Mutable state and loops</a>).</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="enum-and-indexed-types"><a class="header" href="#enum-and-indexed-types">enum and Indexed Types</a></h1>
+<h2 id="plain-enums"><a class="header" href="#plain-enums">Plain enums</a></h2>
+<pre><code class="language-moonbit">enum Shape {
+  Circle(Double)
+  Rect(Double, Double)
+}
+
+fn Shape::area(self : Shape) -&gt; Double {
+  match self {
+    Circle(r) =&gt; 3.14 * r * r
+    Rect(w, h) =&gt; w * h
+  }
+}
+
+fn main {
+  println(Rect(2.0, 3.0).area())
+}
+</code></pre>
+<h2 id="parameters-and-indices"><a class="header" href="#parameters-and-indices">Parameters and indices</a></h2>
+<pre><code class="language-text">enum Name[implicit params](explicit params) : indices -&gt; universe { constructors }
+</code></pre>
+<ul>
+<li><strong>Parameters</strong> come after the name and are fixed across all constructors.</li>
+<li><strong>Indices</strong> come after the colon and may vary between constructors. The universe is <code>Type</code> or <code>Prop</code>.</li>
+<li><strong>Constructors</strong>: <code>C[own implicit params](fields) : return type</code>. The return type can be omitted when there are no indices.</li>
+</ul>
+<pre><code class="language-moonbit">enum Vector[T] : Nat -&gt; Type {
+  Nil : Vector[T](0)
+  Cons[n : Nat](T, Vector[T](n)) : Vector[T](S(n))
+}
+
+// Indices written in []: a GADT
+enum Exp : [T] -&gt; Type {
+  IntLit(Int) : Exp[Int]
+  BoolLit(Bool) : Exp[Bool]
+  Add(Exp[Int], Exp[Int]) : Exp[Int]
+  If[T](Exp[Bool], Exp[T], Exp[T]) : Exp[T]
+}
+
+fn[T] Exp::eval(self : Exp[T]) -&gt; T {
+  match self {
+    IntLit(n) =&gt; n
+    BoolLit(b) =&gt; b
+    Add(l, r) =&gt; l.eval() + r.eval()
+    If(c, t, f) =&gt; if c.eval() { t.eval() } else { f.eval() }
+  }
+}
+
+fn main {
+  let e = If(BoolLit(true), Add(IntLit(1), IntLit(2)), IntLit(0))
+  println(e.eval())
+}
+</code></pre>
+<p>The result type of <code>Exp::eval</code> varies by constructor: when <code>IntLit(n)</code> matches, <code>T</code> is refined to <code>Int</code>.</p>
+<h2 id="named-fields"><a class="header" href="#named-fields">Named fields</a></h2>
+<p>Constructor fields can be named, and the types of later fields can refer to them:</p>
+<pre><code class="language-moonbit">enum Sigma[A](P : (A) -&gt; Type) {
+  MkSigma(fst : A, snd : P(fst))
+}
+</code></pre>
+<h2 id="using-constructors"><a class="header" href="#using-constructors">Using constructors</a></h2>
+<ul>
+<li>The data type’s parameters are always inferred; <code>[...]</code> supplies only the constructor’s own implicit parameters, e.g. <code>Cons[n](x, xs)</code>.</li>
+<li>Constructors with the same name are disambiguated by the expected type, or you can write the full name <code>Vector::Cons</code>.</li>
+<li>An enum whose universe is <code>Prop</code> is a proposition, e.g. <code>Id</code> in the Prelude (see <a href="#propositional-equality">Propositional Equality</a>).</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="struct-and-dependent-fields"><a class="header" href="#struct-and-dependent-fields">struct and Dependent Fields</a></h1>
+<pre><code class="language-moonbit">struct Point {
+  x : Int
+  y : Int
+}
+
+fn main {
+  let p : Point = { x: 1, y: 2 }
+  println(p.x + p.y)
+}
+</code></pre>
+<ul>
+<li><strong>Construction</strong>: <code>{ x: 1, y: 2 }</code>; the type is determined by the expected type.</li>
+<li><strong>Field access</strong>: <code>p.x</code>.</li>
+<li><strong>Parameters</strong>: <code>struct Name[T, n : Nat] { … }</code>.</li>
+<li>Struct patterns (<code>{ x: a, y: b } =&gt; …</code>) are not supported; use field access.</li>
+</ul>
+<h2 id="dependent-fields"><a class="header" href="#dependent-fields">Dependent fields</a></h2>
+<p>Later fields can depend on earlier ones, e.g. an array that carries a proof of its length:</p>
+<pre><code class="language-moonbit">struct Vec[T, n : Nat] {
+  to_array : Array[T]
+  length_to_array : to_array.size() === n
+}
+
+fn[T] Vec::from_array(xs : Array[T]) -&gt; Vec[T, xs.size()] {
+  { to_array: xs, length_to_array: Refl }
+}
+
+fn[T, n : Nat] Vec::get(self : Vec[T, n], i : Int) -&gt; T {
+  self.to_array[i]
+}
+
+fn main {
+  let v = Vec::from_array([1, 2, 3])
+  println(v.get(1))
+}
+</code></pre>
+<p><code>xs.size()</code> returns a <code>Nat</code>, so it can appear in types; <code>xs.length()</code> returns an <code>Int</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="pattern-matching"><a class="header" href="#pattern-matching">Pattern Matching</a></h1>
+<p><code>match</code> is written the same way as in MoonBit:</p>
+<pre><code class="language-moonbit">fn describe(n : Int, xs : List[Int]) -&gt; String {
+  match (n, xs) {
+    (0, _) =&gt; "zero"
+    (_, Nil) =&gt; "empty"
+    (_, Cons(x, Cons(_, _))) =&gt; "at least two, starting with \{x}"
+    _ =&gt; "other"
+  }
+}
+
+fn main {
+  println(describe(1, Cons(7, Cons(8, Nil))))
+}
+</code></pre>
+<ul>
+<li><strong>Patterns</strong>: variables, the wildcard <code>_</code>, constructors (possibly nested), literals, tuples.</li>
+<li>Arms are tried in order and may overlap; the first matching arm wins.</li>
+<li><strong>Implicit parameters of constructors</strong> can be bound or ignored in patterns: <code>If[t](c, a, b)</code>, <code>IZ[_, a] =&gt; a</code>.</li>
+<li><strong><code>let</code> patterns</strong>: <code>let (a, b) = pair</code>.</li>
+</ul>
+<p>Pattern matching in MoonBit++ is dependent:</p>
+<ul>
+<li><a href="#dependent-matching-and-refinement">Dependent Matching and Refinement</a>: matching a constructor refines the indices in types.</li>
+<li><a href="#coverage-checking-and-impossible-branches">Coverage Checking and Impossible Branches</a>: missing arms are errors, and arms that are impossible by their types can be omitted.</li>
+<li><a href="#the-return-clause">The return Clause</a>: give the motive of a match explicitly (Rocq style).</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="dependent-matching-and-refinement"><a class="header" href="#dependent-matching-and-refinement">Dependent Matching and Refinement</a></h1>
+<p>When you match on a variable, the constructor’s indices are unified with the indices in the
+variable’s type, and the result refines the whole context and the goal type (Agda style):</p>
+<pre><code class="language-moonbit">enum Vec2[T] : Nat -&gt; Type {
+  VNil : Vec2[T](0)
+  VCons[n : Nat](T, Vec2[T](n)) : Vec2[T](S(n))
+}
+
+fn[T, n : Nat] Vec2::zip_with(self : Vec2[T](n), other : Vec2[T](n), f : (T, T) -&gt; T) -&gt; Vec2[T](n) {
+  match (self, other) {
+    (VNil, VNil) =&gt; VNil
+    (VCons(x, xs), VCons(y, ys)) =&gt; VCons(f(x, y), xs.zip_with(ys, f))
+  }
+}
+
+fn main {
+  let v : Vec2[Int](2) = VCons(1, VCons(2, VNil))
+  match v.zip_with(v, (a, b) =&gt; a + b) {
+    VCons(x, _) =&gt; println(x)
+  }
+}
+</code></pre>
+<ul>
+<li>When <code>self</code> matches <code>VNil</code>, unification yields <code>n = 0</code>. So <code>other : Vec2[T](0)</code> can only be <code>VNil</code>,
+and combinations like <code>(VNil, VCons(…))</code> need not be written.</li>
+<li>In each arm the goal type <code>Vec2[T](n)</code> is refined too: the <code>VNil</code> arm returns <code>Vec2[T](0)</code>, and the
+<code>VCons</code> arm returns <code>Vec2[T](S(n'))</code>.</li>
+<li>Matching on implicit parameters refines as well, e.g. <code>match g { Empty =&gt; …; Extend(_, _) =&gt; … }</code>,
+where <code>g</code> is an implicit parameter of the function.</li>
+</ul>
+<h2 id="matching-on-the-result-of-a-function-call"><a class="header" href="#matching-on-the-result-of-a-function-call">Matching on the result of a function call</a></h2>
+<p>When the scrutinee is not a variable (e.g. a function call), the index relationships in its result
+type are still used to refine the goal type:</p>
+<pre><code class="language-text">match progress(t1) {
+  PrStep(_, u1, st1) =&gt; PrStep(_, _, StApp1(t1, u1, t2, st1))
+  PrDone(_, VLam(b)) =&gt; PrStep(_, _, StApp(b, t2))
+}
+</code></pre>
+<p>See <code>examples/stlc.mbtpp</code> in the repository for the full example.</p>
+<h2 id="eliminating-prop"><a class="header" href="#eliminating-prop">Eliminating Prop</a></h2>
+<p>When matching on data in <code>Prop</code>, the result must also be in <code>Prop</code>, unless the type is a
+subsingleton (such as propositional equality <code>===</code>, which has at most one proof).</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="coverage-checking-and-impossible-branches"><a class="header" href="#coverage-checking-and-impossible-branches">Coverage Checking and Impossible Branches</a></h1>
+<p>Every <code>match</code> must cover all cases; otherwise it is an error:</p>
+<pre><code class="language-text">t.mbtpp:2:3: error: match is not exhaustive; missing case(s):
+  S(_)
+</code></pre>
+<h2 id="impossible-branches"><a class="header" href="#impossible-branches">Impossible branches</a></h2>
+<p>When a constructor’s indices fail to unify with the scrutinee’s type, that branch cannot occur and
+can be omitted:</p>
+<pre><code class="language-moonbit">enum Fin : (Nat) -&gt; Type {
+  FZ[n : Nat] : Fin(S(n))
+  FS[n : Nat](Fin(n)) : Fin(S(n))
+}
+
+enum Vector[T] : Nat -&gt; Type {
+  Nil : Vector[T](0)
+  Cons[n : Nat](T, Vector[T](n)) : Vector[T](S(n))
+}
+
+// No Nil arm needed: Fin(0) is empty, so Nil can never occur together with a Fin(n)
+fn[T, n : Nat] Vector::get(self : Vector[T](n), i : Fin(n)) -&gt; T {
+  match (self, i) {
+    (Cons(x, _), FZ) =&gt; x
+    (Cons(_, xs), FS(j)) =&gt; xs.get(j)
+  }
+}
+
+fn main {
+  let v : Vector[String](3) = Cons("a", Cons("b", Cons("c", Nil)))
+  println(v.get(FS(FS(FZ))))
+}
+</code></pre>
+<p>You can also write just the pattern without <code>=&gt;</code>; the checker then confirms that it really is
+impossible (if it is not, it reports “this pattern is not impossible”):</p>
+<pre><code class="language-moonbit">enum V3[T] : Nat -&gt; Type {
+  N3 : V3[T](0)
+  C3[n : Nat](T, V3[T](n)) : V3[T](S(n))
+}
+
+fn[T, n : Nat] V3::head(self : V3[T](S(n))) -&gt; T {
+  match self {
+    N3
+    C3(x, _) =&gt; x
+  }
+}
+</code></pre>
+<h2 id="empty-types"><a class="header" href="#empty-types">Empty types</a></h2>
+<p>A type that no constructor can match is empty, and a match on it may have no arms. The checker also
+recognizes empty types in nested positions; for example, a constructor with a field of type <code>Fin(0)</code>
+need not be listed. Built-in types (<code>Int</code>, <code>Array</code>, etc.) are not empty.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="the-return-clause"><a class="header" href="#the-return-clause">The return Clause</a></h1>
+<pre><code class="language-text">match e as x in D[_](i) return P(i, x) { … }
+</code></pre>
+<p>A Rocq-style match: you give the motive <code>P</code> explicitly, i.e. how the result type of each arm depends
+on the scrutinee <code>x</code> and its index <code>i</code>.</p>
+<pre><code class="language-moonbit">enum Vector[T] : Nat -&gt; Type {
+  Nil : Vector[T](0)
+  Cons[n : Nat](T, Vector[T](n)) : Vector[T](S(n))
+}
+
+fn[T, n : Nat] Vector::length_eq(self : Vector[T](n)) -&gt; Nat {
+  match self as v in Vector[_](m) return Nat {
+    Nil =&gt; Z
+    Cons(_, xs) =&gt; S(xs.length_eq())
+  }
+}
+
+fn main {
+  let v : Vector[Int](2) = Cons(7, Cons(8, Nil))
+  println(v.length_eq().to_int())
+}
+</code></pre>
+<ul>
+<li><code>as x</code> names the scrutinee, <code>in D[_](i)</code> names the indices in its type, and <code>return P</code> is the
+motive; each of the three parts can be omitted (as in <code>match n as m return NAry(m)</code> in
+<a href="#type-level-computation">Type-Level Computation</a>).</li>
+<li>With <code>return</code>, Rocq semantics apply and the context is not refined; without <code>return</code>, the match
+works as described in <a href="#dependent-matching-and-refinement">Dependent Matching and Refinement</a>.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="propositions-and-proofs"><a class="header" href="#propositions-and-proofs">Propositions and Proofs</a></h1>
+<p>Propositions are types in <code>Prop</code>, and proofs are their values. The type checker computes (normalizes)
+expressions while checking proofs, so many equalities follow directly by computation.</p>
+<ul>
+<li><a href="#propositional-equality">Propositional Equality</a>: <code>===</code>, <code>Refl</code>, and the equality lemmas in the Prelude.</li>
+<li><a href="#lemma">lemma</a>: declaring theorems.</li>
+<li><a href="#tactics">Tactics</a>: building proofs step by step with <code>proof { … }</code>.</li>
+</ul>
+<p>User-defined propositions are enums whose universe is <code>Prop</code>:</p>
+<pre><code class="language-moonbit">enum And[A : Prop, B : Prop] : Prop {
+  Conj(A, B)
+}
+
+lemma and_comm[A : Prop, B : Prop](p : And[A, B]) -&gt; And[B, A] {
+  match p {
+    Conj(a, b) =&gt; Conj(b, a)
+  }
+}
+</code></pre>
+<blockquote>
+<p>There is no termination checking and no strict positivity checking: recursive functions and
+recursive proofs are accepted as they are, so false propositions can be “proved”. Proofs are also
+not erased at compile time.</p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="propositional-equality"><a class="header" href="#propositional-equality">Propositional Equality</a></h1>
+<p><code>a === b</code> is <code>Id[_](a)(b)</code> from the Prelude:</p>
+<pre><code class="language-text">enum Id[T](x : T) : (y : T) -&gt; Prop {
+  Refl : Id[T](x)(x)
+}
+</code></pre>
+<p><code>Refl</code> is the only constructor, and it proves <code>x === x</code>. Because type checking computes, any equality
+whose two sides normalize to the same term can be proved directly with <code>Refl</code>:</p>
+<pre><code class="language-moonbit">lemma two_plus_two : (2 : Nat) + 2 === 4 = Refl
+
+lemma plus_zero_left(n : Nat) -&gt; (0 : Nat) + n === n {
+  Refl
+}
+</code></pre>
+<p><code>0 + n</code> computes to <code>n</code> by the definition of <code>Nat::op_add</code>; <code>n + 0</code> cannot be computed directly
+(<code>n</code> is a variable) and needs induction; see <a href="#lemma">lemma</a>.</p>
+<h2 id="equality-lemmas"><a class="header" href="#equality-lemmas">Equality lemmas</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Lemma</th><th>Type</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Id::sym(p)</code></td><td>from <code>x === y</code> derive <code>y === x</code></td></tr>
+<tr><td><code>Id::trans(p, q)</code></td><td>from <code>x === y</code> and <code>y === z</code> derive <code>x === z</code></td></tr>
+<tr><td><code>Id::cong(f, p)</code></td><td>from <code>x === y</code> derive <code>f(x) === f(y)</code></td></tr>
+<tr><td><code>Id::subst(p, motive, px)</code></td><td>from <code>x === y</code> and <code>motive(x)</code> derive <code>motive(y)</code>; <code>motive</code> may return <code>Type</code></td></tr>
+</tbody>
+</table>
+</div>
+<p><code>===</code> is a subsingleton, so you can match on <code>Refl</code> to rewrite types, even when the result is in <code>Type</code>:</p>
+<pre><code class="language-moonbit">fn[a : Nat, b : Nat] cast(e : a === b, xs : Array[Int]) -&gt; Array[Int] {
+  match e {
+    Refl =&gt; xs
+  }
+}
+</code></pre>
+<p><code>==</code> is not the same as <code>===</code>: <code>==</code> compares values, producing a <code>Bool</code> that can be computed at run
+time; <code>===</code> is a proposition.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="lemma"><a class="header" href="#lemma">lemma</a></h1>
+<p>A <code>lemma</code> is the same as a <code>fn</code>, except that its result is usually a proposition. There are two forms:</p>
+<ul>
+<li><code>lemma name[implicits](params) -&gt; proposition { proof }</code></li>
+<li><code>lemma name[implicits] : proposition = proof expression</code></li>
+</ul>
+<p>Induction is done with pattern matching and recursion:</p>
+<pre><code class="language-moonbit">lemma plus_zero(n : Nat) -&gt; n + 0 === n {
+  match n {
+    Z =&gt; Refl
+    S(k) =&gt; Id::cong(S, plus_zero(k))
+  }
+}
+
+lemma plus_succ(n : Nat, m : Nat) -&gt; n + S(m) === S(n + m) {
+  match n {
+    Z =&gt; Refl
+    S(k) =&gt; Id::cong(S, plus_succ(k, m))
+  }
+}
+
+lemma append_nil[T](xs : List[T]) -&gt; xs.append(Nil) === xs {
+  match xs {
+    Nil =&gt; Refl
+    Cons(x, rest) =&gt; Id::cong(r =&gt; List::Cons(x, r), append_nil(rest))
+  }
+}
+</code></pre>
+<ul>
+<li>In the <code>Z</code> arm, both sides of the goal <code>0 + 0 === 0</code> compute to the same term, so <code>Refl</code> works.</li>
+<li>In the <code>S(k)</code> arm, the goal is <code>S(k) + 0 === S(k)</code>, which computes to <code>S(k + 0) === S(k)</code>; it
+follows from the recursively obtained <code>k + 0 === k</code> via <code>Id::cong(S, …)</code>.</li>
+<li>The recursive call is the induction hypothesis. The checker does not verify that the recursion
+terminates.</li>
+</ul>
+<p>For longer proofs, see <code>examples/proofs.mbtpp</code> in the repository (associativity of vector append,
+properties of <code>reverse</code>) and <code>examples/stlc.mbtpp</code> (substitution lemmas, progress, and canonicity for
+the simply typed λ-calculus, plus an evaluator extracted from the canonicity proof).</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="tactics"><a class="header" href="#tactics">Tactics</a></h1>
+<p><code>proof { … }</code> builds a proof step by step with tactics, one per line:</p>
+<pre><code class="language-moonbit">lemma plus_zero(n : Nat) -&gt; n + 0 === n {
+  match n {
+    Z =&gt; Refl
+    S(k) =&gt; Id::cong(S, plus_zero(k))
+  }
+}
+
+lemma plus_succ(n : Nat, m : Nat) -&gt; n + S(m) === S(n + m) {
+  match n {
+    Z =&gt; Refl
+    S(k) =&gt; Id::cong(S, plus_succ(k, m))
+  }
+}
+
+lemma plus_comm : forall n m : Nat, n + m === m + n = proof {
+  intros n m
+  destruct n
+  rewrite plus_zero(m)
+  rfl
+  rewrite plus_succ(m, n_0)
+  rewrite plus_comm(n_0, m)
+  rfl
+}
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tactic</th><th>Effect</th></tr>
+</thead>
+<tbody>
+<tr><td><code>intros x y</code></td><td>Introduce hypotheses (also <code>intro</code>; <code>_</code> discards one)</td></tr>
+<tr><td><code>exact e</code></td><td>Close the current goal with the expression <code>e</code></td></tr>
+<tr><td><code>rfl</code></td><td>Close the goal with <code>Refl</code> (both sides normalize to the same term)</td></tr>
+<tr><td><code>destruct x</code></td><td>Case split on <code>x</code>, one new goal per constructor; fields are named <code>x_0</code>, <code>x_1</code>, … (also <code>cases</code>)</td></tr>
+<tr><td><code>rewrite e</code>, <code>rewrite &lt;- e</code></td><td>Rewrite the goal with the equality <code>e</code>, left to right or right to left (also <code>rw</code>)</td></tr>
+<tr><td><code>apply f</code></td><td>Reduce the goal to the arguments of the function <code>f</code></td></tr>
+<tr><td><code>assume h : P</code></td><td>Use <code>P</code> as hypothesis <code>h</code> now and prove <code>P</code> later (also <code>have</code>)</td></tr>
+</tbody>
+</table>
+</div>
+<p>More examples:</p>
+<pre><code class="language-moonbit">enum And[A : Prop, B : Prop] : Prop {
+  Conj(A, B)
+}
+
+lemma and_comm[A : Prop, B : Prop] : (And[A, B]) -&gt; And[B, A] = proof {
+  intros p
+  destruct p
+  exact Conj(p_1, p_0)
+}
+
+lemma modus_ponens[A : Prop, B : Prop] : (A, (A) -&gt; B) -&gt; B = proof {
+  intros a f
+  apply f
+  exact a
+}
+
+lemma zero_ne_one : (0 : Nat) === 1 -&gt; Int = proof {
+  intros h
+  destruct h
+}
+</code></pre>
+<ul>
+<li>Tactics are just another way to build proof terms; the result is the same as a hand-written term.</li>
+<li><code>destruct</code> on an impossible equality (such as <code>0 === 1</code>) leaves no goals.</li>
+<li>There are no automation tactics such as <code>simp</code>, <code>omega</code>, or <code>auto</code>.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="traits"><a class="header" href="#traits">Traits</a></h1>
+<pre><code class="language-moonbit">trait Shape {
+  area(Self) -&gt; Int
+  name(Self) -&gt; String
+}
+
+trait Solid : Shape {                          // supertrait
+  volume(Self, Int) -&gt; Int
+}
+
+struct Square {
+  side : Int
+}
+
+impl Shape for Square with area(self) { self.side * self.side }
+impl Shape for Square with name(self) { "square" }
+impl Solid for Square with volume(self, depth) { self.area() * depth }
+
+fn[S : Shape] describe(s : S) -&gt; String {
+  "\{s.name()} with area \{s.area()}"
+}
+
+fn[S : Solid] describe_solid(s : S) -&gt; String {
+  describe(s) + ", volume \{s.volume(2)}"     // supertrait methods are available
+}
+
+fn main {
+  let sq : Square = { side: 2 }
+  println(describe_solid(sq))
+}
+</code></pre>
+<ul>
+<li><strong>Declaration</strong>: <code>trait Name : Super1 + Super2 { method(param types) -&gt; result }</code>. The first
+parameter of a method is usually <code>Self</code>. Generic methods are written <code>fn[T] m(…)</code>.</li>
+<li><strong>Implementation</strong>: <code>impl Tr for T with m(params) { … }</code>, one per method. Generic instances:
+<code>impl[T : Show] Show for Array[T] with to_string(self) { … }</code>.</li>
+<li><strong>Bounds</strong>: <code>fn[T : Tr]</code>; multiple bounds are written <code>[T : Eq + Show]</code>.</li>
+<li><strong>Calls</strong>: <code>x.m()</code> or <code>Tr::m(x)</code>.</li>
+</ul>
+<h3 id="bounds-and-implicit-parameters"><a class="header" href="#bounds-and-implicit-parameters">Bounds and implicit parameters</a></h3>
+<p><code>[T : Add]</code> and <code>[n : Nat]</code> are written the same way; they are told apart by the name to the right
+of the colon:</p>
+<ul>
+<li>If the right side is a trait (or several traits joined by <code>+</code>), this is a <strong>bound</strong>: <code>T</code> is a
+type (its kind is determined by the trait’s <code>Self</code>: <code>Type</code> for <code>Add</code>, <code>[T] -&gt; Type</code> for
+<code>Monad</code>), and each trait adds an instance parameter that the checker fills in automatically.
+Read it as “a type <code>T</code> that implements <code>Add</code>”.</li>
+<li>If the right side is a type, this is an ordinary <strong>implicit parameter</strong>: <code>n</code> is a value of type
+<code>Nat</code>, as in <code>fn[T, n : Nat] Vector::head(…)</code>.</li>
+</ul>
+<p>Traits and types share one namespace and cannot have the same name, so there is no ambiguity. Note:</p>
+<ul>
+<li>This rule applies only inside <code>[...]</code>. An explicit parameter <code>(x : Add)</code> is checked as a type and
+is an error: there are no MoonBit trait objects <code>&amp;Add</code>.</li>
+<li>Local names take precedence: if an enclosing parameter has the same name as a trait, the right
+side of the colon refers to that parameter.</li>
+<li>Multiple bounds must have the same kind (the kind of <code>T</code> is taken from the first trait);
+<code>[M : Monad + Show]</code> is an error.</li>
+<li><strong>Instance search</strong>: the instances for bounds are filled in by the checker. It first looks at
+local bounds (and their supertraits), then at global instances (including generic instances).</li>
+</ul>
+<p>Traits in the Prelude: <code>Show</code> (<code>to_string</code>), <code>Eq</code> (<code>op_equal</code>), <code>Compare : Eq</code> (<code>compare</code>),
+<code>Add</code> (<code>op_add</code>), <code>Monad</code> (see <a href="#higher-kinded-traits-and-monads">Higher-Kinded Traits and Monads</a>). <code>println</code> requires
+<code>Show</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="higher-kinded-traits-and-monads"><a class="header" href="#higher-kinded-traits-and-monads">Higher-Kinded Traits and Monads</a></h1>
+<p><code>Self</code> can be a type constructor. <code>Monad</code> in the Prelude:</p>
+<pre><code class="language-text">trait Monad(Self : [T] -&gt; Type) {
+  fn[T] pure(T) -&gt; Self[T]
+  fn[T, U] bind(Self[T], (T) -&gt; Self[U]) -&gt; Self[U]
+}
+</code></pre>
+<p><code>Option</code> and <code>List</code> have <code>Monad</code> instances.</p>
+<h2 id="monad-blocks"><a class="header" href="#monad-blocks">monad blocks</a></h2>
+<pre><code class="language-moonbit">fn[M : Monad, T, U, V] lift2(f : (T, U) -&gt; V, m : M[T], n : M[U]) -&gt; M[V] {
+  monad {
+    let t &lt;- m
+    let u &lt;- n
+    Monad::pure(f(t, u))
+  }
+}
+
+fn[M : Monad, T, U, V] lift2_inline(f : (T, U) -&gt; V, m : M[T], n : M[U]) -&gt; M[V] {
+  monad {
+    Monad::pure(f(&lt;- m, &lt;- n))
+  }
+}
+
+fn main {
+  println(lift2((a, b) =&gt; a + b, Some(1), Some(2)))
+  println(lift2_inline((a, b) =&gt; a + b, Some(1), None))
+  let xs : List[Int] = Cons(1, Cons(2, Nil))
+  let ys : List[Int] = Cons(10, Cons(20, Nil))
+  println(lift2_inline((a, b) =&gt; a * b, xs, ys))
+}
+</code></pre>
+<ul>
+<li><code>let x &lt;- m</code> binds the result of <code>m</code>; the statements after it go into the <code>bind</code> callback.</li>
+<li><code>&lt;- m</code> inside an expression binds in place, from left to right.</li>
+<li>The <code>Monad</code> instance a <code>monad { … }</code> block uses is inferred from the expected type or from the
+expressions inside it.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="mutable-state-and-loops"><a class="header" href="#mutable-state-and-loops">Mutable State and Loops</a></h1>
+<pre><code class="language-moonbit">fn sum_to(n : Int) -&gt; Int {
+  let mut acc = 0
+  for i = 1; i &lt;= n; i = i + 1 {
+    acc = acc + i
+  }
+  acc
+}
+
+fn find_first(xs : Array[Int], p : (Int) -&gt; Bool) -&gt; Int {
+  for x in xs {
+    if p(x) {
+      return x
+    }
+  }
+  -1
+}
+
+fn main {
+  println(sum_to(100))
+  println(find_first([1, 5, 8, 11], x =&gt; x % 2 == 0))
+  let mut i = 0
+  while true {
+    i += 1
+    if i &gt; 5 {
+      break
+    }
+  }
+  println("i = \{i}")
+  let arr = Array::make(3, 0)
+  arr[1] = 42
+  for k in 0..&lt;3 {
+    print(arr[k])
+    print(" ")
+  }
+  println("")
+}
+</code></pre>
+<ul>
+<li><strong>Mutable variables</strong>: <code>let mut x = e</code>, assignment <code>x = e</code>, and <code>+=</code>, <code>-=</code>, <code>*=</code>, <code>/=</code>.</li>
+<li><strong>Loops</strong>: <code>while c { … }</code>; C-style <code>for i = 0; i &lt; n; i = i + 1 { … }</code>; <code>for x in xs { … }</code>
+iterates over an array; <code>for k in a..&lt;b</code> and <code>for k in a..=b</code> iterate over a range.</li>
+<li><strong><code>break</code></strong> and <strong><code>continue</code></strong> apply to the innermost loop; <strong><code>return</code></strong> returns from the current
+function, and inside a lambda it returns only from the lambda.</li>
+<li><strong>Arrays</strong> are mutable: <code>xs[i] = v</code>, <code>xs.push(x)</code>.</li>
+</ul>
+<h2 id="interaction-with-type-checking"><a class="header" href="#interaction-with-type-checking">Interaction with type checking</a></h2>
+<p>Functions that use <code>let mut</code>, assignment, loops, <code>raise</code>, or <code>try</code> are <strong>not unfolded</strong> during type
+checking: they can be called and run normally, but they take no part in type-level computation,
+and equations about them cannot be proved with <code>Refl</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="error-handling"><a class="header" href="#error-handling">Error Handling</a></h1>
+<pre><code class="language-moonbit">suberror DivError {
+  DivError(String)
+}
+
+fn div(a : Int, b : Int) -&gt; Int raise DivError {
+  if b == 0 {
+    raise DivError("division by zero")
+  }
+  a / b
+}
+
+fn main {
+  let r = try div(10, 0) catch {
+    DivError(msg) =&gt; {
+      println("caught: " + msg)
+      0
+    }
+  }
+  println(r)
+  println(try? div(10, 2))      // Ok(5)
+}
+</code></pre>
+<ul>
+<li><strong>Error types</strong>: <code>suberror Name { C(…) }</code>, or the single-constructor shorthand
+<code>suberror Name(String)</code>.</li>
+<li><strong>Declaration</strong>: function type <code>-&gt; T raise E</code>; <code>raise</code> without a type means <code>Error</code> (any error).</li>
+<li><strong>Raising</strong>: <code>raise e</code>.</li>
+<li><strong>Catching</strong>: <code>try e catch { pattern =&gt; … }</code>. Arms match on the error’s constructor; errors that
+match no arm keep propagating outward.</li>
+<li><strong><code>try? e</code></strong>: produces a <code>Result[T, Error]</code> instead of raising.</li>
+<li><code>fail(msg)</code> in the Prelude raises <code>Failure(msg)</code>.</li>
+</ul>
+<p>Like mutable state, <code>raise</code> and <code>try</code> keep a function from being unfolded during type checking (see
+<a href="#mutable-state-and-loops">Mutable State and Loops</a>).</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="prelude"><a class="header" href="#prelude">Prelude</a></h1>
+<p>The Prelude is loaded automatically into every program (<code>moonpp --no-prelude</code> turns it off).</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Name</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Int</code>, <code>Double</code>, <code>Bool</code>, <code>Char</code>, <code>String</code>, <code>Unit</code>, <code>Array[T]</code>, <code>Error</code></td><td>Built-in types</td></tr>
+<tr><td><code>Nat</code> (<code>Z</code>, <code>S</code>)</td><td>Natural numbers; integer literals expand at type <code>Nat</code>; <code>n.to_int()</code>, <code>int_to_nat(i)</code>, <code>+</code>, <code>*</code>, <code>==</code></td></tr>
+<tr><td><code>Id[T](x)(y)</code>, <code>===</code>, <code>Refl</code></td><td>Propositional equality; <code>Id::sym</code>, <code>Id::trans</code>, <code>Id::cong</code>, <code>Id::subst</code></td></tr>
+<tr><td><code>Option[T]</code> (<code>None</code>, <code>Some</code>), <code>T?</code></td><td>Optional values</td></tr>
+<tr><td><code>Result[T, E]</code> (<code>Ok</code>, <code>Err</code>)</td><td>Results</td></tr>
+<tr><td><code>List[T]</code> (<code>Nil</code>, <code>Cons</code>)</td><td>Linked lists: <code>append</code>, <code>reverse</code>, <code>length</code>, <code>map</code>, <code>flat_map</code></td></tr>
+<tr><td><code>(a, b)</code>, <code>(a, b, c)</code></td><td>Tuples (<code>Tuple2</code>, <code>Tuple3</code>)</td></tr>
+<tr><td><code>Failure</code>, <code>fail(msg)</code></td><td>General-purpose error</td></tr>
+<tr><td><code>Show</code>, <code>Eq</code>, <code>Compare</code>, <code>Add</code>, <code>Monad</code></td><td>Traits</td></tr>
+<tr><td><code>println</code>, <code>print</code>, <code>print_string</code></td><td>Output (<code>println</code> and <code>print</code> require <code>Show</code>)</td></tr>
+<tr><td><code>abort(msg)</code>, <code>panic()</code></td><td>Terminate the program</td></tr>
+<tr><td><code>not(b)</code></td><td>Boolean negation</td></tr>
+</tbody>
+</table>
+</div>
+<p>Methods on built-in types:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Type</th><th>Methods</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Int</code></td><td>Arithmetic and comparison operators, <code>compare</code>, <code>to_string</code>, <code>to_double</code>, <code>unsafe_to_char</code></td></tr>
+<tr><td><code>Double</code></td><td>Arithmetic and comparison operators, <code>compare</code>, <code>to_string</code>, <code>to_int</code></td></tr>
+<tr><td><code>String</code></td><td><code>+</code>, <code>==</code>, <code>compare</code>, <code>length</code>, <code>s[i]</code>, <code>substring(start, end)</code>, <code>to_string</code></td></tr>
+<tr><td><code>Char</code></td><td><code>==</code>, <code>compare</code>, <code>to_int</code>, <code>to_string</code></td></tr>
+<tr><td><code>Bool</code></td><td><code>==</code>, <code>not</code>, <code>to_string</code></td></tr>
+<tr><td><code>Array[T]</code></td><td><code>Array::make(n, x)</code>, <code>Array::new()</code>, <code>length</code>, <code>size</code> (<code>Nat</code>), <code>xs[i]</code>, <code>xs[i] = v</code>, <code>push</code></td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
+<p>Requirements:</p>
+<ul>
+<li>Node.js (18 or newer).</li>
+<li>The MoonBit toolchain <code>moon</code>, a version that uses <code>moon.mod</code> / <code>moon.pkg</code> (2026-10 or later).</li>
+</ul>
+<h2 id="installing-a-release"><a class="header" href="#installing-a-release">Installing a release</a></h2>
+<p>Every version on the <a href="https://github.com/GreckF/mbtpp/releases">Releases</a> page comes with an npm
+package:</p>
+<pre><code class="language-bash">npm install -g https://github.com/GreckF/mbtpp/releases/download/v0.1.1/moonpp-0.1.1.tgz
+moonpp version
+</code></pre>
+<p>Pushing a <code>v*</code> tag makes GitHub Actions test, build, and publish a release
+(<code>.github/workflows/release.yml</code>).</p>
+<h2 id="installing-from-source"><a class="header" href="#installing-from-source">Installing from source</a></h2>
+<p>In the repository root:</p>
+<pre><code class="language-bash">moon build --target js --release
+npm install -g .
+</code></pre>
+<p><code>npm install -g .</code> installs a link to this repository, so to update later, just rerun
+<code>moon build --target js --release</code>; <code>npm uninstall -g moonpp</code> uninstalls it. You can also call
+<code>bin/moonpp</code> directly (<code>bin\moonpp.cmd</code> on Windows).</p>
+<p><code>moonpp</code> runs in a Node worker with a large stack (the type checker and interpreter recurse deeply).</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="project-structure"><a class="header" href="#project-structure">Project Structure</a></h1>
+<p>A MoonBit++ project is simply a MoonBit module, and a package is a directory containing <code>.mbtpp</code>
+files:</p>
+<pre><code class="language-text">hello/
+  moon.mod                 module: name, version, dependencies, source directory
+  src/
+    main/
+      moon.pkg             package: imported MoonBit packages, whether it is a main package
+      main.mbtpp           a package can have several .mbtpp files
+  mbtpp_out/               output of moonpp build
+</code></pre>
+<h2 id="moonmod"><a class="header" href="#moonmod">moon.mod</a></h2>
+<pre><code class="language-text">name = "username/hello"
+
+version = "0.1.0"
+
+import {
+  "moonbitlang/x@0.5.6",
+}
+
+source = "src"
+</code></pre>
+<p>The <code>import</code> block lists the module’s dependencies and is maintained by <code>moonpp add</code>.</p>
+<h2 id="moonpkg"><a class="header" href="#moonpkg">moon.pkg</a></h2>
+<pre><code class="language-text">import {
+  "moonbitlang/x/encoding/percent",
+  "moonbitlang/core/string" @str,
+}
+
+options(
+  "is-main": true,
+)
+</code></pre>
+<ul>
+<li>The <code>import</code> block lists the MoonBit packages the package imports. <code>@alias</code> is optional and
+defaults to the last segment of the path.</li>
+<li>The main package is marked with <code>options("is-main": true)</code>. Newer versions of <code>moon fmt</code> rewrite
+this as <code>pkgtype(kind: "executable")</code>; both forms are accepted.</li>
+<li>All <code>.mbtpp</code> files of a package share one scope; errors point to the specific file.</li>
+</ul>
+<h2 id="check-order"><a class="header" href="#check-order">Check order</a></h2>
+<p>The files of a package are checked one after another in lexicographic order of file name. Names can
+refer to each other (a function can call one defined later), but <strong>computation</strong> during type
+checking can only use function bodies that have already been checked: if a proof in <code>facts.mbtpp</code>
+needs to compute a function defined in <code>shapes.mbtpp</code>, <code>shapes.mbtpp</code> must be checked first. Use
+<code>"mbtpp-order"</code> to specify the order:</p>
+<pre><code class="language-text">options(
+  "is-main": true,
+  "mbtpp-order": [ "shapes.mbtpp" ],
+)
+</code></pre>
+<p>The listed files are checked first (in the listed order), and the remaining files follow in
+lexicographic order. In the old <code>moon.pkg.json</code> format, write
+<code>"mbtpp-order": [ "shapes.mbtpp" ]</code>. <code>moon</code> ignores this option, and <code>moon fmt</code> preserves it.</p>
+<p>If an error may have been caused by the check order, <code>moonpp</code> gives a hint:</p>
+<pre><code class="language-text">src/main/facts.mbtpp:1:47: error: type mismatch
+  expected: Shape::area(Rect(3, 3)) === 9
+  actual:   ?94 === ?94
+hint: Shape::area is defined in src/main/shapes.mbtpp, which is checked after
+src/main/facts.mbtpp, so its definition could not be used here; the error may
+come from that. … list it in the package's moon.pkg: options("mbtpp-order": [ "shapes.mbtpp", ... ])
+</code></pre>
+<h2 id="old-format"><a class="header" href="#old-format">Old format</a></h2>
+<p>The old <code>moon.mod.json</code> and <code>moon.pkg.json</code> files can still be read. However, newer versions of
+<code>moon</code> no longer accept <code>moon.mod.json</code>, so when you need dependency management or compilation, run
+<code>moon fmt</code> in the project root to migrate; <code>moonpp</code> gives a hint when this happens.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="commands"><a class="header" href="#commands">Commands</a></h1>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Command</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>moonpp new &lt;name&gt;</code></td><td>Create a project</td></tr>
+<tr><td><code>moonpp check [path]</code></td><td>Type-check the whole project, a package directory, or a file; also points out <code>pub</code> declarations that can be marked <code>#mbt</code></td></tr>
+<tr><td><code>moonpp fix [path]</code></td><td>Add <code>#mbt</code> to those <code>pub</code> declarations</td></tr>
+<tr><td><code>moonpp ide &lt;file&gt; [--overlay &lt;json&gt;]</code></td><td>Check the package containing the file for an editor and output JSON (see <a href="#editor">Editor</a>)</td></tr>
+<tr><td><code>moonpp run [path]</code></td><td>Run the main package (or the given package or file) with the interpreter</td></tr>
+<tr><td><code>moonpp run --compiled [path]</code></td><td>Compile to MoonBit and run with <code>moon run</code></td></tr>
+<tr><td><code>moonpp build [path] [-o dir]</code></td><td>Compile to a MoonBit project and run <code>moon build</code></td></tr>
+<tr><td><code>moonpp add &lt;user/module[@version]&gt;</code></td><td>Add a dependency (<code>moon add</code>) and generate <code>.mbti</code> files for packages that lack an interface</td></tr>
+<tr><td><code>moonpp remove &lt;module&gt;</code></td><td>Remove a dependency (<code>moon remove</code>)</td></tr>
+<tr><td><code>moonpp install</code></td><td>Install dependencies (<code>moon install</code>) and generate interfaces</td></tr>
+<tr><td><code>moonpp interfaces</code></td><td>Only generate missing interfaces for downloaded dependencies (<code>moon info</code>)</td></tr>
+<tr><td><code>moonpp tree</code></td><td>Show the dependency tree (<code>moon tree</code>)</td></tr>
+<tr><td><code>moonpp version</code></td><td>Show the version</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="options"><a class="header" href="#options">Options</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>--verbose</code></td><td>List interface items skipped during import</td></tr>
+<tr><td><code>--no-prelude</code></td><td>Do not load the Prelude</td></tr>
+<tr><td><code>--compiled</code></td><td>With <code>run</code>, run the compiled output instead of interpreting</td></tr>
+<tr><td><code>-o</code>, <code>--output &lt;dir&gt;</code></td><td>Where <code>build</code> and <code>run --compiled</code> generate the project</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="single-files"><a class="header" href="#single-files">Single files</a></h2>
+<p>The path can be a single <code>.mbtpp</code> file:</p>
+<pre><code class="language-bash">moonpp run examples/vector.mbtpp
+moonpp run --compiled examples/vector.mbtpp
+</code></pre>
+<p>If there is a <code>moon.pkg</code> next to the file, its imports apply as well. When a single file is
+compiled, the generated project goes in <code>_mbtpp_build/&lt;file name&gt;/</code> in the file’s directory.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="dependencies"><a class="header" href="#dependencies">Dependencies</a></h1>
+<h2 id="modules-on-mooncakesio"><a class="header" href="#modules-on-mooncakesio">Modules on mooncakes.io</a></h2>
+<pre><code class="language-bash">moonpp add moonbitlang/x@0.5.6
+</code></pre>
+<p>Then import packages from the module in your package’s <code>moon.pkg</code>:</p>
+<pre><code class="language-text">import {
+  "moonbitlang/x/encoding/percent",
+}
+</code></pre>
+<p><code>moonpp add</code> calls <code>moon add</code> to download the module, and runs <code>moon info</code> to generate interfaces
+for packages that lack a <code>.mbti</code> interface. Interfaces are read from the project’s <code>.mooncakes/</code>.</p>
+<h2 id="standard-library"><a class="header" href="#standard-library">Standard library</a></h2>
+<p><code>moonbitlang/core/*</code> does not need to be added; its interfaces are read from the MoonBit
+installation directory (<code>~/.moon/lib/core</code>).</p>
+<h2 id="local-modules"><a class="header" href="#local-modules">Local modules</a></h2>
+<p>Use a MoonBit workspace: write a <code>moon.work</code> in the project root and declare the dependency in
+<code>moon.mod</code>.</p>
+<p><code>moon.work</code>:</p>
+<pre><code class="language-text">members = [
+  ".",
+  "../geo",
+]
+</code></pre>
+<p><code>moon.mod</code>:</p>
+<pre><code class="language-text">name = "username/app"
+
+version = "0.1.0"
+
+import {
+  "u/geo@0.1.0",
+}
+
+source = "src"
+</code></pre>
+<p>Local modules need <code>.mbti</code> interfaces; run <code>moon info</code> in that module to generate them.</p>
+<p>For how to use MoonBit packages once they are imported, see
+<a href="#importing-moonbit-packages">Importing MoonBit Packages</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="build-output"><a class="header" href="#build-output">Build Output</a></h1>
+<p><code>moonpp build</code> generates a complete MoonBit project that can be built and run without moonpp:</p>
+<pre><code class="language-text">mbtpp_out/main/
+  moon.mod          name, version and dependencies of the original project
+  moon.work         workspace: itself, plus local modules (absolute paths)
+  README.md
+  .gitignore
+  main/
+    moon.pkg            imported MoonBit packages; main package
+    main.mbt            compiled from src/main/main.mbtpp
+    shapes.mbt          compiled from src/main/shapes.mbtpp (one .mbt per .mbtpp)
+    mbtpp_prelude.mbt   Prelude definitions in use
+    mbtpp_imports.mbt   glue code for calling imported MoonBit packages (when needed)
+    mbtpp_runtime.mbt   runtime support (value representation, pattern matching, primitives)
+</code></pre>
+<p>Source files and generated files correspond one to one: the definitions in <code>x.mbtpp</code> (functions,
+data types, traits, instances) are compiled to <code>x.mbt</code>; a file with no runtime code (for example,
+one with only lemmas) still produces an <code>x.mbt</code> containing only a comment header. The three file
+names starting with <code>mbtpp_</code> are used by moonpp, so source files cannot have those names.</p>
+<pre><code class="language-bash">cd mbtpp_out/main
+moon run main
+</code></pre>
+<ul>
+<li>The default location is the project’s <code>mbtpp_out/&lt;package name&gt;</code>; for a single file it is
+<code>&lt;file's directory&gt;/_mbtpp_build/&lt;file name&gt;</code>; <code>-o &lt;dir&gt;</code> specifies another location.</li>
+<li>Each build overwrites the files there and deletes <code>.mbt</code> files that were generated before but are
+no longer generated (only files carrying the moonpp generated-file marker are deleted).</li>
+<li>The generated project has its own <code>moon.work</code>, so a workspace in a parent directory does not
+affect it.</li>
+<li>The generated code is formatted with <code>moon fmt</code>.</li>
+</ul>
+<p>To see what the generated code looks like, see <a href="#compiling-to-moonbit">Compiling to MoonBit</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="editor"><a class="header" href="#editor">Editor</a></h1>
+<p><code>editors/vscode</code> in the repository is a VS Code extension, and every release includes a packaged
+<code>mbtpp-vscode.vsix</code>. Download and install the latest version (run it again to update; reload the
+VS Code window after installing):</p>
+<pre><code class="language-powershell"># Windows PowerShell
+$f="$env:TEMP\mbtpp-vscode.vsix"; iwr https://github.com/GreckF/mbtpp/releases/latest/download/mbtpp-vscode.vsix -OutFile $f; code --install-extension $f --force
+</code></pre>
+<pre><code class="language-bash"># macOS, Linux, Git Bash
+curl -fsSLo /tmp/mbtpp-vscode.vsix https://github.com/GreckF/mbtpp/releases/latest/download/mbtpp-vscode.vsix &amp;&amp; code --install-extension /tmp/mbtpp-vscode.vsix --force
+</code></pre>
+<p>You can also download it manually and run <code>code --install-extension mbtpp-vscode.vsix</code>, or run
+“Extensions: Install from VSIX…” in VS Code. The extension calls the <code>moonpp</code> command to do the
+checking, so <a href="#installation">install moonpp</a> first; if it is not on <code>PATH</code>, set the
+<code>mbtpp.moonppPath</code> setting to something like <code>node C:/path/to/mbtpp/bin/moonpp.js</code>.</p>
+<h2 id="features"><a class="header" href="#features">Features</a></h2>
+<ul>
+<li><strong>Syntax highlighting</strong>: including tactics inside <code>proof { ... }</code>.</li>
+<li><strong>Diagnostics</strong>: while you edit (after a 300 ms pause by default), the package containing the
+file is checked, unsaved content included. The checker stops at the first error, so one error is
+shown at a time. <code>pub</code> declarations that can be marked <code>#mbt</code> are shown as hints; the quick fix
+(light bulb) “Add #mbt” inserts the annotation, and “Add #mbt everywhere possible” runs
+<code>moonpp fix</code>.</li>
+<li><strong>Hover</strong>: types of variables, functions, methods, fields, constructors (including those in
+patterns), and types.</li>
+<li><strong>Go to definition</strong> (Ctrl+click, F12): global definitions in the package.</li>
+<li><strong>Symbols</strong>: the outline and Ctrl+Shift+O list the declarations in the file (constructors,
+fields, and methods appear under their type); Ctrl+T searches the declarations of all <code>.mbtpp</code>
+files in the workspace.</li>
+<li><strong>Info view</strong> (the button in the editor title bar, or Ctrl+Shift+Enter): when the cursor is
+inside <code>proof { ... }</code>, shows the goals after the tactic at the cursor runs (hypotheses and
+<code>⊢ goal</code>); before the first tactic it shows the initial goal; when a tactic fails it shows the
+goals before that tactic and the error. Elsewhere it shows the type of the name at the cursor.</li>
+<li><strong>Commands</strong>: MoonBit++: Run (▶ in the title bar), Run Compiled, Check, Build MoonBit Project,
+and Add #mbt Where Possible run the corresponding <code>moonpp</code> command in a terminal.</li>
+</ul>
+<p>For example, with the cursor on the second tactic below:</p>
+<pre><code class="language-text">lemma plus_comm : forall n m : Nat, n + m === m + n = proof {
+  intros n m
+  destruct n
+  ...
+</code></pre>
+<p>the Info view shows the two goals after <code>destruct n</code>:</p>
+<pre><code class="language-text">Goal 1 of 2
+n : Nat
+m : Nat
+⊢ (0 + m) === (m + 0)
+
+Goal 2 of 2
+n : Nat
+m : Nat
+n_0 : Nat
+⊢ (S(n_0) + m) === (m + S(n_0))
+</code></pre>
+<h2 id="how-it-works"><a class="header" href="#how-it-works">How it works</a></h2>
+<p>The extension runs <code>moonpp ide &lt;file&gt; --overlay &lt;json&gt;</code>: this checks the package containing the
+file (the whole directory if it has a <code>moon.pkg</code>, otherwise just that file), and <code>--overlay</code>
+supplies the contents of unsaved files. The output is a JSON object: errors and hints
+(<code>diagnostics</code>), the names used along with their types and definition locations (<code>names</code>), the
+declarations in the package (<code>symbols</code>), and the goals of each tactic block at its start and after
+each tactic (<code>proofs</code>). Other editors can use this command to provide the same features.</p>
+<h2 id="settings"><a class="header" href="#settings">Settings</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Setting</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>mbtpp.moonppPath</code></td><td><code>moonpp</code></td><td>The moonpp command</td></tr>
+<tr><td><code>mbtpp.checkOnType</code></td><td><code>true</code></td><td>Check while editing (otherwise only on open and save)</td></tr>
+<tr><td><code>mbtpp.checkDelay</code></td><td><code>300</code></td><td>Milliseconds to wait after an edit before checking</td></tr>
+<tr><td><code>mbtpp.mbtHints</code></td><td><code>true</code></td><td>Show <code>#mbt</code> hints</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="importing-moonbit-packages"><a class="header" href="#importing-moonbit-packages">Importing MoonBit Packages</a></h1>
+<p>After importing a package in the package’s <code>moon.pkg</code>, refer to its items with <code>@pkg.name</code>:</p>
+<pre><code class="language-text">import {
+  "moonbitlang/core/math",
+  "moonbitlang/core/string" @str,
+}
+</code></pre>
+<pre><code class="language-text">fn distance(x : Double, y : Double) -&gt; Double {
+  @math.hypot(x, y)
+}
+
+fn parse_hex(s : String) -&gt; Int raise {
+  @str.parse_int(s, base=16)
+}
+
+fn main {
+  println(distance(3.0, 4.0))
+  println(try? parse_hex("ff"))
+}
+</code></pre>
+<p>(See <code>examples/import</code> in the repository for the full example.)</p>
+<h2 id="how-it-works-1"><a class="header" href="#how-it-works-1">How it works</a></h2>
+<p><code>moonpp</code> reads the package’s <code>.mbti</code> interface file and translates its items into MoonBit++ declarations:</p>
+<ul>
+<li>Functions become external constants: during type checking they have only a type and are never unfolded.</li>
+<li>Types and traits become the corresponding MoonBit++ declarations (see <a href="#type-mapping-and-skipped-items">Type Mapping and Skipped Items</a>).</li>
+</ul>
+<p><strong>The interpreter cannot run imported functions</strong>; reaching one reports
+“cannot run the imported MoonBit function … in the interpreter”. To actually call them, run the compiled
+program: <code>moonpp run --compiled</code> (see <a href="#calling-moonbit-functions">Calling MoonBit Functions</a>).</p>
+<h2 id="names"><a class="header" href="#names">Names</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Item</th><th>Syntax</th></tr>
+</thead>
+<tbody>
+<tr><td>Function</td><td><code>@pkg.f</code></td></tr>
+<tr><td>Type</td><td><code>@pkg.T</code></td></tr>
+<tr><td>Constructor</td><td><code>@pkg.T::C</code> or <code>@pkg.C</code>; with a known expected type, just <code>C</code></td></tr>
+<tr><td>Method</td><td><code>x.m()</code>; methods marked <code>#as_free_fn</code> can also be written <code>@pkg.m</code></td></tr>
+<tr><td>Trait</td><td><code>@pkg.Tr</code>: in bounds, <code>impl @pkg.Tr for T</code>, and <code>trait A : @pkg.Tr</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Labeled arguments, optional arguments, and <code>raise</code> work the same as in MoonBit.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="type-mapping-and-skipped-items"><a class="header" href="#type-mapping-and-skipped-items">Type Mapping and Skipped Items</a></h1>
+<h2 id="type-mapping"><a class="header" href="#type-mapping">Type mapping</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>MoonBit</th><th>MoonBit++</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Int32</code> (i.e. <code>Int</code>), <code>Double</code>, <code>Bool</code>, <code>Char</code>, <code>String</code>, <code>Unit</code></td><td>The built-in types of the same name (<code>Int32</code> is <code>Int</code>)</td></tr>
+<tr><td><code>Array[T]</code>, <code>T?</code>, <code>Result[T, E]</code></td><td>The types of the same name</td></tr>
+<tr><td><code>StringView</code>, <code>ArrayView[T]</code></td><td><code>String</code>, <code>Array[T]</code></td></tr>
+<tr><td><code>pub(all) enum</code>, <code>pub(all) struct</code></td><td>The same enum or struct, automatically <code>#mbt</code>; can be constructed and matched</td></tr>
+<tr><td><code>pub enum</code>, <code>pub struct</code> (read-only)</td><td>As above, but cannot be constructed, only matched and passed around</td></tr>
+<tr><td><code>pub(open) trait</code></td><td>A trait, automatically <code>#mbt</code>; can be implemented for this program’s types</td></tr>
+<tr><td><code>pub trait</code></td><td>A trait that cannot be implemented</td></tr>
+<tr><td><code>type T</code> (abstract types), and undefined types (<code>Int64</code>, <code>Map</code>, etc.)</td><td>Opaque types</td></tr>
+<tr><td>Unknown trait bounds (<code>Hash</code>, etc.)</td><td>Opaque traits, satisfied by every type</td></tr>
+<tr><td><code>(A) -&gt; B raise E</code>, <code>x~ : T</code>, <code>x? : T</code></td><td>The same</td></tr>
+</tbody>
+</table>
+</div>
+<p>Read-only types:</p>
+<pre><code class="language-text">fn f() -&gt; @h.Handle { H(1) }
+// error: cannot construct a value of the MoonBit type @h.Handle outside its package (it is not pub(all))
+</code></pre>
+<p>For <code>#mbt</code>, see <a href="#mbt-types-and-traits">#mbt Types and Traits</a>.</p>
+<h2 id="skipped-items"><a class="header" href="#skipped-items">Skipped items</a></h2>
+<p>The following items are skipped; <code>moonpp check --verbose</code> lists them:</p>
+<ul>
+<li><code>async</code> functions, and <code>async</code> function types in parameters;</li>
+<li>trait objects <code>&amp;T</code>;</li>
+<li>auto-filled parameters <code>loc~ : SourceLoc</code>;</li>
+<li>generic <code>impl</code>s, and <code>impl</code>s other than <code>Show</code>, <code>Eq</code>, and <code>Compare</code>;</li>
+<li><code>#deprecated</code> items;</li>
+<li><code>using</code> re-exports.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="compiling-to-moonbit"><a class="header" href="#compiling-to-moonbit">Compiling to MoonBit</a></h1>
+<p>The compiler translates the type-checked program into MoonBit. <code>moonpp build</code> and <code>moonpp run --compiled</code> use it;
+“Compile to MoonBit” in the <a href="https://greckf.github.io/mbtpp/">Playground</a> shows the result directly.</p>
+<p>Two translations are mixed:</p>
+<h2 id="native-translation"><a class="header" href="#native-translation">Native translation</a></h2>
+<p>A function whose parameters and result are native types, and whose body is in the first-order fragment, is translated into an ordinary (possibly generic) MoonBit
+function. The native types are:</p>
+<ul>
+<li><code>Int</code>, <code>Double</code>, <code>Bool</code>, <code>Char</code>, <code>String</code>, <code>Unit</code>;</li>
+<li>type parameters and function types;</li>
+<li>data types whose parameters are all types and whose fields are all native types.</li>
+</ul>
+<p>Indices and erased fields disappear, for example:</p>
+<pre><code class="language-text">enum Vector[T] : Nat -&gt; Type { Nil : …; Cons[n : Nat](T, Vector[T](n)) : … }
+// compiles to
+enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
+</code></pre>
+<p><code>#mbt</code> types use their own names instead of <code>E_…</code> (see <a href="#mbt-types-and-traits">#mbt Types and Traits</a>).</p>
+<h2 id="uniform-representation"><a class="header" href="#uniform-representation">Uniform representation</a></h2>
+<p>Everything else (type-level computation, GADT refinement, non-<code>#mbt</code> traits, etc.) uses the uniform representation <code>Value</code>. It is
+an extensible enum (MoonBit’s <code>extenum</code>) in the runtime, with fixed variants <code>VInt</code>, <code>VFun</code>, and so on; each generated file uses
+<code>extenum Value += { … }</code> to add the constructors of its own data types. Indices and erased fields do not appear, and fields are
+<code>Value</code>. For example, the GADT in <code>basic.mbtpp</code>:</p>
+<pre><code class="language-text">enum Exp : [T] -&gt; Type {
+  IntLit(Int) : Exp[Int]
+  Add(Exp[Int], Exp[Int]) : Exp[Int]
+  If[T](Exp[Bool], Exp[T], Exp[T]) : Exp[T]
+  …
+}
+</code></pre>
+<p>compiles in <code>basic.mbt</code> to</p>
+<pre><code class="language-text">extenum Value += {
+  K_Exp_IntLit(Value)
+  K_Exp_Add(Value, Value)
+  K_Exp_If(Value, Value, Value)
+  …
+}
+</code></pre>
+<p>The <code>match</code> in <code>eval</code> is native:</p>
+<pre><code class="language-text">fn f19_exp_eval(self : Value) -&gt; Value raise {
+  match self {
+    K_Exp_IntLit(n) =&gt; n
+    K_Exp_Add(lhs, rhs) =&gt; VInt(as_int(f19_exp_eval(lhs)) + as_int(f19_exp_eval(rhs)))
+    …
+  }
+}
+</code></pre>
+<p>The result type of <code>eval</code> varies with the index (the <code>IntLit</code> branch returns <code>Int</code>, the <code>BoolLit</code> branch returns <code>Bool</code>), which MoonBit’s
+type system cannot express, so its result is still <code>Value</code>. Runtime support (<code>apply</code>, primitives, the dynamic pattern matcher) lives in
+the generated <code>mbtpp_runtime.mbt</code>; it gets constructor names and fields (for display and equality) from decoders that each file
+registers in <code>fn init</code>. The two kinds of code convert values at their boundary.</p>
+<p>Because <code>Value</code> can be extended from other files and other packages, this representation also suits separate compilation of multiple MoonBit++ packages in the future.</p>
+<h2 id="erasure"><a class="header" href="#erasure">Erasure</a></h2>
+<ul>
+<li>Type parameters are always erased.</li>
+<li>Other implicit parameters and implicit constructor fields are erased when they are used only in types.</li>
+<li>Proofs are not erased: they are computed like ordinary values.</li>
+</ul>
+<h2 id="performance"><a class="header" href="#performance">Performance</a></h2>
+<p>A <code>fib</code> program runs about 40 times faster when compiled (7.85 s interpreted, 0.18 s compiled). Before constructors became native
+variants of <code>Value</code>, data in the uniform representation was <code>VCon(constructor name, field array)</code> and matching compared strings; with native variants,
+evaluating an <code>Exp</code> tree with 2^18 leaves 20 times dropped from 2.65 s to 1.26 s.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="calling-moonbit-functions"><a class="header" href="#calling-moonbit-functions">Calling MoonBit Functions</a></h1>
+<p>Compiled programs really call imported MoonBit functions:</p>
+<ul>
+<li><strong>From native code</strong>: called directly, with no conversion.</li>
+<li><strong>From the uniform representation</strong>: arguments and results are converted according to the signature.</li>
+</ul>
+<p>Supported signatures:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Type</th><th>Conversion</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Int</code>, <code>Double</code>, <code>Bool</code>, <code>Char</code>, <code>String</code>, <code>Unit</code></td><td>Scalar</td></tr>
+<tr><td>Type parameters</td><td>None (the value itself)</td></tr>
+<tr><td><code>Array[T]</code>, <code>T?</code></td><td>Element by element</td></tr>
+<tr><td><code>#mbt</code> data types (including imported <code>pub(all)</code> types)</td><td>Constructor by constructor</td></tr>
+<tr><td>Function types</td><td>Callback: arguments and results are converted when MoonBit calls it</td></tr>
+<tr><td>Opaque types</td><td>Boxed</td></tr>
+<tr><td>Labeled arguments, optional arguments, <code>raise</code></td><td>Supported</td></tr>
+<tr><td>Generic functions with <code>#mbt</code> trait bounds</td><td>Callable from native code</td></tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>Calling an external function whose signature is unsupported is a <strong>compile error</strong> that explains why.</li>
+<li>Values of <strong>read-only types</strong> (<code>pub</code> rather than <code>pub(all)</code>) cannot be rebuilt from the uniform representation; they can only be passed around in native code.
+Passing them to a MoonBit function from the uniform representation is a compile error, suggesting that you make the call in the native fragment instead.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="mbt-types-and-traits"><a class="header" href="#mbt-types-and-traits">#mbt Types and Traits</a></h1>
+<p>Putting <code>#mbt</code> before an enum, struct, or trait declares that it corresponds directly to a MoonBit type or trait. Compiled native
+code uses these MoonBit types directly, and MoonBit functions can take them without conversion.</p>
+<pre><code class="language-moonbit">#mbt
+enum Tree[T] {
+  Leaf
+  Node(Tree[T], T, Tree[T])
+}
+
+#mbt
+struct Pt {
+  x : Int
+  y : Int
+}
+
+#mbt
+trait Size {
+  size(Self) -&gt; Int
+}
+
+impl Size for Int with size(self) { self }
+impl Size for Pt with size(self) { self.x + self.y }
+impl[T : Size] Size for Tree[T] with size(self) {
+  match self {
+    Leaf =&gt; 0
+    Node(l, x, r) =&gt; l.size() + x.size() + r.size()
+  }
+}
+
+fn main {
+  let t : Tree[Pt] = Node(Leaf, { x: 1, y: 2 }, Leaf)
+  println(t.size())
+}
+</code></pre>
+<p>The output includes <code>pub(all) enum Tree[T0]</code>, <code>pub(all) struct Pt</code>, <code>pub(open) trait Size</code>, and
+<code>impl[T0 : Size] Size for Tree[T0]</code>.</p>
+<p><code>#mbt</code> does not change type checking or interpretation; it only affects compilation. Its conditions are checked during type checking, and an error is reported if they are not met.</p>
+<h2 id="mbt-types"><a class="header" href="#mbt-types">#mbt types</a></h2>
+<ul>
+<li>Only type parameters, no indices; not a proposition and not a <code>suberror</code>; constructors have no implicit fields.</li>
+<li>Field types are MoonBit types: <code>Int</code>, <code>Double</code>, <code>Bool</code>, <code>Char</code>, <code>String</code>, <code>Unit</code>, type parameters, <code>#mbt</code>
+types, and function types between them. Arrays are not supported yet.</li>
+<li>Generated type and constructor names must start with an uppercase letter and must not clash with existing names such as <code>Value</code> or <code>Option</code>.</li>
+</ul>
+<h2 id="mbtname"><a class="header" href="#mbtname">#mbt(“name”)</a></h2>
+<p>Maps to an existing MoonBit type or trait; no declaration is generated. <code>Option</code> and <code>Result</code> in the prelude are
+<code>#mbt("Option")</code> and <code>#mbt("Result")</code>. <code>pub(all)</code> types and <code>pub(open)</code> traits imported from <code>.mbti</code> automatically get
+<code>#mbt("@pkg.T")</code> (when the conditions hold).</p>
+<h2 id="mbt-traits"><a class="header" href="#mbt-traits">#mbt traits</a></h2>
+<ul>
+<li><code>Self : Type</code>; supertraits are also <code>#mbt</code>.</li>
+<li>Methods are not generic; their parameters and results are MoonBit types (<code>Self</code> may appear).</li>
+<li>All methods in the generated MoonBit trait are marked <code>raise</code> (compiled code implements control flow with errors).</li>
+<li>In native code, a bound <code>[T : Size]</code> becomes MoonBit’s <code>fn[T0 : Size]</code>, and a method call becomes <code>Size::size(x)</code>.</li>
+</ul>
+<h2 id="instances-of-mbt-traits"><a class="header" href="#instances-of-mbt-traits">Instances of #mbt traits</a></h2>
+<ul>
+<li>Only type parameters and <code>#mbt</code> bounds; <code>Self</code> is a MoonBit type (not just a type parameter).</li>
+<li>MoonBit’s orphan rule applies: existing traits (<code>#mbt("…")</code> or imported) can only be implemented for types generated by this program.</li>
+<li>Read-only (<code>pub</code>) traits cannot be implemented.</li>
+<li>Instances whose methods are in the native fragment generate a MoonBit <code>impl</code>.</li>
+</ul>
+<h2 id="finding-declarations-that-could-be-mbt"><a class="header" href="#finding-declarations-that-could-be-mbt">Finding declarations that could be <code>#mbt</code></a></h2>
+<p><code>#mbt</code> is an explicit contract; the compiler never adds it on its own. But <code>moonpp check</code> examines enums, structs, traits, and functions
+marked <code>pub</code> without <code>#mbt</code>, and gives a hint for each one that meets the <code>#mbt</code> conditions:</p>
+<pre><code class="language-text">src/main/shapes.mbtpp:2: hint: pub type Shape could be #mbt (it would be a MoonBit type)
+src/main/shapes.mbtpp:23: hint: pub trait Area could be #mbt (it would be a MoonBit trait)
+src/main/shapes.mbtpp:41: hint: pub fn norm1 could be #mbt (it would be exported as a MoonBit function)
+  (`moonpp fix` adds #mbt to them)
+ok: src/main
+</code></pre>
+<p><code>moonpp fix</code> inserts a <code>#mbt</code> line above these declarations and re-checks the package; if the check fails, it restores the original files.</p>
+<ul>
+<li>Only <code>pub</code> declarations are considered: <code>pub</code> has no other meaning in MoonBit++, so here it signals “intended for MoonBit”.</li>
+<li>Types and traits are judged together: several mutually referring types can become <code>#mbt</code> at once.</li>
+<li>A function needs a translatable signature (assuming the hinted types are annotated) and a body in the native fragment (the same check
+the compiler does).</li>
+<li>Indexed types, types and functions that mention them, and <code>lemma</code>s are never hinted.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="mbt-functions"><a class="header" href="#mbt-functions">#mbt Functions</a></h1>
+<p>Functions can be marked <code>#mbt</code> too: each is compiled to a public MoonBit function of the same name, which MoonBit code can call directly.</p>
+<pre><code class="language-moonbit">#mbt
+enum Tree[T] {
+  Leaf
+  Node(Tree[T], T, Tree[T])
+}
+
+#mbt
+fn[T] insert(t : Tree[T], x : T, lt~ : (T, T) -&gt; Bool) -&gt; Tree[T] {
+  match t {
+    Leaf =&gt; Node(Leaf, x, Leaf)
+    Node(l, y, r) =&gt;
+      if lt(x, y) {
+        Node(insert(l, x, lt~), y, r)
+      } else {
+        Node(l, y, insert(r, x, lt~))
+      }
+  }
+}
+
+#mbt
+fn[T] Tree::depth(self : Tree[T]) -&gt; Int {
+  match self {
+    Leaf =&gt; 0
+    Node(l, _, r) =&gt; {
+      let a = l.depth()
+      let b = r.depth()
+      1 + (if a &gt; b { a } else { b })
+    }
+  }
+}
+
+fn main {
+  let mut t : Tree[Int] = Leaf
+  for i = 0; i &lt; 6; i = i + 1 {
+    t = insert(t, i * 7 % 10, lt=(a, b) =&gt; a &lt; b)
+  }
+  println(t.depth())
+}
+</code></pre>
+<p>The output:</p>
+<pre><code class="language-text">pub fn[T0] insert(t : Tree[T0], x : T0, lt~ : (T0, T0) -&gt; Bool raise) -&gt; Tree[T0]
+pub fn[T0] Tree::depth(self : Tree[T0]) -&gt; Int32
+</code></pre>
+<p>(<code>moon fmt</code> writes MoonBit’s <code>Int</code> as <code>Int32</code>.)</p>
+<h2 id="signature-checked-during-type-checking"><a class="header" href="#signature-checked-during-type-checking">Signature (checked during type checking)</a></h2>
+<ul>
+<li>Implicit parameters can only be type parameters <code>[T]</code>; bounds can only be <code>#mbt</code> traits on type parameters, and a bounded type parameter must appear in
+the parameters or the result.</li>
+<li>Parameters and results are MoonBit types.</li>
+<li><code>x~</code> and <code>x?</code> parameters are supported; default values are not.</li>
+<li>Methods can only belong to <code>#mbt</code> types generated by this program.</li>
+<li><code>main</code> cannot be marked <code>#mbt</code>.</li>
+<li><code>#mbt("name")</code> sets the function’s name in MoonBit.</li>
+</ul>
+<h2 id="body-checked-during-compilation"><a class="header" href="#body-checked-during-compilation">Body (checked during compilation)</a></h2>
+<p>The body must be in the native fragment; otherwise compilation fails and points to the first expression that cannot be natively translated, for example:</p>
+<pre><code class="language-text">#mbt fn f cannot be compiled to MoonBit: its body is not in the native fragment:
+in `println(x)`, println has no native signature (a type without a MoonBit type,
+or a bound that is not #mbt)
+</code></pre>
+<h2 id="raise"><a class="header" href="#raise">raise</a></h2>
+<p>A function that does not declare <code>raise</code> does not <code>raise</code> in MoonBit either; runtime failures inside it (such as an incomplete match) become
+<code>abort</code>. A function that declares <code>raise E</code> is <code>raise</code> in MoonBit.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="using-compiled-code-from-moonbit"><a class="header" href="#using-compiled-code-from-moonbit">Using Compiled Code from MoonBit</a></h1>
+<p><code>#mbt</code> functions, types, and traits are public after compilation, so MoonBit code can use them.</p>
+<p>For example, after compiling the program in <a href="#mbt-functions">#mbt Functions</a>, add a MoonBit
+test file <code>export_wbtest.mbt</code> to the <code>main/</code> directory of the generated project:</p>
+<pre><code class="language-text">test "exported functions" {
+  let t = insert(Tree::Leaf, 3, lt=(a, b) =&gt; a &lt; b)
+  inspect(t.depth(), content="1")
+}
+</code></pre>
+<p>Then run <code>moon test</code> in the generated project.</p>
+<p>Other MoonBit projects can also reference the generated project through a workspace (<code>moon.work</code>).</p>
+<p>Currently the output is always a main package (with a <code>main</code> function); standalone library packages cannot be generated yet.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="known-limitations"><a class="header" href="#known-limitations">Known Limitations</a></h1>
+<h2 id="language"><a class="header" href="#language">Language</a></h2>
+<ul>
+<li>No termination checking or strict positivity checking (by design): you can “prove” false propositions.</li>
+<li>No resumable algebraic effects, and no automation tactics such as <code>simp</code>, <code>omega</code>, or <code>auto</code>.</li>
+<li>Local functions cannot be recursive.</li>
+<li>Structs have no mutable fields, and there are no struct patterns.</li>
+<li>Traits have no default methods.</li>
+</ul>
+<h2 id="imports"><a class="header" href="#imports">Imports</a></h2>
+<ul>
+<li>The interpreter cannot run imported MoonBit functions; they can only be called after compilation.</li>
+<li>MoonBit’s <code>async</code> (<code>async fn</code>, <code>async</code> function types) is not supported.</li>
+<li>Generic <code>impl</code>s, trait objects, and similar items in imported packages are not imported (see <a href="#type-mapping-and-skipped-items">Type mapping and items not imported</a>).</li>
+</ul>
+<h2 id="compiler"><a class="header" href="#compiler">Compiler</a></h2>
+<ul>
+<li>Arrays are not native types in native code: signatures containing arrays use the uniform representation and cannot be <code>#mbt</code>.</li>
+<li>Values are converted by value between the uniform representation and native code, so frequently passing large data across the boundary is slow.</li>
+<li>Proofs are not erased.</li>
+</ul>
+<h2 id="tooling"><a class="header" href="#tooling">Tooling</a></h2>
+<ul>
+<li>The generated project is always a main package; library packages cannot be generated.</li>
+<li>Requires a recent <code>moon</code> (one that uses <code>moon.mod</code> / <code>moon.pkg</code>).</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-09f2665d.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="theme/moonbit-cc4ee67c.js"></script>
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,21 @@
+[book]
+title = "MoonBit++ Manual"
+language = "en"
+src = "src"
+
+[build]
+build-dir = "../../docs/book/en"
+create-missing = false
+
+[output.html]
+default-theme = "light"
+preferred-dark-theme = "navy"
+git-repository-url = "https://github.com/GreckF/mbtpp"
+edit-url-template = "https://github.com/GreckF/mbtpp/edit/main/book/en/{path}"
+# copied from book/theme by scripts/build-book.mjs
+additional-js = ["theme/moonbit.js"]
+additional-css = ["theme/moonbit.css"]
+site-url = "/mbtpp/book/en/"
+
+[output.html.search]
+enable = true

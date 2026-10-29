@@ -1,4 +1,4 @@
-// Check the MoonBit++ examples of the manual (book/src):
+// Check the MoonBit++ examples of the manual (book/src and book/en/src):
 //   node scripts/check-book.mjs
 // Every ```moonbit block is type checked with moonpp, and run when it has a
 // `main`; blocks are standalone programs (```text is used for fragments).
@@ -8,7 +8,7 @@ import { tmpdir } from "node:os";
 import { join, relative } from "node:path";
 
 const root = new URL("..", import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1");
-const src = join(root, "book", "src");
+const srcs = [join(root, "book", "src"), join(root, "book", "en", "src")];
 const tmp = mkdtempSync(join(tmpdir(), "mbtpp-book-"));
 
 function* markdown(dir) {
@@ -21,7 +21,7 @@ function* markdown(dir) {
 
 let failed = 0;
 let count = 0;
-for (const file of markdown(src)) {
+for (const file of srcs.flatMap((d) => [...markdown(d)])) {
   const text = readFileSync(file, "utf8").replace(/\r\n/g, "\n");
   const blocks = [...text.matchAll(/```moonbit\n([\s\S]*?)```/g)].map((m) => m[1]);
   blocks.forEach((code, k) => {

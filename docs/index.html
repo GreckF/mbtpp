@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MoonBit++ Playground</title>
-<meta name="description" content="在线类型检查、运行 MoonBit++ 程序，并查看编译到 MoonBit 的结果">
+<meta name="description" content="Type check and run MoonBit++ programs online, and see the MoonBit code they compile to / 在线类型检查、运行 MoonBit++ 程序，并查看编译到 MoonBit 的结果">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/mode/simple.min.js"></script>
@@ -207,29 +207,30 @@ main {
 <body>
 <header>
   <div class="brand">MoonBit<span>++</span> Playground</div>
-  <select id="examples" aria-label="示例"></select>
-  <button id="run" class="primary" title="Ctrl+Enter">运行</button>
-  <button id="compile" title="Ctrl+Shift+Enter">编译到 MoonBit</button>
-  <button id="share" title="复制带代码的链接">分享</button>
+  <select id="examples" data-i18n-label="examples"></select>
+  <button id="run" class="primary" title="Ctrl+Enter" data-i18n="run">运行</button>
+  <button id="compile" title="Ctrl+Shift+Enter" data-i18n="compile">编译到 MoonBit</button>
+  <button id="share" data-i18n="share" data-i18n-title="shareTitle">分享</button>
   <div class="spacer"></div>
-  <a href="book/">文档</a>
+  <button id="lang" title="Language / 语言">EN</button>
+  <a id="docs" href="book/" data-i18n="docs">文档</a>
   <a href="https://github.com/GreckF/mbtpp">GitHub</a>
 </header>
 <main>
   <section class="pane">
-    <div class="pane-head"><span class="title">main.mbtpp</span><span class="note">编辑时自动类型检查</span></div>
+    <div class="pane-head"><span class="title">main.mbtpp</span><span class="note" data-i18n="checkNote">编辑时自动类型检查</span></div>
     <div class="editor-wrap"><textarea id="src"></textarea></div>
-    <div id="status" class="status">正在加载…</div>
+    <div id="status" class="status" data-i18n="loading">正在加载…</div>
   </section>
   <section class="pane">
     <div class="pane-head" role="tablist">
-      <button class="tab" role="tab" data-tab="output" aria-selected="true">输出</button>
+      <button class="tab" role="tab" data-tab="output" aria-selected="true" data-i18n="output">输出</button>
       <button class="tab" role="tab" data-tab="main" aria-selected="false">MoonBit</button>
       <button class="tab" role="tab" data-tab="runtime" aria-selected="false">mbtpp_runtime.mbt</button>
       <span id="out-note" class="note"></span>
     </div>
     <div class="out-wrap">
-      <pre id="output"><span class="hint">点击“运行”用解释器执行，点击“编译到 MoonBit”查看生成的代码。</span></pre>
+      <pre id="output"><span class="hint" data-i18n="hint">点击“运行”用解释器执行，点击“编译到 MoonBit”查看生成的代码。</span></pre>
       <div id="code-wrap" class="hidden" style="height:100%"><textarea id="code"></textarea></div>
     </div>
   </section>

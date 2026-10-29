@@ -1,0 +1,17 @@
+/* the "open in Playground" button of runnable MoonBit++ examples */
+pre > .buttons > .mbtpp-run {
+  text-decoration: none;
+}
+
+/* the link to the other language, in the menu bar */
+.mbtpp-lang {
+  display: inline-block;
+  padding: 0 10px;
+  font-size: 1.4rem;
+  line-height: var(--menu-bar-height);
+  color: var(--icons);
+  text-decoration: none;
+}
+.mbtpp-lang:hover {
+  color: var(--icons-hover);
+}

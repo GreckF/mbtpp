@@ -36,6 +36,10 @@
     return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
   }
 
+  // The English book is built into `en/` below the Chinese one.
+  var en = (document.documentElement.lang || "").indexOf("en") === 0;
+  var playground = path_to_root + (en ? "../../" : "../");
+
   var blocks = document.querySelectorAll("code.language-moonbit");
   for (var i = 0; i < blocks.length; i++) {
     var code = blocks[i];
@@ -56,11 +60,26 @@
     }
     var a = document.createElement("a");
     a.className = "fa fa-play mbtpp-run";
-    a.title = "在 Playground 中打开";
+    a.title = en ? "Open in the Playground" : "在 Playground 中打开";
     a.setAttribute("aria-label", a.title);
     a.target = "_blank";
     a.rel = "noopener";
-    a.href = path_to_root + "../#code=" + encode(src);
+    a.href = playground + "#code=" + encode(src);
     buttons.insertBefore(a, buttons.firstChild);
+  }
+
+  // A link to the same page in the other language.
+  var right = document.querySelector(".right-buttons");
+  if (right) {
+    var root = new URL(path_to_root || "./", location.href).href;
+    var page = location.href.split("#")[0].slice(root.length);
+    var other = new URL((en ? "../" : "en/") + page, root).href;
+    var link = document.createElement("a");
+    link.href = other;
+    link.className = "mbtpp-lang";
+    link.textContent = en ? "中文" : "English";
+    link.title = en ? "切换到中文" : "Switch to English";
+    link.setAttribute("aria-label", link.title);
+    right.insertBefore(link, right.firstChild);
   }
 })();

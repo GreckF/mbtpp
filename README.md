@@ -1,17 +1,20 @@
 # MoonBit++
 
-> **声明：这是一个纯 vibe coding 的娱乐项目，请不要认真看待。**
-> 代码未经严格审查。
+English | [中文](README.zh-CN.md)
+
+> **Disclaimer: this is a pure vibe-coding project for fun; please don't take it seriously.**
+> The code has not been carefully reviewed.
 
 A small dependently typed language with MoonBit syntax: a type checker and a
 tree-walking interpreter, written in MoonBit.
 
-语言标准大致来自：
-[写给一般月兔用户的MoonBit++入门](https://zhuanlan.zhihu.com/p/2067605478985749711)（知乎，作者：用户名可以重复吗）
+The language roughly follows
+[写给一般月兔用户的MoonBit++入门](https://zhuanlan.zhihu.com/p/2067605478985749711)
+("An introduction to MoonBit++ for ordinary MoonBit users", Zhihu, by 用户名可以重复吗).
 
 ## Playground
 
-Try it online: <https://greckf.github.io/mbtpp/> (manual: <https://greckf.github.io/mbtpp/book/>) — type checking while you
+Try it online: <https://greckf.github.io/mbtpp/> (manual: <https://greckf.github.io/mbtpp/book/en/>) — type checking while you
 edit, running with the interpreter, and the MoonBit code the compiler
 generates. The page lives in [docs/](docs); rebuild it with
 `node scripts/build-web.mjs`.
@@ -105,9 +108,11 @@ MoonBit code can call (see
 
 `moon test` runs the examples in `examples/` and the tests in `src/*_test.mbt`.
 
-The manual (language, moonpp, MoonBit interop) is online at
-<https://greckf.github.io/mbtpp/book/>; its source is in [book/src](book/src)
-(an [mdBook](https://github.com/rust-lang/mdBook): `mdbook build book` writes
-`docs/book`, `node scripts/check-book.mjs` checks its examples). The design
+The manual (language, moonpp, MoonBit interop) is online in English at
+<https://greckf.github.io/mbtpp/book/en/> and in Chinese at
+<https://greckf.github.io/mbtpp/book/>; its sources are in [book/en/src](book/en/src)
+and [book/src](book/src) (an [mdBook](https://github.com/rust-lang/mdBook):
+`node scripts/build-book.mjs` writes `docs/book` and `docs/book/en`,
+`node scripts/check-book.mjs` checks the examples). The design
 notes are in [doc/mbtpp/proposal.md](doc/mbtpp/proposal.md), the
 implementation in [doc/mbtpp/implementation.md](doc/mbtpp/implementation.md).

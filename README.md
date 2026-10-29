@@ -77,5 +77,7 @@ MoonBit code can call (see
 
 `moon test` runs the examples in `examples/` and the tests in `src/*_test.mbt`.
 
-The language is described in [doc/mbtpp/proposal.md](doc/mbtpp/proposal.md),
-the implementation in [doc/mbtpp/implementation.md](doc/mbtpp/implementation.md).
+The full manual (language, moonpp, MoonBit interop) is
+[doc/mbtpp/guide.md](doc/mbtpp/guide.md); the design notes are in
+[doc/mbtpp/proposal.md](doc/mbtpp/proposal.md), the implementation in
+[doc/mbtpp/implementation.md](doc/mbtpp/implementation.md).

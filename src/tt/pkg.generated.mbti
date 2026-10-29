@@ -124,6 +124,8 @@ pub fn unfold(String, Array[(Val, Icit)]) -> Val?
 
 pub fn unfold_any(String, Array[(Val, Icit)]) -> Val?
 
+pub let unfolded_too_early : Array[String]
+
 pub fn unify(Array[Val?], Val, Val) -> Unit raise UnifyError
 
 pub fn v_var(Int32) -> Val

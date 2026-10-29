@@ -588,3 +588,29 @@ test "mbt: functions" {
     content="t.mbtpp:1:1: error: #mbt fn f: the parameter xs has type Array[Int], which does not translate to MoonBit (arrays are not supported yet)",
   )
 }
+
+///|
+fn check_files(files : Array[(String, String)]) -> String {
+  @tt.check_package(files) catch {
+    @tt.CheckError(msg) => return msg
+  }
+  "ok"
+}
+
+///|
+test "file order: a hint when a later file's function is needed" {
+  let shapes = (
+    "shapes.mbtpp", "enum Shape { Sq(Int) }\nfn Shape::area(self : Shape) -> Int { match self { Sq(n) => n * n } }",
+  )
+  let facts = ("facts.mbtpp", "lemma area3 : Sq(3).area() === 9 = Refl")
+  inspect(
+    check_files([facts, shapes]),
+    content=(
+      #|facts.mbtpp:1:36: error: type mismatch
+      #|  expected: Shape::area(Sq(3)) === 9
+      #|  actual:   ?86 === ?86
+      #|hint: Shape::area is defined in shapes.mbtpp, which is checked after facts.mbtpp, so its definition could not be used here; the error may come from that. Files are checked in dictionary order; to check shapes.mbtpp first, list it in the package's moon.pkg: options("mbtpp-order": [ "shapes.mbtpp", ... ])
+    ),
+  )
+  inspect(check_files([shapes, facts]), content="ok")
+}

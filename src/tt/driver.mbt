@@ -157,8 +157,55 @@ pub fn check_package(
   }
   check_decls(decls) catch {
     ElabError(p, msg) =>
-      raise CheckError(package_pos(files, p) + ": error: " + msg)
+      raise CheckError(
+        package_pos(files, p) + ": error: " + msg + order_hint(files, p),
+      )
   }
+}
+
+///|
+/// When an error in file k may come from a function of a later file whose
+/// body was not available yet (files are checked one after the other), a
+/// hint to change the order.
+fn order_hint(files : Array[(String, String)], p : Pos) -> String {
+  let k = p.line / file_stride - 1
+  if k < 0 || k >= files.length() {
+    return ""
+  }
+  for n in unfolded_too_early {
+    match global_files.get(n) {
+      Some(f) =>
+        match files.search_by(x => x.0 == f) {
+          Some(j) if j > k =>
+            return "\nhint: " +
+              n +
+              " is defined in " +
+              f +
+              ", which is checked after " +
+              files[k].0 +
+              ", so its definition could not be used here; the error may come from that. Files are checked in dictionary order; to check " +
+              base_name(f) +
+              " first, list it in the package's moon.pkg: options(\"mbtpp-order\": [ \"" +
+              base_name(f) +
+              "\", ... ])"
+          _ => ()
+        }
+      None => ()
+    }
+  }
+  ""
+}
+
+///|
+fn base_name(path : String) -> String {
+  let mut b = path
+  for sep in ["/", "\\"] {
+    match b.rev_find(sep) {
+      Some(i) => b = b.unsafe_substring(start=i + 1, end=b.length())
+      None => ()
+    }
+  }
+  b
 }
 
 ///|

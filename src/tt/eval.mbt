@@ -184,12 +184,29 @@ fn is_blocked(v : Val) -> Bool {
 }
 
 ///|
+/// Functions that could not be unfolded because their bodies were not
+/// elaborated yet (they are defined later), since the start of the current
+/// declaration: an error may come from the order in which files are checked.
+pub let unfolded_too_early : Array[String] = []
+
+///|
+fn note_no_body(n : String) -> Unit {
+  if !unfolded_too_early.contains(n) {
+    unfolded_too_early.push(n)
+  }
+}
+
+///|
 /// Unfold a global function applied to at least as many arguments as it
 /// has leading lambdas.
 pub fn unfold(n : String, sp : Spine) -> Val? {
   match globals.get(n) {
     Some({ kind: GFunc(Some(body), false, arity), .. }) if sp.length() >= arity =>
       Some(app_spine(eval([], body), sp))
+    Some({ kind: GFunc(None, _, _), .. }) => {
+      note_no_body(n)
+      None
+    }
     _ => None
   }
 }
@@ -200,6 +217,10 @@ pub fn unfold_any(n : String, sp : Spine) -> Val? {
   match globals.get(n) {
     Some({ kind: GFunc(Some(body), false, _), .. }) =>
       Some(app_spine(eval([], body), sp))
+    Some({ kind: GFunc(None, _, _), .. }) => {
+      note_no_body(n)
+      None
+    }
     _ => None
   }
 }

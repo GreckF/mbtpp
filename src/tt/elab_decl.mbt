@@ -960,6 +960,7 @@ pub fn check_decls(
     }
   }
   for name in types {
+    unfolded_too_early.clear()
     if lenient {
       ensure(nowhere, name) catch {
         _ => skipped.push(name)
@@ -970,6 +971,7 @@ pub fn check_decls(
   }
   check_mbt_decls(marked, lenient)
   for k = 0; k < steps.length(); k = k + 1 {
+    unfolded_too_early.clear()
     if lenient {
       let npending = st.pending.length()
       steps[k]() catch {

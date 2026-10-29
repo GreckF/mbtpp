@@ -151,6 +151,81 @@ fn package_imports(dir : String) -> Array[(String, String)] raise Failure {
 }
 
 ///|
+/// The order in which the files of a package are checked, if the package
+/// gives one: `options("mbtpp-order": [ "b.mbtpp", "a.mbtpp" ])` in its
+/// `moon.pkg` (or `"mbtpp-order"` in a `moon.pkg.json`).
+fn package_order(dir : String) -> Array[String]? raise Failure {
+  match read_moon_file(dir + "/moon.pkg") {
+    Some(f) =>
+      return match f.option("mbtpp-order") {
+        Some(MList(xs)) =>
+          Some(
+            xs.map(x => {
+              match x {
+                MStr(s) => s
+                _ => die(dir + "/moon.pkg: \"mbtpp-order\" lists file names")
+              }
+            }),
+          )
+        Some(_) => die(dir + "/moon.pkg: \"mbtpp-order\" must be a list")
+        None => None
+      }
+    None => ()
+  }
+  match read_json(dir + "/moon.pkg.json") {
+    Some(j) =>
+      match j.value("mbtpp-order") {
+        Some(Array(xs)) =>
+          Some(
+            xs.map(x => {
+              match x {
+                String(s) => s
+                _ =>
+                  die(dir + "/moon.pkg.json: \"mbtpp-order\" lists file names")
+              }
+            }),
+          )
+        Some(_) => die(dir + "/moon.pkg.json: \"mbtpp-order\" must be a list")
+        None => None
+      }
+    None => None
+  }
+}
+
+///|
+/// The files of a package in the order they are checked: those listed in
+/// `"mbtpp-order"` first, in that order, then the others in dictionary
+/// order.
+fn ordered_files(
+  dir : String,
+  files : Array[String],
+) -> Array[String] raise Failure {
+  let order = match package_order(dir) {
+    Some(o) => o
+    None => return files
+  }
+  let out : Array[String] = []
+  for name in order {
+    match files.search_by(f => last_segment(f) == name) {
+      Some(i) => if !out.contains(files[i]) { out.push(files[i]) }
+      None =>
+        die(
+          relative(dir, current_dir()) +
+          "/moon.pkg: \"mbtpp-order\" lists " +
+          name +
+          ", which is not a file of the package",
+        )
+    }
+  }
+  for f in files {
+    if !out.contains(f) {
+      out.push(f)
+    }
+  }
+  out
+}
+
+///|
 /// Is the package in `dir` a main package (`"is-main": true`)?
 fn package_is_main(dir : String) -> Bool {
   match (read_moon_file(dir + "/moon.pkg") catch { _ => None }) {

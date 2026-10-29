@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ddc88031.js";
+            window.path_to_searchindex_js = "searchindex-0a64dc98.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-9775a42a.js"></script>
@@ -1201,8 +1201,27 @@ options(
 <li><code>import</code> 块列出包导入的 MoonBit 包，<code>@别名</code> 可选，默认是路径的最后一段。</li>
 <li>main 包用 <code>options("is-main": true)</code> 标记。新版 <code>moon fmt</code> 会改写成
 <code>pkgtype(kind: "executable")</code>，两种写法都认。</li>
-<li>一个包的所有 <code>.mbtpp</code> 文件共享一个作用域，声明顺序无关；报错定位到具体文件。</li>
+<li>一个包的所有 <code>.mbtpp</code> 文件共享一个作用域；报错定位到具体文件。</li>
 </ul>
+<h2 id="检查顺序"><a class="header" href="#检查顺序">检查顺序</a></h2>
+<p>一个包的文件按文件名的字典序依次检查。名字可以互相引用（定义在后面的函数也能调用），但类型
+检查时的<strong>计算</strong>只能用已经检查过的函数体：如果 <code>facts.mbtpp</code> 中的证明要计算 <code>shapes.mbtpp</code> 中
+定义的函数，<code>shapes.mbtpp</code> 必须先检查。这时用 <code>"mbtpp-order"</code> 指定顺序：</p>
+<pre><code class="language-text">options(
+  "is-main": true,
+  "mbtpp-order": [ "shapes.mbtpp" ],
+)
+</code></pre>
+<p>列出的文件先检查（按列出的顺序），其余文件仍按字典序在后面。旧格式的 <code>moon.pkg.json</code> 中写
+<code>"mbtpp-order": [ "shapes.mbtpp" ]</code>。<code>moon</code> 会忽略这个选项，<code>moon fmt</code> 会保留它。</p>
+<p>如果一个错误可能是检查顺序造成的，<code>moonpp</code> 会给出提示：</p>
+<pre><code class="language-text">src/main/facts.mbtpp:1:47: error: type mismatch
+  expected: Shape::area(Rect(3, 3)) === 9
+  actual:   ?94 === ?94
+hint: Shape::area is defined in src/main/shapes.mbtpp, which is checked after
+src/main/facts.mbtpp, so its definition could not be used here; the error may
+come from that. … list it in the package's moon.pkg: options("mbtpp-order": [ "shapes.mbtpp", ... ])
+</code></pre>
 <h2 id="旧格式"><a class="header" href="#旧格式">旧格式</a></h2>
 <p>旧的 <code>moon.mod.json</code>、<code>moon.pkg.json</code> 也能读取。但新版 <code>moon</code> 不再接受 <code>moon.mod.json</code>，所以
 需要依赖管理或编译时，在项目根目录运行 <code>moon fmt</code> 迁移；<code>moonpp</code> 遇到这种情况会给出提示。</p>

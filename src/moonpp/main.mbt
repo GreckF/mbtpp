@@ -77,7 +77,7 @@ fn check_files(
 ) -> Unit raise Failure {
   let srcs : Array[(String, String)] = []
   let cwd = current_dir()
-  for f in files {
+  for f in ordered_files(dir, files) {
     let src = @fs.read_file_to_string(f) catch {
       @fs.IOError(msg) => die("cannot read " + f + ": " + msg)
     }

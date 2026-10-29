@@ -134,6 +134,11 @@
           "default": 300,
           "description": "Milliseconds to wait after an edit before checking."
         },
+        "mbtpp.checkTimeout": {
+          "type": "number",
+          "default": 120,
+          "description": "Seconds after which a check of a package is stopped (each declaration also has its own limit, 30 s by default or #timelimit). 0: no limit."
+        },
         "mbtpp.mbtHints": {
           "type": "boolean",
           "default": true,

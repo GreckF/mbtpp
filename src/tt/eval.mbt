@@ -1,6 +1,10 @@
 ///|
 /// Normalisation by evaluation.
 pub fn eval(env : Env, t : Tm) -> Val {
+  // out of time (see timelimit.mbt): stop computing
+  if time_up() {
+    return VStuck(env, t, [])
+  }
   match t {
     Var(ix) => env[env.length() - 1 - ix]
     Global(n) => global_val(n)
@@ -201,8 +205,13 @@ fn note_no_body(n : String) -> Unit {
 /// has leading lambdas.
 pub fn unfold(n : String, sp : Spine) -> Val? {
   match globals.get(n) {
-    Some({ kind: GFunc(Some(body), false, arity), .. }) if sp.length() >= arity =>
+    Some({ kind: GFunc(Some(body), false, arity), .. }) if sp.length() >= arity => {
+      last_unfolded.val = Some(n)
       Some(app_spine(eval([], body), sp))
+    }
+    // with mutable state: run it (see exec.mbt)
+    Some({ kind: GFunc(Some(body), true, arity), .. }) if sp.length() >= arity =>
+      exec_call(n, body, arity, sp)
     Some({ kind: GFunc(None, _, _), .. }) => {
       note_no_body(n)
       None
@@ -217,6 +226,8 @@ pub fn unfold_any(n : String, sp : Spine) -> Val? {
   match globals.get(n) {
     Some({ kind: GFunc(Some(body), false, _), .. }) =>
       Some(app_spine(eval([], body), sp))
+    Some({ kind: GFunc(Some(body), true, arity), .. }) if sp.length() >= arity =>
+      exec_call(n, body, arity, sp)
     Some({ kind: GFunc(None, _, _), .. }) => {
       note_no_body(n)
       None

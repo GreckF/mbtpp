@@ -48,6 +48,44 @@ fn main {
 
 ## Interaction with type checking
 
-Functions that use `let mut`, assignment, loops, `raise`, or `try` are **not unfolded** during type
-checking: they can be called and run normally, but they take no part in type-level computation,
-and equations about them cannot be proved with `Refl`.
+Functions that use `let mut`, assignment, loops, `raise`, or `try` are **run** during type checking,
+as the interpreter would run them: if the run finishes, the call is replaced by its result; if it
+cannot finish, the whole call stays folded, like a constant.
+
+```moonbit
+fn sum_to(n : Int) -> Int {
+  let mut i = 0
+  let mut acc = 0
+  while i < n {
+    i = i + 1
+    acc = acc + i
+  }
+  acc
+}
+
+fn inc(x : Int) -> Int {
+  let mut y = x
+  y = y + 1
+  y
+}
+
+lemma s10 : sum_to(10) === 55 = Refl
+lemma inc_x[x : Int] : inc(x) === x + 1 = Refl
+
+fn main {
+  let v : Array[Int] = Array::make(sum_to(3), 0)
+  println(v.length())
+}
+```
+
+- **The run finishes** when every decision can be made: for example with concrete arguments, or,
+  like `inc(x)`, when no decision is needed. Errors reach their `try` as usual, and output such as
+  `println` is skipped (it does not change the result).
+- **The call stays folded** when a decision depends on an unknown value (`if x < 0` in `abs(x)`,
+  where `x` is a variable); when an error escapes the function; when the function uses an array
+  (arrays are mutable), an imported MoonBit function or an async function; or when a lambda
+  captures a `let mut` variable. The result could then depend on more than the arguments.
+- So general properties over variable arguments, such as "for all `n`, `sum_to(n) * 2 == n * (n +
+  1)`", still cannot be proved this way.
+- A loop that does not terminate keeps the checker running until the
+  [time limit](type-level.md#time-limits) of the definition.

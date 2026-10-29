@@ -2,6 +2,7 @@
 package "username/mbtpp/tt"
 
 import {
+  "moonbitlang/core/ref",
   "username/mbtpp/parser",
 }
 
@@ -33,6 +34,8 @@ pub fn data_info(String) -> DataInfo?
 pub let decl_kinds : Map[String, String]
 
 pub let decl_pos : Map[String, @parser.Pos]
+
+pub let default_time_limit : @ref.Ref[Int32]
 
 pub let derived_lines : Array[Int32]
 

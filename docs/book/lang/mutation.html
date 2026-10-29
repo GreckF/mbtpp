@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-e894a78e.js";
+            window.path_to_searchindex_js = "../searchindex-47d5bf4f.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-77b35725.js"></script>
@@ -228,8 +228,42 @@ lambda 返回。</li>
 <li><strong>数组</strong>是可变的：<code>xs[i] = v</code>、<code>xs.push(x)</code>。</li>
 </ul>
 <h2 id="与类型检查的关系"><a class="header" href="#与类型检查的关系">与类型检查的关系</a></h2>
-<p>使用了 <code>let mut</code>、赋值、循环、<code>raise</code>、<code>try</code> 的函数在类型检查时<strong>不展开</strong>：它们可以正常调用、
-运行，但不参与类型层的计算，关于它们的等式不能用 <code>Refl</code> 证明。</p>
+<p>使用了 <code>let mut</code>、赋值、循环、<code>raise</code>、<code>try</code> 的函数，在类型检查时会像解释器一样<strong>被执行</strong>：
+执行跑完，调用就换成它的结果；跑不完，整个调用保持不展开，和普通常量一样。</p>
+<pre><code class="language-moonbit">fn sum_to(n : Int) -&gt; Int {
+  let mut i = 0
+  let mut acc = 0
+  while i &lt; n {
+    i = i + 1
+    acc = acc + i
+  }
+  acc
+}
+
+fn inc(x : Int) -&gt; Int {
+  let mut y = x
+  y = y + 1
+  y
+}
+
+lemma s10 : sum_to(10) === 55 = Refl
+lemma inc_x[x : Int] : inc(x) === x + 1 = Refl
+
+fn main {
+  let v : Array[Int] = Array::make(sum_to(3), 0)
+  println(v.length())
+}
+</code></pre>
+<ul>
+<li><strong>能跑完</strong>：所有判断都能确定，例如参数是具体的值，或者像 <code>inc(x)</code> 那样根本不需要判断。错误
+会正常传到 <code>try</code>，<code>println</code> 等输出被跳过（输出不影响结果）。</li>
+<li><strong>保持不展开</strong>：需要根据未知的值做判断（<code>abs(x)</code> 中的 <code>if x &lt; 0</code>，<code>x</code> 是变量）；错误一直抛到
+函数外；用到数组（数组是可变的）、导入的 MoonBit 函数或 async 函数；lambda 捕获了 <code>let mut</code>
+变量。这些情况下结果可能不只由参数决定，所以不展开。</li>
+<li>所以关于变量参数的一般性质，例如“对所有 <code>n</code>，<code>sum_to(n) * 2 == n * (n + 1)</code>”，仍然不能这样
+证明。</li>
+<li>不终止的循环会让检查一直执行下去，直到这个定义的<a href="type-level.html#检查时限">检查时限</a>。</li>
+</ul>
 
                     </main>
 

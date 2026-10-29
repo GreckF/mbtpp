@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-e894a78e.js";
+            window.path_to_searchindex_js = "../searchindex-47d5bf4f.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-77b35725.js"></script>
@@ -212,7 +212,7 @@ fn main {
 <li><strong><code>try? e</code></strong>：得到 <code>Result[T, Error]</code>，不抛出。</li>
 <li>Prelude 中的 <code>fail(msg)</code> 抛出 <code>Failure(msg)</code>。</li>
 </ul>
-<p><code>raise</code>、<code>try</code> 与可变状态一样，使函数在类型检查时不展开（见
+<p>使用 <code>raise</code>、<code>try</code> 的函数和使用可变状态的函数一样，在类型检查时被执行，执行不完则保持不展开（见
 <a href="mutation.html">可变状态与循环</a>）。</p>
 <h2 id="不写-try-的-catch-与-noraise"><a class="header" href="#不写-try-的-catch-与-noraise">不写 <code>try</code> 的 <code>catch</code> 与 <code>noraise</code></a></h2>
 <pre><code class="language-moonbit">suberror Oops {

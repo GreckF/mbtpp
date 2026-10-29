@@ -55,6 +55,7 @@ fn strip_derives(d : @parser.Decl, ds : Array[(Pos, String)]) -> @parser.Decl {
   match d {
     DMbt(p, n, ro, x) => DMbt(p, n, ro, strip_derives(x, ds))
     DPub(x) => DPub(strip_derives(x, ds))
+    DLimit(p, l, x) => DLimit(p, l, strip_derives(x, ds))
     DDerive(xs, x) => {
       for y in xs {
         ds.push(y)
@@ -71,7 +72,7 @@ fn strip_derives(d : @parser.Decl, ds : Array[(Pos, String)]) -> @parser.Decl {
 fn generated_mbt(d : @parser.Decl) -> Bool {
   match d {
     DMbt(_, None, _, _) => true
-    DPub(x) | DDerive(_, x) => generated_mbt(x)
+    DPub(x) | DDerive(_, x) | DLimit(_, _, x) => generated_mbt(x)
     _ => false
   }
 }

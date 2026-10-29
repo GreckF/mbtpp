@@ -237,7 +237,7 @@ function showStatus(result) {
 async function checkNow() {
   const seq = ++checkSeq;
   if (!checker.loaded) $("status").textContent = t("loadingChecker");
-  const result = await checker.call("check", editor.getValue(), 10000);
+  const result = await checker.call("check", editor.getValue(), 60000);
   if (seq === checkSeq) showStatus(result);
 }
 
@@ -341,7 +341,7 @@ function runProgram() {
     showTab("output");
     $("output").className = "";
     $("output").textContent = t("running");
-    const result = await runner.call("run", editor.getValue(), 15000);
+    const result = await runner.call("run", editor.getValue(), 60000);
     const isErr = loc.test(result) || result.startsWith("error:");
     setOutput(result, isErr);
     if (loc.test(result)) markError(result);
@@ -350,7 +350,7 @@ function runProgram() {
 
 function compileProgram() {
   return busy($("compile"), t("compiling"), async () => {
-    const result = await runner.call("compile", editor.getValue(), 15000);
+    const result = await runner.call("compile", editor.getValue(), 60000);
     if (result.startsWith("error:")) {
       tabs.main = "";
       showTab("output");

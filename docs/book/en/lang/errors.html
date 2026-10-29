@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-b60ff9cb.js";
+            window.path_to_searchindex_js = "../searchindex-e124d479.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-ec08c6a2.js"></script>
@@ -214,8 +214,8 @@ match no arm keep propagating outward.</li>
 <li><strong><code>try? e</code></strong>: produces a <code>Result[T, Error]</code> instead of raising.</li>
 <li><code>fail(msg)</code> in the Prelude raises <code>Failure(msg)</code>.</li>
 </ul>
-<p>Like mutable state, <code>raise</code> and <code>try</code> keep a function from being unfolded during type checking (see
-<a href="mutation.html">Mutable State and Loops</a>).</p>
+<p>Like functions with mutable state, functions that use <code>raise</code> and <code>try</code> are run during type
+checking, and stay folded when the run cannot finish (see <a href="mutation.html">Mutable State and Loops</a>).</p>
 <h2 id="catch-without-try-and-noraise"><a class="header" href="#catch-without-try-and-noraise"><code>catch</code> without <code>try</code>, and <code>noraise</code></a></h2>
 <pre><code class="language-moonbit">suberror Oops {
   Oops(Int)

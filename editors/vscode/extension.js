@@ -66,7 +66,7 @@ function checkThen(file, done) {
   const k = key(t.path);
   const id = ++seq;
   const prev = runs.get(k);
-  if (prev && prev.proc) prev.proc.kill();
+  if (prev && prev.proc) killTree(prev.proc);
   // unsaved buffers of the package
   const overlay = {};
   for (const d of vscode.workspace.textDocuments) {
@@ -85,6 +85,7 @@ function checkThen(file, done) {
     cmd,
     { cwd: t.dir, maxBuffer: 64 * 1024 * 1024, windowsHide: true },
     (err, stdout, stderr) => {
+      clearTimeout(limit);
       fs.rm(tmp, () => {});
       const run = runs.get(k);
       if (!run || run.id !== id) return done(); // superseded
@@ -93,7 +94,9 @@ function checkThen(file, done) {
       try {
         res = JSON.parse(stdout.trim().split(/\r?\n/).pop());
       } catch (e) {
-        const msg = (stderr || stdout || String(err)).trim();
+        const msg = timedOut
+          ? `the check took more than ${timeout} s (see the setting mbtpp.checkTimeout)`
+          : (stderr || stdout || String(err)).trim();
         output.appendLine(`$ ${cmd}\n${msg}`);
         setStatus("failed", msg.split("\n")[0]);
         return done();
@@ -102,7 +105,30 @@ function checkThen(file, done) {
       done();
     },
   );
+  // the whole check is stopped after `mbtpp.checkTimeout` seconds
+  const timeout = config().get("checkTimeout") ?? 120;
+  let timedOut = false;
+  const limit =
+    timeout > 0
+      ? setTimeout(() => {
+          timedOut = true;
+          killTree(proc);
+        }, timeout * 1000)
+      : undefined;
   runs.set(k, { id, proc });
+}
+
+/**
+ * Stop a check: `cp.exec` runs a shell, and on Windows killing it leaves
+ * moonpp (a child of the shell) running, so the whole tree is stopped.
+ */
+function killTree(proc) {
+  if (proc.exitCode !== null) return;
+  if (process.platform === "win32") {
+    cp.exec(`taskkill /pid ${proc.pid} /T /F`, { windowsHide: true }, () => {});
+  } else {
+    proc.kill();
+  }
 }
 
 function apply(res) {

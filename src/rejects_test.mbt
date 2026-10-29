@@ -227,18 +227,75 @@ test "type-level computation" {
 }
 
 ///|
-test "functions with mutation do not reduce in types" {
+test "functions with mutation are run in types" {
   inspect(
     check(
       (
         #|fn one() -> Int { let mut x = 0; x = x + 1; x }
-        #|lemma bad : one(()) === 1 = Refl
+        #|fn sum_to(n : Int) -> Int {
+        #|  let mut i = 0
+        #|  let mut acc = 0
+        #|  while i < n { i = i + 1; acc = acc + i }
+        #|  acc
+        #|}
+        #|suberror Neg { Neg(Int) }
+        #|fn checked(x : Int) -> Int raise Neg { if x < 0 { raise Neg(x) }; x }
+        #|fn safe(x : Int) -> Int { try checked(x) catch { Neg(k) => k - 100 } }
+        #|fn inc(x : Int) -> Int { let mut y = x; y = y + 1; y }
+        #|lemma a : one(()) === 1 = Refl
+        #|lemma b : sum_to(10) === 55 = Refl
+        #|lemma c : safe(-5) === -105 = Refl
+        #|lemma d[x : Int] : inc(x) === x + 1 = Refl
+      ),
+    ),
+    content="ok",
+  )
+}
+
+///|
+test "a run that cannot finish keeps the call folded" {
+  // a decision on a variable
+  inspect(
+    check(
+      (
+        #|fn abs(x : Int) -> Int { if x < 0 { return -x }; x }
+        #|lemma bad[x : Int] : abs(x) === x = Refl
       ),
     ),
     content=(
-      #|t.mbtpp:2:29: error: type mismatch
-      #|  expected: one(()) === 1
-      #|  actual:   ?128 === ?128
+      #|t.mbtpp:2:37: error: type mismatch
+      #|  expected: abs(x) === x
+      #|  actual:   ?128(x) === ?128(x)
+    ),
+  )
+  // arrays are mutable
+  inspect(
+    check(
+      (
+        #|fn first() -> Int { let a = [1, 2]; a[0] }
+        #|lemma bad : first(()) === 1 = Refl
+      ),
+    ),
+    content=(
+      #|t.mbtpp:2:31: error: type mismatch
+      #|  expected: first(()) === 1
+      #|  actual:   ?129 === ?129
+    ),
+  )
+}
+
+///|
+test "time limit of a declaration" {
+  inspect(
+    check(
+      (
+        #|fn spin(n : Int) -> Int { let mut i = n; while true { i = i + 1 }; i }
+        #|#timelimit(1)
+        #|lemma bad : spin(0) === 0 = Refl
+      ),
+    ),
+    content=(
+      #|t.mbtpp:3:1: error: checking bad took more than 1 s (while evaluating spin); a definition that does not terminate? Raise the limit with #timelimit(seconds) or #timelimit(none)
     ),
   )
 }

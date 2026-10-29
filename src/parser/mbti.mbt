@@ -228,7 +228,11 @@ pub fn decl_bound_names(d : Decl) -> Array[String] {
     DTrait(td) => td.methods.map(m => m.impl_params).flatten()
     DImpl(id) => id.impl_params
     DDef(_, _, bs, _, _) => bs
-    DOpaque(_, _, _) | DMbt(_, _, _, _) | DPub(_) | DDerive(_, _) => []
+    DOpaque(_, _, _)
+    | DMbt(_, _, _, _)
+    | DPub(_)
+    | DDerive(_, _)
+    | DLimit(_, _, _) => []
   }
   for b in bs {
     match b.ty {
@@ -390,7 +394,7 @@ pub fn parse_mbti(
     let first = decls.length()
     let d = d0.inner()
     match d {
-      DMbt(_, _, _, _) | DPub(_) | DDerive(_, _) => ()
+      DMbt(_, _, _, _) | DPub(_) | DDerive(_, _) | DLimit(_, _, _) => ()
       DFn(fd) => {
         let (name, self_ty) = match fd.name.find("::") {
           Some(k) => {

@@ -48,5 +48,40 @@ fn main {
 
 ## 与类型检查的关系
 
-使用了 `let mut`、赋值、循环、`raise`、`try` 的函数在类型检查时**不展开**：它们可以正常调用、
-运行，但不参与类型层的计算，关于它们的等式不能用 `Refl` 证明。
+使用了 `let mut`、赋值、循环、`raise`、`try` 的函数，在类型检查时会像解释器一样**被执行**：
+执行跑完，调用就换成它的结果；跑不完，整个调用保持不展开，和普通常量一样。
+
+```moonbit
+fn sum_to(n : Int) -> Int {
+  let mut i = 0
+  let mut acc = 0
+  while i < n {
+    i = i + 1
+    acc = acc + i
+  }
+  acc
+}
+
+fn inc(x : Int) -> Int {
+  let mut y = x
+  y = y + 1
+  y
+}
+
+lemma s10 : sum_to(10) === 55 = Refl
+lemma inc_x[x : Int] : inc(x) === x + 1 = Refl
+
+fn main {
+  let v : Array[Int] = Array::make(sum_to(3), 0)
+  println(v.length())
+}
+```
+
+- **能跑完**：所有判断都能确定，例如参数是具体的值，或者像 `inc(x)` 那样根本不需要判断。错误
+  会正常传到 `try`，`println` 等输出被跳过（输出不影响结果）。
+- **保持不展开**：需要根据未知的值做判断（`abs(x)` 中的 `if x < 0`，`x` 是变量）；错误一直抛到
+  函数外；用到数组（数组是可变的）、导入的 MoonBit 函数或 async 函数；lambda 捕获了 `let mut`
+  变量。这些情况下结果可能不只由参数决定，所以不展开。
+- 所以关于变量参数的一般性质，例如“对所有 `n`，`sum_to(n) * 2 == n * (n + 1)`”，仍然不能这样
+  证明。
+- 不终止的循环会让检查一直执行下去，直到这个定义的[检查时限](type-level.md#检查时限)。

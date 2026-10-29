@@ -31,7 +31,7 @@ fn main {
 - **`try? e`**：得到 `Result[T, Error]`，不抛出。
 - Prelude 中的 `fail(msg)` 抛出 `Failure(msg)`。
 
-`raise`、`try` 与可变状态一样，使函数在类型检查时不展开（见
+使用 `raise`、`try` 的函数和使用可变状态的函数一样，在类型检查时被执行，执行不完则保持不展开（见
 [可变状态与循环](mutation.md)）。
 
 ## 不写 `try` 的 `catch` 与 `noraise`

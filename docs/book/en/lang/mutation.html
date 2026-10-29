@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-b60ff9cb.js";
+            window.path_to_searchindex_js = "../searchindex-e124d479.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-ec08c6a2.js"></script>
@@ -228,9 +228,45 @@ function, and inside a lambda it returns only from the lambda.</li>
 <li><strong>Arrays</strong> are mutable: <code>xs[i] = v</code>, <code>xs.push(x)</code>.</li>
 </ul>
 <h2 id="interaction-with-type-checking"><a class="header" href="#interaction-with-type-checking">Interaction with type checking</a></h2>
-<p>Functions that use <code>let mut</code>, assignment, loops, <code>raise</code>, or <code>try</code> are <strong>not unfolded</strong> during type
-checking: they can be called and run normally, but they take no part in type-level computation,
-and equations about them cannot be proved with <code>Refl</code>.</p>
+<p>Functions that use <code>let mut</code>, assignment, loops, <code>raise</code>, or <code>try</code> are <strong>run</strong> during type checking,
+as the interpreter would run them: if the run finishes, the call is replaced by its result; if it
+cannot finish, the whole call stays folded, like a constant.</p>
+<pre><code class="language-moonbit">fn sum_to(n : Int) -&gt; Int {
+  let mut i = 0
+  let mut acc = 0
+  while i &lt; n {
+    i = i + 1
+    acc = acc + i
+  }
+  acc
+}
+
+fn inc(x : Int) -&gt; Int {
+  let mut y = x
+  y = y + 1
+  y
+}
+
+lemma s10 : sum_to(10) === 55 = Refl
+lemma inc_x[x : Int] : inc(x) === x + 1 = Refl
+
+fn main {
+  let v : Array[Int] = Array::make(sum_to(3), 0)
+  println(v.length())
+}
+</code></pre>
+<ul>
+<li><strong>The run finishes</strong> when every decision can be made: for example with concrete arguments, or,
+like <code>inc(x)</code>, when no decision is needed. Errors reach their <code>try</code> as usual, and output such as
+<code>println</code> is skipped (it does not change the result).</li>
+<li><strong>The call stays folded</strong> when a decision depends on an unknown value (<code>if x &lt; 0</code> in <code>abs(x)</code>,
+where <code>x</code> is a variable); when an error escapes the function; when the function uses an array
+(arrays are mutable), an imported MoonBit function or an async function; or when a lambda
+captures a <code>let mut</code> variable. The result could then depend on more than the arguments.</li>
+<li>So general properties over variable arguments, such as “for all <code>n</code>, <code>sum_to(n) * 2 == n * (n +  1)</code>”, still cannot be proved this way.</li>
+<li>A loop that does not terminate keeps the checker running until the
+<a href="type-level.html#time-limits">time limit</a> of the definition.</li>
+</ul>
 
                     </main>
 

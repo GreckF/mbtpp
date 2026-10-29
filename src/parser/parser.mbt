@@ -1278,7 +1278,7 @@ fn Parser::con_decls(self : Parser) -> Array[ConDecl] raise ParseError {
 ///|
 fn Decl::without_pub(self : Decl) -> Decl {
   match self {
-    DPub(d) | DDerive(_, d) => d.without_pub()
+    DPub(d) | DDerive(_, d) | DLimit(_, _, d) => d.without_pub()
     d => d
   }
 }
@@ -1315,9 +1315,21 @@ fn with_derives(d : Decl, ds : Array[(Pos, String)]) -> Decl {
 fn Parser::decl(self : Parser) -> Decl raise ParseError {
   let pos = self.pos()
   if self.accept("#") {
+    let attr = self.ident()
+    // `#timelimit(60)` or `#timelimit(none)`
+    if attr == "timelimit" {
+      self.expect("(")
+      let limit = match self.advance().tok {
+        TInt(n) if n > 0 => Some(n)
+        TIdent("none") => None
+        _ => self.fail("expected a number of seconds or `none`")
+      }
+      self.expect(")")
+      return DLimit(pos, limit, self.decl())
+    }
     // `#mbt` or `#mbt("name")`
-    if self.ident() != "mbt" {
-      self.fail("unknown attribute (only #mbt is supported)")
+    if attr != "mbt" {
+      self.fail("unknown attribute (only #mbt and #timelimit are supported)")
     }
     let name = if self.is_same_line("(") {
       ignore(self.advance())

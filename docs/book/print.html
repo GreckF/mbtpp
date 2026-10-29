@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-e894a78e.js";
+            window.path_to_searchindex_js = "searchindex-47d5bf4f.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-77b35725.js"></script>
@@ -521,8 +521,37 @@ fn main {
 </code></pre>
 <p><code>sum_n(3, 0)</code> 的类型 <code>NAry(3)</code> 在类型检查时被计算成 <code>(Int) -&gt; (Int) -&gt; (Int) -&gt; Int</code>。
 这里用 <a href="#return-子句">return 子句</a> 给出了匹配的动机。</p>
-<p>类型检查时会展开的只有纯函数：使用了可变状态、循环或异常的函数不展开（见
+<p>类型检查时，纯函数直接展开；使用了可变状态、循环或异常的函数会被执行，执行不完则保持不展开（见
 <a href="#可变状态与循环">可变状态与循环</a>）。</p>
+<h2 id="检查时限"><a class="header" href="#检查时限">检查时限</a></h2>
+<p>类型检查没有终止检查，计算可能永远不结束。所以每个定义的检查都有时间上限，默认 30 秒；超过时，
+这个定义报错，并指出当时正在计算的函数：</p>
+<pre><code class="language-text">t.mbtpp:3:1: error: checking f took more than 30 s (while evaluating T); a definition that does
+not terminate? Raise the limit with #timelimit(seconds) or #timelimit(none)
+</code></pre>
+<p>在定义前加 <code>#timelimit</code> 可以修改它的时限：</p>
+<pre><code class="language-moonbit">fn sum_to(n : Int) -&gt; Int {
+  let mut acc = 0
+  for i = 1; i &lt;= n; i = i + 1 {
+    acc = acc + i
+  }
+  acc
+}
+
+#timelimit(120)
+lemma big : sum_to(1000) === 500500 = Refl
+
+#timelimit(none)
+lemma bigger : sum_to(2000) === 2001000 = Refl
+</code></pre>
+<ul>
+<li>单位是秒；<code>#timelimit(none)</code> 表示不限时。可以和 <code>#mbt</code> 一起写。</li>
+<li>时限针对单个定义，而不是整个检查过程。签名和函数体分开计时。检查过程中顺带检查的其他定义
+（例如它用到、但写在后面的函数）按各自的时限计时，所花的时间不算在这个定义上。</li>
+<li>时限只管类型检查，不管 <code>moonpp run</code> 运行程序。</li>
+<li>Playground 对整个检查或运行另有 60 秒的上限，VS Code 插件对一次检查默认 120 秒
+（设置 <code>mbtpp.checkTimeout</code>）。</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="enum-与索引类型"><a class="header" href="#enum-与索引类型">enum 与索引类型</a></h1>
 <h2 id="普通-enum"><a class="header" href="#普通-enum">普通 enum</a></h2>
@@ -1283,8 +1312,42 @@ lambda 返回。</li>
 <li><strong>数组</strong>是可变的：<code>xs[i] = v</code>、<code>xs.push(x)</code>。</li>
 </ul>
 <h2 id="与类型检查的关系"><a class="header" href="#与类型检查的关系">与类型检查的关系</a></h2>
-<p>使用了 <code>let mut</code>、赋值、循环、<code>raise</code>、<code>try</code> 的函数在类型检查时<strong>不展开</strong>：它们可以正常调用、
-运行，但不参与类型层的计算，关于它们的等式不能用 <code>Refl</code> 证明。</p>
+<p>使用了 <code>let mut</code>、赋值、循环、<code>raise</code>、<code>try</code> 的函数，在类型检查时会像解释器一样<strong>被执行</strong>：
+执行跑完，调用就换成它的结果；跑不完，整个调用保持不展开，和普通常量一样。</p>
+<pre><code class="language-moonbit">fn sum_to(n : Int) -&gt; Int {
+  let mut i = 0
+  let mut acc = 0
+  while i &lt; n {
+    i = i + 1
+    acc = acc + i
+  }
+  acc
+}
+
+fn inc(x : Int) -&gt; Int {
+  let mut y = x
+  y = y + 1
+  y
+}
+
+lemma s10 : sum_to(10) === 55 = Refl
+lemma inc_x[x : Int] : inc(x) === x + 1 = Refl
+
+fn main {
+  let v : Array[Int] = Array::make(sum_to(3), 0)
+  println(v.length())
+}
+</code></pre>
+<ul>
+<li><strong>能跑完</strong>：所有判断都能确定，例如参数是具体的值，或者像 <code>inc(x)</code> 那样根本不需要判断。错误
+会正常传到 <code>try</code>，<code>println</code> 等输出被跳过（输出不影响结果）。</li>
+<li><strong>保持不展开</strong>：需要根据未知的值做判断（<code>abs(x)</code> 中的 <code>if x &lt; 0</code>，<code>x</code> 是变量）；错误一直抛到
+函数外；用到数组（数组是可变的）、导入的 MoonBit 函数或 async 函数；lambda 捕获了 <code>let mut</code>
+变量。这些情况下结果可能不只由参数决定，所以不展开。</li>
+<li>所以关于变量参数的一般性质，例如“对所有 <code>n</code>，<code>sum_to(n) * 2 == n * (n + 1)</code>”，仍然不能这样
+证明。</li>
+<li>不终止的循环会让检查一直执行下去，直到这个定义的<a href="#检查时限">检查时限</a>。</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="错误处理"><a class="header" href="#错误处理">错误处理</a></h1>
 <pre><code class="language-moonbit">suberror DivError {
@@ -1317,7 +1380,7 @@ fn main {
 <li><strong><code>try? e</code></strong>：得到 <code>Result[T, Error]</code>，不抛出。</li>
 <li>Prelude 中的 <code>fail(msg)</code> 抛出 <code>Failure(msg)</code>。</li>
 </ul>
-<p><code>raise</code>、<code>try</code> 与可变状态一样，使函数在类型检查时不展开（见
+<p>使用 <code>raise</code>、<code>try</code> 的函数和使用可变状态的函数一样，在类型检查时被执行，执行不完则保持不展开（见
 <a href="#可变状态与循环">可变状态与循环</a>）。</p>
 <h2 id="不写-try-的-catch-与-noraise"><a class="header" href="#不写-try-的-catch-与-noraise">不写 <code>try</code> 的 <code>catch</code> 与 <code>noraise</code></a></h2>
 <pre><code class="language-moonbit">suberror Oops {
@@ -2098,6 +2161,8 @@ or a bound that is not #mbt)
 <li>没有终止检查和严格正性检查（按设计）：可以“证明”假命题。</li>
 <li>没有可恢复的代数效应，没有 <code>simp</code>、<code>omega</code>、<code>auto</code> 等自动化策略。</li>
 <li>局部函数不能递归。</li>
+<li>类型检查时执行非纯函数时，用到数组、导入函数或捕获 <code>let mut</code> 的 lambda 的调用不执行（见<a href="#可变状态与循环">可变状态与循环</a>）。</li>
+<li>检查时限按实际时间计算，同一个文件在较慢的机器上可能超时（见<a href="#检查时限">检查时限</a>）。</li>
 <li>结构体没有可变字段，没有结构体模式。</li>
 <li>trait 没有默认方法。</li>
 </ul>

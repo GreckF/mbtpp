@@ -33,8 +33,8 @@ fn main {
 - **`try? e`**: produces a `Result[T, Error]` instead of raising.
 - `fail(msg)` in the Prelude raises `Failure(msg)`.
 
-Like mutable state, `raise` and `try` keep a function from being unfolded during type checking (see
-[Mutable State and Loops](mutation.md)).
+Like functions with mutable state, functions that use `raise` and `try` are run during type
+checking, and stay folded when the run cannot finish (see [Mutable State and Loops](mutation.md)).
 
 ## `catch` without `try`, and `noraise`
 

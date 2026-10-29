@@ -55,6 +55,7 @@ pub(all) enum Decl {
   DMbt(Pos, String?, Bool, Decl)
   DPub(Decl)
   DDerive(Array[(Pos, String)], Decl)
+  DLimit(Pos, Int32?, Decl)
 } derive(Show)
 pub fn Decl::inner(Self) -> Self
 

@@ -780,7 +780,7 @@ fn elab_impl_body(
 
 ///|
 fn add_thunk(name : String, th : () -> Unit raise ElabError) -> Unit {
-  st.thunks.set(name, th)
+  st.thunks.set(name, () => with_time_limit(name, th))
 }
 
 ///|
@@ -812,7 +812,7 @@ pub fn check_decls(
   let mbt_fn_decls : Array[(Pos, String)] = []
   let mbt_impls : Array[(Pos, String, String)] = []
   let decls : Array[@parser.Decl] = []
-  let decls0 = expand_derives(decls0)
+  let decls0 = expand_derives(decls0.map(strip_limits))
   if !lenient {
     for d in decls0 {
       record_decl_pos(d.inner())
@@ -879,7 +879,7 @@ pub fn check_decls(
         DStruct(sd) => sd.name
         DTrait(td) => td.name
         DImpl(id) => "impl$" + id.trait_name + "$" + impl_head(id.for_ty)
-        DMbt(_, _, _, _) | DPub(_) | DDerive(_, _) => continue
+        DMbt(_, _, _, _) | DPub(_) | DDerive(_, _) | DLimit(_, _, _) => continue
       }
       if taken(name) && !(d is DImpl(_) && impl_groups.contains(name)) {
         skipped.push(name)
@@ -887,7 +887,7 @@ pub fn check_decls(
       }
     }
     match d {
-      DMbt(_, _, _, _) | DPub(_) | DDerive(_, _) => ()
+      DMbt(_, _, _, _) | DPub(_) | DDerive(_, _) | DLimit(_, _, _) => ()
       DOpaque(_, name, k) => {
         add_thunk(name, () => {
           let mut ty = U
@@ -902,14 +902,14 @@ pub fn check_decls(
         add_thunk(fd.name, () => elab_fn_sig(fd))
         steps.push(() => {
           ensure(nowhere, fd.name)
-          elab_fn_body(fd)
+          with_time_limit(fd.name, () => elab_fn_body(fd))
         })
       }
       DDef(pos, name, impls, ty, body) => {
         add_thunk(name, () => elab_def_sig(pos, name, impls, ty, body))
         steps.push(() => {
           ensure(nowhere, name)
-          elab_def_body(pos, name, body)
+          with_time_limit(name, () => elab_def_body(pos, name, body))
         })
       }
       DEnum(ed) => {
@@ -964,7 +964,9 @@ pub fn check_decls(
             add_thunk(key, () => elab_impl_sig(key, id))
             steps.push(() => {
               ensure(nowhere, key)
-              elab_impl_body(key, impl_groups.get(key).unwrap())
+              with_time_limit(key, () => {
+                elab_impl_body(key, impl_groups.get(key).unwrap())
+              })
             })
           }
         }
@@ -1035,6 +1037,7 @@ fn record_decl_pos(d : @parser.Decl) -> Unit {
         set(td.name + "::" + m.name, m.pos, "method")
       }
     }
-    DImpl(_) | DMbt(_, _, _, _) | DPub(_) | DDerive(_, _) => ()
+    DImpl(_) | DMbt(_, _, _, _) | DPub(_) | DDerive(_, _) | DLimit(_, _, _) =>
+      ()
   }
 }

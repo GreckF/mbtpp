@@ -279,6 +279,7 @@ pub fn reset_state() -> Unit {
   mbt_types.clear()
   mbt_fns.clear()
   metas.clear()
+  reset_time_limits()
 }
 
 ///|

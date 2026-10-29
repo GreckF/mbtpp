@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-4e93d181.js";
+            window.path_to_searchindex_js = "../searchindex-a0393893.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-77b35725.js"></script>
@@ -221,6 +221,11 @@ fn main {
 参数，<code>(...)</code> 给显式参数。</li>
 <li><code>T?</code> 即 <code>Option[T]</code>；<code>(A, B)</code> 是二元组类型。</li>
 <li>返回 <code>Type</code> 的函数就是类型层的函数，见<a href="type-level.html">类型层计算</a>。</li>
+</ul>
+<h2 id="常量与类型别名"><a class="header" href="#常量与类型别名">常量与类型别名</a></h2>
+<ul>
+<li><code>const N : Int = 3</code>、<code>const N = 3</code> 定义常量（同 <code>let</code>）。</li>
+<li><code>typealias Int as Score</code> 或 <code>typealias Pair[A] = (A, A)</code> 定义类型别名。</li>
 </ul>
 
                     </main>

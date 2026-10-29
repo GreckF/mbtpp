@@ -111,6 +111,8 @@ pub fn meta_sol(Int32) -> Val?
 
 pub let metas : Array[MetaEntry]
 
+pub let mut_fields : Map[String, Bool]
+
 pub let name_infos : Array[NameInfo]
 
 pub fn new_meta() -> Int32
@@ -164,6 +166,8 @@ pub fn trait_method_names(String) -> Array[String]
 pub fn trait_method_type(String, String) -> Tm?
 
 pub fn trait_supers(String) -> Array[String]
+
+pub let tuple_structs : Map[String, Bool]
 
 pub fn type_of(Array[Val?], Val) -> Val?
 

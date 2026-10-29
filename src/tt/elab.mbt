@@ -751,6 +751,13 @@ fn elab_app(
   expl_args : Array[@parser.Expr]?,
   expected : Val?,
 ) -> (Tm, Val) raise ElabError {
+  // `P(a, b)` builds the tuple struct `P`
+  let f = match f {
+    EVar(p, x) if expl_args is Some(_) &&
+      tuple_structs.contains(x) &&
+      cxt.lookup(x) is None => @parser.EVar(p, x + "::mk")
+    _ => f
+  }
   // An ambiguous constructor name: try each candidate on the arguments.
   match (f, expected.bind(head_name)) {
     (EVar(p, x), None) if !x.contains("::") &&
@@ -1434,6 +1441,7 @@ fn elab_field(
   ty : Val,
   f : String,
   at? : Pos,
+  raw~ : Bool = false,
 ) -> (Tm, Val) raise ElabError {
   match head_name(ty) {
     Some(d) =>
@@ -1445,7 +1453,22 @@ fn elab_field(
             record_global(p, f, name)
           }
           let g = global_entry(cxt, name)
-          app_core(cxt, Global(name), g.vty, 0, None, Some([AV(t, ty)]))
+          let (pt, pty) = app_core(
+            cxt,
+            Global(name),
+            g.vty,
+            0,
+            None,
+            Some([AV(t, ty)]),
+          )
+          // a mutable field: the content of its box
+          if mut_fields.contains(name) && !raw {
+            elab_method(cxt, pt, pty, "op_get", None, [
+              AV(Lit(LInt(0)), VData("Int", [])),
+            ])
+          } else {
+            (pt, pty)
+          }
         }
         _ => cxt.fail("type " + cxt.show(ty) + " has no field " + f)
       }
@@ -1497,6 +1520,33 @@ fn elab_struct(
   fields : Array[(String, @parser.Expr)],
   expected : Val?,
 ) -> (Tm, Val) raise ElabError {
+  // `{ ..base, x: e }`: the other fields are those of `base`
+  match fields {
+    [("..", base), .. given] => {
+      let (tb, tyb) = infer_ins(cxt, base)
+      let d = match head_name(tyb) {
+        Some(d) if data_info(d) is Some({ fields: Some(_), .. }) => d
+        _ => cxt.fail("`..` needs a struct, not " + cxt.show(tyb))
+      }
+      let fs = data_info(d).unwrap().fields.unwrap()
+      let tmp = fresh_name_gen("__base")
+      let c2 = cxt.define_local(tmp, tyb, cxt.eval(tb))
+      let p = cxt.pos
+      let all = fs.map(f => {
+        match given.iter().find_first(x => x.0 == f) {
+          Some(x) => x
+          None => (f, @parser.EField(p, EVar(p, tmp), f))
+        }
+      })
+      let (t, ty) = elab_struct(c2, all, Some(tyb))
+      match expected {
+        Some(e) => cxt.unify(e, ty)
+        None => ()
+      }
+      return (Let(tmp, cxt.quote(tyb), tb, t), ty)
+    }
+    _ => ()
+  }
   let names = fields.map(f => f.0)
   let d = match expected.bind(head_name) {
     Some(d) if data_info(d) is Some({ fields: Some(_), .. }) => d
@@ -1519,6 +1569,9 @@ fn elab_struct(
   let args : Array[Arg] = []
   for f in fs {
     match fields.iter().find_first(x => x.0 == f) {
+      // a mutable field gets a new box
+      Some((_, e)) if mut_fields.contains(d + "::" + f) =>
+        args.push(AE(EArray(e.pos(), [e])))
       Some((_, e)) => args.push(AE(e))
       None => cxt.fail("missing field " + f)
     }

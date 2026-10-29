@@ -14,6 +14,8 @@ pub fn parse_mbti(String, String, String, Map[String, String]) -> MbtiResult
 
 pub fn parse_program(String, line0? : Int32) -> Array[Decl] raise ParseError
 
+pub let test_names : Map[String, String]
+
 pub fn tokenize(String, line0? : Int32, col0? : Int32) -> Array[Token] raise ParseError
 
 // Errors
@@ -194,6 +196,8 @@ pub(all) enum Pat {
   PAs(Pos, Pat, String)
   PArray(Pos, Array[Pat], String??, Array[Pat])
   PRange(Pos, Lit?, Lit?, Bool)
+  PStruct(Pos, Array[(String, Pat)], Bool)
+  PLabel(Pos, String, Pat)
 } derive(Show)
 pub fn Pat::pos(Self) -> Pos
 

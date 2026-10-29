@@ -10,6 +10,7 @@ let help_msg : String =
   #|  moonpp fix [path]          add #mbt to the `pub` declarations that could have it
   #|  moonpp ide <file> [--overlay <json>]  check for an editor: errors, types and goals as JSON
   #|  moonpp run [path]          run the main package (or a package directory or file)
+  #|  moonpp test [path]         run the `test` blocks (with the interpreter)
   #|  moonpp build [path]        compile to a MoonBit project and `moon build` it: by default
   #|                             mbtpp_out/<pkg> in the project (or _mbtpp_build/<file> for a
   #|                             single file), with the dependencies of the project
@@ -517,6 +518,52 @@ fn cmd_run(opts : Options, path : String?) -> Bool raise Failure {
 }
 
 ///|
+/// Run the `test` blocks of the packages (with the interpreter).
+fn cmd_test(opts : Options, path : String?) -> Bool raise Failure {
+  let (_, pkgs) = targets(path)
+  let mut passed = 0
+  let mut failed = 0
+  for pkg in pkgs {
+    let (dir, files) = pkg
+    ignore(check_files(opts, dir, files))
+    for name, display in @parser.test_names {
+      if !@tt.globals.contains(name) {
+        continue
+      }
+      let out = { buf: StringBuilder::new(), }
+      let label = if display == "" { name } else { display }
+      let ok = try {
+        @interp.run_global(name, s => out.write(s))
+        true
+      } catch {
+        @interp.RunError(msg) => {
+          out.flush()
+          println("test " + label.escape() + " failed: " + msg)
+          false
+        }
+      }
+      if ok {
+        out.flush()
+        passed = passed + 1
+      } else {
+        failed = failed + 1
+      }
+    }
+    @parser.test_names.clear()
+  }
+  println(
+    "Total tests: " +
+    (passed + failed).to_string() +
+    ", passed: " +
+    passed.to_string() +
+    ", failed: " +
+    failed.to_string() +
+    ".",
+  )
+  failed == 0
+}
+
+///|
 /// Run a `moon` command in the project, failing if it fails.
 fn moon(args : String, dir : String) -> Unit raise Failure {
   if !can_run_commands {
@@ -648,6 +695,8 @@ fn run_cli(args : Array[String]) -> Bool raise Failure {
     ["build", p] => cmd_build(opts, Some(p))
     ["run"] => cmd_run(opts, None)
     ["run", p] => cmd_run(opts, Some(p))
+    ["test"] => cmd_test(opts, None)
+    ["test", p] => cmd_test(opts, Some(p))
     [p] if p.has_suffix(".mbtpp") => cmd_run(opts, Some(p))
     ["add", m] => {
       let root = project_root()

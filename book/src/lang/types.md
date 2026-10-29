@@ -36,3 +36,8 @@ fn main {
   参数，`(...)` 给显式参数。
 - `T?` 即 `Option[T]`；`(A, B)` 是二元组类型。
 - 返回 `Type` 的函数就是类型层的函数，见[类型层计算](type-level.md)。
+
+## 常量与类型别名
+
+- `const N : Int = 3`、`const N = 3` 定义常量（同 `let`）。
+- `typealias Int as Score` 或 `typealias Pair[A] = (A, A)` 定义类型别名。

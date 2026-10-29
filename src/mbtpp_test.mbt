@@ -272,3 +272,20 @@ test "example syntax" {
     ),
   )
 }
+
+///|
+test "example data" {
+  inspect(
+    run_example("data.mbtpp"),
+    content=(
+      #|clicks 12, copy 13
+      #|3
+      #|5
+      #|7
+      #|{x: 3, y: 10}
+      #|13
+      #|<point>
+      #|
+    ),
+  )
+}

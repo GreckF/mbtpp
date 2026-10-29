@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-4e93d181.js";
+            window.path_to_searchindex_js = "../searchindex-a0393893.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-77b35725.js"></script>
@@ -247,6 +247,25 @@ fn main {
 <li>重名构造子按期望类型区分，也可以写全名 <code>Vector::Cons</code>。</li>
 <li>宇宙为 <code>Prop</code> 的 enum 是命题，例如 Prelude 中的 <code>Id</code>（见<a href="equality.html">命题相等</a>）。</li>
 </ul>
+<h2 id="带标签的字段"><a class="header" href="#带标签的字段">带标签的字段</a></h2>
+<pre><code class="language-moonbit">enum Shape {
+  Rect(width~ : Int, height~ : Int)
+  Circle(Int, label~ : String)
+}
+
+fn area(s : Shape) -&gt; Int {
+  match s {
+    Rect(width~, height~) =&gt; width * height
+    Circle(r, ..) =&gt; 3 * r * r
+  }
+}
+
+fn main {
+  println(area(Rect(height=2, width=5)))
+}
+</code></pre>
+<p>构造子的字段可以带标签：构造时写 <code>C(x=e)</code>，模式中写 <code>C(x~)</code> 或 <code>C(x=p)</code>；<code>..</code> 表示其余字段
+匹配任何值。</p>
 
                     </main>
 

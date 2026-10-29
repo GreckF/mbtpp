@@ -76,3 +76,26 @@ enum Sigma[A](P : (A) -> Type) {
 - 数据类型的参数总是推断的；`[...]` 只给构造子自己的隐式参数，例如 `Cons[n](x, xs)`。
 - 重名构造子按期望类型区分，也可以写全名 `Vector::Cons`。
 - 宇宙为 `Prop` 的 enum 是命题，例如 Prelude 中的 `Id`（见[命题相等](equality.md)）。
+
+## 带标签的字段
+
+```moonbit
+enum Shape {
+  Rect(width~ : Int, height~ : Int)
+  Circle(Int, label~ : String)
+}
+
+fn area(s : Shape) -> Int {
+  match s {
+    Rect(width~, height~) => width * height
+    Circle(r, ..) => 3 * r * r
+  }
+}
+
+fn main {
+  println(area(Rect(height=2, width=5)))
+}
+```
+
+构造子的字段可以带标签：构造时写 `C(x=e)`，模式中写 `C(x~)` 或 `C(x=p)`；`..` 表示其余字段
+匹配任何值。

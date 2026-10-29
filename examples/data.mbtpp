@@ -1,0 +1,83 @@
+// MoonBit data syntax: mutable fields, record update, struct patterns,
+// tuple structs, labelled constructor fields, default methods, constants
+// and type aliases.
+
+const START : Int = 10
+
+typealias Int as Score
+
+struct Counter {
+  name : String
+  mut count : Score
+}
+
+fn bump(c : Counter) -> Unit {
+  c.count += 1
+}
+
+// a tuple struct, and a newtype
+struct Pair(Int, Int)
+
+type Meters Int
+
+struct Point {
+  x : Int
+  y : Int
+} derive(Show)
+
+fn sum(p : Point) -> Int {
+  match p {
+    { x, y } => x + y
+  }
+}
+
+enum Shape {
+  Rect(width~ : Int, height~ : Int)
+  Circle(Int, label~ : String)
+}
+
+fn area(s : Shape) -> Int {
+  match s {
+    Rect(width~, height~) => width * height
+    Circle(r, ..) => 3 * r * r
+  }
+}
+
+trait Describe {
+  name(Self) -> String
+  describe(Self) -> String = _
+}
+
+// the default of `describe`
+impl Describe with describe(self) {
+  "<" + self.name() + ">"
+}
+
+impl Describe for Point with name(_) {
+  "point"
+}
+
+fn main {
+  let c = { name: "clicks", count: START }
+  bump(c)
+  bump(c)
+  let copy = { ..c, name: "copy" }
+  bump(copy)
+  println("\{c.name} \{c.count}, \{copy.name} \{copy.count}")
+  let p = Pair(1, 2)
+  match p {
+    Pair(a, b) => println(a + b)
+  }
+  println(Meters(5).0)
+  let pt = { x: 3, y: 4 }
+  println(sum(pt))
+  println({ ..pt, y: 10 })
+  println(area(Rect(height=2, width=5)) + area(Circle(1, label="c")))
+  println(pt.describe())
+}
+
+test "counter" {
+  let c = { name: "t", count: 0 }
+  bump(c)
+  assert_eq(c.count, 1)
+}

@@ -444,6 +444,18 @@ fn elab_con(
   } else {
     (c1, [])
   }
+  // labelled fields `C(x~ : Int)`: built with `C(x=e)`
+  if cd.params.iter().any(p => !(p.kind is Positional)) {
+    st.labels.set(
+      d + "::" + cd.name,
+      cd.params.map(p => {
+        match p.kind {
+          Positional => LPos
+          _ => LReq(p.name)
+        }
+      }),
+    )
+  }
   let ret = match cd.ret {
     Some(r) => {
       let rt = check_type(c2, r)
@@ -509,8 +521,20 @@ fn elab_struct_decl(sd : @parser.StructDecl) -> Unit raise ElabError {
   // the constructor
   let mut c = pc
   let fbs : Array[(String, Icit, Tm)] = []
+  if sd.fields.length() > 0 &&
+    sd.fields.iter().all(f => f.1.iter().all(ch => ch >= '0' && ch <= '9')) {
+    tuple_structs.set(d, true)
+  }
   for f in sd.fields {
-    let ft = check_type(c.at(f.0), f.2)
+    // a `mut` field is a box, unless the struct is MoonBit's
+    let (fty0, is_mut) = unmark_mut(f.2)
+    let fty0 = if is_mut && !mbt_types.contains(d) {
+      mut_fields.set(d + "::" + f.1, true)
+      @parser.EApp(f.0, EVar(f.0, "Array"), Some([fty0]), None)
+    } else {
+      fty0
+    }
+    let ft = check_type(c.at(f.0), fty0)
     fbs.push((f.1, Expl, ft))
     c = c.bind(f.1, c.eval(ft))
   }
@@ -743,7 +767,7 @@ fn elab_impl_body(
   }
   let args : Array[(Tm, Icit)] = [(cxt.quote(self_v), Impl)]
   for d in ds {
-    if !info.methods.contains(d.meth) {
+    if d.meth != "" && !info.methods.contains(d.meth) {
       cxt.at(d.pos).fail(d.meth + " is not a method of " + tr)
     }
   }
@@ -759,7 +783,9 @@ fn elab_impl_body(
           cxt.fail("missing instance " + cxt.show(fty) + " required by " + tr)
       }
     } else {
-      match ds.iter().find_first(d => d.meth == f) {
+      let own = ds.iter().find_first(d => d.meth == f)
+      match
+        (if own is None { trait_defaults.get(tr + "::" + f) } else { own }) {
         Some(d) => {
           let lam : @parser.Expr = ELam(d.pos, [], d.params, None, d.body)
           check(cxt.at(d.pos), lam, fty)
@@ -954,6 +980,9 @@ pub fn check_decls(
         shared_thunk(names, () => elab_trait(td))
         types.push(td.name)
       }
+      // the default of a method
+      DImpl({ for_ty: EVar(_, "%Default"), .. } as id) =>
+        trait_defaults.set(id.trait_name + "::" + id.meth, id)
       DImpl(id) => {
         let h = impl_head(id.for_ty)
         let key = "impl$" + id.trait_name + "$" + h

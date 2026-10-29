@@ -1,5 +1,6 @@
 import {
   "username/mbtpp/tt",
+  "username/mbtpp/parser",
   "username/mbtpp/interp",
   "username/mbtpp/codegen",
   "moonbitlang/x/sys",

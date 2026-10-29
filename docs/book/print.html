@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-4e93d181.js";
+            window.path_to_searchindex_js = "searchindex-a0393893.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-77b35725.js"></script>
@@ -283,7 +283,7 @@ fn main {
 <h2 id="关键字"><a class="header" href="#关键字">关键字</a></h2>
 <pre><code class="language-text">fn let mut if else match enum struct trait impl for in with while return break
 continue raise try catch true false Type Prop forall lemma proof monad as suberror
-derive pub priv noraise loop is guard async
+derive pub priv noraise loop is guard async defer
 </code></pre>
 <p><code>pub</code>、<code>priv</code>、<code>derive(...)</code> 可以写，但被忽略：一个包是一个作用域，没有可见性。</p>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -508,6 +508,11 @@ fn main {
 <li><code>T?</code> 即 <code>Option[T]</code>；<code>(A, B)</code> 是二元组类型。</li>
 <li>返回 <code>Type</code> 的函数就是类型层的函数，见<a href="#类型层计算">类型层计算</a>。</li>
 </ul>
+<h2 id="常量与类型别名"><a class="header" href="#常量与类型别名">常量与类型别名</a></h2>
+<ul>
+<li><code>const N : Int = 3</code>、<code>const N = 3</code> 定义常量（同 <code>let</code>）。</li>
+<li><code>typealias Int as Score</code> 或 <code>typealias Pair[A] = (A, A)</code> 定义类型别名。</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="类型层计算"><a class="header" href="#类型层计算">类型层计算</a></h1>
 <p>类型是值，所以可以用普通函数计算类型，类型检查时会规范化（计算）它们：</p>
@@ -630,6 +635,25 @@ fn main {
 <li>重名构造子按期望类型区分，也可以写全名 <code>Vector::Cons</code>。</li>
 <li>宇宙为 <code>Prop</code> 的 enum 是命题，例如 Prelude 中的 <code>Id</code>（见<a href="#命题相等">命题相等</a>）。</li>
 </ul>
+<h2 id="带标签的字段"><a class="header" href="#带标签的字段">带标签的字段</a></h2>
+<pre><code class="language-moonbit">enum Shape {
+  Rect(width~ : Int, height~ : Int)
+  Circle(Int, label~ : String)
+}
+
+fn area(s : Shape) -&gt; Int {
+  match s {
+    Rect(width~, height~) =&gt; width * height
+    Circle(r, ..) =&gt; 3 * r * r
+  }
+}
+
+fn main {
+  println(area(Rect(height=2, width=5)))
+}
+</code></pre>
+<p>构造子的字段可以带标签：构造时写 <code>C(x=e)</code>，模式中写 <code>C(x~)</code> 或 <code>C(x=p)</code>；<code>..</code> 表示其余字段
+匹配任何值。</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="struct-与依赖字段"><a class="header" href="#struct-与依赖字段">struct 与依赖字段</a></h1>
 <pre><code class="language-moonbit">struct Point {
@@ -669,6 +693,43 @@ fn main {
 }
 </code></pre>
 <p><code>xs.size()</code> 返回 <code>Nat</code>，所以可以出现在类型中；<code>xs.length()</code> 返回 <code>Int</code>。</p>
+<h2 id="可变字段更新模式与元组结构体"><a class="header" href="#可变字段更新模式与元组结构体">可变字段、更新、模式与元组结构体</a></h2>
+<pre><code class="language-moonbit">struct Counter {
+  name : String
+  mut count : Int
+}
+
+struct Pair(Int, Int)
+
+struct Point {
+  x : Int
+  y : Int
+} derive(Show)
+
+fn main {
+  let c = { name: "clicks", count: 0 }
+  c.count += 1
+  let copy = { ..c, name: "copy" }
+  copy.count = 10
+  println("\{c.count} \{copy.count}")
+  match Pair(1, 2) {
+    Pair(a, b) =&gt; println(a + b)
+  }
+  let p = { x: 3, y: 4 }
+  match p {
+    { x, .. } =&gt; println(x)
+  }
+  println({ ..p, y: 10 })
+}
+</code></pre>
+<ul>
+<li><strong><code>mut</code> 字段</strong>：<code>p.x = v</code>、<code>p.x += 1</code> 修改它，所有引用同一个结构体的地方都看得到。</li>
+<li><strong>更新</strong>：<code>{ ..p, x: e }</code> 是一个新结构体，其余字段取自 <code>p</code>（<code>mut</code> 字段复制当前的值）。</li>
+<li><strong>模式</strong>：<code>{ x, y }</code>、<code>{ x: p, .. }</code>；省略字段时要写 <code>..</code>。<code>mut</code> 字段在模式中只能是 <code>_</code>。</li>
+<li><strong>元组结构体</strong>：<code>struct P(Int, Int)</code> 的字段是 <code>0</code>、<code>1</code>，<code>P(a, b)</code> 构造，也是它的模式。
+<code>type Meters Int</code> 是只有一个字段的元组结构体。</li>
+<li><code>mut</code> 字段在类型检查时不参与计算；从 MoonBit 导入的结构体的 <code>mut</code> 字段只能读。</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="模式匹配"><a class="header" href="#模式匹配">模式匹配</a></h1>
 <p><code>match</code> 的写法与 MoonBit 相同：</p>
@@ -1150,6 +1211,31 @@ fn main {
 <li>局部名字优先：如果外层有与 trait 同名的参数，冒号右边指的是那个参数。</li>
 <li>多个约束的种类要相同（<code>T</code> 的种类取自第一个 trait），<code>[M : Monad + Show]</code> 会报错。</li>
 </ul>
+<h2 id="默认方法"><a class="header" href="#默认方法">默认方法</a></h2>
+<p>trait 中写 <code>= _</code> 的方法有默认实现，用 <code>impl Tr with m(…) { … }</code>（不写 <code>for</code>）给出；实例没有
+实现它时就用默认的。<code>impl Tr for T</code> 可以不写任何方法。</p>
+<pre><code class="language-moonbit">trait Describe {
+  name(Self) -&gt; String
+  describe(Self) -&gt; String = _
+}
+
+impl Describe with describe(self) {
+  "&lt;" + self.name() + "&gt;"
+}
+
+struct Dog {
+  age : Int
+}
+
+impl Describe for Dog with name(_) {
+  "dog"
+}
+
+fn main {
+  let d : Dog = { age: 3 }
+  println(d.describe())
+}
+</code></pre>
 <h2 id="prelude-中的-trait"><a class="header" href="#prelude-中的-trait">Prelude 中的 trait</a></h2>
 <div class="table-wrapper">
 <table>
@@ -1703,6 +1789,7 @@ come from that. … list it in the package's moon.pkg: options("mbtpp-order": [ 
 <tr><td><code>moonpp ide &lt;文件&gt; [--overlay &lt;json&gt;]</code></td><td>为编辑器检查文件所在的包，输出 JSON（见<a href="#编辑器">编辑器</a>）</td></tr>
 <tr><td><code>moonpp run [路径]</code></td><td>用解释器运行 main 包（或指定的包、文件）</td></tr>
 <tr><td><code>moonpp run --compiled [路径]</code></td><td>编译到 MoonBit 并用 <code>moon run</code> 运行</td></tr>
+<tr><td><code>moonpp test [路径]</code></td><td>用解释器运行 <code>test "名字" { … }</code> 块，块中可以用 <code>assert_eq</code>、<code>assert_true</code> 等</td></tr>
 <tr><td><code>moonpp build [路径] [-o 目录]</code></td><td>编译成 MoonBit 项目并 <code>moon build</code></td></tr>
 <tr><td><code>moonpp add &lt;user/module[@版本]&gt;</code></td><td>添加依赖（<code>moon add</code>），并为缺少接口的包生成 <code>.mbti</code></td></tr>
 <tr><td><code>moonpp remove &lt;module&gt;</code></td><td>删除依赖（<code>moon remove</code>）</td></tr>

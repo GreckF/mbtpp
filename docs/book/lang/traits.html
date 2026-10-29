@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-4e93d181.js";
+            window.path_to_searchindex_js = "../searchindex-a0393893.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-77b35725.js"></script>
@@ -238,6 +238,31 @@ fn main {
 <li>局部名字优先：如果外层有与 trait 同名的参数，冒号右边指的是那个参数。</li>
 <li>多个约束的种类要相同（<code>T</code> 的种类取自第一个 trait），<code>[M : Monad + Show]</code> 会报错。</li>
 </ul>
+<h2 id="默认方法"><a class="header" href="#默认方法">默认方法</a></h2>
+<p>trait 中写 <code>= _</code> 的方法有默认实现，用 <code>impl Tr with m(…) { … }</code>（不写 <code>for</code>）给出；实例没有
+实现它时就用默认的。<code>impl Tr for T</code> 可以不写任何方法。</p>
+<pre><code class="language-moonbit">trait Describe {
+  name(Self) -&gt; String
+  describe(Self) -&gt; String = _
+}
+
+impl Describe with describe(self) {
+  "&lt;" + self.name() + "&gt;"
+}
+
+struct Dog {
+  age : Int
+}
+
+impl Describe for Dog with name(_) {
+  "dog"
+}
+
+fn main {
+  let d : Dog = { age: 3 }
+  println(d.describe())
+}
+</code></pre>
 <h2 id="prelude-中的-trait"><a class="header" href="#prelude-中的-trait">Prelude 中的 trait</a></h2>
 <div class="table-wrapper">
 <table>

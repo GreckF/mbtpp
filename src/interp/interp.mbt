@@ -383,6 +383,25 @@ pub fn run_main(write : (String) -> Unit) -> Unit raise RunError {
 }
 
 ///|
+/// Run the global `name` (a `test` block).
+pub fn run_global(
+  name : String,
+  write : (String) -> Unit,
+) -> Unit raise RunError {
+  let m = { cache: {}, write, }
+  let body = match @tt.global_body(name) {
+    Some(b) => b
+    None => raise RunError("no definition of " + name)
+  }
+  ignore(m.eval(ENil, body)) catch {
+    CReturn(_) => ()
+    CRaise(e) => raise RunError("uncaught error: " + show_rval(e))
+    CAbort(msg) => raise RunError("runtime error: " + msg)
+    CBreak | CContinue => raise RunError("break/continue outside of a loop")
+  }
+}
+
+///|
 /// Evaluate a global constant (for tests).
 pub fn eval_global(name : String) -> String raise RunError {
   let m = { cache: {}, write: _ => (), }

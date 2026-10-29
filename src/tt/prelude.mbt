@@ -530,6 +530,30 @@ pub let prelude_src : String =
   #|  print_string(x.to_string())
   #|}
   #|
+  #|fn[T : Eq + Show] assert_eq(a : T, b : T) -> Unit raise Failure {
+  #|  if !(a == b) {
+  #|    raise Failure("`" + a.to_string() + " == " + b.to_string() + "`")
+  #|  }
+  #|}
+  #|
+  #|fn[T : Eq + Show] assert_not_eq(a : T, b : T) -> Unit raise Failure {
+  #|  if a == b {
+  #|    raise Failure("`" + a.to_string() + " != " + b.to_string() + "`")
+  #|  }
+  #|}
+  #|
+  #|fn assert_true(b : Bool) -> Unit raise Failure {
+  #|  if !b {
+  #|    raise Failure("`true` expected")
+  #|  }
+  #|}
+  #|
+  #|fn assert_false(b : Bool) -> Unit raise Failure {
+  #|  if b {
+  #|    raise Failure("`false` expected")
+  #|  }
+  #|}
+  #|
   #|fn[T] fail(msg : String) -> T raise Failure {
   #|  raise Failure(msg)
   #|}

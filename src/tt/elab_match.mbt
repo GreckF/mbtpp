@@ -54,6 +54,25 @@ fn check_pat(
     PAs(_, inner, x) =>
       check_pat(cxt, inner, ty, index_unify, scrut, refine_scrut, as_name=x)
     POr(q, _, _) => cxt.at(q).fail("an or-pattern cannot be used here")
+    PLabel(q, _, _) =>
+      cxt.at(q).fail("a labelled pattern is an argument of a constructor")
+    PStruct(q, fields, open) =>
+      match ty {
+        VData(d, _) =>
+          check_pat(
+            cxt,
+            struct_pattern(cxt.at(q), d, fields, open),
+            ty,
+            index_unify,
+            scrut,
+            refine_scrut,
+            as_name~,
+          )
+        _ =>
+          cxt
+          .at(q)
+          .fail("cannot match a struct pattern against " + cxt.show(ty))
+      }
     PArray(q, _, _, _) | PRange(q, _, _, _) =>
       cxt
       .at(q)
@@ -94,6 +113,12 @@ fn check_pat(
             "cannot match constructor " + name + " against type " + cxt.show(ty),
           )
       }
+      // the tuple struct `P(a, b)`
+      let name = if name == d && tuple_structs.contains(d) {
+        d + "::mk"
+      } else {
+        name
+      }
       let c = resolve_name(cxt, name, false, Some(d))
       record_global(cpos, name, c)
       let ci = match con_info(c) {
@@ -101,6 +126,53 @@ fn check_pat(
         _ => cxt.fail(name + " is not a constructor of " + d)
       }
       let impl_ps = impl_ps.unwrap_or([])
+      // `C(p, ..)`
+      let open = expl_ps.iter().any(q => q is PLabel(_, "..", _))
+      let expl_ps = expl_ps.filter(q => !(q is PLabel(_, "..", _)))
+      // labelled fields go to their positions; omitted ones match anything
+      let expl_ps = if expl_ps.iter().any(q => q is PLabel(_, _, _)) {
+        let infos = st.labels.get(c).unwrap_or([])
+        let positional = expl_ps.filter(q => !(q is PLabel(_, _, _)))
+        let mut next = 0
+        let out : Array[@parser.Pat] = []
+        for info in infos {
+          match info {
+            LReq(l) | LOpt(l) | LDefault(l, _) =>
+              out.push(
+                match
+                  expl_ps
+                  .iter()
+                  .find_first(q => q is PLabel(_, l2, _) && l2 == l) {
+                  Some(PLabel(_, _, q)) => q
+                  _ => PWild(cpos)
+                },
+              )
+            LPos => {
+              if next < positional.length() {
+                out.push(positional[next])
+              }
+              next = next + 1
+            }
+          }
+        }
+        for q in expl_ps {
+          if q is PLabel(lp, l, _) &&
+            !infos
+            .iter()
+            .any(i => i is (LReq(l2) | LOpt(l2) | LDefault(l2, _)) && l2 == l) {
+            cxt.at(lp).fail(name + " has no field labelled " + l)
+          }
+        }
+        out
+      } else {
+        expl_ps
+      }
+      let expl_ps = if open && expl_ps.length() < ci.nargs - ci.nimpl {
+        expl_ps +
+        Array::make(ci.nargs - ci.nimpl - expl_ps.length(), PWild(cpos))
+      } else {
+        expl_ps
+      }
       if impl_ps.length() > ci.nimpl {
         cxt.fail("too many implicit arguments in pattern " + name)
       }
@@ -257,7 +329,8 @@ fn splits(p : @parser.Pat) -> Bool {
   match p {
     PCon(_, _, _, _) | PTuple(_, _) | PLit(_, _) => true
     PAs(_, q, _) => splits(q)
-    PArray(_, _, _, _) | PRange(_, _, _, _) => true
+    PArray(_, _, _, _) | PRange(_, _, _, _) | PStruct(_, _, _) => true
+    PLabel(_, _, q) => splits(q)
     POr(_, a, b) => splits(a) || splits(b)
     PVar(_, _) | PWild(_) => false
   }

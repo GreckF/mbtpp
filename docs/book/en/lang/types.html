@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-c13f5aac.js";
+            window.path_to_searchindex_js = "../searchindex-320c42f5.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-ec08c6a2.js"></script>
@@ -221,6 +221,11 @@ fn main {
 arguments and <code>(...)</code> gives explicit ones.</li>
 <li><code>T?</code> means <code>Option[T]</code>; <code>(A, B)</code> is a pair type.</li>
 <li>A function returning <code>Type</code> is a type-level function; see <a href="type-level.html">Type-level computation</a>.</li>
+</ul>
+<h2 id="constants-and-type-aliases"><a class="header" href="#constants-and-type-aliases">Constants and type aliases</a></h2>
+<ul>
+<li><code>const N : Int = 3</code> and <code>const N = 3</code> define constants (like <code>let</code>).</li>
+<li><code>typealias Int as Score</code> and <code>typealias Pair[A] = (A, A)</code> define type aliases.</li>
 </ul>
 
                     </main>

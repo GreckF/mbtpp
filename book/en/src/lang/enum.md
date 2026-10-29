@@ -76,3 +76,26 @@ enum Sigma[A](P : (A) -> Type) {
 - The data type's parameters are always inferred; `[...]` supplies only the constructor's own implicit parameters, e.g. `Cons[n](x, xs)`.
 - Constructors with the same name are disambiguated by the expected type, or you can write the full name `Vector::Cons`.
 - An enum whose universe is `Prop` is a proposition, e.g. `Id` in the Prelude (see [Propositional Equality](equality.md)).
+
+## Labelled fields
+
+```moonbit
+enum Shape {
+  Rect(width~ : Int, height~ : Int)
+  Circle(Int, label~ : String)
+}
+
+fn area(s : Shape) -> Int {
+  match s {
+    Rect(width~, height~) => width * height
+    Circle(r, ..) => 3 * r * r
+  }
+}
+
+fn main {
+  println(area(Rect(height=2, width=5)))
+}
+```
+
+Constructor fields can have labels: `C(x=e)` builds, and `C(x~)` or `C(x=p)` matches; `..` lets
+the other fields match anything.

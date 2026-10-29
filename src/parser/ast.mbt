@@ -133,6 +133,12 @@ pub(all) enum Pat {
   PArray(Pos, Array[Pat], String??, Array[Pat])
   /// `lo..=hi`, `lo..<hi` (`_` for an open bound); the flag: inclusive.
   PRange(Pos, Lit?, Lit?, Bool)
+  /// `{ x, y: p, .. }`: fields and their patterns (`x` alone is `x: x`);
+  /// the flag: other fields are allowed (`..`).
+  PStruct(Pos, Array[(String, Pat)], Bool)
+  /// `x~` or `x=p` among the arguments of a constructor pattern: the field
+  /// labelled `x`.
+  PLabel(Pos, String, Pat)
 } derive(Show)
 
 ///|
@@ -337,6 +343,8 @@ pub fn Pat::pos(self : Pat) -> Pos {
     | POr(p, _, _)
     | PAs(p, _, _)
     | PArray(p, _, _, _)
-    | PRange(p, _, _, _) => p
+    | PRange(p, _, _, _)
+    | PStruct(p, _, _)
+    | PLabel(p, _, _) => p
   }
 }

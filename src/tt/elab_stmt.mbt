@@ -128,6 +128,19 @@ fn check_block(
           }
         EApp(_, arr, Some([i]), None) =>
           infer_ins(c, EMethod(p, arr, "op_set", None, [i, rhs])).0
+        // `p.x = v`: a mutable field, written in its box
+        EField(fp, e, f) => {
+          let (te, tye) = infer_ins(c, e)
+          let (tb, tyb) = elab_field(c, te, tye, f, at=fp, raw=true)
+          match head_name(tye) {
+            Some(d) if mut_fields.contains(d + "::" + f) => ()
+            _ => c.fail("the field " + f + " is not mutable")
+          }
+          elab_method(c, tb, tyb, "op_set", None, [
+            AV(Lit(LInt(0)), VData("Int", [])),
+            AE(rhs),
+          ]).0
+        }
         _ => c.fail("invalid assignment target")
       }
       let (r, rty) = check_block(cxt, rest, goal)

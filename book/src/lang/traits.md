@@ -58,6 +58,35 @@ trait 和类型在同一个命名空间中，不能同名，所以不会有歧�
 - 局部名字优先：如果外层有与 trait 同名的参数，冒号右边指的是那个参数。
 - 多个约束的种类要相同（`T` 的种类取自第一个 trait），`[M : Monad + Show]` 会报错。
 
+## 默认方法
+
+trait 中写 `= _` 的方法有默认实现，用 `impl Tr with m(…) { … }`（不写 `for`）给出；实例没有
+实现它时就用默认的。`impl Tr for T` 可以不写任何方法。
+
+```moonbit
+trait Describe {
+  name(Self) -> String
+  describe(Self) -> String = _
+}
+
+impl Describe with describe(self) {
+  "<" + self.name() + ">"
+}
+
+struct Dog {
+  age : Int
+}
+
+impl Describe for Dog with name(_) {
+  "dog"
+}
+
+fn main {
+  let d : Dog = { age: 3 }
+  println(d.describe())
+}
+```
+
 ## Prelude 中的 trait
 
 | trait | 方法 | MoonBit 中的 trait 与方法 |

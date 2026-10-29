@@ -14,7 +14,10 @@ fn pat_alts(
     | PWild(_)
     | PLit(_, _)
     | PRange(_, _, _, _)
-    | PArray(_, _, _, _) => [(p, [])]
+    | PArray(_, _, _, _)
+    | PStruct(_, _, _) => [(p, [])]
+    PLabel(q, l, inner) =>
+      pat_alts(cxt, inner).map(a => (@parser.PLabel(q, l, a.0), a.1))
     PCon(q, c, impl_ps, expl_ps) => {
       let ni = impl_ps.map(ps => ps.length()).unwrap_or(0)
       let subs = impl_ps.unwrap_or([]) + expl_ps
@@ -88,6 +91,11 @@ fn pat_vars(p : @parser.Pat, out : Array[String]) -> Unit {
   match p {
     PVar(_, x) => out.push(x)
     PWild(_) | PLit(_, _) | PRange(_, _, _, _) => ()
+    PStruct(_, fields, _) =>
+      for f in fields {
+        pat_vars(f.1, out)
+      }
+    PLabel(_, _, q) => pat_vars(q, out)
     PArray(_, before, rest, after) => {
       for q in before {
         pat_vars(q, out)

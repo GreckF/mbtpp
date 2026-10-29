@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-c13f5aac.js";
+            window.path_to_searchindex_js = "searchindex-320c42f5.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-ec08c6a2.js"></script>
@@ -284,7 +284,7 @@ lines are kept as they are, and <code>$|</code> lines allow escapes and interpol
 <h2 id="keywords"><a class="header" href="#keywords">Keywords</a></h2>
 <pre><code class="language-text">fn let mut if else match enum struct trait impl for in with while return break
 continue raise try catch true false Type Prop forall lemma proof monad as suberror
-derive pub priv noraise loop is guard async
+derive pub priv noraise loop is guard async defer
 </code></pre>
 <p><code>pub</code>, <code>priv</code>, and <code>derive(...)</code> are accepted but ignored: a package is a single scope with no visibility control.</p>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -509,6 +509,11 @@ arguments and <code>(...)</code> gives explicit ones.</li>
 <li><code>T?</code> means <code>Option[T]</code>; <code>(A, B)</code> is a pair type.</li>
 <li>A function returning <code>Type</code> is a type-level function; see <a href="#type-level-computation">Type-level computation</a>.</li>
 </ul>
+<h2 id="constants-and-type-aliases"><a class="header" href="#constants-and-type-aliases">Constants and type aliases</a></h2>
+<ul>
+<li><code>const N : Int = 3</code> and <code>const N = 3</code> define constants (like <code>let</code>).</li>
+<li><code>typealias Int as Score</code> and <code>typealias Pair[A] = (A, A)</code> define type aliases.</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="type-level-computation"><a class="header" href="#type-level-computation">Type-Level Computation</a></h1>
 <p>Types are values, so you can compute types with ordinary functions, and the type checker normalizes (evaluates) them:</p>
@@ -634,6 +639,25 @@ fn main {
 <li>Constructors with the same name are disambiguated by the expected type, or you can write the full name <code>Vector::Cons</code>.</li>
 <li>An enum whose universe is <code>Prop</code> is a proposition, e.g. <code>Id</code> in the Prelude (see <a href="#propositional-equality">Propositional Equality</a>).</li>
 </ul>
+<h2 id="labelled-fields"><a class="header" href="#labelled-fields">Labelled fields</a></h2>
+<pre><code class="language-moonbit">enum Shape {
+  Rect(width~ : Int, height~ : Int)
+  Circle(Int, label~ : String)
+}
+
+fn area(s : Shape) -&gt; Int {
+  match s {
+    Rect(width~, height~) =&gt; width * height
+    Circle(r, ..) =&gt; 3 * r * r
+  }
+}
+
+fn main {
+  println(area(Rect(height=2, width=5)))
+}
+</code></pre>
+<p>Constructor fields can have labels: <code>C(x=e)</code> builds, and <code>C(x~)</code> or <code>C(x=p)</code> matches; <code>..</code> lets
+the other fields match anything.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="struct-and-dependent-fields"><a class="header" href="#struct-and-dependent-fields">struct and Dependent Fields</a></h1>
 <pre><code class="language-moonbit">struct Point {
@@ -673,6 +697,47 @@ fn main {
 }
 </code></pre>
 <p><code>xs.size()</code> returns a <code>Nat</code>, so it can appear in types; <code>xs.length()</code> returns an <code>Int</code>.</p>
+<h2 id="mutable-fields-updates-patterns-and-tuple-structs"><a class="header" href="#mutable-fields-updates-patterns-and-tuple-structs">Mutable fields, updates, patterns and tuple structs</a></h2>
+<pre><code class="language-moonbit">struct Counter {
+  name : String
+  mut count : Int
+}
+
+struct Pair(Int, Int)
+
+struct Point {
+  x : Int
+  y : Int
+} derive(Show)
+
+fn main {
+  let c = { name: "clicks", count: 0 }
+  c.count += 1
+  let copy = { ..c, name: "copy" }
+  copy.count = 10
+  println("\{c.count} \{copy.count}")
+  match Pair(1, 2) {
+    Pair(a, b) =&gt; println(a + b)
+  }
+  let p = { x: 3, y: 4 }
+  match p {
+    { x, .. } =&gt; println(x)
+  }
+  println({ ..p, y: 10 })
+}
+</code></pre>
+<ul>
+<li><strong><code>mut</code> fields</strong>: <code>p.x = v</code> and <code>p.x += 1</code> change them, and every reference to the same struct
+sees the change.</li>
+<li><strong>Updates</strong>: <code>{ ..p, x: e }</code> is a new struct whose other fields come from <code>p</code> (<code>mut</code> fields get
+a copy of their current value).</li>
+<li><strong>Patterns</strong>: <code>{ x, y }</code>, <code>{ x: p, .. }</code>; omitting fields requires <code>..</code>. In a pattern, a <code>mut</code>
+field can only be <code>_</code>.</li>
+<li><strong>Tuple structs</strong>: the fields of <code>struct P(Int, Int)</code> are <code>0</code> and <code>1</code>; <code>P(a, b)</code> builds one and
+is its pattern. <code>type Meters Int</code> is a tuple struct with one field.</li>
+<li><code>mut</code> fields take no part in type-level computation; the <code>mut</code> fields of structs imported from
+MoonBit can only be read.</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="pattern-matching"><a class="header" href="#pattern-matching">Pattern Matching</a></h1>
 <p><code>match</code> is written the same way as in MoonBit:</p>
@@ -1173,6 +1238,32 @@ side of the colon refers to that parameter.</li>
 <li>Multiple bounds must have the same kind (the kind of <code>T</code> is taken from the first trait);
 <code>[M : Monad + Show]</code> is an error.</li>
 </ul>
+<h2 id="default-methods"><a class="header" href="#default-methods">Default methods</a></h2>
+<p>A method declared with <code>= _</code> in a trait has a default implementation, given by
+<code>impl Tr with m(…) { … }</code> (without <code>for</code>); an instance that does not implement it uses the default.
+<code>impl Tr for T</code> may implement no method at all.</p>
+<pre><code class="language-moonbit">trait Describe {
+  name(Self) -&gt; String
+  describe(Self) -&gt; String = _
+}
+
+impl Describe with describe(self) {
+  "&lt;" + self.name() + "&gt;"
+}
+
+struct Dog {
+  age : Int
+}
+
+impl Describe for Dog with name(_) {
+  "dog"
+}
+
+fn main {
+  let d : Dog = { age: 3 }
+  println(d.describe())
+}
+</code></pre>
 <h2 id="traits-in-the-prelude"><a class="header" href="#traits-in-the-prelude">Traits in the Prelude</a></h2>
 <div class="table-wrapper">
 <table>
@@ -1757,6 +1848,7 @@ come from that. … list it in the package's moon.pkg: options("mbtpp-order": [ 
 <tr><td><code>moonpp ide &lt;file&gt; [--overlay &lt;json&gt;]</code></td><td>Check the package containing the file for an editor and output JSON (see <a href="#editor">Editor</a>)</td></tr>
 <tr><td><code>moonpp run [path]</code></td><td>Run the main package (or the given package or file) with the interpreter</td></tr>
 <tr><td><code>moonpp run --compiled [path]</code></td><td>Compile to MoonBit and run with <code>moon run</code></td></tr>
+<tr><td><code>moonpp test [path]</code></td><td>Run the <code>test "name" { … }</code> blocks with the interpreter; they can use <code>assert_eq</code>, <code>assert_true</code>, etc.</td></tr>
 <tr><td><code>moonpp build [path] [-o dir]</code></td><td>Compile to a MoonBit project and run <code>moon build</code></td></tr>
 <tr><td><code>moonpp add &lt;user/module[@version]&gt;</code></td><td>Add a dependency (<code>moon add</code>) and generate <code>.mbti</code> files for packages that lack an interface</td></tr>
 <tr><td><code>moonpp remove &lt;module&gt;</code></td><td>Remove a dependency (<code>moon remove</code>)</td></tr>

@@ -46,7 +46,7 @@ fn main {
 ```text
 fn let mut if else match enum struct trait impl for in with while return break
 continue raise try catch true false Type Prop forall lemma proof monad as suberror
-derive pub priv noraise loop is guard async
+derive pub priv noraise loop is guard async defer
 ```
 
 `pub`、`priv`、`derive(...)` 可以写，但被忽略：一个包是一个作用域，没有可见性。

@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-c13f5aac.js";
+            window.path_to_searchindex_js = "../searchindex-320c42f5.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-ec08c6a2.js"></script>
@@ -247,6 +247,25 @@ fn main {
 <li>Constructors with the same name are disambiguated by the expected type, or you can write the full name <code>Vector::Cons</code>.</li>
 <li>An enum whose universe is <code>Prop</code> is a proposition, e.g. <code>Id</code> in the Prelude (see <a href="equality.html">Propositional Equality</a>).</li>
 </ul>
+<h2 id="labelled-fields"><a class="header" href="#labelled-fields">Labelled fields</a></h2>
+<pre><code class="language-moonbit">enum Shape {
+  Rect(width~ : Int, height~ : Int)
+  Circle(Int, label~ : String)
+}
+
+fn area(s : Shape) -&gt; Int {
+  match s {
+    Rect(width~, height~) =&gt; width * height
+    Circle(r, ..) =&gt; 3 * r * r
+  }
+}
+
+fn main {
+  println(area(Rect(height=2, width=5)))
+}
+</code></pre>
+<p>Constructor fields can have labels: <code>C(x=e)</code> builds, and <code>C(x~)</code> or <code>C(x=p)</code> matches; <code>..</code> lets
+the other fields match anything.</p>
 
                     </main>
 

@@ -622,6 +622,7 @@ fn Parser::is_struct_literal(self : Parser) -> Bool {
   }
   match self.peek_at(1).tok {
     TIdent(_) => self.at_k(2, ":") || self.at_k(2, ",")
+    TSym("..") => true
     _ => false
   }
 }
@@ -631,6 +632,11 @@ fn Parser::struct_literal(self : Parser) -> Expr raise ParseError {
   let pos = self.pos()
   self.expect("{")
   let fields : Array[(String, Expr)] = []
+  // `{ ..base, x: e }`: the base is the field `..`
+  if self.accept("..") {
+    fields.push(("..", self.expr()))
+    ignore(self.accept(","))
+  }
   while !self.at("}") {
     let fpos = self.pos()
     let name = self.ident()
@@ -1018,7 +1024,25 @@ fn Parser::con_pattern_args(
   if self.is_same_line("(") {
     ignore(self.advance())
     while !self.at(")") {
-      ps.push(self.pattern())
+      // `..`: the other arguments match anything
+      if self.at("..") {
+        let lpos = self.pos()
+        ignore(self.advance())
+        ps.push(PLabel(lpos, "..", PWild(lpos)))
+      } else if self.is_ident() && self.at_k(1, "~") {
+        // `x~` and `x=p`: a labelled field
+        let lpos = self.pos()
+        let l = self.ident()
+        ignore(self.advance())
+        ps.push(PLabel(lpos, l, PVar(lpos, l)))
+      } else if self.is_ident() && self.at_k(1, "=") {
+        let lpos = self.pos()
+        let l = self.ident()
+        ignore(self.advance())
+        ps.push(PLabel(lpos, l, self.pattern()))
+      } else {
+        ps.push(self.pattern())
+      }
       if !self.accept(",") {
         break
       }
@@ -1078,6 +1102,28 @@ fn Parser::pattern_atom1(self : Parser) -> Pat raise ParseError {
   let t = self.peek()
   let pos = t.pos
   match t.tok {
+    // `{ x, y: p, .. }`
+    TSym("{") => {
+      ignore(self.advance())
+      let fields : Array[(String, Pat)] = []
+      let mut open = false
+      while !self.at("}") {
+        if self.accept("..") {
+          open = true
+          ignore(self.accept(","))
+          break
+        }
+        let fpos = self.pos()
+        let f = self.ident()
+        let p = if self.accept(":") { self.pattern() } else { PVar(fpos, f) }
+        fields.push((f, p))
+        if !self.accept(",") {
+          break
+        }
+      }
+      self.expect("}")
+      PStruct(pos, fields, open)
+    }
     // `[p, q, ..rest, r]`
     TSym("[") => {
       ignore(self.advance())
@@ -1593,11 +1639,68 @@ fn Parser::decl_body(self : Parser) -> Decl raise ParseError {
       is_lemma: true,
     })
   }
-  if self.accept("let") {
+  if self.accept("let") || self.accept_ident("const") {
     let name = self.ident()
     let ty = if self.accept(":") { Some(self.expr()) } else { None }
     self.expect("=")
     return DDef(pos, name, [], ty, self.expr())
+  }
+  // `typealias T = U`, `typealias U as T`
+  if self.accept_ident("typealias") {
+    let first = self.expr()
+    if self.accept("as") {
+      let name = self.ident()
+      return DDef(pos, name, [], Some(EType(pos)), first)
+    }
+    let (name, bs) = match first {
+      EVar(_, n) => (n, [])
+      EApp(_, EVar(_, n), Some(ps), None) => (n, exprs_to_impl_binders(ps))
+      _ => self.fail("expected the name of the alias")
+    }
+    self.expect("=")
+    return DDef(pos, name, bs, Some(EType(pos)), self.expr())
+  }
+  // `type T U`: a tuple struct with one field
+  if self.peek().tok == TIdent("type") && self.peek_at(1).tok is TIdent(_) {
+    ignore(self.advance())
+    let name = self.ident()
+    let impl_bs = self.impl_binders()
+    let ty = self.expr()
+    let ds = self.derives()
+    return with_derives(
+      DStruct({
+        pos,
+        name,
+        impl_params: impl_bs,
+        params: None,
+        fields: [(pos, "0", ty)],
+      }),
+      ds,
+    )
+  }
+  // `test "name" { .. }`: a function run by `moonpp test`
+  if self.peek().tok == TIdent("test") {
+    ignore(self.advance())
+    let display = match self.peek().tok {
+      TStr([SPStr(s)]) => {
+        ignore(self.advance())
+        s
+      }
+      _ => ""
+    }
+    test_counter.val = test_counter.val + 1
+    let name = "__test_" + test_counter.val.to_string()
+    test_names.set(name, display)
+    return DFn({
+      pos,
+      name,
+      impl_params: [],
+      params: None,
+      ret: Some(EVar(pos, "Unit")),
+      raises: Some(EVar(pos, "Error")),
+      body: BodyExpr(self.block()),
+      is_lemma: false,
+    })
   }
   if self.accept("enum") {
     let name = self.ident()
@@ -1652,17 +1755,46 @@ fn Parser::decl_body(self : Parser) -> Decl raise ParseError {
     let name = self.ident()
     let impl_bs = self.impl_binders()
     let params = if self.at("(") { Some(self.params(false)) } else { None }
+    // `struct P(Int, Int)`: a tuple struct, with the fields `0`, `1`, ...
+    if !self.at("{") {
+      let fields : Array[(Pos, String, Expr)] = []
+      let ps = params.unwrap_or([])
+      for k = 0; k < ps.length(); k = k + 1 {
+        let ty = match ps[k].ty {
+          Some(t) => t
+          None => EVar(ps[k].pos, ps[k].name)
+        }
+        fields.push((ps[k].pos, k.to_string(), ty))
+      }
+      let ds = self.derives()
+      return with_derives(
+        DStruct({ pos, name, impl_params: impl_bs, params: None, fields, }),
+        ds,
+      )
+    }
     self.expect("{")
     let fields : Array[(Pos, String, Expr)] = []
     while !self.at("}") {
       if self.accept(";") {
         continue
       }
-      ignore(self.accept("mut"))
+      // `mut x : T`: the type is marked `%Mut[T]`
+      let is_mut = self.accept("mut")
       let fpos = self.pos()
       let f = self.ident()
       self.expect(":")
-      fields.push((fpos, f, self.expr()))
+      let ty = self.expr()
+      fields.push(
+        (
+          fpos,
+          f,
+          if is_mut {
+            EApp(fpos, EVar(fpos, "%Mut"), Some([ty]), None)
+          } else {
+            ty
+          },
+        ),
+      )
       if !self.at("}") {
         self.end_stmt()
       }
@@ -1730,8 +1862,25 @@ fn Parser::decl_body(self : Parser) -> Decl raise ParseError {
   if self.accept("impl") {
     let impl_bs = self.impl_binders()
     let tr = self.qual_ident()
-    self.expect("for")
-    let ty = self.expr()
+    // `impl Tr with m(..) { }`: the default of a method (for `%Default`)
+    let ty = if self.at("with") {
+      EVar(pos, "%Default")
+    } else {
+      self.expect("for")
+      self.expr()
+    }
+    // `impl Tr for T`: all methods are the defaults
+    if !self.at("with") {
+      return DImpl({
+        pos,
+        impl_params: impl_bs,
+        trait_name: tr,
+        for_ty: ty,
+        meth: "",
+        params: [],
+        body: EVar(pos, "_"),
+      })
+    }
     self.expect("with")
     let m = self.ident()
     let ps = self.params(true)
@@ -1820,4 +1969,22 @@ fn Parser::guard_expr(self : Parser) -> Expr raise ParseError {
   }
   self.i = k
   e
+}
+
+///|
+/// The names of the `test` blocks: the function -> the test's name.
+pub let test_names : Map[String, String] = {}
+
+///|
+let test_counter : Ref[Int32] = Ref::new(0)
+
+///|
+/// Accept an identifier that is not a keyword of MoonBit++ (`const`).
+fn Parser::accept_ident(self : Parser, s : String) -> Bool {
+  if self.peek().tok == TIdent(s) {
+    ignore(self.advance())
+    true
+  } else {
+    false
+  }
 }

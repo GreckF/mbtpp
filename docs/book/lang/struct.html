@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-4e93d181.js";
+            window.path_to_searchindex_js = "../searchindex-a0393893.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-77b35725.js"></script>
@@ -219,6 +219,43 @@ fn main {
 }
 </code></pre>
 <p><code>xs.size()</code> 返回 <code>Nat</code>，所以可以出现在类型中；<code>xs.length()</code> 返回 <code>Int</code>。</p>
+<h2 id="可变字段更新模式与元组结构体"><a class="header" href="#可变字段更新模式与元组结构体">可变字段、更新、模式与元组结构体</a></h2>
+<pre><code class="language-moonbit">struct Counter {
+  name : String
+  mut count : Int
+}
+
+struct Pair(Int, Int)
+
+struct Point {
+  x : Int
+  y : Int
+} derive(Show)
+
+fn main {
+  let c = { name: "clicks", count: 0 }
+  c.count += 1
+  let copy = { ..c, name: "copy" }
+  copy.count = 10
+  println("\{c.count} \{copy.count}")
+  match Pair(1, 2) {
+    Pair(a, b) =&gt; println(a + b)
+  }
+  let p = { x: 3, y: 4 }
+  match p {
+    { x, .. } =&gt; println(x)
+  }
+  println({ ..p, y: 10 })
+}
+</code></pre>
+<ul>
+<li><strong><code>mut</code> 字段</strong>：<code>p.x = v</code>、<code>p.x += 1</code> 修改它，所有引用同一个结构体的地方都看得到。</li>
+<li><strong>更新</strong>：<code>{ ..p, x: e }</code> 是一个新结构体，其余字段取自 <code>p</code>（<code>mut</code> 字段复制当前的值）。</li>
+<li><strong>模式</strong>：<code>{ x, y }</code>、<code>{ x: p, .. }</code>；省略字段时要写 <code>..</code>。<code>mut</code> 字段在模式中只能是 <code>_</code>。</li>
+<li><strong>元组结构体</strong>：<code>struct P(Int, Int)</code> 的字段是 <code>0</code>、<code>1</code>，<code>P(a, b)</code> 构造，也是它的模式。
+<code>type Meters Int</code> 是只有一个字段的元组结构体。</li>
+<li><code>mut</code> 字段在类型检查时不参与计算；从 MoonBit 导入的结构体的 <code>mut</code> 字段只能读。</li>
+</ul>
 
                     </main>
 

@@ -62,6 +62,36 @@ Traits and types share one namespace and cannot have the same name, so there is 
 - Multiple bounds must have the same kind (the kind of `T` is taken from the first trait);
   `[M : Monad + Show]` is an error.
 
+## Default methods
+
+A method declared with `= _` in a trait has a default implementation, given by
+`impl Tr with m(…) { … }` (without `for`); an instance that does not implement it uses the default.
+`impl Tr for T` may implement no method at all.
+
+```moonbit
+trait Describe {
+  name(Self) -> String
+  describe(Self) -> String = _
+}
+
+impl Describe with describe(self) {
+  "<" + self.name() + ">"
+}
+
+struct Dog {
+  age : Int
+}
+
+impl Describe for Dog with name(_) {
+  "dog"
+}
+
+fn main {
+  let d : Dog = { age: 3 }
+  println(d.describe())
+}
+```
+
 ## Traits in the Prelude
 
 | Trait | Methods | MoonBit trait and method |

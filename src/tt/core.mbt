@@ -284,6 +284,7 @@ pub fn reset_state() -> Unit {
   metas.clear()
   reset_time_limits()
   lifted.clear()
+  reset_structs()
 }
 
 ///|

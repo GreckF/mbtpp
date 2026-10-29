@@ -10,6 +10,8 @@ import {
 // Values
 pub fn eval_global(String) -> String raise RunError
 
+pub fn run_global(String, (String) -> Unit) -> Unit raise RunError
+
 pub fn run_main((String) -> Unit) -> Unit raise RunError
 
 pub fn show_rval(RVal) -> String

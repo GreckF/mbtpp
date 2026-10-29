@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-c13f5aac.js";
+            window.path_to_searchindex_js = "../searchindex-320c42f5.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-ec08c6a2.js"></script>
@@ -219,6 +219,47 @@ fn main {
 }
 </code></pre>
 <p><code>xs.size()</code> returns a <code>Nat</code>, so it can appear in types; <code>xs.length()</code> returns an <code>Int</code>.</p>
+<h2 id="mutable-fields-updates-patterns-and-tuple-structs"><a class="header" href="#mutable-fields-updates-patterns-and-tuple-structs">Mutable fields, updates, patterns and tuple structs</a></h2>
+<pre><code class="language-moonbit">struct Counter {
+  name : String
+  mut count : Int
+}
+
+struct Pair(Int, Int)
+
+struct Point {
+  x : Int
+  y : Int
+} derive(Show)
+
+fn main {
+  let c = { name: "clicks", count: 0 }
+  c.count += 1
+  let copy = { ..c, name: "copy" }
+  copy.count = 10
+  println("\{c.count} \{copy.count}")
+  match Pair(1, 2) {
+    Pair(a, b) =&gt; println(a + b)
+  }
+  let p = { x: 3, y: 4 }
+  match p {
+    { x, .. } =&gt; println(x)
+  }
+  println({ ..p, y: 10 })
+}
+</code></pre>
+<ul>
+<li><strong><code>mut</code> fields</strong>: <code>p.x = v</code> and <code>p.x += 1</code> change them, and every reference to the same struct
+sees the change.</li>
+<li><strong>Updates</strong>: <code>{ ..p, x: e }</code> is a new struct whose other fields come from <code>p</code> (<code>mut</code> fields get
+a copy of their current value).</li>
+<li><strong>Patterns</strong>: <code>{ x, y }</code>, <code>{ x: p, .. }</code>; omitting fields requires <code>..</code>. In a pattern, a <code>mut</code>
+field can only be <code>_</code>.</li>
+<li><strong>Tuple structs</strong>: the fields of <code>struct P(Int, Int)</code> are <code>0</code> and <code>1</code>; <code>P(a, b)</code> builds one and
+is its pattern. <code>type Meters Int</code> is a tuple struct with one field.</li>
+<li><code>mut</code> fields take no part in type-level computation; the <code>mut</code> fields of structs imported from
+MoonBit can only be read.</li>
+</ul>
 
                     </main>
 

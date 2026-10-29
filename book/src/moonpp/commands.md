@@ -8,6 +8,7 @@
 | `moonpp ide <文件> [--overlay <json>]` | 为编辑器检查文件所在的包，输出 JSON（见[编辑器](editor.md)） |
 | `moonpp run [路径]` | 用解释器运行 main 包（或指定的包、文件） |
 | `moonpp run --compiled [路径]` | 编译到 MoonBit 并用 `moon run` 运行 |
+| `moonpp test [路径]` | 用解释器运行 `test "名字" { … }` 块，块中可以用 `assert_eq`、`assert_true` 等 |
 | `moonpp build [路径] [-o 目录]` | 编译成 MoonBit 项目并 `moon build` |
 | `moonpp add <user/module[@版本]>` | 添加依赖（`moon add`），并为缺少接口的包生成 `.mbti` |
 | `moonpp remove <module>` | 删除依赖（`moon remove`） |

@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-4e93d181.js";
+            window.path_to_searchindex_js = "../searchindex-a0393893.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-77b35725.js"></script>
@@ -194,6 +194,7 @@
 <tr><td><code>moonpp ide &lt;文件&gt; [--overlay &lt;json&gt;]</code></td><td>为编辑器检查文件所在的包，输出 JSON（见<a href="editor.html">编辑器</a>）</td></tr>
 <tr><td><code>moonpp run [路径]</code></td><td>用解释器运行 main 包（或指定的包、文件）</td></tr>
 <tr><td><code>moonpp run --compiled [路径]</code></td><td>编译到 MoonBit 并用 <code>moon run</code> 运行</td></tr>
+<tr><td><code>moonpp test [路径]</code></td><td>用解释器运行 <code>test "名字" { … }</code> 块，块中可以用 <code>assert_eq</code>、<code>assert_true</code> 等</td></tr>
 <tr><td><code>moonpp build [路径] [-o 目录]</code></td><td>编译成 MoonBit 项目并 <code>moon build</code></td></tr>
 <tr><td><code>moonpp add &lt;user/module[@版本]&gt;</code></td><td>添加依赖（<code>moon add</code>），并为缺少接口的包生成 <code>.mbti</code></td></tr>
 <tr><td><code>moonpp remove &lt;module&gt;</code></td><td>删除依赖（<code>moon remove</code>）</td></tr>

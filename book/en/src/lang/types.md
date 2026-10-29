@@ -36,3 +36,8 @@ fn main {
   arguments and `(...)` gives explicit ones.
 - `T?` means `Option[T]`; `(A, B)` is a pair type.
 - A function returning `Type` is a type-level function; see [Type-level computation](type-level.md).
+
+## Constants and type aliases
+
+- `const N : Int = 3` and `const N = 3` define constants (like `let`).
+- `typealias Int as Score` and `typealias Pair[A] = (A, A)` define type aliases.

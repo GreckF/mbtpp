@@ -29,6 +29,8 @@ priv struct Gen {
   /// MoonBit type of a foreign value -> its `Foreign` constructor.
   foreign : Map[String, String]
   foreign_order : Array[String]
+  /// MoonBit wrappers of trait objects (`&Tr` passed to MoonBit), by trait.
+  dyn_wrappers : Map[String, String]
   /// Package path -> alias, for imported packages.
   aliases : Map[String, String]
   er : Erasure
@@ -995,6 +997,7 @@ fn Gen::new(imports : Array[(String, String)]) -> Gen {
     cur_file: imports_file,
     foreign: {},
     foreign_order: [],
+    dyn_wrappers: {},
     aliases: {},
     er: compute_erasure(),
     fresh: 0,

@@ -37,10 +37,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-5e198cdb.js";
+            window.path_to_searchindex_js = "searchindex-a7679546.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-393214f6.js"></script>
+        <script src="toc-73e1d097.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -1111,6 +1111,57 @@ fn main {
 <li><code>monad { … }</code> 的类型由期望类型或其中的表达式推断出用哪个 <code>Monad</code> 实例。</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="trait-对象"><a class="header" href="#trait-对象">trait 对象</a></h1>
+<p><code>&amp;Tr</code> 是“某个实现了 <code>Tr</code> 的类型的值”，和 MoonBit 的 trait 对象一样：</p>
+<pre><code class="language-moonbit">trait Shape {
+  area(Self) -&gt; Double
+}
+
+struct Circle {
+  r : Double
+}
+
+struct Square {
+  side : Double
+}
+
+impl Shape for Circle with area(self) { 3.0 * self.r * self.r }
+impl Shape for Square with area(self) { self.side * self.side }
+
+fn total(shapes : Array[&amp;Shape]) -&gt; Double {
+  let mut s = 0.0
+  for x in shapes {
+    s = s + x.area()
+  }
+  s
+}
+
+fn main {
+  let c : Circle = { r: 1.0 }
+  let q : Square = { side: 2.0 }
+  println(total([c, q]))               // 7
+  let things : Array[&amp;Show] = [1, "two", Some(3)]
+  for t in things {
+    println(t)
+  }
+}
+</code></pre>
+<ul>
+<li><strong>打包</strong>：在需要 <code>&amp;Tr</code> 的地方（类型标注、参数、数组元素），一个类型有 <code>Tr</code> 实例的值会自动
+打包。</li>
+<li><strong>调用</strong>：<code>x.m(...)</code> 调用打包的实例的方法；<code>&amp;Tr</code> 本身也有 <code>Tr</code> 的实例（以及父 trait 的
+实例），所以 <code>&amp;Show</code> 可以用于 <code>println</code>、带 <code>Show</code> 约束的函数。</li>
+<li><strong>对象安全</strong>：和 MoonBit 一样，<code>Self</code> 必须是类型，每个方法（包括父 trait 的）只在第一个
+参数中出现 <code>Self</code>，且不是泛型方法。<code>&amp;Eq</code> 不行（<code>op_equal(Self, Self)</code>），<code>&amp;Monad</code> 也不行。</li>
+<li><strong>表示</strong>：<code>&amp;Tr</code> 是依赖 struct <code>{ ty : Type; inst : Tr(ty); val : ty }</code>，在第一次使用时生成。</li>
+</ul>
+<h2 id="与-moonbit-交互"><a class="header" href="#与-moonbit-交互">与 MoonBit 交互</a></h2>
+<p>导入的函数的 <code>&amp;Tr</code> 参数（例如 <code>moonbitlang/core/prelude</code> 的 <code>inspect(&amp;Show, content?)</code>），只要
+<code>Tr</code> 是 MoonBit 的 trait（Prelude 中对应 MoonBit 的 trait，或导入的 trait），就可以传入
+MoonBit++ 的 <code>&amp;Tr</code>：编译后它被包装成一个 MoonBit 值，其 impl 调用 MoonBit++ 的实例。
+例如自己实现 <code>Show</code> 的类型可以交给 MoonBit 的 <code>inspect</code> 比较。</p>
+<p>导入的函数返回 <code>&amp;Tr</code> 时还不能编译。</p>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="可变状态与循环"><a class="header" href="#可变状态与循环">可变状态与循环</a></h1>
 <pre><code class="language-moonbit">fn sum_to(n : Int) -&gt; Int {
   let mut acc = 0
@@ -1561,6 +1612,7 @@ fn main {
 <tr><td><code>type T</code>（抽象类型），以及未定义的类型（<code>Int64</code>、<code>Map</code> 等）</td><td>不透明类型</td></tr>
 <tr><td>未知的 trait 约束（<code>Hash</code> 等）</td><td>不透明 trait，任何类型都满足</td></tr>
 <tr><td><code>(A) -&gt; B raise E</code>、<code>x~ : T</code>、<code>x? : T</code></td><td>相同</td></tr>
+<tr><td><code>&amp;Tr</code>（trait 对象）</td><td><code>&amp;Tr</code>，见 <a href="#trait-对象">trait 对象</a>；返回 <code>&amp;Tr</code> 的函数还不能编译</td></tr>
 </tbody>
 </table>
 </div>
@@ -1597,7 +1649,6 @@ MoonBit 填入。填入的位置是生成的 <code>.mbt</code> 中的位置。</
 <p>下面的项会被跳过，<code>moonpp check --verbose</code> 会列出它们：</p>
 <ul>
 <li><code>async</code> 函数，以及参数中的 <code>async</code> 函数类型；</li>
-<li>trait 对象 <code>&amp;T</code>；</li>
 <li>trait 既不是 Prelude trait、也不是导入的 trait 的 <code>impl</code>（例如没有导入 <code>moonbitlang/core/debug</code>
 时的 <code>@debug.Debug</code>）；</li>
 <li><code>#deprecated</code> 的项；</li>

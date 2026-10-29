@@ -102,7 +102,7 @@ test "import: items that are not imported" {
   inspect(
     @tt.import_skipped,
     content=(
-      #|[pub fn draw(&Show) -> Unit]
+      #|[]
     ),
   )
 }

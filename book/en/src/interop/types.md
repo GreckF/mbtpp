@@ -14,6 +14,7 @@
 | `type T` (abstract types), and undefined types (`Int64`, `Map`, etc.) | Opaque types |
 | Unknown trait bounds (`Hash`, etc.) | Opaque traits, satisfied by every type |
 | `(A) -> B raise E`, `x~ : T`, `x? : T` | The same |
+| `&Tr` (trait objects) | `&Tr`, see [Trait Objects](../lang/trait-objects.md); functions returning `&Tr` cannot be compiled yet |
 
 Read-only types:
 
@@ -65,7 +66,6 @@ re-exports are not imported.
 The following items are skipped; `moonpp check --verbose` lists them:
 
 - `async` functions, and `async` function types in parameters;
-- trait objects `&T`;
 - `impl`s of traits that are neither Prelude traits nor imported traits (e.g. `@debug.Debug`
   when `moonbitlang/core/debug` is not imported);
 - `#deprecated` items;

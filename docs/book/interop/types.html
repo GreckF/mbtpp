@@ -36,10 +36,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-5e198cdb.js";
+            window.path_to_searchindex_js = "../searchindex-a7679546.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-393214f6.js"></script>
+        <script src="../toc-73e1d097.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -199,6 +199,7 @@
 <tr><td><code>type T</code>（抽象类型），以及未定义的类型（<code>Int64</code>、<code>Map</code> 等）</td><td>不透明类型</td></tr>
 <tr><td>未知的 trait 约束（<code>Hash</code> 等）</td><td>不透明 trait，任何类型都满足</td></tr>
 <tr><td><code>(A) -&gt; B raise E</code>、<code>x~ : T</code>、<code>x? : T</code></td><td>相同</td></tr>
+<tr><td><code>&amp;Tr</code>（trait 对象）</td><td><code>&amp;Tr</code>，见 <a href="../lang/trait-objects.html">trait 对象</a>；返回 <code>&amp;Tr</code> 的函数还不能编译</td></tr>
 </tbody>
 </table>
 </div>
@@ -235,7 +236,6 @@ MoonBit 填入。填入的位置是生成的 <code>.mbt</code> 中的位置。</
 <p>下面的项会被跳过，<code>moonpp check --verbose</code> 会列出它们：</p>
 <ul>
 <li><code>async</code> 函数，以及参数中的 <code>async</code> 函数类型；</li>
-<li>trait 对象 <code>&amp;T</code>；</li>
 <li>trait 既不是 Prelude trait、也不是导入的 trait 的 <code>impl</code>（例如没有导入 <code>moonbitlang/core/debug</code>
 时的 <code>@debug.Debug</code>）；</li>
 <li><code>#deprecated</code> 的项；</li>

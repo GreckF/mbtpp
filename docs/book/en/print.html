@@ -37,10 +37,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-6b05358c.js";
+            window.path_to_searchindex_js = "searchindex-126d0dd7.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-f86c1434.js"></script>
+        <script src="toc-1277b054.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -1131,6 +1131,61 @@ fn main {
 expressions inside it.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="trait-objects"><a class="header" href="#trait-objects">Trait Objects</a></h1>
+<p><code>&amp;Tr</code> is “a value of some type that implements <code>Tr</code>”, as with MoonBit’s trait objects:</p>
+<pre><code class="language-moonbit">trait Shape {
+  area(Self) -&gt; Double
+}
+
+struct Circle {
+  r : Double
+}
+
+struct Square {
+  side : Double
+}
+
+impl Shape for Circle with area(self) { 3.0 * self.r * self.r }
+impl Shape for Square with area(self) { self.side * self.side }
+
+fn total(shapes : Array[&amp;Shape]) -&gt; Double {
+  let mut s = 0.0
+  for x in shapes {
+    s = s + x.area()
+  }
+  s
+}
+
+fn main {
+  let c : Circle = { r: 1.0 }
+  let q : Square = { side: 2.0 }
+  println(total([c, q]))               // 7
+  let things : Array[&amp;Show] = [1, "two", Some(3)]
+  for t in things {
+    println(t)
+  }
+}
+</code></pre>
+<ul>
+<li><strong>Packing</strong>: where an <code>&amp;Tr</code> is expected (a type annotation, a parameter, an array element), a
+value whose type has an instance of <code>Tr</code> is packed automatically.</li>
+<li><strong>Calls</strong>: <code>x.m(...)</code> calls the method of the packed instance; <code>&amp;Tr</code> itself has an instance of
+<code>Tr</code> (and of its supertraits), so an <code>&amp;Show</code> works with <code>println</code> and with functions bounded by
+<code>Show</code>.</li>
+<li><strong>Object safety</strong>: as in MoonBit, <code>Self</code> must be a type, and every method (supertraits’
+included) mentions <code>Self</code> only in its first parameter and is not generic. <code>&amp;Eq</code> is not allowed
+(<code>op_equal(Self, Self)</code>), nor is <code>&amp;Monad</code>.</li>
+<li><strong>Representation</strong>: <code>&amp;Tr</code> is the dependent struct <code>{ ty : Type; inst : Tr(ty); val : ty }</code>,
+generated on first use.</li>
+</ul>
+<h2 id="interoperating-with-moonbit"><a class="header" href="#interoperating-with-moonbit">Interoperating with MoonBit</a></h2>
+<p>A MoonBit++ <code>&amp;Tr</code> can be passed for an <code>&amp;Tr</code> parameter of an imported function (such as
+<code>inspect(&amp;Show, content?)</code> of <code>moonbitlang/core/prelude</code>) when <code>Tr</code> is a MoonBit trait (a Prelude
+trait that is MoonBit’s, or an imported trait): in the compiled program it is wrapped in a MoonBit
+value whose impl calls the MoonBit++ instance. For example, a type with its own <code>Show</code> can be
+compared by MoonBit’s <code>inspect</code>.</p>
+<p>Imported functions that return an <code>&amp;Tr</code> cannot be compiled yet.</p>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="mutable-state-and-loops"><a class="header" href="#mutable-state-and-loops">Mutable State and Loops</a></h1>
 <pre><code class="language-moonbit">fn sum_to(n : Int) -&gt; Int {
   let mut acc = 0
@@ -1605,6 +1660,7 @@ program: <code>moonpp run --compiled</code> (see <a href="#calling-moonbit-funct
 <tr><td><code>type T</code> (abstract types), and undefined types (<code>Int64</code>, <code>Map</code>, etc.)</td><td>Opaque types</td></tr>
 <tr><td>Unknown trait bounds (<code>Hash</code>, etc.)</td><td>Opaque traits, satisfied by every type</td></tr>
 <tr><td><code>(A) -&gt; B raise E</code>, <code>x~ : T</code>, <code>x? : T</code></td><td>The same</td></tr>
+<tr><td><code>&amp;Tr</code> (trait objects)</td><td><code>&amp;Tr</code>, see <a href="#trait-objects">Trait Objects</a>; functions returning <code>&amp;Tr</code> cannot be compiled yet</td></tr>
 </tbody>
 </table>
 </div>
@@ -1644,7 +1700,6 @@ re-exports are not imported.</p>
 <p>The following items are skipped; <code>moonpp check --verbose</code> lists them:</p>
 <ul>
 <li><code>async</code> functions, and <code>async</code> function types in parameters;</li>
-<li>trait objects <code>&amp;T</code>;</li>
 <li><code>impl</code>s of traits that are neither Prelude traits nor imported traits (e.g. <code>@debug.Debug</code>
 when <code>moonbitlang/core/debug</code> is not imported);</li>
 <li><code>#deprecated</code> items;</li>

@@ -24,6 +24,7 @@
   - [Tactics](lang/tactics.md)
 - [Traits](lang/traits.md)
   - [Higher-Kinded Traits and Monads](lang/monad.md)
+  - [Trait Objects](lang/trait-objects.md)
 - [Mutable State and Loops](lang/mutation.md)
 - [Error Handling](lang/errors.md)
 - [Prelude](lang/prelude.md)

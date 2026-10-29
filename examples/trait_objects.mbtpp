@@ -1,0 +1,59 @@
+// Trait objects: `&Shape` is a value of any type with an instance of
+// `Shape`. A value is packed where an `&Shape` is expected, and its methods
+// are called through the packed instance. `&Show` values can be passed to
+// MoonBit functions that take `&Show` (e.g. `inspect` of moonbitlang/core).
+
+trait Shape {
+  area(Self) -> Double
+  name(Self) -> String
+}
+
+struct Circle {
+  r : Double
+}
+
+struct Square {
+  side : Double
+}
+
+impl Shape for Circle with area(self) { 3.0 * self.r * self.r }
+impl Shape for Circle with name(_) { "circle" }
+impl Shape for Square with area(self) { self.side * self.side }
+impl Shape for Square with name(_) { "square" }
+
+trait Named : Show {
+  label(Self, String) -> String
+}
+
+impl Named for Int with label(self, p) { p + self.to_string() }
+
+fn total(shapes : Array[&Shape]) -> Double {
+  let mut s = 0.0
+  for x in shapes {
+    s = s + x.area()
+  }
+  s
+}
+
+fn describe(x : &Show) -> String {
+  "<" + x.to_string() + ">"
+}
+
+fn main {
+  let c : Circle = { r: 1.0 }
+  let q : Square = { side: 2.0 }
+  let shapes : Array[&Shape] = [c, q, c]
+  println(total(shapes))
+  for x in shapes {
+    println(x.name())
+  }
+  println(describe(42))
+  println(describe("hi"))
+  let things : Array[&Show] = [1, "two", true, Some(3)]
+  for t in things {
+    println(t)
+  }
+  let n : &Named = 7
+  println(n.label("#"))
+  println(n)
+}

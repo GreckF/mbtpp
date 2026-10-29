@@ -403,6 +403,10 @@ fn Parser::unary(self : Parser) -> Expr raise ParseError {
   if self.accept("!") {
     return EUn(pos, "!", self.unary())
   }
+  // `&Show`: a trait object type
+  if self.accept("&") {
+    return EUn(pos, "&", self.unary())
+  }
   if self.accept("<-") {
     return EBind(pos, self.unary())
   }

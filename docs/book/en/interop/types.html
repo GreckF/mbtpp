@@ -36,10 +36,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-6b05358c.js";
+            window.path_to_searchindex_js = "../searchindex-126d0dd7.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-f86c1434.js"></script>
+        <script src="../toc-1277b054.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -199,6 +199,7 @@
 <tr><td><code>type T</code> (abstract types), and undefined types (<code>Int64</code>, <code>Map</code>, etc.)</td><td>Opaque types</td></tr>
 <tr><td>Unknown trait bounds (<code>Hash</code>, etc.)</td><td>Opaque traits, satisfied by every type</td></tr>
 <tr><td><code>(A) -&gt; B raise E</code>, <code>x~ : T</code>, <code>x? : T</code></td><td>The same</td></tr>
+<tr><td><code>&amp;Tr</code> (trait objects)</td><td><code>&amp;Tr</code>, see <a href="../lang/trait-objects.html">Trait Objects</a>; functions returning <code>&amp;Tr</code> cannot be compiled yet</td></tr>
 </tbody>
 </table>
 </div>
@@ -238,7 +239,6 @@ re-exports are not imported.</p>
 <p>The following items are skipped; <code>moonpp check --verbose</code> lists them:</p>
 <ul>
 <li><code>async</code> functions, and <code>async</code> function types in parameters;</li>
-<li>trait objects <code>&amp;T</code>;</li>
 <li><code>impl</code>s of traits that are neither Prelude traits nor imported traits (e.g. <code>@debug.Debug</code>
 when <code>moonbitlang/core/debug</code> is not imported);</li>
 <li><code>#deprecated</code> items;</li>

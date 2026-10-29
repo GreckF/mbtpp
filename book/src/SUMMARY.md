@@ -24,6 +24,7 @@
   - [策略](lang/tactics.md)
 - [trait](lang/traits.md)
   - [高阶 trait 与 monad](lang/monad.md)
+  - [trait 对象](lang/trait-objects.md)
 - [可变状态与循环](lang/mutation.md)
 - [错误处理](lang/errors.md)
 - [Prelude](lang/prelude.md)

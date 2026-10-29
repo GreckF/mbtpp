@@ -105,10 +105,13 @@ are `#mbt` automatically, so MoonBit functions over them can be called.
 A `#mbt fn` is compiled to a public MoonBit function of the same name that
 MoonBit code can call (see
 [examples/mbt_types.mbtpp](examples/mbt_types.mbtpp)). The Prelude traits
-`Show`, `Eq`, `Compare`, `Add`, `Sub`, `Mul`, `Div`, `Mod`, `Neg` and
-`Default` are MoonBit's own traits, and `derive(Show, Eq, Compare)` generates
-their instances, which become MoonBit impls for `#mbt` types (see
-[examples/derive.mbtpp](examples/derive.mbtpp)).
+(`Show`, `Eq`, `Compare`, `Hash`, `ToJson`, `Default`, the operator traits)
+are MoonBit's own traits, and `derive(Show, Eq, Compare, Hash)` generates
+their instances, which become MoonBit impls for `#mbt` types;
+`derive(ToJson, FromJson, Debug)` uses MoonBit's own derive (see
+[examples/derive.mbtpp](examples/derive.mbtpp)). Trait objects `&Tr` work as
+in MoonBit and can be passed to MoonBit functions (see
+[examples/trait_objects.mbtpp](examples/trait_objects.mbtpp)).
 
 `moon test` runs the examples in `examples/` and the tests in `src/*_test.mbt`.
 

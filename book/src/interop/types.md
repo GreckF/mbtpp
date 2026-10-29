@@ -14,6 +14,7 @@
 | `type T`（抽象类型），以及未定义的类型（`Int64`、`Map` 等） | 不透明类型 |
 | 未知的 trait 约束（`Hash` 等） | 不透明 trait，任何类型都满足 |
 | `(A) -> B raise E`、`x~ : T`、`x? : T` | 相同 |
+| `&Tr`（trait 对象） | `&Tr`，见 [trait 对象](../lang/trait-objects.md)；返回 `&Tr` 的函数还不能编译 |
 
 只读类型：
 
@@ -62,7 +63,6 @@ MoonBit 填入。填入的位置是生成的 `.mbt` 中的位置。
 下面的项会被跳过，`moonpp check --verbose` 会列出它们：
 
 - `async` 函数，以及参数中的 `async` 函数类型；
-- trait 对象 `&T`；
 - trait 既不是 Prelude trait、也不是导入的 trait 的 `impl`（例如没有导入 `moonbitlang/core/debug`
   时的 `@debug.Debug`）；
 - `#deprecated` 的项；

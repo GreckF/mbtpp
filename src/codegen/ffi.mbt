@@ -115,6 +115,13 @@ fn Gen::to_mbt(
     Global("Unit") => return Some("as_unit(" + e + ")")
     // views: MoonBit++ uses the containers themselves
     Global("StringView") => return Some("as_str(" + e + ")[:]")
+    // a trait object: a MoonBit wrapper calling the packed instance
+    Global(d) if d.has_prefix("&") =>
+      return match
+        self.dyn_wrapper(d.unsafe_substring(start=1, end=d.length())) {
+        Some((w, mt)) => Some("(" + w + "::{ v: " + e + " } : &" + mt + ")")
+        None => None
+      }
     Global(n) =>
       for s in scalar_types {
         if s.0 == n {
@@ -478,4 +485,130 @@ fn Gen::ffi_fn(
     "\n}\n",
   )
   f
+}
+
+///|
+/// The MoonBit trait of the MoonBit++ trait `tr`, if it is one.
+fn mbt_trait_of(tr : String) -> String? {
+  match @tt.mbt_info(tr) {
+    Some(info) if @tt.data_info(tr) is Some({ is_trait: true, .. }) =>
+      Some(info.name)
+    _ => None
+  }
+}
+
+///|
+/// The MoonBit struct wrapping a MoonBit++ `&tr` value, with impls of the
+/// MoonBit trait (and its supertraits) that call the packed instance; its
+/// name and the MoonBit trait. `None` if `tr` is not a MoonBit trait or a
+/// method's types do not convert.
+fn Gen::dyn_wrapper(self : Gen, tr : String) -> (String, String)? {
+  let mt = match mbt_trait_of(tr) {
+    Some(m) => m
+    None => return None
+  }
+  match self.dyn_wrappers.get(tr) {
+    Some(w) => return Some((w, mt))
+    None => ()
+  }
+  let w = "DynW" + self.dyn_wrappers.length().to_string()
+  self.dyn_wrappers.set(tr, w)
+  let code = StringBuilder::new()
+  code.write_string(
+    "\n/// &" + tr + " passed to MoonBit\nstruct " + w + " {\n  v : Value\n}\n",
+  )
+  let d = "&" + tr
+  // the trait and its supertraits
+  let todo = [tr]
+  let seen : Array[String] = []
+  while todo.pop() is Some(t) {
+    if seen.contains(t) {
+      continue
+    }
+    seen.push(t)
+    for s in @tt.trait_supers(t) {
+      todo.push(s)
+    }
+    let tm = match mbt_trait_of(t) {
+      Some(m) => m
+      None => return None
+    }
+    let key = "impl$" + t + "$" + d
+    for m in @tt.trait_method_names(t) {
+      // the method's type in the context [Self, inst], after `self`
+      let mut ty = match @tt.trait_method_type(t, m) {
+        Some(Pi(_, _, _, _, rest)) => rest
+        _ => return None
+      }
+      let stack : Array[Binder] = [Explicit, Explicit, Explicit]
+      let names : Array[String] = []
+      let vals : Array[String] = []
+      while ty is Pi(_, Expl, _, a, b) {
+        let x = "a" + names.length().to_string()
+        match self.from_mbt(stack, a, x) {
+          Some(c) => vals.push(c)
+          None => return None
+        }
+        names.push(x)
+        stack.push(Explicit)
+        ty = b
+      }
+      let ret = match ty {
+        Raises(r, _) => r
+        _ => ty
+      }
+      // the MoonBit++ method, applied to the packed value and the arguments
+      let mut call = @tt.App(
+        @tt.App(
+          @tt.App(@tt.Global(t + "::" + m), @tt.Global(d), @tt.Impl),
+          @tt.Global(key),
+          @tt.Inst,
+        ),
+        @tt.Var(names.length()),
+        @tt.Expl,
+      )
+      for i = 0; i < names.length(); i = i + 1 {
+        call = @tt.App(call, @tt.Var(names.length() - 1 - i), @tt.Expl)
+      }
+      let env : Array[Local] = [LVar("self.v")]
+      let env = vals.fold(init=env, (e, v) => push_local(e, LVar(v)))
+      let back = match self.to_mbt(stack, ret, self.tm(env, call)) {
+        Some(c) => c
+        None => return None
+      }
+      let mname = @tt.mbt_method_name(t, m)
+      let body = "try {\n" +
+        back +
+        "\n} catch {\n_ => abort(" +
+        ("error in " + t + "::" + m).escape() +
+        ")\n}"
+      if t == "Hash" {
+        code.write_string(
+          "\nimpl " +
+          tm +
+          " for " +
+          w +
+          " with hash_combine(self, hasher) {\nhasher.combine_int(" +
+          body +
+          ")\n}\n",
+        )
+      } else {
+        code.write_string(
+          "\nimpl " +
+          tm +
+          " for " +
+          w +
+          " with " +
+          mname +
+          "(" +
+          ["self", ..names].join(", ") +
+          ") {\n" +
+          body +
+          "\n}\n",
+        )
+      }
+    }
+  }
+  self.write_to(imports_file, code.to_string())
+  Some((w, mt))
 }

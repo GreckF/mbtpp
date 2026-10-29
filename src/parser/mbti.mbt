@@ -147,6 +147,7 @@ fn map_names(e : Expr, f : (Pos, String) -> Expr) -> Expr {
     ETuple(p, es) => ETuple(p, es.map(go))
     EBin(p, op, a, b) => EBin(p, op, go(a), go(b))
     EAnn(p, a, b) => EAnn(p, go(a), go(b))
+    EUn(p, op, a) => EUn(p, op, go(a))
     _ => e
   }
 }
@@ -196,6 +197,8 @@ fn collect_names(
       go(a)
       go(b)
     }
+    // `&Tr`: a trait, not a type
+    EUn(_, "&", _) => ()
     _ => ()
   }
 }

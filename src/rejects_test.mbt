@@ -745,3 +745,31 @@ test "derive: what is not supported" {
   )
   inspect(check("enum H[T] { H(T) } derive(Eq, Compare)"), content="ok")
 }
+
+///|
+test "trait objects: object safety" {
+  inspect(
+    check("fn f(x : &Eq) -> Bool { true }"),
+    content=(
+      #|t.mbtpp:1:10: error: &Eq is not a trait object type: the method op_equal does not take Self as its first parameter only
+    ),
+  )
+  inspect(
+    check("fn f(x : &Monad) -> Int { 0 }"),
+    content=(
+      #|t.mbtpp:1:10: error: &Monad is not a trait object type: its Self is not a type
+    ),
+  )
+  inspect(
+    check("fn f(x : &Int) -> Int { 0 }"),
+    content=(
+      #|t.mbtpp:1:10: error: Int is not a trait
+    ),
+  )
+  inspect(
+    check("trait T { m(Self) -> Int }\nfn f() -> &T { 1 }"),
+    content=(
+      #|t.mbtpp:2:16: error: no instance of T(Int)
+    ),
+  )
+}

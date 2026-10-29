@@ -182,3 +182,25 @@ test "example derive" {
     ),
   )
 }
+
+///|
+test "example trait_objects" {
+  inspect(
+    run_example("trait_objects.mbtpp"),
+    content=(
+      #|10
+      #|circle
+      #|square
+      #|circle
+      #|<42>
+      #|<hi>
+      #|1
+      #|two
+      #|true
+      #|Some(3)
+      #|#7
+      #|7
+      #|
+    ),
+  )
+}

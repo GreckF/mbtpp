@@ -1052,16 +1052,38 @@ pub fn check(cxt0 : Cxt, e : @parser.Expr, ty0 : Val) -> Tm raise ElabError {
     (ETuple(_, es), VU) => tuple_type(cxt, es)
     (ETuple(_, es), _) => elab_tuple(cxt, es, Some(ty)).0
     (EApp(_, f, i, x), _) => {
-      let (t, aty) = elab_app(cxt, f, i, x, Some(ty))
+      // against `&Tr`, the application has its own type (`Some(3)`)
+      let to_dyn = ty is VData(d, []) && d.has_prefix("&")
+      let (t, aty) = elab_app(
+        cxt,
+        f,
+        i,
+        x,
+        if to_dyn {
+          None
+        } else {
+          Some(ty)
+        },
+      )
       let (t, aty) = insert_until(cxt, t, aty, ty)
-      cxt.unify(ty, aty)
-      t
+      match pack_dyn(cxt, t, aty, ty) {
+        Some(packed) => packed
+        None => {
+          cxt.unify(ty, aty)
+          t
+        }
+      }
     }
     (EVar(_, _), _) => {
       let (t, aty, _) = infer_head(cxt, e, Some(ty))
       let (t, aty) = insert_until(cxt, t, aty, ty)
-      cxt.unify(ty, aty)
-      t
+      match pack_dyn(cxt, t, aty, ty) {
+        Some(packed) => packed
+        None => {
+          cxt.unify(ty, aty)
+          t
+        }
+      }
     }
     (ERaise(_, x), _) => elab_raise(cxt, x)
     (EReturn(_, x), _) => elab_return(cxt, x)
@@ -1081,8 +1103,13 @@ pub fn check(cxt0 : Cxt, e : @parser.Expr, ty0 : Val) -> Tm raise ElabError {
     _ => {
       let (t, aty) = infer(cxt, e)
       let (t, aty) = insert_until(cxt, t, aty, ty)
-      cxt.unify(ty, aty)
-      t
+      match pack_dyn(cxt, t, aty, ty) {
+        Some(packed) => packed
+        None => {
+          cxt.unify(ty, aty)
+          t
+        }
+      }
     }
   }
 }
@@ -1267,6 +1294,15 @@ pub fn infer(cxt0 : Cxt, e : @parser.Expr) -> (Tm, Val) raise ElabError {
       elab_method(cxt, t, ty, m, i, args.map(AE(_)), at=p)
     }
     EBin(_, op, a, b) => infer_bin(cxt, op, a, b)
+    EUn(p, "&", EVar(_, tr)) => {
+      let c = cxt.at(p)
+      ensure(c, tr)
+      if !st.traits.contains(tr) {
+        c.fail(tr + " is not a trait")
+      }
+      ensure_dyn(c, tr)
+      (Global(dyn_name(tr)), VU)
+    }
     EUn(_, "-", x) => {
       let (t, ty) = infer_ins(cxt, x)
       elab_method(cxt, t, ty, "op_neg", None, [])

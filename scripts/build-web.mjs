@@ -13,7 +13,7 @@ copyFileSync(
 );
 
 // examples in a fixed order: the simplest first
-const first = ["basic", "vector", "traits", "mbt_types", "proofs", "progress"];
+const first = ["basic", "vector", "traits", "mbt_types", "proofs", "stlc"];
 const names = readdirSync(join(root, "examples"))
   .filter((f) => f.endsWith(".mbtpp"))
   .map((f) => f.slice(0, -".mbtpp".length))

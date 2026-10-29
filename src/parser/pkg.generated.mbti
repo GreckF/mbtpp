@@ -6,6 +6,8 @@ pub fn decl_bound_names(Decl) -> Array[String]
 
 pub fn decl_type_names(Decl) -> Map[String, Int32]
 
+pub fn external_impls(Array[MbtiImpl], Map[String, TraitDecl], (String, String) -> (String, String)?) -> (Array[Decl], Array[String])
+
 pub fn parse_expr(String) -> Expr raise ParseError
 
 pub fn parse_mbti(String, String, String, Map[String, String]) -> MbtiResult
@@ -146,9 +148,26 @@ pub(all) struct MatchRet {
   ret : Expr?
 } derive(Show)
 
+pub(all) struct MbtiImpl {
+  pos : Pos
+  params : Array[Binder]
+  trait_name : String
+  for_ty : Expr
+  text : String
+}
+
 pub(all) struct MbtiResult {
   decls : Array[Decl]
   skipped : Array[String]
+  impls : Array[MbtiImpl]
+  usings : Array[MbtiUsing]
+}
+
+pub(all) struct MbtiUsing {
+  pos : Pos
+  name : String
+  target : String
+  is_type : Bool
 }
 
 pub(all) enum ParamKind {

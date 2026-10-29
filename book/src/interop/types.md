@@ -24,13 +24,45 @@ fn f() -> @h.Handle { H(1) }
 
 `#mbt` 见 [#mbt 类型与 trait](mbt-types.md)。
 
+## impl
+
+接口中的 `impl`（包括泛型的，如 `impl[K : Show, V : Show] Show for HashMap[K, V]`）导入为
+实例，条件是 trait 是 Prelude 中对应 MoonBit 的 trait（`Show`、`Eq`、`Compare`、`Add`、`Sub`、
+`Mul`、`Div`、`Mod`、`Neg`、`Default`，见 [trait](../lang/traits.md)），或是导入的包中的 trait。
+实例的方法调用 MoonBit 的 trait 方法（如 `Show::to_string(x)`），由 MoonBit 找到对应的
+impl。例如：
+
+```text
+let a = @bigint.BigInt::from_int(1000)
+println(a * a + a)                                        // Mul、Add、Show
+let m : @hashmap.HashMap[String, Int] = Default::default() // impl[K, V] Default for HashMap[K, V]
+println(m == m)                                           // impl[K : Hash + Eq, V : Eq] Eq ...
+```
+
+带约束的泛型函数（`fn[T : Add + Mul]`）也可以用于这些类型。
+
+## 自动填充的参数
+
+`loc~ : SourceLoc`、`args_loc~ : ArgsLoc` 不是 MoonBit++ 中的参数：调用时不写，编译后由
+MoonBit 填入。填入的位置是生成的 `.mbt` 中的位置。
+
+## 重新导出
+
+`pub using @q {type T as U}` 中的类型和函数可以通过本包的名字使用（`@p.U`）：
+
+- `@q` 是 `@builtin` 或也被导入时，`@p.U` 就是 `@q.T`（同一个类型）；
+- 否则 `@p.U` 是一个不透明类型。
+
+`@builtin` 的 trait（`pub using @builtin {trait Show}`）就是 Prelude 中的 trait；其他 trait 的
+重新导出不导入。
+
 ## 不导入的项
 
 下面的项会被跳过，`moonpp check --verbose` 会列出它们：
 
 - `async` 函数，以及参数中的 `async` 函数类型；
 - trait 对象 `&T`；
-- 自动填充的参数 `loc~ : SourceLoc`；
-- 泛型 `impl`，以及 `Show`、`Eq`、`Compare` 之外的 `impl`；
+- trait 既不是上面列出的 Prelude trait、也不是导入的 trait 的 `impl`（如 `Hash`、`ToJson`、
+  `@debug.Debug`）；
 - `#deprecated` 的项；
-- `using` 重新导出。
+- trait 的重新导出（`@builtin` 的除外），以及来源包未导入的函数的重新导出。

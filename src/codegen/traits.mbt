@@ -255,7 +255,9 @@ fn Gen::satisfies(self : Gen, t : NTy, tr : String) -> Bool {
     NSelf | NAny => false
     _ => {
       for i in @tt.instances_of(tr) {
-        if !self.mbt_impls.contains(i) {
+        // imported impls exist in MoonBit already
+        let external = @tt.external_instances.contains(i)
+        if !external && !self.mbt_impls.contains(i) {
           continue
         }
         guard self.impl_info(i) is Some((ntv, bounds, pat, _)) else { continue }
@@ -272,7 +274,9 @@ fn Gen::satisfies(self : Gen, t : NTy, tr : String) -> Bool {
             }
           })
         if ok {
-          self.need_impl(i)
+          if !external {
+            self.need_impl(i)
+          }
           return true
         }
       }

@@ -40,6 +40,8 @@ pub fn env_push(Array[Val], Val) -> Array[Val]
 
 pub fn eval(Array[Val], Tm) -> Val
 
+pub let external_instances : Array[String]
+
 pub fn force(Val) -> Val
 
 pub fn force_meta(Val) -> Val

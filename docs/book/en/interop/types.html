@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-4b7a1f05.js";
+            window.path_to_searchindex_js = "../searchindex-d646c2d2.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-f86c1434.js"></script>
@@ -207,15 +207,42 @@
 // error: cannot construct a value of the MoonBit type @h.Handle outside its package (it is not pub(all))
 </code></pre>
 <p>For <code>#mbt</code>, see <a href="mbt-types.html">#mbt Types and Traits</a>.</p>
+<h2 id="impl"><a class="header" href="#impl">impl</a></h2>
+<p>The <code>impl</code>s of an interface (generic ones too, such as
+<code>impl[K : Show, V : Show] Show for HashMap[K, V]</code>) are imported as instances when their trait is
+one of the Prelude traits that are MoonBit’s (<code>Show</code>, <code>Eq</code>, <code>Compare</code>, <code>Add</code>, <code>Sub</code>, <code>Mul</code>, <code>Div</code>,
+<code>Mod</code>, <code>Neg</code>, <code>Default</code>; see <a href="../lang/traits.html">Traits</a>) or a trait of an imported package. The
+methods of the instance call the MoonBit trait method (e.g. <code>Show::to_string(x)</code>), and MoonBit
+finds the impl. For example:</p>
+<pre><code class="language-text">let a = @bigint.BigInt::from_int(1000)
+println(a * a + a)                                        // Mul, Add, Show
+let m : @hashmap.HashMap[String, Int] = Default::default() // impl[K, V] Default for HashMap[K, V]
+println(m == m)                                           // impl[K : Hash + Eq, V : Eq] Eq ...
+</code></pre>
+<p>Generic functions with bounds (<code>fn[T : Add + Mul]</code>) work with these types too.</p>
+<h2 id="auto-filled-parameters"><a class="header" href="#auto-filled-parameters">Auto-filled parameters</a></h2>
+<p><code>loc~ : SourceLoc</code> and <code>args_loc~ : ArgsLoc</code> are not parameters in MoonBit++: calls leave them out
+and MoonBit fills them in in the compiled program. The location is the one in the generated
+<code>.mbt</code> file.</p>
+<h2 id="re-exports"><a class="header" href="#re-exports">Re-exports</a></h2>
+<p>The types and functions of <code>pub using @q {type T as U}</code> can be used under the package’s own name
+(<code>@p.U</code>):</p>
+<ul>
+<li>when <code>@q</code> is <code>@builtin</code> or is imported too, <code>@p.U</code> is <code>@q.T</code> (the same type);</li>
+<li>otherwise <code>@p.U</code> is an opaque type.</li>
+</ul>
+<p>The traits of <code>@builtin</code> (<code>pub using @builtin {trait Show}</code>) are the Prelude’s; other trait
+re-exports are not imported.</p>
 <h2 id="skipped-items"><a class="header" href="#skipped-items">Skipped items</a></h2>
 <p>The following items are skipped; <code>moonpp check --verbose</code> lists them:</p>
 <ul>
 <li><code>async</code> functions, and <code>async</code> function types in parameters;</li>
 <li>trait objects <code>&amp;T</code>;</li>
-<li>auto-filled parameters <code>loc~ : SourceLoc</code>;</li>
-<li>generic <code>impl</code>s, and <code>impl</code>s other than <code>Show</code>, <code>Eq</code>, and <code>Compare</code>;</li>
+<li><code>impl</code>s of traits that are neither the Prelude traits above nor imported traits (such as
+<code>Hash</code>, <code>ToJson</code>, <code>@debug.Debug</code>);</li>
 <li><code>#deprecated</code> items;</li>
-<li><code>using</code> re-exports.</li>
+<li>trait re-exports (except those of <code>@builtin</code>), and re-exported functions whose package is not
+imported.</li>
 </ul>
 
                     </main>

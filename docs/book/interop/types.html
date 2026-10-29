@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-d2c97973.js";
+            window.path_to_searchindex_js = "../searchindex-1c73caeb.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-393214f6.js"></script>
@@ -207,15 +207,38 @@
 // error: cannot construct a value of the MoonBit type @h.Handle outside its package (it is not pub(all))
 </code></pre>
 <p><code>#mbt</code> 见 <a href="mbt-types.html">#mbt 类型与 trait</a>。</p>
+<h2 id="impl"><a class="header" href="#impl">impl</a></h2>
+<p>接口中的 <code>impl</code>（包括泛型的，如 <code>impl[K : Show, V : Show] Show for HashMap[K, V]</code>）导入为
+实例，条件是 trait 是 Prelude 中对应 MoonBit 的 trait（<code>Show</code>、<code>Eq</code>、<code>Compare</code>、<code>Add</code>、<code>Sub</code>、
+<code>Mul</code>、<code>Div</code>、<code>Mod</code>、<code>Neg</code>、<code>Default</code>，见 <a href="../lang/traits.html">trait</a>），或是导入的包中的 trait。
+实例的方法调用 MoonBit 的 trait 方法（如 <code>Show::to_string(x)</code>），由 MoonBit 找到对应的
+impl。例如：</p>
+<pre><code class="language-text">let a = @bigint.BigInt::from_int(1000)
+println(a * a + a)                                        // Mul、Add、Show
+let m : @hashmap.HashMap[String, Int] = Default::default() // impl[K, V] Default for HashMap[K, V]
+println(m == m)                                           // impl[K : Hash + Eq, V : Eq] Eq ...
+</code></pre>
+<p>带约束的泛型函数（<code>fn[T : Add + Mul]</code>）也可以用于这些类型。</p>
+<h2 id="自动填充的参数"><a class="header" href="#自动填充的参数">自动填充的参数</a></h2>
+<p><code>loc~ : SourceLoc</code>、<code>args_loc~ : ArgsLoc</code> 不是 MoonBit++ 中的参数：调用时不写，编译后由
+MoonBit 填入。填入的位置是生成的 <code>.mbt</code> 中的位置。</p>
+<h2 id="重新导出"><a class="header" href="#重新导出">重新导出</a></h2>
+<p><code>pub using @q {type T as U}</code> 中的类型和函数可以通过本包的名字使用（<code>@p.U</code>）：</p>
+<ul>
+<li><code>@q</code> 是 <code>@builtin</code> 或也被导入时，<code>@p.U</code> 就是 <code>@q.T</code>（同一个类型）；</li>
+<li>否则 <code>@p.U</code> 是一个不透明类型。</li>
+</ul>
+<p><code>@builtin</code> 的 trait（<code>pub using @builtin {trait Show}</code>）就是 Prelude 中的 trait；其他 trait 的
+重新导出不导入。</p>
 <h2 id="不导入的项"><a class="header" href="#不导入的项">不导入的项</a></h2>
 <p>下面的项会被跳过，<code>moonpp check --verbose</code> 会列出它们：</p>
 <ul>
 <li><code>async</code> 函数，以及参数中的 <code>async</code> 函数类型；</li>
 <li>trait 对象 <code>&amp;T</code>；</li>
-<li>自动填充的参数 <code>loc~ : SourceLoc</code>；</li>
-<li>泛型 <code>impl</code>，以及 <code>Show</code>、<code>Eq</code>、<code>Compare</code> 之外的 <code>impl</code>；</li>
+<li>trait 既不是上面列出的 Prelude trait、也不是导入的 trait 的 <code>impl</code>（如 <code>Hash</code>、<code>ToJson</code>、
+<code>@debug.Debug</code>）；</li>
 <li><code>#deprecated</code> 的项；</li>
-<li><code>using</code> 重新导出。</li>
+<li>trait 的重新导出（<code>@builtin</code> 的除外），以及来源包未导入的函数的重新导出。</li>
 </ul>
 
                     </main>

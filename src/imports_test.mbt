@@ -290,3 +290,75 @@ test "import: Int32 is Int" {
   }
   inspect(r, content="ok")
 }
+
+///|
+/// Generic impls, autofilled `SourceLoc` parameters and re-exports.
+let coll_mbti : String =
+  #|package "demo/coll"
+  #|
+  #|import {
+  #|  "moonbitlang/core/builtin",
+  #|}
+  #|
+  #|pub fn[T] Bag::new() -> Self[T]
+  #|pub fn[T] Bag::add(Self[T], T) -> Unit
+  #|pub fn check(Bool, msg? : String, loc~ : @builtin.SourceLoc) -> Unit raise
+  #|
+  #|pub type Bag[T]
+  #|pub impl[T : Show] Show for Bag[T]
+  #|pub impl[T : Eq] Eq for Bag[T]
+  #|pub impl[T] Default for Bag[T]
+  #|pub impl[T : @builtin.Eq + Hash] Hash for Bag[T]
+  #|
+  #|pub type Num
+  #|pub fn Num::of(Int) -> Self
+  #|pub impl Add for Num
+  #|pub impl Mul for Num
+  #|pub impl Show for Num
+  #|
+  #|pub using @builtin {type Array as Vec}
+  #|pub using @builtin {trait Show}
+  #|pub using @other {type Thing}
+  #|
+
+///|
+fn check_coll(src : String) -> String {
+  let imports : Array[@tt.Import] = [
+    { alias: "coll", path: "demo/coll", mbti: coll_mbti, },
+  ]
+  @tt.check_program("t.mbtpp", src, imports~) catch {
+    @tt.CheckError(msg) => return msg
+  }
+  "ok"
+}
+
+///|
+test "import: generic impls, SourceLoc and re-exports" {
+  inspect(
+    check_coll(
+      (
+        #|fn[T : Add + Mul] square_plus(x : T) -> T { x * x + x }
+        #|
+        #|fn main {
+        #|  let b : @coll.Bag[Int] = Default::default()
+        #|  b.add(1)
+        #|  println(b)
+        #|  println(b == b)
+        #|  println(square_plus(@coll.Num::of(3)))
+        #|  let xs : @coll.Vec[Int] = [1, 2]
+        #|  println(xs.length())
+        #|  try { @coll.check(true, msg="fine") } catch { _ => () }
+        #|}
+      ),
+    ),
+    content="ok",
+  )
+  // `Hash` is not a Prelude trait: its impl is skipped; so is the
+  // re-export of a package that is not imported
+  inspect(
+    @tt.import_skipped.filter(s => !s.has_prefix("pub fn")).join("\n"),
+    content=(
+      #|impl Hash for @coll.Bag
+    ),
+  )
+}

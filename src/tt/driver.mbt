@@ -261,6 +261,8 @@ fn load_imports(imports : Array[Import]) -> Unit raise CheckError {
       _ => ()
     }
   }
+  let impls : Array[@parser.MbtiImpl] = []
+  let usings : Array[@parser.MbtiUsing] = []
   for im in imports {
     let r = @parser.parse_mbti(im.mbti, im.alias, im.path, aliases)
     for d in r.decls {
@@ -269,6 +271,36 @@ fn load_imports(imports : Array[Import]) -> Unit raise CheckError {
     for s in r.skipped {
       import_skipped.push(s)
     }
+    for i in r.impls {
+      impls.push(i)
+    }
+    for u in r.usings {
+      usings.push(u)
+    }
+  }
+  reexports(usings, decls)
+  // the impls, as instances of the Prelude's traits and the imported ones
+  let traits : Map[String, @parser.TraitDecl] = {}
+  let prelude_decls = @parser.parse_program(prelude_src) catch { _ => [] }
+  for d in [..prelude_decls, ..decls] {
+    if d.inner() is DTrait(td) {
+      traits.set(td.name, td)
+    }
+  }
+  let (ext_decls, ext_skipped) = @parser.external_impls(impls, traits, (tr, m) => {
+    if mbt_builtin_traits.contains(tr) {
+      Some((tr, mbt_method_name(tr, m)))
+    } else if tr.has_prefix("@") {
+      Some((tr, m))
+    } else {
+      None
+    }
+  })
+  for d in ext_decls {
+    decls.push(d)
+  }
+  for s in ext_skipped {
+    import_skipped.push(s)
   }
   // Types that the interfaces mention but nobody defines (e.g. `Int64`,
   // `Map`, or types of packages that are not imported) become opaque.
@@ -325,7 +357,87 @@ fn load_imports(imports : Array[Import]) -> Unit raise CheckError {
     ElabError(p, msg) =>
       raise CheckError("<import>:" + p.to_string() + ": error: " + msg)
   }
+  for d in ext_decls {
+    if d is DImpl(id) {
+      let key = "impl$" + id.trait_name + "$" + impl_head(id.for_ty)
+      if globals.contains(key) && !external_instances.contains(key) {
+        external_instances.push(key)
+      }
+    }
+  }
 }
+
+///|
+/// Re-exported items (`pub using`): a type becomes an alias with as many
+/// parameters as its target, a function a copy of the target's declaration
+/// (compiled code calls the target).
+fn reexports(
+  usings : Array[@parser.MbtiUsing],
+  decls : Array[@parser.Decl],
+) -> Unit {
+  let by_name : Map[String, @parser.Decl] = {}
+  for d in decls {
+    match d.inner() {
+      DEnum({ name, .. })
+      | DStruct({ name, .. })
+      | DFn({ name, .. })
+      | DDef(_, name, _, _, _)
+      | DOpaque(_, name, _) => by_name.set(name, d.inner())
+      _ => ()
+    }
+  }
+  for u in usings {
+    let p = u.pos
+    if u.is_type {
+      let arity = match by_name.get(u.target) {
+        Some(DEnum(ed)) => Some(ed.impl_params.length())
+        Some(DStruct(sd)) => Some(sd.impl_params.length())
+        Some(DOpaque(_, _, k)) => Some(k)
+        Some(DDef(_, _, bs, _, _)) => Some(bs.length())
+        _ =>
+          match globals.get(u.target) {
+            Some(g) => {
+              let mut k = 0
+              let mut t = g.ty
+              while t is Pi(_, Impl, _, _, b) {
+                k = k + 1
+                t = b
+              }
+              Some(k)
+            }
+            None => None
+          }
+      }
+      match arity {
+        Some(k) => {
+          let bs : Array[@parser.Binder] = Array::makei(k, i => {
+            pos: p,
+            name: "T" + i.to_string(),
+            ty: None,
+            kind: Positional,
+          })
+          let body : @parser.Expr = if k == 0 {
+            EVar(p, u.target)
+          } else {
+            EApp(p, EVar(p, u.target), Some(bs.map(b => EVar(p, b.name))), None)
+          }
+          decls.push(DDef(p, u.name, bs, Some(EType(p)), body))
+        }
+        None => ()
+      }
+    } else {
+      match by_name.get(u.target) {
+        Some(DFn(fd)) => decls.push(DFn({ ..fd, name: u.name, }))
+        _ => import_skipped.push("pub using " + u.target + " as " + u.name)
+      }
+    }
+  }
+}
+
+///|
+/// Instances of imported impls: MoonBit has them, the compiler does not
+/// generate them.
+pub let external_instances : Array[String] = []
 
 ///|
 /// Pretty-print the type of a global.

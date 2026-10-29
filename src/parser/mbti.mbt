@@ -10,6 +10,32 @@ pub(all) struct MbtiResult {
   decls : Array[Decl]
   /// Items that could not be translated (first line of each).
   skipped : Array[String]
+  /// The impls of the interface, resolved by `external_impls` once the
+  /// traits of all imported packages are known.
+  impls : Array[MbtiImpl]
+  /// Re-exported items (`pub using`), resolved like the impls.
+  usings : Array[MbtiUsing]
+}
+
+///|
+/// `pub using @q {type T as U}`: `name` (`@alias.U`) is `target` (`@q.T`,
+/// or `T` for `@builtin`).
+pub(all) struct MbtiUsing {
+  pos : Pos
+  name : String
+  target : String
+  is_type : Bool
+}
+
+///|
+/// `impl[K : Show] Show for Map[K]` of an interface, with qualified names.
+pub(all) struct MbtiImpl {
+  pos : Pos
+  params : Array[Binder]
+  trait_name : String
+  for_ty : Expr
+  /// The first line of the item (for the list of skipped items).
+  text : String
 }
 
 ///|
@@ -271,6 +297,7 @@ pub fn parse_mbti(
   }
   let raw : Array[(Decl, Array[String])] = []
   let skipped : Array[String] = []
+  let usings : Array[(Int32, String)] = []
   for item in items {
     if item.attrs.iter().any(a => a.has_prefix("#deprecated")) {
       continue
@@ -278,6 +305,10 @@ pub fn parse_mbti(
     let first = match item.text.find("\n") {
       Some(k) => item.text.unsafe_substring(start=0, end=k)
       None => item.text
+    }
+    if first.has_prefix("pub using ") || first.has_prefix("using ") {
+      usings.push((item.line, item.text))
+      continue
     }
     try {
       let p = { toks: tokenize(item.text, line0=item.line), i: 0, }
@@ -309,6 +340,10 @@ pub fn parse_mbti(
         EVar(p, "Int")
       } else if local.contains(n) {
         EVar(p, prefix + n)
+      } else if n.has_prefix("@builtin.") {
+        // the types and traits of `@builtin` are the global ones
+        let m = n.unsafe_substring(start=9, end=n.length())
+        EVar(p, if m == "Int32" { "Int" } else { m })
       } else if n.has_prefix("@") {
         // `@pkg.T` refers to an import of this interface
         match n.find(".") {
@@ -329,6 +364,21 @@ pub fn parse_mbti(
     }
   }
   let decls : Array[Decl] = []
+  let impls : Array[MbtiImpl] = []
+  let reexports : Array[MbtiUsing] = []
+  for u in usings {
+    using_items(u.0, u.1, prefix, import_alias, reexports, skipped)
+  }
+  let qualify_trait = (tr : String) => {
+    if local.contains(tr) {
+      prefix + tr
+    } else {
+      match map_names(EVar({ line: 0, col: 0, }, tr), qualify(None)) {
+        EVar(_, n) => n
+        _ => tr
+      }
+    }
+  }
   for r in raw {
     let (d0, attrs) = r
     let first = decls.length()
@@ -433,10 +483,19 @@ pub fn parse_mbti(
           }),
         )
       }
-      DImpl(id) =>
-        decls.push(
-          DImpl({ ..id, for_ty: map_names(id.for_ty, qualify(None)), }),
-        )
+      DImpl(id) => {
+        let f = qualify(None)
+        impls.push({
+          pos: id.pos,
+          params: id.impl_params.map(b => {
+            ..b,
+            ty: b.ty.map(t => map_names(t, f)),
+          }),
+          trait_name: qualify_trait(id.trait_name),
+          for_ty: map_names(id.for_ty, f),
+          text: "impl " + id.trait_name + " for ...",
+        })
+      }
     }
     // a type of the package is the MoonBit type `@alias.T`
     match d0 {
@@ -449,7 +508,7 @@ pub fn parse_mbti(
       _ => ()
     }
   }
-  { decls, skipped, }
+  { decls, skipped, impls, usings: reexports, }
 }
 
 ///|
@@ -476,13 +535,22 @@ fn mbti_item(p : Parser, pkg_path : String) -> Array[Decl] raise ParseError {
       while p.accept("::") {
         name = name + "::" + p.ident()
       }
-      let params = p.params(false)
-      for b in params {
-        // `loc~ : SourceLoc` is filled in by the MoonBit compiler
-        if b.ty is Some(EVar(_, "SourceLoc" | "ArgsLoc")) {
-          p.fail("autofill argument")
-        }
-      }
+      // `loc~ : SourceLoc` is filled in by the MoonBit compiler: it is not
+      // a parameter in MoonBit++
+      let params = p
+        .params(false)
+        .filter(b => {
+          !(b.ty
+          is Some(
+            EVar(
+              _,
+              "SourceLoc"
+              | "ArgsLoc"
+              | "@builtin.SourceLoc"
+              | "@builtin.ArgsLoc"
+            )
+          ))
+        })
       let ret = if p.accept("->") { p.expr() } else { EVar(pos, "Unit") }
       let raises = p.raises_opt()
       [
@@ -547,13 +615,23 @@ fn mbti_item(p : Parser, pkg_path : String) -> Array[Decl] raise ParseError {
     TSym("impl") => {
       ignore(p.advance())
       let bs = p.impl_binders()
-      let tr = p.ident()
+      let mut tr = p.ident()
+      while p.accept(".") {
+        tr = tr + "." + p.ident()
+      }
       p.expect("for")
       let ty = p.expr()
-      if bs.length() > 0 {
-        p.fail("generic impl")
-      }
-      impl_decls(pos, tr, ty)
+      [
+        DImpl({
+          pos,
+          impl_params: bs,
+          trait_name: tr,
+          for_ty: ty,
+          meth: "",
+          params: [],
+          body: EVar(pos, "_"),
+        }),
+      ]
     }
     _ => p.fail("unsupported interface item")
   }
@@ -564,65 +642,154 @@ fn mbti_item(p : Parser, pkg_path : String) -> Array[Decl] raise ParseError {
 }
 
 ///|
-/// `impl Show for T` and friends: declare the external method and an
-/// instance of the corresponding prelude trait that calls it. Other traits
-/// are not imported.
-fn impl_decls(
-  pos : Pos,
-  tr : String,
-  ty : Expr,
-) -> Array[Decl] raise ParseError {
-  let head = match ty {
-    EVar(_, n) => n
-    _ => raise ParseError(pos, "impl for a non-trivial type")
-  }
-  let self_b = (n : String) => {
-    ({ pos, name: n, ty: Some(ty), kind: Positional, } : Binder)
-  }
-  let evar = (n : String) => EVar(pos, n)
-  let (meth, params, ret, body) = match tr {
-    "Show" =>
+/// `pub using @q {type T as U, f, trait Tr}`: the items of `@q` are also
+/// items of this package. Types and functions are re-exported when `@q` is
+/// imported (or is `@builtin`); otherwise a type is left to the opaque
+/// types the checker makes for names it does not know, under this
+/// package's name, which is how compiled code refers to it. Traits are not
+/// re-exported (those of `@builtin` are the Prelude's anyway).
+fn using_items(
+  line : Int32,
+  text : String,
+  prefix : String,
+  import_alias : Map[String, String],
+  out : Array[MbtiUsing],
+  skipped : Array[String],
+) -> Unit {
+  let pos : Pos = { line, col: 1, }
+  let t = text.trim(chars=" \t\n").to_string()
+  let (q, body) = match (t.find("@"), t.find("{"), t.rev_find("}")) {
+    (Some(a), Some(b), Some(c)) if a < b && b < c =>
       (
-        "to_string",
-        [self_b("self")],
-        evar("String"),
-        EMethod(pos, evar("self"), "to_string", None, []),
+        t.unsafe_substring(start=a + 1, end=b).trim(chars=" ").to_string(),
+        t.unsafe_substring(start=b + 1, end=c),
       )
-    "Eq" =>
-      (
-        "op_equal",
-        [self_b("self"), self_b("other")],
-        evar("Bool"),
-        EBin(pos, "==", evar("self"), evar("other")),
-      )
-    "Compare" =>
-      (
-        "compare",
-        [self_b("self"), self_b("other")],
-        evar("Int"),
-        EMethod(pos, evar("self"), "compare", None, [evar("other")]),
-      )
-    _ => raise ParseError(pos, "trait not imported")
+    _ => {
+      skipped.push(t)
+      return
+    }
   }
-  [
-    DFn({
-      pos,
-      name: head + "::" + meth,
-      impl_params: [],
-      params: Some(params),
-      ret: Some(ret),
-      raises: None,
-      body: BodyExtern("@mbt:" + head + "::" + meth),
-      is_lemma: false,
-    }),
-    DImpl({
-      pos,
-      impl_params: [],
-      trait_name: tr,
-      for_ty: ty,
-      meth,
-      params: params.map(b => { ..b, ty: None, }),
-      body: EBlock(pos, [SExpr(pos, body)]),
-    }),
-  ]
+  let source = (n : String) => {
+    if q == "builtin" {
+      Some(n)
+    } else {
+      match import_alias.get(q) {
+        Some(a) => Some("@" + a + "." + n)
+        None => None
+      }
+    }
+  }
+  for entry in body.split(",") {
+    let e = entry.trim(chars=" \t\n").to_string()
+    if e == "" {
+      continue
+    }
+    let words = e
+      .split(" ")
+      .filter(w => w != "")
+      .map(w => w.to_string())
+      .to_array()
+    let (kind, name, rest) = match words {
+      ["type", n, .. rest] => ("type", n, rest)
+      ["trait", n, .. rest] => ("trait", n, rest)
+      [n, .. rest] => ("fn", n, rest)
+      [] => continue
+    }
+    let local_name = match rest {
+      ["as", u] => u
+      _ => name
+    }
+    match (kind, source(name)) {
+      ("type", Some(target)) =>
+        out.push({ pos, name: prefix + local_name, target, is_type: true, })
+      ("type", None) => ()
+      ("fn", Some(target)) =>
+        out.push({ pos, name: prefix + local_name, target, is_type: false, })
+      // the traits of `@builtin` are those of the Prelude
+      ("trait", _) if q == "builtin" => ()
+      _ => skipped.push("pub using @" + q + " {" + e + "}")
+    }
+  }
+}
+
+///|
+/// The instances of the impls of the imported interfaces. `traits` are the
+/// known trait declarations (the Prelude's and the imported ones, with
+/// qualified names); `mbt_method` gives the MoonBit trait and method that
+/// implement a MoonBit++ trait method (`None`: the trait is not a MoonBit
+/// trait, and its impls are not imported).
+///
+/// `impl[K : Show] Show for @m.Map[K]` becomes, for each method, an external
+/// function calling the MoonBit trait method (`Show::to_string(x)`; MoonBit
+/// finds the impl) and an instance whose methods are these functions.
+pub fn external_impls(
+  impls : Array[MbtiImpl],
+  traits : Map[String, TraitDecl],
+  mbt_method : (String, String) -> (String, String)?,
+) -> (Array[Decl], Array[String]) {
+  let out : Array[Decl] = []
+  let skipped : Array[String] = []
+  for im in impls {
+    let head = match im.for_ty {
+      EVar(_, n) | EApp(_, EVar(_, n), _, _) => n
+      _ => {
+        skipped.push(im.text)
+        continue
+      }
+    }
+    let td = match traits.get(im.trait_name) {
+      Some(td) => td
+      None => {
+        skipped.push("impl " + im.trait_name + " for " + head)
+        continue
+      }
+    }
+    if td.methods.iter().any(m => mbt_method(td.name, m.name) is None) {
+      skipped.push("impl " + im.trait_name + " for " + head)
+      continue
+    }
+    let self_sub = (p : Pos, n : String) => {
+      if n == "Self" {
+        im.for_ty
+      } else {
+        EVar(p, n)
+      }
+    }
+    // the type parameters of the impl, without their bounds
+    let tparams = im.params.map(b => { ..b, ty: None, })
+    for m in td.methods {
+      let (mtr, mm) = mbt_method(td.name, m.name).unwrap()
+      let ext = "ext$" + td.name + "$" + head + "$" + m.name
+      let ps = m.params.mapi((k, b) => {
+        ..b,
+        name: "a" + k.to_string(),
+        ty: b.ty.map(t => map_names(t, self_sub)),
+      })
+      out.push(
+        DFn({
+          pos: im.pos,
+          name: ext,
+          impl_params: [..tparams, ..m.impl_params],
+          params: Some(ps),
+          ret: Some(map_names(m.ret, self_sub)),
+          raises: m.raises.map(t => map_names(t, self_sub)),
+          body: BodyExtern("@mbt:trait:" + mtr + "::" + mm),
+          is_lemma: false,
+        }),
+      )
+      let args = ps.map(b => EVar(im.pos, b.name))
+      out.push(
+        DImpl({
+          pos: im.pos,
+          impl_params: im.params,
+          trait_name: td.name,
+          for_ty: im.for_ty,
+          meth: m.name,
+          params: ps.map(b => { ..b, ty: None, }),
+          body: EApp(im.pos, EVar(im.pos, ext), None, Some(args)),
+        }),
+      )
+    }
+  }
+  (out, skipped)
 }

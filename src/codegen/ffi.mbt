@@ -405,7 +405,13 @@ fn Gen::ffi_call(
   target : String,
   conv : Array[String],
 ) -> Result[String, String] {
-  let call = if target.has_prefix("@") || !target.contains(".") {
+  let call = if target.has_prefix("trait:") {
+    // a method of an imported impl: MoonBit finds the impl
+    target.unsafe_substring(start=6, end=target.length()) +
+    "(" +
+    conv.join(", ") +
+    ")"
+  } else if target.has_prefix("@") || !target.contains(".") {
     // `impl Show for T`: a method of the type
     match target.find("::") {
       Some(i) if conv.length() > 0 => {

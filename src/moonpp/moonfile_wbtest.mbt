@@ -24,15 +24,20 @@ test "moon.pkg" {
     f.imports.map(i => (i.path, i.alias, i.kind)),
     content=(
       #|[(u/mig/lib, None, None), (moonbitlang/core/strconv, Some(conv), None), (moonbitlang/x/fs, None, Some(test))]
-
     ),
   )
-  inspect(f.option("is-main"), content=(
-    #|Some(MAtom(true))
-  ))
-  inspect(f.string_field("warnings"), content=(
-    #|Some(-a)
-  ))
+  inspect(
+    f.option("is-main"),
+    content=(
+      #|Some(MAtom(true))
+    ),
+  )
+  inspect(
+    f.string_field("warnings"),
+    content=(
+      #|Some(-a)
+    ),
+  )
 }
 
 ///|
@@ -53,15 +58,22 @@ test "moon.mod and moon.work" {
     ),
   )
   inspect(
-    (m.string_field("name"), m.string_field("source"), m.imports.map(i => i.path)),
+    (
+      m.string_field("name"),
+      m.string_field("source"),
+      m.imports.map(i => i.path),
+    ),
     content=(
       #|(Some(u/app), Some(src), [moonbitlang/x@0.5.6])
     ),
   )
   let w = parse_moon_file("members = [\n  \".\",\n  \"../geo\",\n]\n")
-  inspect(w.fields.get("members"), content=(
-    #|Some(MList([MStr(.), MStr(../geo)]))
-  ))
+  inspect(
+    w.fields.get("members"),
+    content=(
+      #|Some(MList([MStr(.), MStr(../geo)]))
+    ),
+  )
 }
 
 ///|
@@ -73,9 +85,12 @@ test "pkgtype" {
       #|pkgtype(kind: "executable")
     ),
   )
-  inspect(f.call_arg("pkgtype", "kind"), content=(
-    #|Some(MStr(executable))
-  ))
+  inspect(
+    f.call_arg("pkgtype", "kind"),
+    content=(
+      #|Some(MStr(executable))
+    ),
+  )
 }
 
 ///|

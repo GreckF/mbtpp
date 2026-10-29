@@ -16,7 +16,9 @@ fn signatures(src : String) -> String {
         l.has_prefix("fn") &&
         !l.contains("_v()") &&
         !l.contains("_to_value") &&
-        !l.contains("_of_value")
+        !l.contains("_of_value") &&
+        !l.contains("fn con_name") &&
+        !l.contains("fn con_fields")
       ) ||
       l.has_prefix("enum E_") {
       // drop the counters: f12_fib -> f_fib, x_34 -> x
@@ -265,6 +267,86 @@ test "codegen: #mbt functions must be native" {
       #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
       #|fn f_show_to_string(inst : Value) -> Value raise {
       #|fn main {
+    ),
+  )
+}
+
+///|
+/// The constructor variants of `Value` and the patterns matching them.
+fn data_lines(src : String) -> String {
+  @tt.check_program("t.mbtpp", src) catch {
+    @tt.CheckError(msg) => return msg
+  }
+  let code = @codegen.generate([]) catch {
+    @codegen.CodegenError(msg) => return msg
+  }
+  code
+  .split("\n")
+  .map(l => l.to_string().trim(chars=" ").to_string())
+  .filter(l => l.has_prefix("K_Exp"))
+  .map(l => {
+    // drop the counters of local names: n_176 -> n
+    let buf = StringBuilder::new()
+    let cs : Array[Char] = l.iter().collect()
+    let mut i = 0
+    while i < cs.length() {
+      if cs[i] == '_' &&
+        i + 1 < cs.length() &&
+        cs[i + 1] >= '0' &&
+        cs[i + 1] <= '9' &&
+        i > 0 &&
+        cs[i - 1] >= 'a' &&
+        cs[i - 1] <= 'z' {
+        i = i + 1
+        while i < cs.length() && cs[i] >= '0' && cs[i] <= '9' {
+          i = i + 1
+        }
+      } else {
+        buf.write_char(cs[i])
+        i = i + 1
+      }
+    }
+    buf.to_string()
+  })
+  .to_array()
+  .join("\n")
+}
+
+///|
+test "codegen: data are native variants of Value, without indices" {
+  inspect(
+    data_lines(
+      (
+        #|enum Exp : [T] -> Type {
+        #|  IntLit(Int) : Exp[Int]
+        #|  BoolLit(Bool) : Exp[Bool]
+        #|  Add(Exp[Int], Exp[Int]) : Exp[Int]
+        #|  If[T](Exp[Bool], Exp[T], Exp[T]) : Exp[T]
+        #|}
+        #|fn[T] Exp::eval(self : Exp[T]) -> T {
+        #|  match self {
+        #|    IntLit(n) => n
+        #|    BoolLit(b) => b
+        #|    Add(l, r) => l.eval() + r.eval()
+        #|    If[_](c, t, f) => if c.eval() { t.eval() } else { f.eval() }
+        #|  }
+        #|}
+        #|fn main { println(If(BoolLit(true), IntLit(1), IntLit(2)).eval()) }
+      ),
+    ),
+    content=(
+      #|K_Exp_BoolLit(Value)
+      #|K_Exp_IntLit(Value)
+      #|K_Exp_If(Value, Value, Value)
+      #|K_Exp_Add(Value, Value)
+      #|K_Exp_BoolLit(a0) => Some("Exp::BoolLit")
+      #|K_Exp_IntLit(a0) => Some("Exp::IntLit")
+      #|K_Exp_If(a0, a1, a2) => Some("Exp::If")
+      #|K_Exp_Add(a0, a1) => Some("Exp::Add")
+      #|K_Exp_BoolLit(a0) => [a0]
+      #|K_Exp_IntLit(a0) => [a0]
+      #|K_Exp_If(a0, a1, a2) => [a0, a1, a2]
+      #|K_Exp_Add(a0, a1) => [a0, a1]
     ),
   )
 }

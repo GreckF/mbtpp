@@ -90,8 +90,7 @@ fn moon_tokens(src : String) -> Array[MTok] raise Failure {
       i = i + 1
     } else {
       let buf = StringBuilder::new()
-      while i < cs.length() &&
-            !" \t\r\n{}()[],:=@\"".contains_char(cs[i]) {
+      while i < cs.length() && !" \t\r\n{}()[],:=@\"".contains_char(cs[i]) {
         buf.write_char(cs[i])
         i = i + 1
       }
@@ -212,11 +211,10 @@ fn parse_moon_file(src : String) -> MoonFile raise Failure {
           None
         }
         for b in block {
-          imports.push({ path: b.0, alias: b.1, kind })
+          imports.push({ path: b.0, alias: b.1, kind, })
         }
       }
-      Some(TWord(name)) if i + 1 < toks.length() &&
-        toks[i + 1] == TPunct('(') => {
+      Some(TWord(name)) if i + 1 < toks.length() && toks[i + 1] == TPunct('(') => {
         i = i + 2
         let args : Array[(String, MValue)] = calls.get(name).unwrap_or([])
         while peek() != Some(TPunct(')')) {
@@ -237,7 +235,7 @@ fn parse_moon_file(src : String) -> MoonFile raise Failure {
       }
     }
   }
-  { fields, imports, calls }
+  { fields, imports, calls, }
 }
 
 ///|

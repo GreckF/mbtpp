@@ -34,7 +34,8 @@ fn runtime_fns() -> Array[String] {
 ///|
 /// Every `#mbt` function must have a native translation.
 fn Gen::check_mbt_fns(self : Gen) -> Unit raise CodegenError {
-  let reserved = runtime_fns()
+  // and the functions generated with `Value` (data.mbt)
+  let reserved = [..runtime_fns(), "con_name", "con_fields"]
   for f, mname in @tt.mbt_fns {
     if reserved.contains(mname) || mname == "main" {
       raise CodegenError(

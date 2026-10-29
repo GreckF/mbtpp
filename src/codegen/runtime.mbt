@@ -5,19 +5,8 @@
 let runtime_src : String =
   #|// ---- MoonBit++ runtime -------------------------------------------------
   #|
-  #|enum Value {
-  #|  VInt(Int)
-  #|  VDouble(Double)
-  #|  VStr(String)
-  #|  VChar(Char)
-  #|  VBool(Bool)
-  #|  VUnit
-  #|  VCon(String, Array[Value])
-  #|  VFun((Value) -> Value raise)
-  #|  VArr(Array[Value])
-  #|  VType
-  #|  VForeign(Foreign)
-  #|}
+  #|// `Value` and its constructors (`con_name`, `con_fields`) are generated
+  #|// with the program, in main.mbt.
   #|
   #|suberror Ctl {
   #|  CRaise(Value)
@@ -92,17 +81,6 @@ let runtime_src : String =
   #|    (VChar(x), VChar(y)) => x == y
   #|    (VBool(x), VBool(y)) => x == y
   #|    (VUnit, VUnit) => true
-  #|    (VCon(c, xs), VCon(d, ys)) => {
-  #|      if c != d || xs.length() != ys.length() {
-  #|        return false
-  #|      }
-  #|      for k = 0; k < xs.length(); k = k + 1 {
-  #|        if !value_eq(xs[k], ys[k]) {
-  #|          return false
-  #|        }
-  #|      }
-  #|      true
-  #|    }
   #|    (VArr(xs), VArr(ys)) => {
   #|      if xs.length() != ys.length() {
   #|        return false
@@ -114,7 +92,23 @@ let runtime_src : String =
   #|      }
   #|      true
   #|    }
-  #|    _ => false
+  #|    _ =>
+  #|      match (con_name(a), con_name(b)) {
+  #|        (Some(c), Some(d)) if c == d => {
+  #|          let xs = con_fields(a)
+  #|          let ys = con_fields(b)
+  #|          if xs.length() != ys.length() {
+  #|            return false
+  #|          }
+  #|          for k = 0; k < xs.length(); k = k + 1 {
+  #|            if !value_eq(xs[k], ys[k]) {
+  #|              return false
+  #|            }
+  #|          }
+  #|          true
+  #|        }
+  #|        _ => false
+  #|      }
   #|  }
   #|}
   #|
@@ -123,8 +117,9 @@ let runtime_src : String =
   #|  match p {
   #|    PAny => true
   #|    PCon(c, ps) =>
-  #|      match v {
-  #|        VCon(c2, args) if c2 == c && args.length() == ps.length() => {
+  #|      match con_name(v) {
+  #|        Some(c2) if c2 == c && con_fields(v).length() == ps.length() => {
+  #|          let args = con_fields(v)
   #|          for k = 0; k < ps.length(); k = k + 1 {
   #|            if !match_pat(ps[k], args[k], out) {
   #|              return false
@@ -171,12 +166,17 @@ let runtime_src : String =
   #|    VChar(c) => c.to_string().escape()
   #|    VBool(b) => b.to_string()
   #|    VUnit => "()"
-  #|    VCon(c, []) => short_name(c)
-  #|    VCon(c, args) => short_name(c) + "(" + args.map(show_value).join(", ") + ")"
   #|    VArr(xs) => "[" + xs.map(show_value).join(", ") + "]"
   #|    VFun(_) => "<function>"
   #|    VType => "<type>"
   #|    VForeign(_) => "<foreign>"
+  #|    _ =>
+  #|      match (con_name(v), con_fields(v)) {
+  #|        (Some(c), []) => short_name(c)
+  #|        (Some(c), args) =>
+  #|          short_name(c) + "(" + args.map(show_value).join(", ") + ")"
+  #|        (None, _) => "<value>"
+  #|      }
   #|  }
   #|}
   #|
@@ -364,7 +364,7 @@ let runtime_src : String =
   #|
   #|/// A foreign MoonBit error, as a MoonBit++ value.
   #|fn foreign_error(e : Error) -> Value {
-  #|  VCon("MoonBitError", [VStr(e.to_string())])
+  #|  VDyn("MoonBitError", [VStr(e.to_string())])
   #|}
   #|
   #|fn run_main(f : () -> Value raise) -> Unit {

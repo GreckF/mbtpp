@@ -102,7 +102,7 @@ fn load_imports(dir : String) -> Array[@tt.Import] raise Failure {
     let src = @fs.read_file_to_string(mbti) catch {
       @fs.IOError(msg) => die("cannot read " + mbti + ": " + msg)
     }
-    out.push({ alias, path, mbti: src })
+    out.push({ alias, path, mbti: src, })
   }
   out
 }

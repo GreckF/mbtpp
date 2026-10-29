@@ -30,14 +30,17 @@
 
 ## Compiler (`src/codegen`)
 
-- `runtime.mbt`: the support code emitted with every program: the uniform
-  representation `Value` (`VInt`, `VCon(name, args)`, `VFun`, ...), `apply`,
+- `runtime.mbt`: the support code emitted with every program: `apply`,
   primitives, a pattern matcher for patterns MoonBit cannot express.
+- `data.mbt`: the uniform representation `Value`, generated per program:
+  the fixed variants (`VInt`, `VFun`, ...) and one variant per constructor
+  used (`K_Exp_Add(Value, Value)`), without indices and erased fields;
+  `con_name` / `con_fields` give the runtime generic access.
 - `codegen.mbt`: the uniform translation. Only globals reachable from
   `main` are emitted. A function of n parameters becomes a MoonBit function
   (saturated calls are direct, `<id>_v()` is its curried value); constants
-  are cached; `match` becomes a MoonBit `match` on `VCon`; `if`, constructors
-  and primitive operations are inlined.
+  are cached; `match` becomes a native MoonBit `match` on the constructor
+  variants; `if`, constructors and primitive operations are inlined.
 - `erase.mbt`: erasure analysis (greatest fixed point over the program):
   type parameters are always erased; other implicit parameters and implicit
   constructor fields are erased unless used at run time.

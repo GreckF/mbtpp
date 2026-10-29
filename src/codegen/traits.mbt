@@ -4,7 +4,7 @@
 /// A `#mbt` datatype is the MoonBit type of its name: generated (with the
 /// same name, constructors and fields) when the program defines it, used as
 /// it is when it is an existing MoonBit type (`#mbt("Option")`, imported
-/// `@pkg.T`). In the uniform representation its values are `VCon`s as for
+/// `@pkg.T`). In the uniform representation its values are constructor variants of `Value` as for
 /// any datatype, converted at the boundary.
 ///
 /// A `#mbt` trait is a MoonBit trait: a bound `[T : Tr]` of a native

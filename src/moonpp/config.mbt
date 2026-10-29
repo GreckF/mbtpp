@@ -66,11 +66,19 @@ fn module_info(dir : String) -> ModInfo raise Failure {
   let j = match read_json(dir + "/moon.mod.json") {
     Some(j) => j
     None =>
-      return { name: None, version: None, source: "", deps: [], local_deps: [] }
+      return {
+        name: None,
+        version: None,
+        source: "",
+        deps: [],
+        local_deps: [],
+      }
   }
-  let str = (k : String) => match j.value(k) {
-    Some(String(s)) => Some(s)
-    _ => None
+  let str = (k : String) => {
+    match j.value(k) {
+      Some(String(s)) => Some(s)
+      _ => None
+    }
   }
   let deps : Array[String] = []
   let local_deps : Array[(String, String)] = []
@@ -128,15 +136,17 @@ fn package_imports(dir : String) -> Array[(String, String)] raise Failure {
     Some(_) => die(cfg + ": \"import\" must be an array")
     None => []
   }
-  entries.map(e => match e {
-    String(p) => (p, last_segment(p))
-    Object(o) =>
-      match (o.get("path"), o.get("alias")) {
-        (Some(String(p)), Some(String(a))) => (p, a)
-        (Some(String(p)), None) => (p, last_segment(p))
-        _ => die(cfg + ": an import needs a \"path\"")
-      }
-    _ => die(cfg + ": invalid import entry")
+  entries.map(e => {
+    match e {
+      String(p) => (p, last_segment(p))
+      Object(o) =>
+        match (o.get("path"), o.get("alias")) {
+          (Some(String(p)), Some(String(a))) => (p, a)
+          (Some(String(p)), None) => (p, last_segment(p))
+          _ => die(cfg + ": an import needs a \"path\"")
+        }
+      _ => die(cfg + ": invalid import entry")
+    }
   })
 }
 
@@ -173,9 +183,11 @@ fn workspace_members(dir : String) -> Array[String] {
       Some(f) =>
         return match f.fields.get("members") {
           Some(MList(ms)) =>
-            ms.filter_map(m => match m {
-              MStr(p) => Some(join_path(cur, p))
-              _ => None
+            ms.filter_map(m => {
+              match m {
+                MStr(p) => Some(join_path(cur, p))
+                _ => None
+              }
             })
           _ => []
         }

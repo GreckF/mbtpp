@@ -101,7 +101,7 @@
 
 ### 7.1 结构
 
-1. **统一表示**（`codegen.mbt`、`runtime.mbt`）：所有值用 `enum Value`（`VInt`、`VCon(构造子名, 参数)`、`VFun`……）表示，可以翻译语言的全部特性（GADT、类型层计算、trait、异常、循环）。
+1. **统一表示**（`codegen.mbt`、`data.mbt`、`runtime.mbt`）：所有值用 `enum Value` 表示，可以翻译语言的全部特性（GADT、类型层计算、trait、异常、循环）。`Value` 为每个程序生成：固定变体 `VInt`、`VFun`……，加上程序用到的每个构造子一个原生变体（如 `K_Exp_Add(Value, Value)`），索引与被擦除的字段不出现，匹配是原生的（以前是 `VCon(构造子名, 参数)`，要比较字符串；对 GADT 求值的测试快约 2 倍）。
    - n 元函数成为 MoonBit 函数，饱和调用是直接调用，作为值使用时才构造闭包；
    - `match` 翻译为 MoonBit 原生 `match`；`if`、构造子、基本运算内联；
    - 只输出从 `main` 可达的定义；变量沿用源码名字；未使用的模式绑定被删除；输出经过 `moon fmt`。

@@ -147,9 +147,9 @@ fn Gen::to_mbt(
           return Some(
             "(match " +
             e +
-            " { VCon(\"Option::Some\", [" +
-            x +
-            "]) => Some(" +
+            " { " +
+            self.con_code("Option::Some", [x]) +
+            " => Some(" +
             c +
             "); _ => None })",
           )
@@ -265,9 +265,11 @@ fn Gen::from_mbt(
             e +
             " { Some(" +
             x +
-            ") => VCon(\"Option::Some\", [" +
-            c +
-            "]); None => VCon(\"Option::None\", []) })",
+            ") => " +
+            self.con_code("Option::Some", [c]) +
+            "; None => " +
+            self.con_code("Option::None", []) +
+            " })",
           )
         None => return None
       }

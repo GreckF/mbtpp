@@ -542,18 +542,14 @@ fn Gen::need_enum(self : Gen, d : String) -> Unit {
     to.write_string(
       "    " +
       con_pat(d, c, kept.map(k => k.0)) +
-      " => VCon(" +
-      c.escape() +
-      ", [" +
-      kept.map(k => self.to_value(k.1, k.0, Some(to_convs))).join(", ") +
-      "])\n",
+      " => " +
+      self.con_code(c, kept.map(k => self.to_value(k.1, k.0, Some(to_convs)))) +
+      "\n",
     )
     of.write_string(
-      "    VCon(" +
-      c.escape() +
-      ", [" +
-      vpats.join(", ") +
-      "]) => " +
+      "    " +
+      self.con_code(c, vpats) +
+      " => " +
       con_expr(d, c, kept.map(k => self.of_value(k.1, k.0, Some(of_convs)))) +
       "\n",
     )
@@ -767,7 +763,7 @@ fn Gen::typed_check(
       // `return` in the lambda returns from it
       let saved = self.cur_result
       self.cur_result = Some(r)
-      let res = try Ok(self.typed(e, b)) catch { err => Err(err) }
+      let res = Ok(self.typed(e, b)) catch { err => Err(err) }
       self.cur_result = saved
       let (cb, tb) = match res {
         Ok(x) => x
@@ -1339,7 +1335,7 @@ fn Gen::typed_fn(self : Gen, name : String) -> String? {
   }
   self.cur_result = Some(sig.result)
   self.cur_bounds = sig.bounds
-  let res = try Ok(self.typed(env, b)) catch { err => Err(err) }
+  let res = Ok(self.typed(env, b)) catch { err => Err(err) }
   self.cur_result = None
   self.cur_bounds = []
   match res {

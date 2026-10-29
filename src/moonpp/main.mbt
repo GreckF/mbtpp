@@ -199,7 +199,7 @@ fn output_module(
 ) -> (String, String) raise Failure {
   let info = match root {
     Some(r) => module_info(r)
-    None => { name: None, version: None, source: "", deps: [], local_deps: [] }
+    None => { name: None, version: None, source: "", deps: [], local_deps: [], }
   }
   let deps = info.deps.copy()
   let members : Array[String] = []

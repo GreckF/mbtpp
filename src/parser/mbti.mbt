@@ -576,8 +576,9 @@ fn impl_decls(
     EVar(_, n) => n
     _ => raise ParseError(pos, "impl for a non-trivial type")
   }
-  let self_b = (n : String) => (
-    { pos, name: n, ty: Some(ty), kind: Positional } : Binder)
+  let self_b = (n : String) => {
+    ({ pos, name: n, ty: Some(ty), kind: Positional, } : Binder)
+  }
   let evar = (n : String) => EVar(pos, n)
   let (meth, params, ret, body) = match tr {
     "Show" =>
@@ -620,7 +621,7 @@ fn impl_decls(
       trait_name: tr,
       for_ty: ty,
       meth,
-      params: params.map(b => { ..b, ty: None }),
+      params: params.map(b => { ..b, ty: None, }),
       body: EBlock(pos, [SExpr(pos, body)]),
     }),
   ]

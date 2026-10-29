@@ -26,9 +26,35 @@ enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
 
 ## 统一表示
 
-其余部分（类型层计算、GADT 细化、非 `#mbt` 的 trait 等）使用运行时的统一值表示 `Value`
-（`VInt`、`VCon(名字, 字段)`、`VFun` …），由生成的 `runtime.mbt` 支持。两种代码之间在边界上
-转换。
+其余部分（类型层计算、GADT 细化、非 `#mbt` 的 trait 等）使用统一值表示 `Value`。它也是
+为每个程序生成的：除了 `VInt`、`VFun` 等固定的变体，程序用到的每个构造子都是 `Value` 的一个
+原生变体，索引和被擦除的字段不出现，字段是 `Value`。例如 `basic.mbtpp` 的 GADT：
+
+```text
+enum Exp : [T] -> Type {
+  IntLit(Int) : Exp[Int]
+  Add(Exp[Int], Exp[Int]) : Exp[Int]
+  If[T](Exp[Bool], Exp[T], Exp[T]) : Exp[T]
+  …
+}
+```
+
+编译为 `Value` 的变体 `K_Exp_IntLit(Value)`、`K_Exp_Add(Value, Value)`、
+`K_Exp_If(Value, Value, Value)`，`eval` 中的 `match` 是原生的：
+
+```text
+fn f19_exp_eval(self : Value) -> Value raise {
+  match self {
+    K_Exp_IntLit(n) => n
+    K_Exp_Add(lhs, rhs) => VInt(as_int(f19_exp_eval(lhs)) + as_int(f19_exp_eval(rhs)))
+    …
+  }
+}
+```
+
+`eval` 的结果类型随索引变化（`IntLit` 分支返回 `Int`，`BoolLit` 分支返回 `Bool`），MoonBit
+的类型系统表达不了，所以它的结果仍是 `Value`。运行时支持（`apply`、原语、动态模式匹配器）在
+生成的 `runtime.mbt` 中。两种代码之间在边界上转换。
 
 ## 擦除
 
@@ -38,4 +64,6 @@ enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
 
 ## 性能
 
-一个 `fib` 程序编译后约快 40 倍（解释器 7.85 秒，编译后 0.18 秒）。
+一个 `fib` 程序编译后约快 40 倍（解释器 7.85 秒，编译后 0.18 秒）。构造子成为 `Value` 的原生
+变体之前，统一表示中的数据是 `VCon(构造子名, 字段数组)`，匹配要比较字符串；改为原生变体后，
+对一棵 2^18 个叶子的 `Exp` 树求值 20 次，从 2.65 秒降到 1.26 秒。

@@ -103,7 +103,6 @@ test "import: items that are not imported" {
     @tt.import_skipped,
     content=(
       #|[pub fn draw(&Show) -> Unit]
-
     ),
   )
 }
@@ -241,7 +240,6 @@ test "import: pub(all) types and pub(open) traits are #mbt" {
     marks,
     content=(
       #|[(@h.Handle, Some((@h.Handle, true))), (@h.Color, Some((@h.Color, false))), (@h.Big, None), (@h.Named, Some((@h.Named, false))), (@h.Sealed, Some((@h.Sealed, true)))]
-
     ),
   )
 }
@@ -278,7 +276,7 @@ test "import: Int32 is Int" {
     #|pub fn twice(Int32) -> Int32
     #|
   let imports : Array[@tt.Import] = [
-    { alias: "ints", path: "demo/ints", mbti },
+    { alias: "ints", path: "demo/ints", mbti, },
   ]
   let r = try {
     @tt.check_program(

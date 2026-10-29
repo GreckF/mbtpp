@@ -37,6 +37,13 @@ fn mbti_in(dir : String) -> String? {
 }
 
 ///|
+/// Is `dir` a MoonBit module? Newer modules describe themselves in
+/// `moon.mod` (`key = value` lines) instead of `moon.mod.json`.
+fn is_module_dir(dir : String) -> Bool {
+  @fs.path_exists(dir + "/moon.mod.json") || @fs.path_exists(dir + "/moon.mod")
+}
+
+///|
 /// The `source` directory of a MoonBit module (`""` for the module root).
 fn module_source(mod_dir : String) -> String {
   match read_json(mod_dir + "/moon.mod.json") {
@@ -45,7 +52,27 @@ fn module_source(mod_dir : String) -> String {
         Some(String(s)) => s
         _ => ""
       }
-    None => ""
+    None => {
+      // `source = "src"` in `moon.mod`
+      let text = @fs.read_file_to_string(mod_dir + "/moon.mod") catch {
+        _ => return ""
+      }
+      for line in text.split("\n") {
+        let l = line.trim(chars=" \t\r").to_string()
+        if l.has_prefix("source") {
+          let rest = l.unsafe_substring(start=6, end=l.length())
+            .trim(chars=" \t")
+            .to_string()
+          if rest.has_prefix("=") {
+            return rest
+              .unsafe_substring(start=1, end=rest.length())
+              .trim(chars=" \t\"")
+              .to_string()
+          }
+        }
+      }
+      ""
+    }
   }
 }
 
@@ -62,7 +89,7 @@ fn mooncakes_package_dir(pkg : String, dir : String) -> String? {
   let mut d : String? = Some(dir)
   while d is Some(cur) {
     let mod_dir = cur + "/.mooncakes/" + module_
-    if @fs.path_exists(mod_dir + "/moon.mod.json") {
+    if is_module_dir(mod_dir) {
       let src = module_source(mod_dir)
       let base = if src == "" { mod_dir } else { mod_dir + "/" + src }
       return Some(

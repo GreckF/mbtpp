@@ -314,7 +314,7 @@ fn extract_interfaces(root : String) -> Unit raise Failure {
   for user in list_dir(cakes) {
     for m in list_dir(cakes + "/" + user) {
       let mod_dir = cakes + "/" + user + "/" + m
-      if !@fs.path_exists(mod_dir + "/moon.mod.json") {
+      if !is_module_dir(mod_dir) {
         continue
       }
       let src = module_source(mod_dir)

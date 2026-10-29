@@ -177,6 +177,15 @@ fn show_prec(names : Array[String], t : Tm, prec : Int32) -> String {
           _ => if !hide_impl { impls.push(show_prec(names, a.0, 0)) }
         }
       }
+      // tuples and tuple types: `(a, b)`, `(Int, String)`
+      match h {
+        Global(n) if n.has_prefix("Tuple") && n.has_suffix("::mk") =>
+          return "(" + expls.join(", ") + ")"
+        Global(n) if n.has_prefix("Tuple") &&
+          data_info(n) is Some(_) &&
+          expls.length() == 0 => return "(" + impls.join(", ") + ")"
+        _ => ()
+      }
       // `T::op_add(a, b)` is shown as `a + b`
       match (h, expls.length()) {
         (Global(n), 2) =>

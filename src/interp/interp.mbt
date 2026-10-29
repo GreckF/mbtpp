@@ -361,7 +361,7 @@ fn Machine::prim(
       match @tt.prim_pure(p, lits) {
         Some(l) => RLit(l)
         None =>
-          if p == "%int_div" || p == "%int_mod" {
+          if p.has_suffix("_div") || p.has_suffix("_mod") {
             raise CAbort("division by zero")
           } else {
             raise CAbort("primitive " + p + " failed")

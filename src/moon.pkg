@@ -6,4 +6,5 @@ import {
 
 import {
   "moonbitlang/x/fs",
+  "username/mbtpp/parser",
 } for "test"

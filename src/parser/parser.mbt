@@ -1101,11 +1101,12 @@ fn Parser::pattern_atom(self : Parser) -> Pat raise ParseError {
     }
     let lo = match bound(p) {
       Some(l) => l
-      None => self.fail("a range pattern is between literals")
+      None => raise ParseError(p.pos(), "a range pattern is between literals")
     }
-    let hi = match bound(self.pattern_atom1()) {
+    let q = self.pattern_atom1()
+    let hi = match bound(q) {
       Some(l) => l
-      None => self.fail("a range pattern is between literals")
+      None => raise ParseError(q.pos(), "a range pattern is between literals")
     }
     return PRange(pos, lo, hi, incl)
   }
@@ -1146,9 +1147,10 @@ fn Parser::pattern_atom1(self : Parser) -> Pat raise ParseError {
       let after : Array[Pat] = []
       let mut rest : String?? = None
       while !self.at("]") {
+        let dpos = self.pos()
         if self.accept("..") {
           if rest is Some(_) {
-            self.fail("an array pattern has at most one `..`")
+            raise ParseError(dpos, "an array pattern has at most one `..`")
           }
           rest = if self.is_ident() {
             Some(Some(self.ident()))
@@ -1582,10 +1584,14 @@ fn Parser::decl(self : Parser) -> Decl raise ParseError {
     // `#timelimit(60)` or `#timelimit(none)`
     if attr == "timelimit" {
       self.expect("(")
+      let lpos = self.pos()
       let limit = match self.advance().tok {
         TInt(n) if n > 0 => Some(n)
         TIdent("none") => None
-        _ => self.fail("expected a number of seconds or `none`")
+        _ =>
+          raise ParseError(
+            lpos, "a time limit is a positive number of seconds or `none`",
+          )
       }
       self.expect(")")
       return DLimit(pos, limit, self.decl())

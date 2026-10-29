@@ -39,6 +39,6 @@ alone), passing unsaved buffers.
 Download `mbtpp-vscode.vsix` from the
 [releases](https://github.com/GreckF/mbtpp/releases) and run "Extensions:
 Install from VSIX...", or `code --install-extension mbtpp-vscode.vsix`.
-From a checkout, `npx @vscode/vsce package` in this folder builds the
-`.vsix`; or run it from source with
+From a checkout, `python scripts/package-vscode.py` builds
+`mbtpp-vscode.vsix`; or run it from source with
 `code --extensionDevelopmentPath=editors/vscode`.

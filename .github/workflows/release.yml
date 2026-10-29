@@ -55,9 +55,7 @@ jobs:
           moonpp run examples/vector.mbtpp
 
       - name: Package the VS Code extension
-        working-directory: editors/vscode
-        run: |
-          npx --yes @vscode/vsce package --no-dependencies -o "../../mbtpp-vscode.vsix"
+        run: python3 scripts/package-vscode.py mbtpp-vscode.vsix
 
       - name: Publish
         uses: softprops/action-gh-release@v2

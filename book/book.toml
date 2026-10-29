@@ -1,0 +1,20 @@
+[book]
+title = "MoonBit++ 手册"
+language = "zh-CN"
+src = "src"
+
+[build]
+build-dir = "../docs/book"
+create-missing = false
+
+[output.html]
+default-theme = "light"
+preferred-dark-theme = "navy"
+git-repository-url = "https://github.com/GreckF/mbtpp"
+edit-url-template = "https://github.com/GreckF/mbtpp/edit/main/book/{path}"
+additional-js = ["theme/moonbit.js"]
+additional-css = ["theme/moonbit.css"]
+site-url = "/mbtpp/book/"
+
+[output.html.search]
+enable = true

@@ -1,0 +1,1676 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>MoonBit++ 手册</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-e96d0476.css">
+        <link rel="stylesheet" href="css/chrome-d279d366.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/moonbit-21f43443.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-f16b5793.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-9775a42a.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">MoonBit++ 手册</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/GreckF/mbtpp" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="moonbit-手册"><a class="header" href="#moonbit-手册">MoonBit++ 手册</a></h1>
+<p>MoonBit++ 是一门依赖类型语言，语法取自 MoonBit：同样的 <code>fn</code>、<code>enum</code>、<code>struct</code>、<code>trait</code>、
+<code>match</code>、<code>let mut</code>、<code>for</code>、<code>raise</code>，加上依赖类型、索引类型、依赖模式匹配、命题与证明。</p>
+<p>它包括：</p>
+<ul>
+<li><strong>类型检查器</strong>：依赖类型、合一、依赖模式匹配与覆盖检查、实例搜索、简单的策略。</li>
+<li><strong>解释器</strong>：直接运行类型检查后的程序。</li>
+<li><strong>编译器</strong>：把程序翻译成 MoonBit，能用 MoonBit 类型表达的部分生成原生代码。</li>
+<li><strong><code>moonpp</code></strong>：类似 <code>moon</code> 的命令行工具，管理项目、依赖与构建。</li>
+</ul>
+<blockquote>
+<p>这是一个纯 vibe coding 的娱乐项目，请不要认真看待。类型检查器不做终止检查，证明可以靠
+无限递归“证”出任何命题，不适合任何正式用途。</p>
+</blockquote>
+<p>本手册分三部分：</p>
+<ul>
+<li><strong>语言</strong>：从词法到证明、trait、副作用，每个特性一章。</li>
+<li><strong>moonpp</strong>：安装、项目结构、命令、依赖、构建产物。</li>
+<li><strong>与 MoonBit 交互</strong>：导入 MoonBit 包、编译到 MoonBit、<code>#mbt</code> 声明、在 MoonBit 中使用编译结果。</li>
+</ul>
+<p>带 <code>fn main</code> 的示例右上角有 ▶ 按钮，可以在 <a href="https://greckf.github.io/mbtpp/">Playground</a> 中打开
+运行。源码与示例在 <a href="https://github.com/GreckF/mbtpp">GitHub</a>。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="快速开始"><a class="header" href="#快速开始">快速开始</a></h1>
+<p>安装 <code>moonpp</code>（见<a href="#安装">安装</a>）后：</p>
+<pre><code class="language-bash">moonpp new hello
+cd hello
+moonpp run                # 用解释器运行 src/main
+moonpp check              # 类型检查
+moonpp run --compiled     # 编译到 MoonBit 再运行
+moonpp build              # 编译成 MoonBit 项目 mbtpp_out/main
+</code></pre>
+<p><code>moonpp new</code> 生成的 <code>src/main/main.mbtpp</code> 类似这样：</p>
+<pre><code class="language-moonbit">enum Vector[T] : Nat -&gt; Type {
+  Nil : Vector[T](0)
+  Cons[n : Nat](T, Vector[T](n)) : Vector[T](S(n))
+}
+
+// 只接受非空向量：不需要 Nil 的分支
+fn[T, n : Nat] Vector::head(self : Vector[T](S(n))) -&gt; T {
+  match self {
+    Cons(x, _) =&gt; x
+  }
+}
+
+fn main {
+  let v : Vector[String](2) = Cons("Hello", Cons("MoonBit++", Nil))
+  println(v.head())
+}
+</code></pre>
+<ul>
+<li><code>Vector[T](n)</code> 是长度为 <code>n</code> 的向量：<code>T</code> 是参数，<code>n</code> 是索引（见
+<a href="#enum-与索引类型">enum 与索引类型</a>）。</li>
+<li><code>head</code> 只接受类型为 <code>Vector[T](S(n))</code> 的向量，所以 <code>Nil</code> 不可能出现，<code>match</code> 不需要它的分支
+（见<a href="#覆盖检查与不可能分支">覆盖检查与不可能分支</a>）。</li>
+<li><code>v.head()</code> 调用方法 <code>Vector::head</code>。</li>
+</ul>
+<p>不安装也可以在 <a href="https://greckf.github.io/mbtpp/">Playground</a> 中试用。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="词法"><a class="header" href="#词法">词法</a></h1>
+<ul>
+<li><strong>注释</strong>：<code>// …</code> 到行尾。没有块注释。</li>
+<li><strong>标识符</strong>：字母、数字、<code>_</code>，不以数字开头。约定上类型、构造子、trait 以大写开头，其余小写。</li>
+<li><strong>语句分隔</strong>：换行或 <code>;</code>。</li>
+</ul>
+<h2 id="字面量"><a class="header" href="#字面量">字面量</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>字面量</th><th>例子</th><th>类型</th></tr>
+</thead>
+<tbody>
+<tr><td>整数</td><td><code>0</code>、<code>42</code>、<code>1_000</code>、<code>-1</code></td><td><code>Int</code>；期望类型是 <code>Nat</code> 时展开为 <code>S(…S(Z))</code></td></tr>
+<tr><td>浮点</td><td><code>1.5</code>、<code>2.0</code></td><td><code>Double</code></td></tr>
+<tr><td>字符</td><td><code>'a'</code>、<code>'\n'</code></td><td><code>Char</code></td></tr>
+<tr><td>字符串</td><td><code>"hello"</code></td><td><code>String</code></td></tr>
+<tr><td>布尔</td><td><code>true</code>、<code>false</code></td><td><code>Bool</code></td></tr>
+<tr><td>单位</td><td><code>()</code></td><td><code>Unit</code></td></tr>
+<tr><td>数组</td><td><code>[1, 2, 3]</code></td><td><code>Array[Int]</code></td></tr>
+<tr><td>元组</td><td><code>(1, "a")</code></td><td><code>(Int, String)</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>转义：<code>\n \t \r \\ \" \' \0</code>。</p>
+<p>字符串插值 <code>"\{e}"</code> 把 <code>e</code> 的 <code>Show</code> 结果插入字符串：</p>
+<pre><code class="language-moonbit">fn main {
+  let n = 3
+  let xs = [1, 2, 3]
+  println("n = \{n}, xs = \{xs}, next = \{n + 1}")
+}
+</code></pre>
+<h2 id="关键字"><a class="header" href="#关键字">关键字</a></h2>
+<pre><code class="language-text">fn let mut if else match enum struct trait impl for in with while return break
+continue raise try catch true false Type Prop forall lemma proof monad as suberror
+derive pub priv noraise loop
+</code></pre>
+<p><code>pub</code>、<code>priv</code>、<code>derive(...)</code> 可以写，但被忽略：一个包是一个作用域，没有可见性。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="表达式与语句"><a class="header" href="#表达式与语句">表达式与语句</a></h1>
+<p>表达式和语句与 MoonBit 一致：</p>
+<pre><code class="language-moonbit">fn demo(xs : Array[Int]) -&gt; Int {
+  let a = 1                       // 不可变绑定
+  let mut total = a               // 可变绑定
+  total = total + 2               // 赋值
+  for x in xs {
+    total = total + x
+  }
+  let f = (x : Int) =&gt; x * 2      // lambda；也可写 x =&gt; e、(x, y) =&gt; e
+  let g = fn(x : Int) { x + 1 }   // 匿名函数
+  let s = if total &gt; 10 { "big" } else { "small" }
+  println(s)
+  total |&gt; f |&gt; g                 // 管道
+}
+
+fn main {
+  println(demo([1, 2, 3]))
+}
+</code></pre>
+<ul>
+<li><strong>块</strong>：<code>{ s1; s2; e }</code> 的值是最后一个表达式。</li>
+<li><strong><code>let</code></strong>：<code>let x = e</code>、<code>let x : T = e</code>；模式绑定 <code>let (a, b) = pair</code>（做覆盖检查）。</li>
+<li><strong><code>if</code></strong>：<code>if c { a } else { b }</code> 是表达式；没有 <code>else</code> 时值为 <code>()</code>。</li>
+<li><strong>lambda</strong>：<code>x =&gt; e</code>、<code>(x, y) =&gt; e</code>、<code>(x : Int) =&gt; e</code>、<code>fn(x : Int) { … }</code>。</li>
+<li><strong>管道</strong>：<code>e |&gt; f</code> 即 <code>f(e)</code>，<code>e |&gt; f(a)</code> 即 <code>f(e, a)</code>。</li>
+<li><strong>类型注解</strong>：<code>(e : T)</code>。</li>
+<li><strong>洞</strong>：<code>_</code> 由合一推断，可以出现在表达式和类型中，例如 <code>Cons(_, xs)</code>、<code>f[_, Int](x)</code>。</li>
+<li><strong>局部函数</strong>：块内可以写 <code>fn name(x : T) -&gt; R { … }</code>，但不能递归。</li>
+<li><strong>数组</strong>：<code>xs[i]</code> 取元素，<code>xs[i] = v</code> 赋值。</li>
+</ul>
+<p>三种等号：<code>=</code> 定义，<code>==</code> 布尔相等（结果是 <code>Bool</code>），<code>===</code> 命题相等（结果是 <code>Prop</code>，见
+<a href="#命题相等">命题相等</a>）。</p>
+<p>循环、<code>return</code>、<code>break</code>、<code>continue</code> 见<a href="#可变状态与循环">可变状态与循环</a>，<code>raise</code>、<code>try</code> 见
+<a href="#错误处理">错误处理</a>。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="函数"><a class="header" href="#函数">函数</a></h1>
+<pre><code class="language-moonbit">fn add(x : Int, y : Int) -&gt; Int {
+  x + y
+}
+
+fn[T] twice(f : (T) -&gt; T, x : T) -&gt; T {   // [T]：隐式参数
+  f(f(x))
+}
+
+fn answer() -&gt; Int { 42 }                 // 无参数函数
+
+fn main {
+  println(add(1, 2))
+  println(twice(x =&gt; x + 1, 0))
+  println(twice[Int](x =&gt; x * 2, 1))      // 显式给出隐式参数
+  println(answer())
+}
+</code></pre>
+<h2 id="不柯里化"><a class="header" href="#不柯里化">不柯里化</a></h2>
+<p>函数接受一组参数：<code>(Int, Int) -&gt; Int</code> 接受两个参数，和返回函数的
+<code>(Int) -&gt; (Int) -&gt; Int</code> 是不同的类型。不允许部分应用。</p>
+<p>无参数的函数（<code>fn answer()</code>）内部表示为接受一个 <code>Unit</code> 参数。</p>
+<h2 id="隐式参数"><a class="header" href="#隐式参数">隐式参数</a></h2>
+<p>隐式参数写在 <code>fn</code> 后面的 <code>[...]</code> 中：</p>
+<pre><code class="language-moonbit">fn[T] count(xs : Array[T], extra : Nat) -&gt; Nat {
+  plus(xs.size(), extra)
+}
+
+fn main {
+  println(count([1, 2], 3).to_int())
+}
+</code></pre>
+<ul>
+<li><code>[T]</code> 即 <code>[T : Type]</code>。不写类型的隐式参数，类型由使用推断，推断不出时默认为 <code>Type</code>。</li>
+<li>调用时一般由合一推断。也可以用 <code>f[a, b](x)</code> 按位置显式给出：可以只给前缀，可以写 <code>_</code>。</li>
+<li>隐式参数只能写在 <code>fn</code> 后面，不支持 <code>fn f[T](...)</code>。</li>
+</ul>
+<h2 id="其他形式"><a class="header" href="#其他形式">其他形式</a></h2>
+<ul>
+<li><strong>方法</strong>：<code>fn Type::m(self : Type, …)</code>，见<a href="#方法与运算符">方法与运算符</a>。</li>
+<li><strong>带标签参数</strong>：<code>x~ : T</code>、<code>x? : T</code>，见<a href="#带标签参数">带标签参数</a>。</li>
+<li><strong>lemma</strong>：结果是命题的函数，见 <a href="#lemma">lemma</a>。</li>
+<li><strong>外部原语</strong>：<code>fn f(x : Int) -&gt; Int = "%prim_name"</code>，只用于 Prelude。</li>
+<li><strong><code>main</code></strong>：<code>fn main { … }</code>，程序入口。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="带标签参数"><a class="header" href="#带标签参数">带标签参数</a></h1>
+<p>与 MoonBit 相同：</p>
+<pre><code class="language-moonbit">fn greet(name~ : String, greeting~ : String = "Hello", title? : String) -&gt; String {
+  match title {
+    Some(t) =&gt; greeting + ", " + t + " " + name
+    None =&gt; greeting + ", " + name
+  }
+}
+
+fn main {
+  println(greet(name="Alice"))
+  println(greet(greeting="Hi", name="Bob", title="Dr."))
+  let name = "Carol"
+  println(greet(name~))            // name~ 即 name=name
+  let t : String? = None
+  println(greet(name~, title?=t))  // title?= 直接传 Option
+}
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>声明</th><th>调用</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td><code>x~ : T</code></td><td><code>f(x=e)</code>、<code>f(x~)</code></td><td>必须传</td></tr>
+<tr><td><code>x~ : T = d</code></td><td>可以省略</td><td>默认值 <code>d</code> 可以引用前面的参数，每次调用时求值</td></tr>
+<tr><td><code>x? : T</code></td><td><code>f(x=e)</code>、<code>f(x?=opt)</code>、省略</td><td>函数体内的类型是 <code>T?</code>，省略时为 <code>None</code></td></tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>带标签参数可以按任意顺序传，也可以和位置参数交错。</li>
+<li>只有顶层函数（包括方法）能有带标签参数，lambda 和局部函数不能。</li>
+<li>作为值使用时，函数类型只按声明顺序列出参数，不含标签。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="方法与运算符"><a class="header" href="#方法与运算符">方法与运算符</a></h1>
+<h2 id="方法"><a class="header" href="#方法">方法</a></h2>
+<p><code>fn Type::m(self : Type, …)</code> 定义类型 <code>Type</code> 的方法。<code>x.m(a)</code> 调用 <code>T::m(x, a)</code>，<code>T</code> 是 <code>x</code> 的
+类型的头部；也可以写 <code>Type::m(x, a)</code>。</p>
+<pre><code class="language-moonbit">enum Color {
+  Red
+  Green
+}
+
+fn Color::name(self : Color) -&gt; String {
+  match self {
+    Red =&gt; "red"
+    Green =&gt; "green"
+  }
+}
+
+fn main {
+  println(Red.name())
+  println(Color::name(Green))
+}
+</code></pre>
+<p><code>x.m()</code> 先找类型自己的方法，再找 trait 方法（见 <a href="#trait">trait</a>）。</p>
+<h2 id="运算符"><a class="header" href="#运算符">运算符</a></h2>
+<p>运算符解析为方法，所以给自己的类型定义对应的方法就能使用它们：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>运算符</th><th>方法</th></tr>
+</thead>
+<tbody>
+<tr><td><code>a + b</code>、<code>a - b</code>、<code>a * b</code>、<code>a / b</code>、<code>a % b</code></td><td><code>op_add</code>、<code>op_sub</code>、<code>op_mul</code>、<code>op_div</code>、<code>op_mod</code></td></tr>
+<tr><td><code>-a</code></td><td><code>op_neg</code></td></tr>
+<tr><td><code>a == b</code>、<code>a != b</code></td><td><code>op_equal</code></td></tr>
+<tr><td><code>a &lt; b</code>、<code>a &lt;= b</code>、<code>a &gt; b</code>、<code>a &gt;= b</code></td><td><code>op_lt</code>、<code>op_le</code>、<code>op_gt</code>、<code>op_ge</code></td></tr>
+</tbody>
+</table>
+</div>
+<pre><code class="language-moonbit">struct Money {
+  cents : Int
+}
+
+fn Money::op_add(self : Money, other : Money) -&gt; Money {
+  { cents: self.cents + other.cents }
+}
+
+fn Money::op_lt(self : Money, other : Money) -&gt; Bool {
+  self.cents &lt; other.cents
+}
+
+fn main {
+  let a : Money = { cents: 150 }
+  let b : Money = { cents: 75 }
+  println((a + b).cents)
+  println(b &lt; a)
+}
+</code></pre>
+<p><code>!</code>、<code>&amp;&amp;</code>、<code>||</code> 只用于 <code>Bool</code>。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="类型"><a class="header" href="#类型">类型</a></h1>
+<h2 id="宇宙"><a class="header" href="#宇宙">宇宙</a></h2>
+<ul>
+<li><code>Type : Type</code>：类型本身是值，类型的类型是 <code>Type</code>（因此不一致，见<a href="README.html">介绍</a>中的声明）。</li>
+<li><code>Prop : Type</code>：命题的宇宙。<code>Prop</code> 中类型的值是证明；证明无关，任意两个同类型的证明视为相等。
+见<a href="#命题与证明">命题与证明</a>。</li>
+</ul>
+<h2 id="函数类型"><a class="header" href="#函数类型">函数类型</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>写法</th><th>含义</th></tr>
+</thead>
+<tbody>
+<tr><td><code>(Int, Int) -&gt; Int</code></td><td>接受两个参数的函数</td></tr>
+<tr><td><code>(Int) -&gt; (Int) -&gt; Int</code></td><td>返回函数的函数</td></tr>
+<tr><td><code>(n : Nat, v : Vector[Int](n)) -&gt; Int</code></td><td>依赖函数类型：后面的类型可以引用前面的参数</td></tr>
+<tr><td><code>forall x : A, P(x)</code></td><td>即 <code>(x : A) -&gt; P(x)</code>；<code>forall x y : A, …</code> 绑定多个</td></tr>
+<tr><td><code>[T](x : T) -&gt; T</code></td><td>一组参数，隐式在前、显式在后</td></tr>
+<tr><td><code>[T] -&gt; Type</code></td><td>只有隐式参数的一组</td></tr>
+<tr><td><code>(A) -&gt; B raise E</code></td><td>可能抛出错误 <code>E</code> 的函数</td></tr>
+</tbody>
+</table>
+</div>
+<pre><code class="language-moonbit">fn types_demo() -&gt; Int {
+  let f : (Int, Int) -&gt; Int = (a, b) =&gt; a + b       // 两个参数
+  let g : (Int) -&gt; (Int) -&gt; Int = a =&gt; b =&gt; a + b   // 返回函数的函数
+  f(1, 2) + g(1)(2)
+}
+
+fn main {
+  println(types_demo())
+}
+</code></pre>
+<h2 id="应用与简写"><a class="header" href="#应用与简写">应用与简写</a></h2>
+<ul>
+<li>类型也是函数，<code>Array[Int]</code>、<code>Vector[T](n)</code>、<code>Id[T](x)(y)</code> 都是普通的应用：<code>[...]</code> 给隐式
+参数，<code>(...)</code> 给显式参数。</li>
+<li><code>T?</code> 即 <code>Option[T]</code>；<code>(A, B)</code> 是二元组类型。</li>
+<li>返回 <code>Type</code> 的函数就是类型层的函数，见<a href="#类型层计算">类型层计算</a>。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="类型层计算"><a class="header" href="#类型层计算">类型层计算</a></h1>
+<p>类型是值，所以可以用普通函数计算类型，类型检查时会规范化（计算）它们：</p>
+<pre><code class="language-moonbit">// 接受 n 个 Int 参数、返回 Int 的函数类型
+fn NAry(n : Nat) -&gt; Type {
+  match n {
+    Z =&gt; Int
+    S(k) =&gt; (Int) -&gt; NAry(k)
+  }
+}
+
+fn sum_n(n : Nat, acc : Int) -&gt; NAry(n) {
+  match n as m return NAry(m) {
+    Z =&gt; acc
+    S(k) =&gt; x =&gt; sum_n(k, acc + x)
+  }
+}
+
+fn main {
+  println(sum_n(3, 0)(1)(2)(3))   // 6
+}
+</code></pre>
+<p><code>sum_n(3, 0)</code> 的类型 <code>NAry(3)</code> 在类型检查时被计算成 <code>(Int) -&gt; (Int) -&gt; (Int) -&gt; Int</code>。
+这里用 <a href="#return-子句">return 子句</a> 给出了匹配的动机。</p>
+<p>类型检查时会展开的只有纯函数：使用了可变状态、循环或异常的函数不展开（见
+<a href="#可变状态与循环">可变状态与循环</a>）。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="enum-与索引类型"><a class="header" href="#enum-与索引类型">enum 与索引类型</a></h1>
+<h2 id="普通-enum"><a class="header" href="#普通-enum">普通 enum</a></h2>
+<pre><code class="language-moonbit">enum Shape {
+  Circle(Double)
+  Rect(Double, Double)
+}
+
+fn Shape::area(self : Shape) -&gt; Double {
+  match self {
+    Circle(r) =&gt; 3.14 * r * r
+    Rect(w, h) =&gt; w * h
+  }
+}
+
+fn main {
+  println(Rect(2.0, 3.0).area())
+}
+</code></pre>
+<h2 id="参数与索引"><a class="header" href="#参数与索引">参数与索引</a></h2>
+<pre><code class="language-text">enum 名字[隐式参数](显式参数) : 索引 -&gt; 宇宙 { 构造子 }
+</code></pre>
+<ul>
+<li><strong>参数</strong>写在名字后，在所有构造子中固定。</li>
+<li><strong>索引</strong>写在冒号后，可以随构造子变化。宇宙是 <code>Type</code> 或 <code>Prop</code>。</li>
+<li><strong>构造子</strong>：<code>C[自己的隐式参数](字段) : 返回类型</code>。没有索引时可以省略返回类型。</li>
+</ul>
+<pre><code class="language-moonbit">enum Vector[T] : Nat -&gt; Type {
+  Nil : Vector[T](0)
+  Cons[n : Nat](T, Vector[T](n)) : Vector[T](S(n))
+}
+
+// 索引写在 [] 中：GADT
+enum Exp : [T] -&gt; Type {
+  IntLit(Int) : Exp[Int]
+  BoolLit(Bool) : Exp[Bool]
+  Add(Exp[Int], Exp[Int]) : Exp[Int]
+  If[T](Exp[Bool], Exp[T], Exp[T]) : Exp[T]
+}
+
+fn[T] Exp::eval(self : Exp[T]) -&gt; T {
+  match self {
+    IntLit(n) =&gt; n
+    BoolLit(b) =&gt; b
+    Add(l, r) =&gt; l.eval() + r.eval()
+    If(c, t, f) =&gt; if c.eval() { t.eval() } else { f.eval() }
+  }
+}
+
+fn main {
+  let e = If(BoolLit(true), Add(IntLit(1), IntLit(2)), IntLit(0))
+  println(e.eval())
+}
+</code></pre>
+<p><code>Exp::eval</code> 的结果类型随构造子变化：匹配到 <code>IntLit(n)</code> 时 <code>T</code> 被细化为 <code>Int</code>。</p>
+<h2 id="命名字段"><a class="header" href="#命名字段">命名字段</a></h2>
+<p>构造子的字段可以命名，后面的字段的类型可以引用它：</p>
+<pre><code class="language-moonbit">enum Sigma[A](P : (A) -&gt; Type) {
+  MkSigma(fst : A, snd : P(fst))
+}
+</code></pre>
+<h2 id="使用构造子"><a class="header" href="#使用构造子">使用构造子</a></h2>
+<ul>
+<li>数据类型的参数总是推断的；<code>[...]</code> 只给构造子自己的隐式参数，例如 <code>Cons[n](x, xs)</code>。</li>
+<li>重名构造子按期望类型区分，也可以写全名 <code>Vector::Cons</code>。</li>
+<li>宇宙为 <code>Prop</code> 的 enum 是命题，例如 Prelude 中的 <code>Id</code>（见<a href="#命题相等">命题相等</a>）。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="struct-与依赖字段"><a class="header" href="#struct-与依赖字段">struct 与依赖字段</a></h1>
+<pre><code class="language-moonbit">struct Point {
+  x : Int
+  y : Int
+}
+
+fn main {
+  let p : Point = { x: 1, y: 2 }
+  println(p.x + p.y)
+}
+</code></pre>
+<ul>
+<li><strong>构造</strong>：<code>{ x: 1, y: 2 }</code>，类型由期望类型决定。</li>
+<li><strong>字段访问</strong>：<code>p.x</code>。</li>
+<li><strong>参数</strong>：<code>struct Name[T, n : Nat] { … }</code>。</li>
+<li>不支持结构体模式（<code>{ x: a, y: b } =&gt; …</code>），用字段访问。</li>
+</ul>
+<h2 id="依赖字段"><a class="header" href="#依赖字段">依赖字段</a></h2>
+<p>后面的字段可以依赖前面的字段，例如一个带长度证明的数组：</p>
+<pre><code class="language-moonbit">struct Vec[T, n : Nat] {
+  to_array : Array[T]
+  length_to_array : to_array.size() === n
+}
+
+fn[T] Vec::from_array(xs : Array[T]) -&gt; Vec[T, xs.size()] {
+  { to_array: xs, length_to_array: Refl }
+}
+
+fn[T, n : Nat] Vec::get(self : Vec[T, n], i : Int) -&gt; T {
+  self.to_array[i]
+}
+
+fn main {
+  let v = Vec::from_array([1, 2, 3])
+  println(v.get(1))
+}
+</code></pre>
+<p><code>xs.size()</code> 返回 <code>Nat</code>，所以可以出现在类型中；<code>xs.length()</code> 返回 <code>Int</code>。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="模式匹配"><a class="header" href="#模式匹配">模式匹配</a></h1>
+<p><code>match</code> 的写法与 MoonBit 相同：</p>
+<pre><code class="language-moonbit">fn describe(n : Int, xs : List[Int]) -&gt; String {
+  match (n, xs) {
+    (0, _) =&gt; "zero"
+    (_, Nil) =&gt; "empty"
+    (_, Cons(x, Cons(_, _))) =&gt; "at least two, starting with \{x}"
+    _ =&gt; "other"
+  }
+}
+
+fn main {
+  println(describe(1, Cons(7, Cons(8, Nil))))
+}
+</code></pre>
+<ul>
+<li><strong>模式</strong>：变量、通配符 <code>_</code>、构造子（可以嵌套）、字面量、元组。</li>
+<li>分支按顺序匹配，可以重叠，第一个匹配的分支生效。</li>
+<li><strong>构造子的隐式参数</strong>可以在模式中绑定或忽略：<code>If[t](c, a, b)</code>、<code>IZ[_, a] =&gt; a</code>。</li>
+<li><strong><code>let</code> 模式</strong>：<code>let (a, b) = pair</code>。</li>
+</ul>
+<p>MoonBit++ 的模式匹配是依赖的：</p>
+<ul>
+<li><a href="#依赖匹配与细化">依赖匹配与细化</a>：匹配一个构造子时，类型中的索引随之细化。</li>
+<li><a href="#覆盖检查与不可能分支">覆盖检查与不可能分支</a>：缺少的分支会报错，类型上不可能的分支可以省略。</li>
+<li><a href="#return-子句">return 子句</a>：显式给出匹配的动机（Rocq 风格）。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="依赖匹配与细化"><a class="header" href="#依赖匹配与细化">依赖匹配与细化</a></h1>
+<p>匹配一个变量时，构造子的索引与变量类型中的索引做合一，结果细化整个上下文和目标类型
+（Agda 风格）：</p>
+<pre><code class="language-moonbit">enum Vec2[T] : Nat -&gt; Type {
+  VNil : Vec2[T](0)
+  VCons[n : Nat](T, Vec2[T](n)) : Vec2[T](S(n))
+}
+
+fn[T, n : Nat] Vec2::zip_with(self : Vec2[T](n), other : Vec2[T](n), f : (T, T) -&gt; T) -&gt; Vec2[T](n) {
+  match (self, other) {
+    (VNil, VNil) =&gt; VNil
+    (VCons(x, xs), VCons(y, ys)) =&gt; VCons(f(x, y), xs.zip_with(ys, f))
+  }
+}
+
+fn main {
+  let v : Vec2[Int](2) = VCons(1, VCons(2, VNil))
+  match v.zip_with(v, (a, b) =&gt; a + b) {
+    VCons(x, _) =&gt; println(x)
+  }
+}
+</code></pre>
+<ul>
+<li>匹配 <code>self</code> 得到 <code>VNil</code> 时，合一得出 <code>n = 0</code>。于是 <code>other : Vec2[T](0)</code> 只能是 <code>VNil</code>，
+<code>(VNil, VCons(…))</code> 这样的组合不需要写。</li>
+<li>每个分支中，目标类型 <code>Vec2[T](n)</code> 也被细化：<code>VNil</code> 分支返回 <code>Vec2[T](0)</code>，<code>VCons</code> 分支返回
+<code>Vec2[T](S(n'))</code>。</li>
+<li>匹配隐式参数也会细化，例如 <code>match g { Empty =&gt; …; Extend(_, _) =&gt; … }</code>，其中 <code>g</code> 是函数的
+隐式参数。</li>
+</ul>
+<h2 id="匹配函数调用的结果"><a class="header" href="#匹配函数调用的结果">匹配函数调用的结果</a></h2>
+<p>被匹配的不是变量（例如函数调用）时，结果类型中的索引关系同样用于细化目标类型：</p>
+<pre><code class="language-text">match progress(t1) {
+  PrStep(_, u1, st1) =&gt; PrStep(_, _, StApp1(t1, u1, t2, st1))
+  PrDone(_, VLam(b)) =&gt; PrStep(_, _, StApp(b, t2))
+}
+</code></pre>
+<p>完整的例子见仓库中的 <code>examples/stlc.mbtpp</code>。</p>
+<h2 id="prop-的消去"><a class="header" href="#prop-的消去">Prop 的消去</a></h2>
+<p>匹配 <code>Prop</code> 中的数据时，结果也必须在 <code>Prop</code> 中，除非这个类型是子单例（如命题相等 <code>===</code>，
+它最多只有一个证明）。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="覆盖检查与不可能分支"><a class="header" href="#覆盖检查与不可能分支">覆盖检查与不可能分支</a></h1>
+<p>每个 <code>match</code> 都要覆盖所有情况，否则报错：</p>
+<pre><code class="language-text">t.mbtpp:2:3: error: match is not exhaustive; missing case(s):
+  S(_)
+</code></pre>
+<h2 id="不可能的分支"><a class="header" href="#不可能的分支">不可能的分支</a></h2>
+<p>构造子的索引与被匹配的类型合一失败时，这个分支不可能出现，可以省略：</p>
+<pre><code class="language-moonbit">enum Fin : (Nat) -&gt; Type {
+  FZ[n : Nat] : Fin(S(n))
+  FS[n : Nat](Fin(n)) : Fin(S(n))
+}
+
+enum Vector[T] : Nat -&gt; Type {
+  Nil : Vector[T](0)
+  Cons[n : Nat](T, Vector[T](n)) : Vector[T](S(n))
+}
+
+// 不需要 Nil 的分支：Fin(0) 是空类型，Nil 不可能与 Fin(n) 同时出现
+fn[T, n : Nat] Vector::get(self : Vector[T](n), i : Fin(n)) -&gt; T {
+  match (self, i) {
+    (Cons(x, _), FZ) =&gt; x
+    (Cons(_, xs), FS(j)) =&gt; xs.get(j)
+  }
+}
+
+fn main {
+  let v : Vector[String](3) = Cons("a", Cons("b", Cons("c", Nil)))
+  println(v.get(FS(FS(FZ))))
+}
+</code></pre>
+<p>也可以只写模式、不写 <code>=&gt;</code>，此时检查器会确认它确实不可能（写错了会报“this pattern is not
+impossible”）：</p>
+<pre><code class="language-moonbit">enum V3[T] : Nat -&gt; Type {
+  N3 : V3[T](0)
+  C3[n : Nat](T, V3[T](n)) : V3[T](S(n))
+}
+
+fn[T, n : Nat] V3::head(self : V3[T](S(n))) -&gt; T {
+  match self {
+    N3
+    C3(x, _) =&gt; x
+  }
+}
+</code></pre>
+<h2 id="空类型"><a class="header" href="#空类型">空类型</a></h2>
+<p>没有构造子能匹配的类型是空类型，对它的匹配可以没有分支。检查器会在嵌套的位置识别空类型，
+例如字段类型为 <code>Fin(0)</code> 的构造子不必列出。内置类型（<code>Int</code>、<code>Array</code> 等）不是空类型。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="return-子句"><a class="header" href="#return-子句">return 子句</a></h1>
+<pre><code class="language-text">match e as x in D[_](i) return P(i, x) { … }
+</code></pre>
+<p>Rocq 风格的匹配：显式给出动机 <code>P</code>，即每个分支的结果类型如何依赖于被匹配的值 <code>x</code> 和它的索引
+<code>i</code>。</p>
+<pre><code class="language-moonbit">enum Vector[T] : Nat -&gt; Type {
+  Nil : Vector[T](0)
+  Cons[n : Nat](T, Vector[T](n)) : Vector[T](S(n))
+}
+
+fn[T, n : Nat] Vector::length_eq(self : Vector[T](n)) -&gt; Nat {
+  match self as v in Vector[_](m) return Nat {
+    Nil =&gt; Z
+    Cons(_, xs) =&gt; S(xs.length_eq())
+  }
+}
+
+fn main {
+  let v : Vector[Int](2) = Cons(7, Cons(8, Nil))
+  println(v.length_eq().to_int())
+}
+</code></pre>
+<ul>
+<li><code>as x</code> 给被匹配的值命名，<code>in D[_](i)</code> 给它的类型中的索引命名，<code>return P</code> 是动机；三部分都
+可以省略（如<a href="#类型层计算">类型层计算</a>中的 <code>match n as m return NAry(m)</code>）。</li>
+<li>有 <code>return</code> 时按 Rocq 的语义，不细化上下文；没有 <code>return</code> 时按
+<a href="#依赖匹配与细化">依赖匹配与细化</a>。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="命题与证明"><a class="header" href="#命题与证明">命题与证明</a></h1>
+<p>命题是 <code>Prop</code> 中的类型，证明是它们的值。类型检查器在检查证明时会计算（规范化）表达式，所以
+很多等式可以直接由计算得出。</p>
+<ul>
+<li><a href="#命题相等">命题相等</a>：<code>===</code>、<code>Refl</code> 与 Prelude 中的等式引理。</li>
+<li><a href="#lemma">lemma</a>：声明定理。</li>
+<li><a href="#策略">策略</a>：用 <code>proof { … }</code> 一步步构造证明。</li>
+</ul>
+<p>自定义的命题是宇宙为 <code>Prop</code> 的 enum：</p>
+<pre><code class="language-moonbit">enum And[A : Prop, B : Prop] : Prop {
+  Conj(A, B)
+}
+
+lemma and_comm[A : Prop, B : Prop](p : And[A, B]) -&gt; And[B, A] {
+  match p {
+    Conj(a, b) =&gt; Conj(b, a)
+  }
+}
+</code></pre>
+<blockquote>
+<p>没有终止检查和严格正性检查：递归函数和递归证明都直接接受，因此可以“证明”假命题。证明在
+编译时也不擦除。</p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="命题相等"><a class="header" href="#命题相等">命题相等</a></h1>
+<p><code>a === b</code> 是 Prelude 中的 <code>Id[_](a)(b)</code>：</p>
+<pre><code class="language-text">enum Id[T](x : T) : (y : T) -&gt; Prop {
+  Refl : Id[T](x)(x)
+}
+</code></pre>
+<p><code>Refl</code> 是唯一的构造子，它证明 <code>x === x</code>。因为类型检查时会计算，两边规范化后相同的等式都可以
+直接用 <code>Refl</code> 证明：</p>
+<pre><code class="language-moonbit">lemma two_plus_two : (2 : Nat) + 2 === 4 = Refl
+
+lemma plus_zero_left(n : Nat) -&gt; (0 : Nat) + n === n {
+  Refl
+}
+</code></pre>
+<p><code>0 + n</code> 按 <code>Nat::op_add</code> 的定义计算为 <code>n</code>；<code>n + 0</code> 则不能直接计算（<code>n</code> 是变量），需要归纳，
+见 <a href="#lemma">lemma</a>。</p>
+<h2 id="等式引理"><a class="header" href="#等式引理">等式引理</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>引理</th><th>类型</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Id::sym(p)</code></td><td><code>x === y</code> 推出 <code>y === x</code></td></tr>
+<tr><td><code>Id::trans(p, q)</code></td><td><code>x === y</code>、<code>y === z</code> 推出 <code>x === z</code></td></tr>
+<tr><td><code>Id::cong(f, p)</code></td><td><code>x === y</code> 推出 <code>f(x) === f(y)</code></td></tr>
+<tr><td><code>Id::subst(p, motive, px)</code></td><td><code>x === y</code> 与 <code>motive(x)</code> 推出 <code>motive(y)</code>；<code>motive</code> 可以返回 <code>Type</code></td></tr>
+</tbody>
+</table>
+</div>
+<p><code>===</code> 是子单例，所以可以匹配 <code>Refl</code> 来改写类型，即使结果在 <code>Type</code> 中：</p>
+<pre><code class="language-moonbit">fn[a : Nat, b : Nat] cast(e : a === b, xs : Array[Int]) -&gt; Array[Int] {
+  match e {
+    Refl =&gt; xs
+  }
+}
+</code></pre>
+<p><code>==</code> 与 <code>===</code> 不同：<code>==</code> 是 <code>Bool</code> 值的比较，可以在运行时计算；<code>===</code> 是命题。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="lemma"><a class="header" href="#lemma">lemma</a></h1>
+<p><code>lemma</code> 与 <code>fn</code> 相同，只是结果通常是命题。有两种写法：</p>
+<ul>
+<li><code>lemma 名字[隐式](参数) -&gt; 命题 { 证明 }</code></li>
+<li><code>lemma 名字[隐式] : 命题 = 证明表达式</code></li>
+</ul>
+<p>用模式匹配和递归做归纳：</p>
+<pre><code class="language-moonbit">lemma plus_zero(n : Nat) -&gt; n + 0 === n {
+  match n {
+    Z =&gt; Refl
+    S(k) =&gt; Id::cong(S, plus_zero(k))
+  }
+}
+
+lemma plus_succ(n : Nat, m : Nat) -&gt; n + S(m) === S(n + m) {
+  match n {
+    Z =&gt; Refl
+    S(k) =&gt; Id::cong(S, plus_succ(k, m))
+  }
+}
+
+lemma append_nil[T](xs : List[T]) -&gt; xs.append(Nil) === xs {
+  match xs {
+    Nil =&gt; Refl
+    Cons(x, rest) =&gt; Id::cong(r =&gt; List::Cons(x, r), append_nil(rest))
+  }
+}
+</code></pre>
+<ul>
+<li><code>Z</code> 分支中目标 <code>0 + 0 === 0</code> 计算后两边相同，用 <code>Refl</code>。</li>
+<li><code>S(k)</code> 分支中目标是 <code>S(k) + 0 === S(k)</code>，计算为 <code>S(k + 0) === S(k)</code>；用递归得到的
+<code>k + 0 === k</code> 加上 <code>Id::cong(S, …)</code> 得出。</li>
+<li>递归调用就是归纳假设。检查器不验证递归是否终止。</li>
+</ul>
+<p>更长的证明见仓库中的 <code>examples/proofs.mbtpp</code>（向量拼接的结合律、<code>reverse</code> 的性质）和
+<code>examples/stlc.mbtpp</code>（简单类型 λ 演算的代换引理、progress 与 canonicity，以及从 canonicity
+证明中提取求值器）。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="策略"><a class="header" href="#策略">策略</a></h1>
+<p><code>proof { … }</code> 用策略一步步构造证明，每行一条：</p>
+<pre><code class="language-moonbit">lemma plus_zero(n : Nat) -&gt; n + 0 === n {
+  match n {
+    Z =&gt; Refl
+    S(k) =&gt; Id::cong(S, plus_zero(k))
+  }
+}
+
+lemma plus_succ(n : Nat, m : Nat) -&gt; n + S(m) === S(n + m) {
+  match n {
+    Z =&gt; Refl
+    S(k) =&gt; Id::cong(S, plus_succ(k, m))
+  }
+}
+
+lemma plus_comm : forall n m : Nat, n + m === m + n = proof {
+  intros n m
+  destruct n
+  rewrite plus_zero(m)
+  rfl
+  rewrite plus_succ(m, n_0)
+  rewrite plus_comm(n_0, m)
+  rfl
+}
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>策略</th><th>作用</th></tr>
+</thead>
+<tbody>
+<tr><td><code>intros x y</code></td><td>引入假设（也写 <code>intro</code>；<code>_</code> 忽略）</td></tr>
+<tr><td><code>exact e</code></td><td>用表达式 <code>e</code> 完成当前目标</td></tr>
+<tr><td><code>rfl</code></td><td>用 <code>Refl</code> 完成目标（两边规范化后相同）</td></tr>
+<tr><td><code>destruct x</code></td><td>对 <code>x</code> 分情况，每个构造子一个新目标；字段命名为 <code>x_0</code>、<code>x_1</code>…（也写 <code>cases</code>）</td></tr>
+<tr><td><code>rewrite e</code>、<code>rewrite &lt;- e</code></td><td>用等式 <code>e</code> 从左到右、从右到左改写目标（也写 <code>rw</code>）</td></tr>
+<tr><td><code>apply f</code></td><td>用函数 <code>f</code> 把目标归约为它的参数</td></tr>
+<tr><td><code>assume h : P</code></td><td>先把 <code>P</code> 作为假设 <code>h</code> 使用，之后再证明 <code>P</code>（也写 <code>have</code>）</td></tr>
+</tbody>
+</table>
+</div>
+<p>更多例子：</p>
+<pre><code class="language-moonbit">enum And[A : Prop, B : Prop] : Prop {
+  Conj(A, B)
+}
+
+lemma and_comm[A : Prop, B : Prop] : (And[A, B]) -&gt; And[B, A] = proof {
+  intros p
+  destruct p
+  exact Conj(p_1, p_0)
+}
+
+lemma modus_ponens[A : Prop, B : Prop] : (A, (A) -&gt; B) -&gt; B = proof {
+  intros a f
+  apply f
+  exact a
+}
+
+lemma zero_ne_one : (0 : Nat) === 1 -&gt; Int = proof {
+  intros h
+  destruct h
+}
+</code></pre>
+<ul>
+<li>策略只是构造证明项的另一种方式，结果与手写的项相同。</li>
+<li>对不可能的等式（如 <code>0 === 1</code>）做 <code>destruct</code> 没有剩余目标。</li>
+<li>没有 <code>simp</code>、<code>omega</code>、<code>auto</code> 这类自动化策略。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="trait"><a class="header" href="#trait">trait</a></h1>
+<pre><code class="language-moonbit">trait Shape {
+  area(Self) -&gt; Int
+  name(Self) -&gt; String
+}
+
+trait Solid : Shape {                          // 父 trait
+  volume(Self, Int) -&gt; Int
+}
+
+struct Square {
+  side : Int
+}
+
+impl Shape for Square with area(self) { self.side * self.side }
+impl Shape for Square with name(self) { "square" }
+impl Solid for Square with volume(self, depth) { self.area() * depth }
+
+fn[S : Shape] describe(s : S) -&gt; String {
+  "\{s.name()} with area \{s.area()}"
+}
+
+fn[S : Solid] describe_solid(s : S) -&gt; String {
+  describe(s) + ", volume \{s.volume(2)}"     // 父 trait 的方法可用
+}
+
+fn main {
+  let sq : Square = { side: 2 }
+  println(describe_solid(sq))
+}
+</code></pre>
+<ul>
+<li><strong>声明</strong>：<code>trait Name : Super1 + Super2 { 方法(参数类型) -&gt; 结果 }</code>，方法的第一个参数通常是
+<code>Self</code>。泛型方法写 <code>fn[T] m(…)</code>。</li>
+<li><strong>实现</strong>：<code>impl Tr for T with m(参数) { … }</code>，每个方法一条。泛型实例：
+<code>impl[T : Show] Show for Array[T] with to_string(self) { … }</code>。</li>
+<li><strong>约束</strong>：<code>fn[T : Tr]</code>，多个约束 <code>[T : Eq + Show]</code>。</li>
+<li><strong>调用</strong>：<code>x.m()</code> 或 <code>Tr::m(x)</code>。</li>
+<li><strong>实例搜索</strong>：约束对应的实例由检查器自动填充：先找局部约束（以及它们的父 trait），再找全局
+实例（包括泛型实例）。</li>
+</ul>
+<p>Prelude 中的 trait：<code>Show</code>（<code>to_string</code>）、<code>Eq</code>（<code>op_equal</code>）、<code>Compare : Eq</code>（<code>compare</code>）、
+<code>Add</code>（<code>op_add</code>）、<code>Monad</code>（见<a href="#高阶-trait-与-monad">高阶 trait 与 monad</a>）。<code>println</code> 需要 <code>Show</code>。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="高阶-trait-与-monad"><a class="header" href="#高阶-trait-与-monad">高阶 trait 与 monad</a></h1>
+<p><code>Self</code> 可以是类型构造子。Prelude 中的 <code>Monad</code>：</p>
+<pre><code class="language-text">trait Monad(Self : [T] -&gt; Type) {
+  fn[T] pure(T) -&gt; Self[T]
+  fn[T, U] bind(Self[T], (T) -&gt; Self[U]) -&gt; Self[U]
+}
+</code></pre>
+<p><code>Option</code> 和 <code>List</code> 有 <code>Monad</code> 实例。</p>
+<h2 id="monad-块"><a class="header" href="#monad-块">monad 块</a></h2>
+<pre><code class="language-moonbit">fn[M : Monad, T, U, V] lift2(f : (T, U) -&gt; V, m : M[T], n : M[U]) -&gt; M[V] {
+  monad {
+    let t &lt;- m
+    let u &lt;- n
+    Monad::pure(f(t, u))
+  }
+}
+
+fn[M : Monad, T, U, V] lift2_inline(f : (T, U) -&gt; V, m : M[T], n : M[U]) -&gt; M[V] {
+  monad {
+    Monad::pure(f(&lt;- m, &lt;- n))
+  }
+}
+
+fn main {
+  println(lift2((a, b) =&gt; a + b, Some(1), Some(2)))
+  println(lift2_inline((a, b) =&gt; a + b, Some(1), None))
+  let xs : List[Int] = Cons(1, Cons(2, Nil))
+  let ys : List[Int] = Cons(10, Cons(20, Nil))
+  println(lift2_inline((a, b) =&gt; a * b, xs, ys))
+}
+</code></pre>
+<ul>
+<li><code>let x &lt;- m</code> 绑定 <code>m</code> 的结果，之后的语句在 <code>bind</code> 的回调中。</li>
+<li>表达式中的 <code>&lt;- m</code> 就地绑定，按从左到右的顺序。</li>
+<li><code>monad { … }</code> 的类型由期望类型或其中的表达式推断出用哪个 <code>Monad</code> 实例。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="可变状态与循环"><a class="header" href="#可变状态与循环">可变状态与循环</a></h1>
+<pre><code class="language-moonbit">fn sum_to(n : Int) -&gt; Int {
+  let mut acc = 0
+  for i = 1; i &lt;= n; i = i + 1 {
+    acc = acc + i
+  }
+  acc
+}
+
+fn find_first(xs : Array[Int], p : (Int) -&gt; Bool) -&gt; Int {
+  for x in xs {
+    if p(x) {
+      return x
+    }
+  }
+  -1
+}
+
+fn main {
+  println(sum_to(100))
+  println(find_first([1, 5, 8, 11], x =&gt; x % 2 == 0))
+  let mut i = 0
+  while true {
+    i += 1
+    if i &gt; 5 {
+      break
+    }
+  }
+  println("i = \{i}")
+  let arr = Array::make(3, 0)
+  arr[1] = 42
+  for k in 0..&lt;3 {
+    print(arr[k])
+    print(" ")
+  }
+  println("")
+}
+</code></pre>
+<ul>
+<li><strong>可变变量</strong>：<code>let mut x = e</code>，赋值 <code>x = e</code>，以及 <code>+=</code>、<code>-=</code>、<code>*=</code>、<code>/=</code>。</li>
+<li><strong>循环</strong>：<code>while c { … }</code>；C 风格 <code>for i = 0; i &lt; n; i = i + 1 { … }</code>；<code>for x in xs { … }</code>
+遍历数组；<code>for k in a..&lt;b</code>、<code>for k in a..=b</code> 遍历区间。</li>
+<li><strong><code>break</code></strong>、<strong><code>continue</code></strong> 作用于最内层循环；<strong><code>return</code></strong> 从当前函数返回，在 lambda 中只从
+lambda 返回。</li>
+<li><strong>数组</strong>是可变的：<code>xs[i] = v</code>、<code>xs.push(x)</code>。</li>
+</ul>
+<h2 id="与类型检查的关系"><a class="header" href="#与类型检查的关系">与类型检查的关系</a></h2>
+<p>使用了 <code>let mut</code>、赋值、循环、<code>raise</code>、<code>try</code> 的函数在类型检查时<strong>不展开</strong>：它们可以正常调用、
+运行，但不参与类型层的计算，关于它们的等式不能用 <code>Refl</code> 证明。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="错误处理"><a class="header" href="#错误处理">错误处理</a></h1>
+<pre><code class="language-moonbit">suberror DivError {
+  DivError(String)
+}
+
+fn div(a : Int, b : Int) -&gt; Int raise DivError {
+  if b == 0 {
+    raise DivError("division by zero")
+  }
+  a / b
+}
+
+fn main {
+  let r = try div(10, 0) catch {
+    DivError(msg) =&gt; {
+      println("caught: " + msg)
+      0
+    }
+  }
+  println(r)
+  println(try? div(10, 2))      // Ok(5)
+}
+</code></pre>
+<ul>
+<li><strong>错误类型</strong>：<code>suberror Name { C(…) }</code>，或单个构造子的简写 <code>suberror Name(String)</code>。</li>
+<li><strong>声明</strong>：函数类型 <code>-&gt; T raise E</code>；<code>raise</code> 不写类型时为 <code>Error</code>（任何错误）。</li>
+<li><strong>抛出</strong>：<code>raise e</code>。</li>
+<li><strong>捕获</strong>：<code>try e catch { 模式 =&gt; … }</code>，分支按错误的构造子匹配，没有匹配的错误继续向外抛出。</li>
+<li><strong><code>try? e</code></strong>：得到 <code>Result[T, Error]</code>，不抛出。</li>
+<li>Prelude 中的 <code>fail(msg)</code> 抛出 <code>Failure(msg)</code>。</li>
+</ul>
+<p><code>raise</code>、<code>try</code> 与可变状态一样，使函数在类型检查时不展开（见
+<a href="#可变状态与循环">可变状态与循环</a>）。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="prelude"><a class="header" href="#prelude">Prelude</a></h1>
+<p>每个程序都自动加载 Prelude（<code>moonpp --no-prelude</code> 可以关闭）。</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>名字</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Int</code>、<code>Double</code>、<code>Bool</code>、<code>Char</code>、<code>String</code>、<code>Unit</code>、<code>Array[T]</code>、<code>Error</code></td><td>内置类型</td></tr>
+<tr><td><code>Nat</code>（<code>Z</code>、<code>S</code>）</td><td>自然数，整数字面量在 <code>Nat</code> 处展开；<code>n.to_int()</code>、<code>int_to_nat(i)</code>、<code>+</code>、<code>*</code>、<code>==</code></td></tr>
+<tr><td><code>Id[T](x)(y)</code>、<code>===</code>、<code>Refl</code></td><td>命题相等；<code>Id::sym</code>、<code>Id::trans</code>、<code>Id::cong</code>、<code>Id::subst</code></td></tr>
+<tr><td><code>Option[T]</code>（<code>None</code>、<code>Some</code>）、<code>T?</code></td><td>可选值</td></tr>
+<tr><td><code>Result[T, E]</code>（<code>Ok</code>、<code>Err</code>）</td><td>结果</td></tr>
+<tr><td><code>List[T]</code>（<code>Nil</code>、<code>Cons</code>）</td><td>链表：<code>append</code>、<code>reverse</code>、<code>length</code>、<code>map</code>、<code>flat_map</code></td></tr>
+<tr><td><code>(a, b)</code>、<code>(a, b, c)</code></td><td>元组（<code>Tuple2</code>、<code>Tuple3</code>）</td></tr>
+<tr><td><code>Failure</code>、<code>fail(msg)</code></td><td>通用错误</td></tr>
+<tr><td><code>Show</code>、<code>Eq</code>、<code>Compare</code>、<code>Add</code>、<code>Monad</code></td><td>trait</td></tr>
+<tr><td><code>println</code>、<code>print</code>、<code>print_string</code></td><td>输出（<code>println</code> 和 <code>print</code> 需要 <code>Show</code>）</td></tr>
+<tr><td><code>abort(msg)</code>、<code>panic()</code></td><td>终止程序</td></tr>
+<tr><td><code>not(b)</code></td><td>布尔取反</td></tr>
+</tbody>
+</table>
+</div>
+<p>内置类型的方法：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>类型</th><th>方法</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Int</code></td><td>算术与比较运算符、<code>compare</code>、<code>to_string</code>、<code>to_double</code>、<code>unsafe_to_char</code></td></tr>
+<tr><td><code>Double</code></td><td>算术与比较运算符、<code>compare</code>、<code>to_string</code>、<code>to_int</code></td></tr>
+<tr><td><code>String</code></td><td><code>+</code>、<code>==</code>、<code>compare</code>、<code>length</code>、<code>s[i]</code>、<code>substring(start, end)</code>、<code>to_string</code></td></tr>
+<tr><td><code>Char</code></td><td><code>==</code>、<code>compare</code>、<code>to_int</code>、<code>to_string</code></td></tr>
+<tr><td><code>Bool</code></td><td><code>==</code>、<code>not</code>、<code>to_string</code></td></tr>
+<tr><td><code>Array[T]</code></td><td><code>Array::make(n, x)</code>、<code>Array::new()</code>、<code>length</code>、<code>size</code>（<code>Nat</code>）、<code>xs[i]</code>、<code>xs[i] = v</code>、<code>push</code></td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="安装"><a class="header" href="#安装">安装</a></h1>
+<p>需要：</p>
+<ul>
+<li>Node.js（18 或更新）。</li>
+<li>MoonBit 工具链 <code>moon</code>，使用 <code>moon.mod</code> / <code>moon.pkg</code> 的版本（2026-10 之后）。</li>
+</ul>
+<p>在仓库根目录：</p>
+<pre><code class="language-bash">moon build --target js --release
+npm install -g .
+</code></pre>
+<p><code>npm install -g .</code> 安装的是指向本仓库的链接，以后重新运行
+<code>moon build --target js --release</code> 即可更新；<code>npm uninstall -g moonpp</code> 卸载。也可以直接调用
+<code>bin/moonpp</code>（Windows 上是 <code>bin\moonpp.cmd</code>）。</p>
+<p><code>moonpp</code> 在一个栈很大的 Node worker 中运行（类型检查器和解释器递归很深）。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="项目结构"><a class="header" href="#项目结构">项目结构</a></h1>
+<p>MoonBit++ 项目就是一个 MoonBit 模块，包是放 <code>.mbtpp</code> 文件的目录：</p>
+<pre><code class="language-text">hello/
+  moon.mod                 模块：名字、版本、依赖、source 目录
+  src/
+    main/
+      moon.pkg             包：导入的 MoonBit 包、是否是 main 包
+      main.mbtpp           一个包可以有多个 .mbtpp 文件
+  mbtpp_out/               moonpp build 的输出
+</code></pre>
+<h2 id="moonmod"><a class="header" href="#moonmod">moon.mod</a></h2>
+<pre><code class="language-text">name = "username/hello"
+
+version = "0.1.0"
+
+import {
+  "moonbitlang/x@0.5.6",
+}
+
+source = "src"
+</code></pre>
+<p><code>import</code> 块是模块的依赖，由 <code>moonpp add</code> 维护。</p>
+<h2 id="moonpkg"><a class="header" href="#moonpkg">moon.pkg</a></h2>
+<pre><code class="language-text">import {
+  "moonbitlang/x/encoding/percent",
+  "moonbitlang/core/string" @str,
+}
+
+options(
+  "is-main": true,
+)
+</code></pre>
+<ul>
+<li><code>import</code> 块列出包导入的 MoonBit 包，<code>@别名</code> 可选，默认是路径的最后一段。</li>
+<li>main 包用 <code>options("is-main": true)</code> 标记。新版 <code>moon fmt</code> 会改写成
+<code>pkgtype(kind: "executable")</code>，两种写法都认。</li>
+<li>一个包的所有 <code>.mbtpp</code> 文件共享一个作用域，声明顺序无关；报错定位到具体文件。</li>
+</ul>
+<h2 id="旧格式"><a class="header" href="#旧格式">旧格式</a></h2>
+<p>旧的 <code>moon.mod.json</code>、<code>moon.pkg.json</code> 也能读取。但新版 <code>moon</code> 不再接受 <code>moon.mod.json</code>，所以
+需要依赖管理或编译时，在项目根目录运行 <code>moon fmt</code> 迁移；<code>moonpp</code> 遇到这种情况会给出提示。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="命令"><a class="header" href="#命令">命令</a></h1>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>命令</th><th>作用</th></tr>
+</thead>
+<tbody>
+<tr><td><code>moonpp new &lt;名字&gt;</code></td><td>创建项目</td></tr>
+<tr><td><code>moonpp check [路径]</code></td><td>类型检查整个项目、一个包目录或一个文件</td></tr>
+<tr><td><code>moonpp run [路径]</code></td><td>用解释器运行 main 包（或指定的包、文件）</td></tr>
+<tr><td><code>moonpp run --compiled [路径]</code></td><td>编译到 MoonBit 并用 <code>moon run</code> 运行</td></tr>
+<tr><td><code>moonpp build [路径] [-o 目录]</code></td><td>编译成 MoonBit 项目并 <code>moon build</code></td></tr>
+<tr><td><code>moonpp add &lt;user/module[@版本]&gt;</code></td><td>添加依赖（<code>moon add</code>），并为缺少接口的包生成 <code>.mbti</code></td></tr>
+<tr><td><code>moonpp remove &lt;module&gt;</code></td><td>删除依赖（<code>moon remove</code>）</td></tr>
+<tr><td><code>moonpp install</code></td><td>安装依赖（<code>moon install</code>）并生成接口</td></tr>
+<tr><td><code>moonpp interfaces</code></td><td>只为已下载的依赖生成缺失的接口（<code>moon info</code>）</td></tr>
+<tr><td><code>moonpp tree</code></td><td>依赖树（<code>moon tree</code>）</td></tr>
+<tr><td><code>moonpp version</code></td><td>版本</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="选项"><a class="header" href="#选项">选项</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>选项</th><th>作用</th></tr>
+</thead>
+<tbody>
+<tr><td><code>--verbose</code></td><td>列出导入时被跳过的接口项</td></tr>
+<tr><td><code>--no-prelude</code></td><td>不加载 Prelude</td></tr>
+<tr><td><code>--compiled</code></td><td><code>run</code> 时运行编译结果而不是解释执行</td></tr>
+<tr><td><code>-o</code>、<code>--output &lt;目录&gt;</code></td><td><code>build</code>、<code>run --compiled</code> 时生成项目的位置</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="单个文件"><a class="header" href="#单个文件">单个文件</a></h2>
+<p>路径可以是一个 <code>.mbtpp</code> 文件：</p>
+<pre><code class="language-bash">moonpp run examples/vector.mbtpp
+moonpp run --compiled examples/vector.mbtpp
+</code></pre>
+<p>文件旁边如果有 <code>moon.pkg</code>，其中的导入同样生效。编译单个文件时，生成的项目在文件所在目录的
+<code>_mbtpp_build/&lt;文件名&gt;/</code>。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="依赖"><a class="header" href="#依赖">依赖</a></h1>
+<h2 id="mooncakesio-上的模块"><a class="header" href="#mooncakesio-上的模块">mooncakes.io 上的模块</a></h2>
+<pre><code class="language-bash">moonpp add moonbitlang/x@0.5.6
+</code></pre>
+<p>然后在包的 <code>moon.pkg</code> 中导入模块中的包：</p>
+<pre><code class="language-text">import {
+  "moonbitlang/x/encoding/percent",
+}
+</code></pre>
+<p><code>moonpp add</code> 调用 <code>moon add</code> 下载模块，并为缺少 <code>.mbti</code> 接口的包运行 <code>moon info</code> 生成接口。
+接口从项目的 <code>.mooncakes/</code> 读取。</p>
+<h2 id="标准库"><a class="header" href="#标准库">标准库</a></h2>
+<p><code>moonbitlang/core/*</code> 不需要添加，接口从 MoonBit 安装目录（<code>~/.moon/lib/core</code>）读取。</p>
+<h2 id="本地模块"><a class="header" href="#本地模块">本地模块</a></h2>
+<p>用 MoonBit 的工作区：在项目根目录写 <code>moon.work</code>，并在 <code>moon.mod</code> 中声明依赖。</p>
+<p><code>moon.work</code>：</p>
+<pre><code class="language-text">members = [
+  ".",
+  "../geo",
+]
+</code></pre>
+<p><code>moon.mod</code>：</p>
+<pre><code class="language-text">name = "username/app"
+
+version = "0.1.0"
+
+import {
+  "u/geo@0.1.0",
+}
+
+source = "src"
+</code></pre>
+<p>本地模块需要有 <code>.mbti</code> 接口，在该模块中运行 <code>moon info</code> 生成。</p>
+<p>导入之后怎样使用 MoonBit 包，见<a href="#导入-moonbit-包">导入 MoonBit 包</a>。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="构建产物"><a class="header" href="#构建产物">构建产物</a></h1>
+<p><code>moonpp build</code> 生成一个完整的 MoonBit 项目，不依赖 moonpp 也能构建运行：</p>
+<pre><code class="language-text">mbtpp_out/main/
+  moon.mod          原项目的名字、版本和依赖
+  moon.work         工作区：自身，加上本地模块（绝对路径）
+  README.md
+  .gitignore
+  main/
+    moon.pkg        导入的 MoonBit 包；main 包
+    main.mbt        生成的程序
+    runtime.mbt     运行时支持（值表示、模式匹配、原语）
+</code></pre>
+<pre><code class="language-bash">cd mbtpp_out/main
+moon run main
+</code></pre>
+<ul>
+<li>默认位置是项目的 <code>mbtpp_out/&lt;包名&gt;</code>；单个文件是 <code>&lt;文件所在目录&gt;/_mbtpp_build/&lt;文件名&gt;</code>；
+<code>-o &lt;目录&gt;</code> 指定其他位置。</li>
+<li>每次构建会覆盖其中的文件。</li>
+<li>生成的项目自带 <code>moon.work</code>，所以上层目录中的工作区不会影响它。</li>
+<li>生成的代码经过 <code>moon fmt</code> 格式化。</li>
+</ul>
+<p>生成的代码是什么样的，见<a href="#编译到-moonbit">编译到 MoonBit</a>。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="导入-moonbit-包"><a class="header" href="#导入-moonbit-包">导入 MoonBit 包</a></h1>
+<p>在包的 <code>moon.pkg</code> 中导入后，用 <code>@包.名字</code> 引用：</p>
+<pre><code class="language-text">import {
+  "moonbitlang/core/math",
+  "moonbitlang/core/string" @str,
+}
+</code></pre>
+<pre><code class="language-text">fn distance(x : Double, y : Double) -&gt; Double {
+  @math.hypot(x, y)
+}
+
+fn parse_hex(s : String) -&gt; Int raise {
+  @str.parse_int(s, base=16)
+}
+
+fn main {
+  println(distance(3.0, 4.0))
+  println(try? parse_hex("ff"))
+}
+</code></pre>
+<p>（完整的例子见仓库中的 <code>examples/import</code>。）</p>
+<h2 id="工作方式"><a class="header" href="#工作方式">工作方式</a></h2>
+<p><code>moonpp</code> 读取包的 <code>.mbti</code> 接口文件，把其中的项翻译成 MoonBit++ 声明：</p>
+<ul>
+<li>函数成为外部常量：类型检查时只有类型，不会展开。</li>
+<li>类型、trait 翻译成对应的 MoonBit++ 声明（见<a href="#类型对应与不导入的项">类型对应与不导入的项</a>）。</li>
+</ul>
+<p><strong>解释器不能运行导入的函数</strong>，运行到它们时报错
+“cannot run the imported MoonBit function … in the interpreter”。需要真正调用时，运行编译后的
+程序：<code>moonpp run --compiled</code>（见<a href="#调用-moonbit-函数">调用 MoonBit 函数</a>）。</p>
+<h2 id="名字"><a class="header" href="#名字">名字</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>项</th><th>写法</th></tr>
+</thead>
+<tbody>
+<tr><td>函数</td><td><code>@pkg.f</code></td></tr>
+<tr><td>类型</td><td><code>@pkg.T</code></td></tr>
+<tr><td>构造子</td><td><code>@pkg.T::C</code> 或 <code>@pkg.C</code>；按期望类型也可以只写 <code>C</code></td></tr>
+<tr><td>方法</td><td><code>x.m()</code>；<code>#as_free_fn</code> 的方法也可以写 <code>@pkg.m</code></td></tr>
+<tr><td>trait</td><td><code>@pkg.Tr</code>：用于约束、<code>impl @pkg.Tr for T</code>、<code>trait A : @pkg.Tr</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>带标签参数、可选参数、<code>raise</code> 与 MoonBit 中相同。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="类型对应与不导入的项"><a class="header" href="#类型对应与不导入的项">类型对应与不导入的项</a></h1>
+<h2 id="类型对应"><a class="header" href="#类型对应">类型对应</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>MoonBit</th><th>MoonBit++</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Int32</code>（即 <code>Int</code>）、<code>Double</code>、<code>Bool</code>、<code>Char</code>、<code>String</code>、<code>Unit</code></td><td>同名内置类型（<code>Int32</code> 即 <code>Int</code>）</td></tr>
+<tr><td><code>Array[T]</code>、<code>T?</code>、<code>Result[T, E]</code></td><td>同名类型</td></tr>
+<tr><td><code>StringView</code>、<code>ArrayView[T]</code></td><td><code>String</code>、<code>Array[T]</code></td></tr>
+<tr><td><code>pub(all) enum</code>、<code>pub(all) struct</code></td><td>同样的 enum、struct，自动 <code>#mbt</code>；可以构造和匹配</td></tr>
+<tr><td><code>pub enum</code>、<code>pub struct</code>（只读）</td><td>同上，但不能构造，只能匹配和传递</td></tr>
+<tr><td><code>pub(open) trait</code></td><td>trait，自动 <code>#mbt</code>；可以为本程序的类型实现</td></tr>
+<tr><td><code>pub trait</code></td><td>trait，不能实现</td></tr>
+<tr><td><code>type T</code>（抽象类型），以及未定义的类型（<code>Int64</code>、<code>Map</code> 等）</td><td>不透明类型</td></tr>
+<tr><td>未知的 trait 约束（<code>Hash</code> 等）</td><td>不透明 trait，任何类型都满足</td></tr>
+<tr><td><code>(A) -&gt; B raise E</code>、<code>x~ : T</code>、<code>x? : T</code></td><td>相同</td></tr>
+</tbody>
+</table>
+</div>
+<p>只读类型：</p>
+<pre><code class="language-text">fn f() -&gt; @h.Handle { H(1) }
+// error: cannot construct a value of the MoonBit type @h.Handle outside its package (it is not pub(all))
+</code></pre>
+<p><code>#mbt</code> 见 <a href="#mbt-类型与-trait">#mbt 类型与 trait</a>。</p>
+<h2 id="不导入的项"><a class="header" href="#不导入的项">不导入的项</a></h2>
+<p>下面的项会被跳过，<code>moonpp check --verbose</code> 会列出它们：</p>
+<ul>
+<li><code>async</code> 函数，以及参数中的 <code>async</code> 函数类型；</li>
+<li>trait 对象 <code>&amp;T</code>；</li>
+<li>自动填充的参数 <code>loc~ : SourceLoc</code>；</li>
+<li>泛型 <code>impl</code>，以及 <code>Show</code>、<code>Eq</code>、<code>Compare</code> 之外的 <code>impl</code>；</li>
+<li><code>#deprecated</code> 的项；</li>
+<li><code>using</code> 重新导出。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="编译到-moonbit"><a class="header" href="#编译到-moonbit">编译到 MoonBit</a></h1>
+<p>编译器把类型检查后的程序翻译成 MoonBit。<code>moonpp build</code> 和 <code>moonpp run --compiled</code> 使用它；
+<a href="https://greckf.github.io/mbtpp/">Playground</a> 中的“编译到 MoonBit”可以直接查看结果。</p>
+<p>两种翻译混合使用：</p>
+<h2 id="原生翻译"><a class="header" href="#原生翻译">原生翻译</a></h2>
+<p>参数和结果都是原生类型、函数体也在一阶片段中的函数，翻译成普通的（可以是泛型的）MoonBit
+函数。原生类型是：</p>
+<ul>
+<li><code>Int</code>、<code>Double</code>、<code>Bool</code>、<code>Char</code>、<code>String</code>、<code>Unit</code>；</li>
+<li>类型参数和函数类型；</li>
+<li>参数都是类型、字段都是原生类型的数据类型。</li>
+</ul>
+<p>索引和被擦除的字段消失，例如：</p>
+<pre><code class="language-text">enum Vector[T] : Nat -&gt; Type { Nil : …; Cons[n : Nat](T, Vector[T](n)) : … }
+// 编译为
+enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
+</code></pre>
+<p><code>#mbt</code> 类型使用自己的名字而不是 <code>E_…</code>（见 <a href="#mbt-类型与-trait">#mbt 类型与 trait</a>）。</p>
+<h2 id="统一表示"><a class="header" href="#统一表示">统一表示</a></h2>
+<p>其余部分（类型层计算、GADT 细化、非 <code>#mbt</code> 的 trait 等）使用运行时的统一值表示 <code>Value</code>
+（<code>VInt</code>、<code>VCon(名字, 字段)</code>、<code>VFun</code> …），由生成的 <code>runtime.mbt</code> 支持。两种代码之间在边界上
+转换。</p>
+<h2 id="擦除"><a class="header" href="#擦除">擦除</a></h2>
+<ul>
+<li>类型参数总是擦除。</li>
+<li>其他隐式参数和构造子的隐式字段只用于类型时擦除。</li>
+<li>证明不擦除：它们和普通值一样被计算。</li>
+</ul>
+<h2 id="性能"><a class="header" href="#性能">性能</a></h2>
+<p>一个 <code>fib</code> 程序编译后约快 40 倍（解释器 7.85 秒，编译后 0.18 秒）。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="调用-moonbit-函数"><a class="header" href="#调用-moonbit-函数">调用 MoonBit 函数</a></h1>
+<p>编译后的程序真正调用导入的 MoonBit 函数：</p>
+<ul>
+<li><strong>从原生代码调用</strong>：直接调用，不做转换。</li>
+<li><strong>从统一表示调用</strong>：按签名转换参数和结果。</li>
+</ul>
+<p>支持的签名：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>类型</th><th>转换</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Int</code>、<code>Double</code>、<code>Bool</code>、<code>Char</code>、<code>String</code>、<code>Unit</code></td><td>标量</td></tr>
+<tr><td>类型参数</td><td>不转换（值本身）</td></tr>
+<tr><td><code>Array[T]</code>、<code>T?</code></td><td>逐元素</td></tr>
+<tr><td><code>#mbt</code> 数据类型（包括导入的 <code>pub(all)</code> 类型）</td><td>逐构造子</td></tr>
+<tr><td>函数类型</td><td>回调：MoonBit 调用时转换参数和结果</td></tr>
+<tr><td>不透明类型</td><td>装箱</td></tr>
+<tr><td>带标签参数、可选参数、<code>raise</code></td><td>支持</td></tr>
+<tr><td>带 <code>#mbt</code> trait 约束的泛型函数</td><td>从原生代码调用</td></tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>签名不受支持的外部函数如果被调用，是<strong>编译错误</strong>，并说明原因。</li>
+<li><strong>只读类型</strong>（<code>pub</code> 而不是 <code>pub(all)</code>）的值不能从统一表示重建，只能在原生代码中传递。在
+统一表示中把它们交给 MoonBit 函数会报编译错误，提示改为在原生片段中调用。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="mbt-类型与-trait"><a class="header" href="#mbt-类型与-trait">#mbt 类型与 trait</a></h1>
+<p>在 enum、struct、trait 前加 <code>#mbt</code>，声明它们直接对应 MoonBit 的类型和 trait。编译后的原生
+代码直接使用这些 MoonBit 类型，MoonBit 函数可以不经转换地接收它们。</p>
+<pre><code class="language-moonbit">#mbt
+enum Tree[T] {
+  Leaf
+  Node(Tree[T], T, Tree[T])
+}
+
+#mbt
+struct Pt {
+  x : Int
+  y : Int
+}
+
+#mbt
+trait Size {
+  size(Self) -&gt; Int
+}
+
+impl Size for Int with size(self) { self }
+impl Size for Pt with size(self) { self.x + self.y }
+impl[T : Size] Size for Tree[T] with size(self) {
+  match self {
+    Leaf =&gt; 0
+    Node(l, x, r) =&gt; l.size() + x.size() + r.size()
+  }
+}
+
+fn main {
+  let t : Tree[Pt] = Node(Leaf, { x: 1, y: 2 }, Leaf)
+  println(t.size())
+}
+</code></pre>
+<p>编译结果包括 <code>pub(all) enum Tree[T0]</code>、<code>pub(all) struct Pt</code>、<code>pub(open) trait Size</code>、
+<code>impl[T0 : Size] Size for Tree[T0]</code>。</p>
+<p><code>#mbt</code> 不改变类型检查和解释执行，只影响编译。条件在类型检查时验证，不满足时报错。</p>
+<h2 id="mbt-类型"><a class="header" href="#mbt-类型">#mbt 类型</a></h2>
+<ul>
+<li>只有类型参数，没有索引；不是命题，不是 <code>suberror</code>；构造子没有隐式字段。</li>
+<li>字段类型是 MoonBit 类型：<code>Int</code>、<code>Double</code>、<code>Bool</code>、<code>Char</code>、<code>String</code>、<code>Unit</code>、类型参数、<code>#mbt</code>
+类型，以及它们之间的函数类型。暂不支持数组。</li>
+<li>生成的类型名和构造子须以大写字母开头，不能与 <code>Value</code>、<code>Option</code> 等已有名字冲突。</li>
+</ul>
+<h2 id="mbt名字"><a class="header" href="#mbt名字">#mbt(“名字”)</a></h2>
+<p>对应已有的 MoonBit 类型或 trait，不生成声明。Prelude 中的 <code>Option</code>、<code>Result</code> 就是
+<code>#mbt("Option")</code>、<code>#mbt("Result")</code>。从 <code>.mbti</code> 导入的 <code>pub(all)</code> 类型和 <code>pub(open)</code> trait 自动带
+<code>#mbt("@pkg.T")</code>（满足条件时）。</p>
+<h2 id="mbt-trait"><a class="header" href="#mbt-trait">#mbt trait</a></h2>
+<ul>
+<li><code>Self : Type</code>；父 trait 也是 <code>#mbt</code>。</li>
+<li>方法不是泛型的，参数和结果是 MoonBit 类型（可以出现 <code>Self</code>）。</li>
+<li>生成的 MoonBit trait 中方法都标 <code>raise</code>（编译后的代码用错误实现控制流）。</li>
+<li>原生代码中，约束 <code>[T : Size]</code> 成为 MoonBit 的 <code>fn[T0 : Size]</code>，方法调用成为 <code>Size::size(x)</code>。</li>
+</ul>
+<h2 id="mbt-trait-的实例"><a class="header" href="#mbt-trait-的实例">#mbt trait 的实例</a></h2>
+<ul>
+<li>只有类型参数和 <code>#mbt</code> 约束；<code>Self</code> 是 MoonBit 类型（不能只是一个类型参数）。</li>
+<li>遵守 MoonBit 的孤儿规则：已有的 trait（<code>#mbt("…")</code>、导入的）只能为本程序生成的类型实现。</li>
+<li>只读（<code>pub</code>）的 trait 不能实现。</li>
+<li>方法在原生片段中的实例生成 MoonBit <code>impl</code>。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="mbt-函数"><a class="header" href="#mbt-函数">#mbt 函数</a></h1>
+<p>函数也可以标 <code>#mbt</code>：它会被编译为同名的公开 MoonBit 函数，MoonBit 代码可以直接调用。</p>
+<pre><code class="language-moonbit">#mbt
+enum Tree[T] {
+  Leaf
+  Node(Tree[T], T, Tree[T])
+}
+
+#mbt
+fn[T] insert(t : Tree[T], x : T, lt~ : (T, T) -&gt; Bool) -&gt; Tree[T] {
+  match t {
+    Leaf =&gt; Node(Leaf, x, Leaf)
+    Node(l, y, r) =&gt;
+      if lt(x, y) {
+        Node(insert(l, x, lt~), y, r)
+      } else {
+        Node(l, y, insert(r, x, lt~))
+      }
+  }
+}
+
+#mbt
+fn[T] Tree::depth(self : Tree[T]) -&gt; Int {
+  match self {
+    Leaf =&gt; 0
+    Node(l, _, r) =&gt; {
+      let a = l.depth()
+      let b = r.depth()
+      1 + (if a &gt; b { a } else { b })
+    }
+  }
+}
+
+fn main {
+  let mut t : Tree[Int] = Leaf
+  for i = 0; i &lt; 6; i = i + 1 {
+    t = insert(t, i * 7 % 10, lt=(a, b) =&gt; a &lt; b)
+  }
+  println(t.depth())
+}
+</code></pre>
+<p>编译结果：</p>
+<pre><code class="language-text">pub fn[T0] insert(t : Tree[T0], x : T0, lt~ : (T0, T0) -&gt; Bool raise) -&gt; Tree[T0]
+pub fn[T0] Tree::depth(self : Tree[T0]) -&gt; Int32
+</code></pre>
+<p>（<code>moon fmt</code> 把 MoonBit 的 <code>Int</code> 写作 <code>Int32</code>。）</p>
+<h2 id="签名类型检查时验证"><a class="header" href="#签名类型检查时验证">签名（类型检查时验证）</a></h2>
+<ul>
+<li>隐式参数只能是类型参数 <code>[T]</code>；约束只能是类型参数上的 <code>#mbt</code> trait，被约束的类型参数要出现在
+参数或结果中。</li>
+<li>参数和结果是 MoonBit 类型。</li>
+<li>支持 <code>x~</code>、<code>x?</code> 参数，不支持默认值。</li>
+<li>方法只能属于本程序生成的 <code>#mbt</code> 类型。</li>
+<li><code>main</code> 不能标 <code>#mbt</code>。</li>
+<li><code>#mbt("名字")</code> 指定 MoonBit 中的函数名。</li>
+</ul>
+<h2 id="函数体编译时验证"><a class="header" href="#函数体编译时验证">函数体（编译时验证）</a></h2>
+<p>函数体必须在原生片段中，否则编译报错，并指出第一个不能原生翻译的表达式，例如：</p>
+<pre><code class="language-text">#mbt fn f cannot be compiled to MoonBit: its body is not in the native fragment:
+in `println(x)`, println has no native signature (a type without a MoonBit type,
+or a bound that is not #mbt)
+</code></pre>
+<h2 id="raise"><a class="header" href="#raise">raise</a></h2>
+<p>没有声明 <code>raise</code> 的函数在 MoonBit 中也不 <code>raise</code>，内部的运行时失败（如不完整的匹配）变成
+<code>abort</code>。声明了 <code>raise E</code> 的函数在 MoonBit 中是 <code>raise</code>。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="在-moonbit-中使用编译结果"><a class="header" href="#在-moonbit-中使用编译结果">在 MoonBit 中使用编译结果</a></h1>
+<p><code>#mbt</code> 的函数、类型和 trait 编译后是公开的，所以 MoonBit 代码可以使用它们。</p>
+<p>例如编译<a href="#mbt-函数">#mbt 函数</a>中的程序后，在生成项目的 <code>main/</code> 目录中加一个 MoonBit
+测试文件 <code>export_wbtest.mbt</code>：</p>
+<pre><code class="language-text">test "exported functions" {
+  let t = insert(Tree::Leaf, 3, lt=(a, b) =&gt; a &lt; b)
+  inspect(t.depth(), content="1")
+}
+</code></pre>
+<p>然后在生成的项目中运行 <code>moon test</code>。</p>
+<p>也可以让别的 MoonBit 项目通过工作区（<code>moon.work</code>）引用生成的项目。</p>
+<p>目前生成的总是 main 包（带 <code>main</code> 函数），还不能生成单独的库包。</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="已知限制"><a class="header" href="#已知限制">已知限制</a></h1>
+<h2 id="语言"><a class="header" href="#语言">语言</a></h2>
+<ul>
+<li>没有终止检查和严格正性检查（按设计）：可以“证明”假命题。</li>
+<li>没有可恢复的代数效应，没有 <code>simp</code>、<code>omega</code>、<code>auto</code> 等自动化策略。</li>
+<li>局部函数不能递归。</li>
+<li>结构体没有可变字段，没有结构体模式。</li>
+<li>trait 没有默认方法。</li>
+</ul>
+<h2 id="导入"><a class="header" href="#导入">导入</a></h2>
+<ul>
+<li>解释器不能运行导入的 MoonBit 函数，只能在编译后调用。</li>
+<li>不支持 MoonBit 的 <code>async</code>（<code>async fn</code>、<code>async</code> 函数类型）。</li>
+<li>导入包中的泛型 <code>impl</code>、trait 对象等不导入（见<a href="#类型对应与不导入的项">类型对应与不导入的项</a>）。</li>
+</ul>
+<h2 id="编译器"><a class="header" href="#编译器">编译器</a></h2>
+<ul>
+<li>数组在原生代码中不是原生类型：含数组的签名走统一表示，也不能是 <code>#mbt</code>。</li>
+<li>统一表示与原生代码之间按值转换，频繁跨边界传递大型数据会慢。</li>
+<li>证明不擦除。</li>
+</ul>
+<h2 id="工具"><a class="header" href="#工具">工具</a></h2>
+<ul>
+<li>生成的项目总是 main 包，不能生成库包。</li>
+<li>需要新版 <code>moon</code>（使用 <code>moon.mod</code> / <code>moon.pkg</code>）。</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-09f2665d.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="theme/moonbit-78f5d861.js"></script>
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+
+    </div>
+    </body>
+</html>

@@ -11,7 +11,7 @@ tree-walking interpreter, written in MoonBit.
 
 ## Playground
 
-Try it online: <https://greckf.github.io/mbtpp/> — type checking while you
+Try it online: <https://greckf.github.io/mbtpp/> (manual: <https://greckf.github.io/mbtpp/book/>) — type checking while you
 edit, running with the interpreter, and the MoonBit code the compiler
 generates. The page lives in [docs/](docs); rebuild it with
 `node scripts/build-web.mjs`.
@@ -77,7 +77,9 @@ MoonBit code can call (see
 
 `moon test` runs the examples in `examples/` and the tests in `src/*_test.mbt`.
 
-The full manual (language, moonpp, MoonBit interop) is
-[doc/mbtpp/guide.md](doc/mbtpp/guide.md); the design notes are in
-[doc/mbtpp/proposal.md](doc/mbtpp/proposal.md), the implementation in
-[doc/mbtpp/implementation.md](doc/mbtpp/implementation.md).
+The manual (language, moonpp, MoonBit interop) is online at
+<https://greckf.github.io/mbtpp/book/>; its source is in [book/src](book/src)
+(an [mdBook](https://github.com/rust-lang/mdBook): `mdbook build book` writes
+`docs/book`, `node scripts/check-book.mjs` checks its examples). The design
+notes are in [doc/mbtpp/proposal.md](doc/mbtpp/proposal.md), the
+implementation in [doc/mbtpp/implementation.md](doc/mbtpp/implementation.md).

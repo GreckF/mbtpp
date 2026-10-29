@@ -140,22 +140,17 @@ let template_main : String =
   #|  Cons[n : Nat](T, Vector[T](n)) : Vector[T](S(n))
   #|}
   #|
-  #|// `head` only accepts non-empty vectors: no case for `Nil` is needed.
-  #|fn[T, n : Nat] Vector::head(self : Vector[T](S(n))) -> T {
+  #|// T : Add is a trait annotation.
+  #|fn[T : Add, n : Nat] Vector::sum(self : Vector[T](n), base : T) -> T {
   #|  match self {
-  #|    Cons(x, _) => x
+  #|    Nil => base
+  #|    Cons(x, xs) => x + xs.sum(base)
   #|  }
   #|}
   #|
   #|fn main {
-  #|  let v : Vector[String](2) = Cons("Hello", Cons("MoonBit++", Nil))
-  #|  println(v.head() + ", " + v.tail_head())
-  #|}
-  #|
-  #|fn[T, n : Nat] Vector::tail_head(self : Vector[T](S(S(n)))) -> T {
-  #|  match self {
-  #|    Cons(_, Cons(y, _)) => y
-  #|  }
+  #|  let v : Vector[String](2) = Cons("Hello, ", Cons("MoonBit++", Nil))
+  #|  println(v.sum(""))
   #|}
   #|
 

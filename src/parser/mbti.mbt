@@ -189,14 +189,14 @@ pub fn decl_bound_names(d : Decl) -> Array[String] {
     }
   }
 
-  let bs : Array[Binder] = match d {
+  let bs : Array[Binder] = match d.inner() {
     DFn(fd) => fd.impl_params
     DEnum(ed) => [..ed.impl_params, ..ed.cons.map(c => c.impl_params).flatten()]
     DStruct(sd) => sd.impl_params
     DTrait(td) => td.methods.map(m => m.impl_params).flatten()
     DImpl(id) => id.impl_params
     DDef(_, _, bs, _, _) => bs
-    DOpaque(_, _, _) => []
+    DOpaque(_, _, _) | DMbt(_, _, _, _) => []
   }
   for b in bs {
     match b.ty {
@@ -214,7 +214,7 @@ pub fn decl_type_names(d : Decl) -> Map[String, Int] {
   let tys = (bs : Array[Binder], bound : Array[String]) => for b in bs {
     b.ty.map(t => collect_names(t, bound, out)) |> ignore
   }
-  match d {
+  match d.inner() {
     DFn(fd) => {
       let bound = ["Self", ..binder_names(fd.impl_params)]
       tys(fd.params.unwrap_or([]), bound)
@@ -289,7 +289,7 @@ pub fn parse_mbti(
   // names of the types of this package
   let local : Array[String] = []
   for r in raw {
-    match r.0 {
+    match r.0.inner() {
       DEnum(ed) => local.push(ed.name)
       DStruct(sd) => local.push(sd.name)
       DTrait(td) => local.push(td.name)
@@ -323,8 +323,11 @@ pub fn parse_mbti(
   }
   let decls : Array[Decl] = []
   for r in raw {
-    let (d, attrs) = r
+    let (d0, attrs) = r
+    let first = decls.length()
+    let d = d0.inner()
     match d {
+      DMbt(_, _, _, _) => ()
       DFn(fd) => {
         let (name, self_ty) = match fd.name.find("::") {
           Some(k) => {
@@ -424,6 +427,16 @@ pub fn parse_mbti(
       DImpl(id) =>
         decls.push(DImpl({ ..id, for_ty: map_names(id.for_ty, qualify(None)) }))
     }
+    // a type of the package is the MoonBit type `@alias.T`
+    match d0 {
+      DMbt(p, _, ro, _) if decls.length() == first + 1 =>
+        match decls[first] {
+          DEnum({ name, .. }) | DStruct({ name, .. }) | DTrait({ name, .. }) =>
+            decls[first] = DMbt(p, Some(name), ro, decls[first])
+          _ => ()
+        }
+      _ => ()
+    }
   }
   { decls, skipped }
 }
@@ -505,8 +518,20 @@ fn mbti_item(p : Parser, pkg_path : String) -> Array[Decl] raise ParseError {
       }
     }
     TSym("struct" | "enum" | "suberror" | "trait") => {
+      // `pub(all)` types can be constructed and `pub(open)` traits
+      // implemented outside their package
+      let full = p.toks.length() > 2 &&
+        p.toks[0].tok == TSym("pub") &&
+        p.toks[1].tok == TSym("(") &&
+        p.toks[2].tok is TIdent("all" | "open")
+      let kind = p.peek().tok
       p.i = 0
-      [p.decl()]
+      let d = p.decl()
+      if kind == TSym("suberror") {
+        [d]
+      } else {
+        [DMbt(pos, None, !full, d)]
+      }
     }
     TSym("impl") => {
       ignore(p.advance())

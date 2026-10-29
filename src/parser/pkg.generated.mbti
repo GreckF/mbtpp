@@ -52,7 +52,9 @@ pub(all) enum Decl {
   DTrait(TraitDecl)
   DImpl(ImplDecl)
   DOpaque(Pos, String, Int)
+  DMbt(Pos, String?, Bool, Decl)
 }
+pub fn Decl::inner(Self) -> Self
 pub impl Show for Decl
 
 pub(all) struct EnumDecl {

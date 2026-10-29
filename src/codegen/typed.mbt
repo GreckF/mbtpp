@@ -11,7 +11,9 @@
 /// parameters, and datatypes whose parameters are types and whose (not
 /// erased) fields are native. Indices and erased fields disappear: e.g.
 /// `Vector[T](n)` becomes the MoonBit enum `E_Vector[T0]` with constructors
-/// `Nil` and `Cons(T0, E_Vector[T0])`.
+/// `Nil` and `Cons(T0, E_Vector[T0])`. A `#mbt` datatype is the MoonBit type
+/// of its name (generated with that name, or an existing one), and a bound
+/// `[T : Tr]` with a `#mbt` trait is a MoonBit bound (see traits.mbt).
 priv enum NTy {
   NInt
   NDouble
@@ -26,6 +28,8 @@ priv enum NTy {
   NFun(Array[NTy], NTy)
   /// The type of `break`, `continue`, `return`, ... (any type).
   NAny
+  /// `Self` in a trait declaration.
+  NSelf
 } derive(Eq)
 
 ///|
@@ -36,6 +40,8 @@ priv struct TSig {
   tparams : Array[Int?]
   ntvars : Int
   result : NTy
+  /// `#mbt` trait bounds of the type parameters.
+  bounds : Array[(Int, String)]
 }
 
 ///|
@@ -90,6 +96,17 @@ fn has_var(t : NTy) -> Bool {
 }
 
 ///|
+/// Does the type parameter `k` occur in `t`?
+fn has_tvar(t : NTy, k : Int) -> Bool {
+  match t {
+    NVar(j) => j == k
+    NEnum(_, xs) => xs.iter().any(x => has_tvar(x, k))
+    NFun(ps, r) => ps.iter().any(x => has_tvar(x, k)) || has_tvar(r, k)
+    _ => false
+  }
+}
+
+///|
 /// Can datatype `d` be a native MoonBit enum?
 fn Gen::enum_ok(self : Gen, d : String) -> Bool {
   match self.enums_ok.get(d) {
@@ -102,7 +119,7 @@ fn Gen::enum_ok(self : Gen, d : String) -> Bool {
       !di.is_prop &&
       !di.is_trait &&
       !di.is_error &&
-      !d.has_prefix("@") &&
+      (!d.has_prefix("@") || is_mbt_type(d)) &&
       di.cons.length() > 0 &&
       data_params_are_types(d, di.nparams)
     None => false
@@ -295,6 +312,7 @@ fn Gen::mbt_ty(self : Gen, t : NTy) -> String {
     NChar => "Char"
     NString => "String"
     NUnit | NAny => "Unit"
+    NSelf => "Self"
     NVar(k) => tvar(k)
     NFun(ps, r) =>
       "(" +
@@ -305,9 +323,9 @@ fn Gen::mbt_ty(self : Gen, t : NTy) -> String {
     NEnum(d, args) => {
       self.need_enum(d)
       if args.length() == 0 {
-        enum_name(d)
+        data_name(d)
       } else {
-        enum_name(d) + "[" + args.map(a => self.mbt_ty(a)).join(", ") + "]"
+        data_name(d) + "[" + args.map(a => self.mbt_ty(a)).join(", ") + "]"
       }
     }
   }
@@ -329,6 +347,7 @@ fn Gen::to_value(
     NChar => "VChar(" + e + ")"
     NString => "VStr(" + e + ")"
     NUnit | NAny => "{ ignore(" + e + "); VUnit }"
+    NSelf => e
     NVar(k) =>
       match convs {
         Some(cs) => cs[k] + "(" + e + ")"
@@ -374,6 +393,7 @@ fn Gen::of_value(
     NChar => "as_char(" + e + ")"
     NString => "as_str(" + e + ")"
     NUnit | NAny => "as_unit(" + e + ")"
+    NSelf => e
     NVar(k) =>
       match convs {
         Some(cs) => cs[k] + "(" + e + ")"
@@ -422,7 +442,7 @@ fn Gen::need_enum(self : Gen, d : String) -> Unit {
     tvs.push(tvar(k))
   }
   let gen = if n == 0 { "" } else { "[" + tvs.join(", ") + "]" }
-  let en = enum_name(d) + gen
+  let en = data_name(d) + gen
   let to_convs = tvs.mapi((k, _) => "to" + k.to_string())
   let of_convs = tvs.mapi((k, _) => "of" + k.to_string())
   let to_params = tvs.mapi((k, tv) => to_convs[k] + " : (" + tv + ") -> Value")
@@ -433,7 +453,20 @@ fn Gen::need_enum(self : Gen, d : String) -> Unit {
   let decl = StringBuilder::new()
   let to = StringBuilder::new()
   let of = StringBuilder::new()
-  decl.write_string("\n/// MoonBit++ " + d + "\nenum " + en + " {\n")
+  let is_struct = is_mbt_struct(d)
+  // an existing MoonBit type is not declared
+  let emit_decl = match @tt.mbt_info(d) {
+    Some(info) => info.defined
+    None => true
+  }
+  decl.write_string(
+    "\n/// MoonBit++ " +
+    d +
+    "\n" +
+    (if is_struct { "struct " } else { "enum " }) +
+    en +
+    " {\n",
+  )
   to.write_string(
     "\nfn" +
     gen +
@@ -474,22 +507,29 @@ fn Gen::need_enum(self : Gen, d : String) -> Unit {
     } else {
       "(" + kept.map(k => k.0).join(", ") + ")"
     }
-    decl.write_string(
-      "  " +
-      cn +
-      (if kept.length() == 0 {
-        ""
-      } else {
-        "(" + kept.map(k => self.mbt_ty(k.1)).join(", ") + ")"
-      }) +
-      "\n",
-    )
+    if is_struct {
+      let names = struct_fields(d)
+      for k = 0; k < kept.length(); k = k + 1 {
+        decl.write_string(
+          "  " + names[k] + " : " + self.mbt_ty(kept[k].1) + "\n",
+        )
+      }
+    } else {
+      decl.write_string(
+        "  " +
+        cn +
+        (if kept.length() == 0 {
+          ""
+        } else {
+          "(" + kept.map(k => self.mbt_ty(k.1)).join(", ") + ")"
+        }) +
+        "\n",
+      )
+    }
+    ignore(args)
     to.write_string(
       "    " +
-      enum_name(d) +
-      "::" +
-      cn +
-      args +
+      con_pat(d, c, kept.map(k => k.0)) +
       " => VCon(" +
       c.escape() +
       ", [" +
@@ -502,16 +542,7 @@ fn Gen::need_enum(self : Gen, d : String) -> Unit {
       ", [" +
       vpats.join(", ") +
       "]) => " +
-      enum_name(d) +
-      "::" +
-      cn +
-      (if kept.length() == 0 {
-        ""
-      } else {
-        "(" +
-        kept.map(k => self.of_value(k.1, k.0, Some(of_convs))).join(", ") +
-        ")"
-      }) +
+      con_expr(d, c, kept.map(k => self.of_value(k.1, k.0, Some(of_convs)))) +
       "\n",
     )
   }
@@ -520,8 +551,11 @@ fn Gen::need_enum(self : Gen, d : String) -> Unit {
   of.write_string(
     "    _ => rt_fail(\"expected a " + d + ", got \" + show_value(v))\n  }\n}\n",
   )
+  let into = self.data_convertible(d, true, [])
   self.enum_defs.write_string(
-    decl.to_string() + to.to_string() + of.to_string(),
+    (if emit_decl { decl.to_string() } else { "" }) +
+    to.to_string() +
+    (if into { of.to_string() } else { "" }),
   )
 }
 
@@ -537,9 +571,21 @@ fn Gen::native_sig(self : Gen, name : String) -> TSig? {
   let params : Array[NTy?] = []
   let tparams : Array[Int?] = []
   let ctx : Array[TyCtx] = []
+  let bounds : Array[(Int, String)] = []
   let mut ntvars = 0
   for i = 0; i < n; i = i + 1 {
     match t {
+      Pi(_, Inst, _, a, b) if !self.er.fun_erased(name, i) => {
+        // a `#mbt` bound: MoonBit finds the instance
+        match bound_of(ctx, a) {
+          Some(bd) => bounds.push(bd)
+          None => return None
+        }
+        params.push(None)
+        tparams.push(None)
+        ctx.push(TyOther)
+        t = b
+      }
       Pi(_, icit, _, a, b) => {
         if self.er.fun_erased(name, i) {
           params.push(None)
@@ -571,7 +617,16 @@ fn Gen::native_sig(self : Gen, name : String) -> TSig? {
     _ => t
   }
   match self.native_ty_in(ctx, result) {
-    Some(r) => Some({ params, tparams, ntvars, result: r })
+    Some(r) => {
+      // MoonBit infers the type parameters from the arguments and result
+      for bd in bounds {
+        if !has_tvar(r, bd.0) &&
+          !params.iter().any(p => p is Some(pt) && has_tvar(pt, bd.0)) {
+          return None
+        }
+      }
+      Some({ params, tparams, ntvars, result: r, bounds })
+    }
     None => None
   }
 }
@@ -705,6 +760,8 @@ fn Gen::typed_check(
         Err(_) => raise NotTyped
       }
       ignore(unify_t(tb, r))
+      // `{ x }` would be a record
+      let cb = if is_ident(cb) { "(" + cb + ")" } else { cb }
       "(" + xs.join(", ") + ") => {\n" + cb + "\n}"
     }
     _ => {
@@ -776,14 +833,12 @@ fn Gen::typed_app(
       }
       let cs = self.typed_args(env, fargs, ftys)
       self.need_enum(ci.data)
-      let code = enum_name(ci.data) +
-        "::" +
-        native_con(n) +
-        (if cs.length() == 0 { "" } else { "(" + cs.join(", ") + ")" })
-      (code, NEnum(ci.data, targs))
+      (con_expr(ci.data, n, cs), NEnum(ci.data, targs))
     }
     GPrim(p, k) if args.length() == k && p.has_prefix("@mbt:") =>
       self.typed_ffi(env, n, p, g.ty, args)
+    GFunc(_, _, _) if method_of(n) is Some((tr, m)) =>
+      self.typed_method(env, tr, m, args)
     GPrim(p, k) if args.length() == k => {
       let (tpl, tys, res) = match native_prims.get(p) {
         Some(x) => x
@@ -821,10 +876,26 @@ fn Gen::typed_app(
             }
           }
           let res = subst_nty(sig.result, inst)
+          for bd in sig.bounds {
+            if !self.satisfies(inst[bd.0], bd.1) {
+              raise NotTyped
+            }
+          }
           let cs = self.typed_args(env, ps, tys)
           let id = self.gid(n)
-          if self.typed_set.contains(n) {
+          if self.typed_set.contains(n) && sig.bounds.length() > 0 {
+            if inst.contains(NAny) {
+              raise NotTyped
+            }
+            // the type parameters may only occur in the bounds
+            (
+              "(" + id + "_t(" + cs.join(", ") + ") : " + self.mbt_ty(res) + ")",
+              res,
+            )
+          } else if self.typed_set.contains(n) {
             (id + "_t(" + cs.join(", ") + ")", res)
+          } else if !self.wrappable(sig) {
+            raise NotTyped
           } else {
             // through the uniform version: only with concrete types
             if has_var(res) || tys.iter().any(has_var) {
@@ -855,14 +926,31 @@ fn Gen::typed_ffi(
   args : Array[@tt.Tm],
 ) -> (String, NTy) raise NotTyped {
   let labels = @tt.param_labels(name).unwrap_or([])
+  // the declared types (with `NVar`s), and the type arguments
   let ctx : Array[TyCtx] = []
+  let inst : Array[NTy] = []
   let conv : Array[String] = []
   let mut t = ty
   let mut expl = 0
+  // a declared type, instantiated; its datatypes must be MoonBit types
+  let decl_ty = (a : @tt.Tm) => match self.native_ty_in(ctx, a) {
+    Some(nt) if mbt_only(nt) => Some(subst_nty(nt, inst))
+    _ => None
+  }
   for i = 0; i < args.length(); i = i + 1 {
     match t {
       Pi(_, Impl, _, U, b) => {
-        ctx.push(TyIs(self.type_arg(env, args[i])))
+        ctx.push(TyIs(NVar(inst.length())))
+        inst.push(self.type_arg(env, args[i]))
+        t = b
+      }
+      Pi(_, Inst, _, a, b) => {
+        // a `#mbt` bound: MoonBit finds the impl
+        match bound_of(ctx, a) {
+          Some((k, tr)) if self.satisfies(inst[k], tr) => ()
+          _ => raise NotTyped
+        }
+        ctx.push(TyOther)
         t = b
       }
       Pi(_, Expl, _, a, b) => {
@@ -883,7 +971,7 @@ fn Gen::typed_ffi(
               match h {
                 Global("Option::None") => ()
                 Global("Option::Some") if xs.length() == 2 => {
-                  let nt = match self.native_ty_in(ctx, inner) {
+                  let nt = match decl_ty(inner) {
                     Some(nt) => nt
                     None => raise NotTyped
                   }
@@ -896,10 +984,9 @@ fn Gen::typed_ffi(
               let code = if a is Global("StringView") {
                 self.typed_check(env, args[i], NString) + "[:]"
               } else {
-                match self.native_ty_in(ctx, a) {
-                  Some(nt) if !(nt is NEnum(_, _)) =>
-                    self.typed_check(env, args[i], nt)
-                  _ => raise NotTyped
+                match decl_ty(a) {
+                  Some(nt) => self.typed_check(env, args[i], nt)
+                  None => raise NotTyped
                 }
               }
               conv.push(
@@ -929,9 +1016,9 @@ fn Gen::typed_ffi(
   let (call, res) = if res_tm is Global("StringView") {
     (call + ".to_string()", NString)
   } else {
-    match self.native_ty_in(ctx, res_tm) {
-      Some(nt) if !(nt is NEnum(_, _)) => (call, nt)
-      _ => raise NotTyped
+    match decl_ty(res_tm) {
+      Some(nt) => (call, nt)
+      None => raise NotTyped
     }
   }
   if raises {
@@ -989,15 +1076,8 @@ fn Gen::typed_pat(
       } else {
         "(" + subs.join(", ") + ")"
       }
-      "(" +
-      enum_name(d) +
-      "::" +
-      native_con(c) +
-      args +
-      as_marker +
-      n +
-      end_marker +
-      ")"
+      ignore(args)
+      "(" + con_pat(d, c, subs) + as_marker + n + end_marker + ")"
     }
     CPLit(l) => {
       let n = self.name("lit")
@@ -1215,8 +1295,10 @@ fn Gen::typed_fn(self : Gen, name : String) -> String? {
     }
   }
   self.cur_result = Some(sig.result)
+  self.cur_bounds = sig.bounds
   let res = try? self.typed(env, b)
   self.cur_result = None
+  self.cur_bounds = []
   match res {
     Ok((code, ty)) =>
       match unify_nty(ty, sig.result) {
@@ -1225,11 +1307,7 @@ fn Gen::typed_fn(self : Gen, name : String) -> String? {
           let gen = if sig.ntvars == 0 {
             ""
           } else {
-            let tvs : Array[String] = []
-            for k = 0; k < sig.ntvars; k = k + 1 {
-              tvs.push(tvar(k))
-            }
-            "[" + tvs.join(", ") + "]"
+            "[" + self.tvars_with_bounds(sig.ntvars, sig.bounds) + "]"
           }
           Some(
             "fn" +
@@ -1301,6 +1379,15 @@ fn Gen::compute_typed(self : Gen) -> Unit {
       self.typed_set.push(name)
     }
   }
+  for tr in @tt.mbt_types.keys() {
+    if is_mbt_trait(tr) {
+      for i in @tt.instances_of(tr) {
+        if self.impl_info(i) is Some(_) {
+          self.mbt_impls.push(i)
+        }
+      }
+    }
+  }
   let mut changed = true
   while changed {
     changed = false
@@ -1315,6 +1402,19 @@ fn Gen::compute_typed(self : Gen) -> Unit {
     self.typed_set.clear()
     for n in keep {
       self.typed_set.push(n)
+    }
+    // instances whose methods are not in the fragment are not MoonBit impls
+    let keep_impls : Array[String] = []
+    for i in self.mbt_impls {
+      if self.impl_code(i) is Some(_) {
+        keep_impls.push(i)
+      } else {
+        changed = true
+      }
+    }
+    self.mbt_impls.clear()
+    for i in keep_impls {
+      self.mbt_impls.push(i)
     }
   }
 }

@@ -165,6 +165,23 @@ fn resolve_name(
   prefer_type : Bool,
   expected : String?,
 ) -> String raise ElabError {
+  // `@pkg.Ctor` is a constructor of a type of package `pkg`
+  if x.has_prefix("@") && !x.contains("::") && !globals.contains(x) {
+    match x.rev_find(".") {
+      Some(k) => {
+        let pkg = x.unsafe_substring(start=0, end=k + 1)
+        let short = x.unsafe_substring(start=k + 1, end=x.length())
+        let cs = st.cons_by_short
+          .get(short)
+          .unwrap_or([])
+          .filter(c => c.has_prefix(pkg))
+        if cs.length() == 1 {
+          return cs[0]
+        }
+      }
+      None => ()
+    }
+  }
   ensure(cxt, x)
   let exact = globals.contains(x)
   let cands = st.cons_by_short.get(x).unwrap_or([])
@@ -694,6 +711,7 @@ fn infer_head(
         None => None
       }
       let n = resolve_name(c, x, prefer_type, h)
+      check_constructible(c, n)
       let g = global_entry(c, n)
       (Global(n), g.vty, nparams_of(n))
     }
@@ -1420,6 +1438,7 @@ fn elab_struct(
     }
   }
   let con = d + "::mk"
+  check_constructible(cxt, con)
   let g = global_entry(cxt, con)
   let np = nparams_of(con)
   // unify the result type first so that later fields see the parameters

@@ -252,6 +252,7 @@ pub fn restore_metas(s : Array[Val?]) -> Unit {
 ///|
 pub fn reset_state() -> Unit {
   globals.clear()
+  mbt_types.clear()
   metas.clear()
 }
 

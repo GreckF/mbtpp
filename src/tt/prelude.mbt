@@ -11,11 +11,13 @@ pub let prelude_src : String =
   #|  Refl : Id[T](x)(x)
   #|}
   #|
+  #|#mbt("Option")
   #|enum Option[T] {
   #|  None
   #|  Some(T)
   #|}
   #|
+  #|#mbt("Result")
   #|enum Result[T, E] {
   #|  Ok(T)
   #|  Err(E)

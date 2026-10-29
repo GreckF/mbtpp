@@ -5,9 +5,11 @@
 ///
 /// Supported types: `Int`, `Double`, `Bool`, `Char`, `String`, `Unit`,
 /// type variables (instantiated with `Value`), `Array[T]`, `Option[T]`,
-/// function types (as arguments), and opaque MoonBit types whose type
-/// arguments are type variables (boxed in the generated `Foreign` enum).
-/// A function with another signature fails when it is called.
+/// `#mbt` datatypes (e.g. imported `pub(all)` enums and structs, converted
+/// constructor by constructor), function types (as arguments), and opaque
+/// MoonBit types whose type arguments are type variables (boxed in the
+/// generated `Foreign` enum). Calling a function with another signature is
+/// a compile error.
 priv enum Binder {
   TyVar
   Explicit
@@ -50,6 +52,20 @@ fn is_tyvar(stack : Array[Binder], t : @tt.Tm) -> Bool {
   match t {
     Var(ix) => lookup(stack, ix) is Some(TyVar)
     _ => false
+  }
+}
+
+///|
+/// A `#mbt` datatype of a signature, as a native type (its type variables
+/// are `Value`s, so they need no conversion).
+fn Gen::ffi_mbt_type(self : Gen, stack : Array[Binder], t : @tt.Tm) -> NTy? {
+  let ctx = stack.map(b => match b {
+    TyVar => TyIs(NVar(0))
+    Explicit => TyOther
+  })
+  match self.native_ty_in(ctx, t) {
+    Some(NEnum(d, _) as nt) if is_mbt_type(d) && mbt_only(nt) => Some(nt)
+    _ => None
   }
 }
 
@@ -139,6 +155,12 @@ fn Gen::to_mbt(
       }
     }
     _ => ()
+  }
+  match self.ffi_mbt_type(stack, t) {
+    Some(nt) if self.convertible(nt, true) =>
+      return Some(self.of_value(nt, e, None))
+    Some(_) => return None
+    None => ()
   }
   match self.foreign_type(stack, t) {
     Some(f) =>
@@ -250,9 +272,36 @@ fn Gen::from_mbt(
     }
     _ => ()
   }
+  match self.ffi_mbt_type(stack, t) {
+    Some(nt) if self.convertible(nt, false) =>
+      return Some(self.to_value(nt, e, None))
+    Some(_) => return None
+    None => ()
+  }
   match self.foreign_type(stack, t) {
     Some(f) => Some("VForeign(" + f + "(" + e + "))")
     None => None
+  }
+}
+
+///|
+/// Why a parameter (or the result) of an imported function cannot be
+/// converted.
+fn Gen::ffi_problem(
+  self : Gen,
+  stack : Array[Binder],
+  t : @tt.Tm,
+  what : String,
+) -> String {
+  match self.ffi_mbt_type(stack, t) {
+    Some(nt) if what == "parameter" && !self.convertible(nt, true) =>
+      "its " +
+      what +
+      " has a read-only MoonBit type (not pub(all)), whose values cannot be rebuilt from compiled MoonBit++ values; call it from a function in the native fragment"
+    _ =>
+      "its " +
+      what +
+      " type is not supported (mark the datatypes it uses #mbt, if they translate to MoonBit)"
   }
 }
 
@@ -305,7 +354,7 @@ fn Gen::ffi_body(
         if !unit_only {
           match self.to_mbt(stack, dom, "args[" + k.to_string() + "]") {
             Some(c) => lets.write_string("  let " + x + " = " + c + "\n")
-            None => return Err("unsupported parameter type")
+            None => return Err(self.ffi_problem(stack, dom, "parameter"))
           }
           let label = if expl < labels.length() { labels[expl] } else { None }
           conv.push(
@@ -339,7 +388,7 @@ fn Gen::ffi_body(
   }
   match self.from_mbt(stack, res_ty, "r") {
     Some(back) => Ok(lets.to_string() + "  let r = " + call + "\n  " + back)
-    None => Err("unsupported result type")
+    None => Err(self.ffi_problem(stack, res_ty, "result"))
   }
 }
 
@@ -396,14 +445,17 @@ fn Gen::ffi_fn(
   prim : String,
   ty : @tt.Tm,
   arity : Int,
-) -> String {
+) -> String raise CodegenError {
   let f = self.name("ffi")
   let body = match self.ffi_body(name, prim, ty, arity) {
     Ok(b) => b
     Err(why) =>
-      "  ignore(args)\n  rt_fail(" +
-      ("cannot call " + name + " from compiled code: " + why).escape() +
-      ")"
+      raise CodegenError(
+        "cannot call the MoonBit function " +
+        name +
+        " from compiled code: " +
+        why,
+      )
   }
   self.ffi.write_string(
     "\n/// " +

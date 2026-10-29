@@ -1,0 +1,379 @@
+///|
+/// `#mbt` types and traits: declarations that translate trivially to a
+/// MoonBit type (trait), so compiled code uses the MoonBit type itself and
+/// MoonBit functions over it can be called without conversion.
+///
+/// A `#mbt` datatype has only type parameters, no indices, no implicit
+/// fields, and fields whose types are again translatable: `Int`, `Double`,
+/// `Bool`, `Char`, `String`, `Unit`, type parameters, `#mbt` types and
+/// (non-dependent) functions between them. A `#mbt` trait has `Self : Type`,
+/// `#mbt` supertraits and non-generic methods over translatable types (with
+/// `Self` among the type parameters). An `impl` of a `#mbt` trait is for a
+/// translatable type, with type parameters and `#mbt` bounds only.
+pub(all) struct MbtInfo {
+  /// The MoonBit name (`T`, `@pkg.T`).
+  name : String
+  /// Whether the compiler generates the MoonBit declaration (otherwise it
+  /// is an existing MoonBit type or trait).
+  defined : Bool
+  /// A read-only type cannot be constructed (`pub enum`), a read-only trait
+  /// cannot be implemented (`pub trait`), outside its package.
+  read_only : Bool
+}
+
+///|
+/// `#mbt` datatypes and traits, by MoonBit++ name.
+pub let mbt_types : Map[String, MbtInfo] = {}
+
+///|
+pub fn mbt_info(name : String) -> MbtInfo? {
+  mbt_types.get(name)
+}
+
+///|
+/// Names that a generated MoonBit declaration may not take.
+let mbt_reserved : Array[String] = [
+  "Value", "Ctl", "Foreign", "Pat", "Int", "Double", "Bool", "Char", "String", "Unit",
+  "Array", "Option", "Result", "Map", "Error", "Ref", "Iter", "Show", "Eq", "Compare",
+  "Hash", "Default", "Logger", "Self",
+]
+
+///|
+let mbt_scalars : Array[String] = [
+  "Int", "Double", "Bool", "Char", "String", "Unit",
+]
+
+///|
+fn is_mbt_trait(n : String) -> Bool {
+  mbt_types.contains(n) && data_info(n) is Some({ is_trait: true, .. })
+}
+
+///|
+/// Does the type `t` translate to a MoonBit type? `ctx[i]` says whether the
+/// variable of level `i` is a type parameter.
+fn mbt_ty_ok(ctx : Array[Bool], t : Tm) -> Bool {
+  match t {
+    Var(ix) => {
+      let i = ctx.length() - 1 - ix
+      i >= 0 && ctx[i]
+    }
+    Global(n) if mbt_scalars.contains(n) => true
+    Pi(_, Expl, true, _, _) => {
+      // one argument group; the result does not depend on the arguments
+      let c = ctx.copy()
+      let mut cur = t
+      let mut first = true
+      while cur is Pi(_, Expl, g, a, b) && (first || !g) {
+        first = false
+        if !mbt_ty_ok(c, a) {
+          return false
+        }
+        c.push(false)
+        cur = b
+      }
+      match cur {
+        Raises(r, _) => mbt_ty_ok(c, r)
+        _ => mbt_ty_ok(c, cur)
+      }
+    }
+    _ => {
+      let args : Array[Tm] = []
+      let mut h = t
+      while h is App(f, a, _) {
+        args.push(a)
+        h = f
+      }
+      match h {
+        Global(d) if mbt_types.contains(d) && !is_mbt_trait(d) =>
+          match data_info(d) {
+            Some(di) =>
+              args.length() == di.nparams &&
+              args.iter().all(a => mbt_ty_ok(ctx, a))
+            None => false
+          }
+        _ => false
+      }
+    }
+  }
+}
+
+///|
+fn starts_upper(s : String) -> Bool {
+  match s.get_char(0) {
+    Some(c) => c >= 'A' && c <= 'Z'
+    None => false
+  }
+}
+
+///|
+/// Why the `#mbt` datatype `d` is not translatable (`None`: it is).
+fn mbt_data_problem(d : String) -> String? {
+  let di = match data_info(d) {
+    Some(di) => di
+    None => return Some("unknown type")
+  }
+  let info = mbt_types.get(d).unwrap()
+  if info.defined &&
+    (mbt_reserved.contains(d) || !starts_upper(d) || d.contains(".")) {
+    return Some(
+      d +
+      " cannot be the name of a generated MoonBit type (use #mbt(\"name\") for an existing one)",
+    )
+  }
+  if di.is_error {
+    return Some("error types are not supported")
+  }
+  if di.is_prop {
+    return Some("propositions have no MoonBit type")
+  }
+  if di.nindices > 0 {
+    return Some("indexed types have no MoonBit type")
+  }
+  let mut t = globals.get(d).unwrap().ty
+  for _ in 0..<di.nparams {
+    match t {
+      Pi(_, _, _, U, b) => t = b
+      _ => return Some("only type parameters are allowed")
+    }
+  }
+  for c in di.cons {
+    let ci = con_info(c).unwrap()
+    if ci.nimpl > 0 {
+      return Some("constructor " + c + " has implicit fields")
+    }
+    if info.defined && di.fields is None && !starts_upper(short_name(c)) {
+      return Some("constructor " + c + " must start with an upper case letter")
+    }
+    let ctx : Array[Bool] = []
+    let mut ct = globals.get(c).unwrap().ty
+    for _ in 0..<ci.nparams {
+      match ct {
+        Pi(_, _, _, _, b) => {
+          ctx.push(true)
+          ct = b
+        }
+        _ => ()
+      }
+    }
+    for _ in 0..<ci.nargs {
+      match ct {
+        Pi(x, _, _, a, b) => {
+          if !mbt_ty_ok(ctx, a) {
+            return Some(
+              "the field " +
+              x +
+              " of " +
+              c +
+              " has type " +
+              show_tm(ctx.map(_ => "_"), a) +
+              ", which has no MoonBit type",
+            )
+          }
+          ctx.push(false)
+          ct = b
+        }
+        _ => ()
+      }
+    }
+  }
+  None
+}
+
+///|
+/// The method fields of trait `tr` (not the supertraits).
+pub fn trait_method_names(tr : String) -> Array[String] {
+  match data_info(tr) {
+    Some({ fields: Some(fs), .. }) => fs.filter(f => !f.has_prefix("super$"))
+    _ => []
+  }
+}
+
+///|
+/// The supertraits of trait `tr`.
+pub fn trait_supers(tr : String) -> Array[String] {
+  match data_info(tr) {
+    Some({ fields: Some(fs), .. }) =>
+      fs
+      .filter(f => f.has_prefix("super$"))
+      .map(f => f.unsafe_substring(start=6, end=f.length()))
+    _ => []
+  }
+}
+
+///|
+/// The type of method `m` of trait `tr`, in the context `[Self, inst]`.
+pub fn trait_method_type(tr : String, m : String) -> Tm? {
+  match globals.get(tr + "::" + m) {
+    Some({ ty: Pi(_, Impl, _, _, Pi(_, Inst, _, _, fty)), .. }) => Some(fty)
+    _ => None
+  }
+}
+
+///|
+/// Why the `#mbt` trait `tr` is not translatable.
+fn mbt_trait_problem(tr : String) -> String? {
+  let info = mbt_types.get(tr).unwrap()
+  if info.defined &&
+    (mbt_reserved.contains(tr) || !starts_upper(tr) || tr.contains(".")) {
+    return Some(
+      tr +
+      " cannot be the name of a generated MoonBit trait (use #mbt(\"name\") for an existing one)",
+    )
+  }
+  match globals.get(tr) {
+    Some({ ty: Pi(_, _, _, U, _), .. }) => ()
+    _ => return Some("Self must be a type")
+  }
+  for s in trait_supers(tr) {
+    if !is_mbt_trait(s) {
+      return Some("the supertrait " + s + " is not #mbt")
+    }
+  }
+  for m in trait_method_names(tr) {
+    match trait_method_type(tr, m) {
+      Some(Pi(_, Impl, _, _, _)) =>
+        return Some("the method " + m + " is generic")
+      Some(Pi(_, Expl, _, _, _) as fty) if mbt_ty_ok([true, false], fty) => ()
+      _ => return Some("the method " + m + " has a type with no MoonBit type")
+    }
+  }
+  None
+}
+
+///|
+/// Why the instance `name` of the `#mbt` trait `tr` cannot be a MoonBit
+/// `impl`.
+fn mbt_impl_problem(name : String, tr : String) -> String? {
+  let info = mbt_types.get(tr).unwrap()
+  if info.read_only {
+    return Some(
+      "the MoonBit trait " +
+      info.name +
+      " cannot be implemented outside its package (it is not pub(open))",
+    )
+  }
+  let ctx : Array[Bool] = []
+  let mut t = globals.get(name).unwrap().ty
+  while t is Pi(_, icit, _, a, b) {
+    match (icit, a) {
+      (Impl, U) => ctx.push(true)
+      (Inst, App(Global(tr2), Var(ix), _)) if is_mbt_trait(tr2) &&
+        ix < ctx.length() &&
+        ctx[ctx.length() - 1 - ix] => ctx.push(false)
+      _ =>
+        return Some(
+          "an impl of a #mbt trait may only have type parameters with #mbt bounds",
+        )
+    }
+    t = b
+  }
+  let self_ty = match t {
+    App(Global(_), s, _) => s
+    _ => return Some("bad instance type")
+  }
+  if self_ty is Var(_) || !mbt_ty_ok(ctx, self_ty) {
+    return Some(
+      "the type " + show_tm(ctx.map(_ => "_"), self_ty) + " has no MoonBit type",
+    )
+  }
+  // MoonBit's orphan rule: the trait or the type must be generated here
+  if !info.defined {
+    let mut h = self_ty
+    while h is App(f, _, _) {
+      h = f
+    }
+    let is_local = match h {
+      Global(d) =>
+        match mbt_types.get(d) {
+          Some(di) => di.defined
+          None => false
+        }
+      _ => false
+    }
+    if !is_local {
+      return Some(
+        "MoonBit does not allow implementing the existing trait " +
+        info.name +
+        " for a type that is not generated by this program",
+      )
+    }
+  }
+  None
+}
+
+///|
+/// The instances of trait `tr` (global names).
+pub fn instances_of(tr : String) -> Array[String] {
+  st.instances.get(tr).unwrap_or([])
+}
+
+///|
+/// Constructing a value of a read-only MoonBit type is not allowed.
+fn check_constructible(cxt : Cxt, name : String) -> Unit raise ElabError {
+  match con_info(name) {
+    Some(ci) =>
+      match mbt_types.get(ci.data) {
+        Some({ read_only: true, name: mn, .. }) =>
+          cxt.fail(
+            "cannot construct a value of the MoonBit type " +
+            mn +
+            " outside its package (it is not pub(all))",
+          )
+        _ => ()
+      }
+    None => ()
+  }
+}
+
+///|
+/// Check the `#mbt` declarations `marked` (positions and names) and the
+/// instances `impls` (global name and trait). With `lenient` (imports), the
+/// marks that do not hold are dropped instead of being errors.
+fn check_mbt_decls(
+  marked : Array[(Pos, String)],
+  lenient : Bool,
+) -> Unit raise ElabError {
+  // dropping a mark may invalidate others: repeat until nothing changes
+  let mut changed = true
+  while changed {
+    changed = false
+    for m in marked {
+      let (pos, n) = m
+      if !mbt_types.contains(n) || !globals.contains(n) {
+        continue
+      }
+      let problem = if is_mbt_trait(n) {
+        mbt_trait_problem(n)
+      } else {
+        mbt_data_problem(n)
+      }
+      match problem {
+        Some(why) =>
+          if lenient {
+            mbt_types.remove(n)
+            changed = true
+          } else {
+            empty_cxt(pos).fail("#mbt " + n + ": " + why)
+          }
+        None => ()
+      }
+    }
+  }
+}
+
+///|
+fn check_mbt_impls(
+  impls : Array[(Pos, String, String)],
+  lenient : Bool,
+) -> Unit raise ElabError {
+  for i in impls {
+    let (pos, name, tr) = i
+    if lenient || !is_mbt_trait(tr) || !globals.contains(name) {
+      continue
+    }
+    match mbt_impl_problem(name, tr) {
+      Some(why) => empty_cxt(pos).fail("impl of #mbt trait " + tr + ": " + why)
+      None => ()
+    }
+  }
+}

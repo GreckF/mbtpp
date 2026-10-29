@@ -48,10 +48,17 @@
   decided by a fixed point. Native datatypes become generic MoonBit enums
   without indices or erased fields, with conversions to and from `Value`.
   Typed code calls imported MoonBit functions directly.
+- `traits.mbt`: `#mbt` types and traits (checked in `src/tt/mbt.mbt`):
+  `#mbt` datatypes are the MoonBit types of their names, `#mbt` traits
+  MoonBit traits; bounds become MoonBit bounds, method calls `Tr::m(..)`,
+  and instances whose methods are typed become `impl`s (emitted when a
+  native call needs them).
 - `ffi.mbt`: calls of imported MoonBit functions from uniform code, with
   conversions derived from their signatures (scalars, type variables,
-  `Array`, `Option`, callbacks, opaque foreign types boxed in a generated
-  `Foreign` enum, labelled and optional arguments, errors).
+  `Array`, `Option`, `#mbt` datatypes, callbacks, opaque foreign types
+  boxed in a generated `Foreign` enum, labelled and optional arguments,
+  errors). Calling a function whose signature is not supported is a compile
+  error.
 
 ## Core language
 

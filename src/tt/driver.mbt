@@ -177,7 +177,7 @@ fn load_imports(imports : Array[Import]) -> Unit raise CheckError {
   // `Map`, or types of packages that are not imported) become opaque.
   let declared : Array[String] = []
   for d in decls {
-    match d {
+    match d.inner() {
       DEnum(ed) => declared.push(ed.name)
       DStruct(sd) => declared.push(sd.name)
       DTrait(td) => declared.push(td.name)

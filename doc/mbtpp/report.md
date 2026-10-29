@@ -71,7 +71,8 @@
 
 - `moon.pkg.json` 的 `import` 字段声明依赖；`moonbitlang/core/*` 的接口从 MoonBit 安装目录读取，其他包从项目的 `.mooncakes` 读取（会读取依赖模块的 `source` 字段）。
 - `.mbti` 按顶层项拆分，每项用 MoonBit++ 解析器解析并翻译成声明，函数是 extern（`@mbt:<包>.<名>`），类型检查时不展开。
-- 命名：`@pkg.f`、`@pkg.T`、`@pkg.T::C`，方法照常 `x.m()`，`#as_free_fn` 的方法也可写 `@pkg.m`。
+- 命名：`@pkg.f`、`@pkg.T`、`@pkg.T::C`（也可写 `@pkg.C`），方法照常 `x.m()`，`#as_free_fn` 的方法也可写 `@pkg.m`；`impl @pkg.Tr for T` 实现导入的 trait。
+- `pub(all)` enum/struct 与 `pub(open)` trait 自动成为 `#mbt("@pkg.T")`（满足条件时，见 7.4）；`pub` 的 enum/struct 只读（不能构造），`pub` trait 不能实现。
 - 宽松处理：失败的项被跳过（`--verbose` 列出），不会影响用户代码；未知类型成为不透明类型，未知 trait 约束成为任何类型都满足的不透明 trait；`StringView`/`ArrayView[T]` 视为 `String`/`Array[T]`。
 - 实测：65 个 core 包逐个导入全部成功；约 1600 个函数中只跳过 36 个（trait 对象 `&T`、自动填充的 `loc~`）。跳过的项主要是泛型 `impl` 以及 Show/Eq/Compare 之外的 `impl`。
 
@@ -161,9 +162,23 @@ fn f19_parse_hex_t(s_183 : String) -> Int raise {
 | `fib(30)` + 一个 `Nat` 递归 | 7.85 s | 0.18 s |
 | `fib(35)` | — | 0.34 s |
 
-### 7.4 验证
+### 7.4 `#mbt` 类型与 trait
 
-- 10 个示例（基本、向量、依赖结构、单子、异常/循环、依赖类型、证明、STLC、带标签参数、trait）编译后与解释执行输出逐字一致；
+`#mbt` 标注的 enum/struct/trait 平凡地翻译到 MoonBit（条件见语言规范第 10 节，类型检查时验证）：
+
+- **类型**：原生翻译直接使用 MoonBit 类型。`#mbt enum Tree[T]` 生成同名的 `enum Tree[T0]`（而不是 `E_Tree`），`#mbt struct Point` 生成 `struct Point`，用 `Point::{ x: .., y: .. }` 构造、`{ x: p, .. }` 匹配；`#mbt("Option")` 与导入的 `@pkg.T` 不生成声明，直接用已有类型。prelude 的 `Option`、`Result` 是 `#mbt("Option")`、`#mbt("Result")`。
+- **trait**：生成 MoonBit trait（方法都标 `raise`，因为编译后的代码用异常实现控制流）；原生函数的约束 `[T : Size]` 成为 `fn[T0 : Size]`，实例参数消失；方法调用成为 `(Size::size(x) : Int)`。
+- **impl**：方法体在原生片段中的实例生成 MoonBit `impl`，按需输出（原生代码在具体类型上需要它时）。一个调用所需的实例如果不能成为 impl，这个调用退回统一表示（实例作为值传递）。
+- **统一表示**：`#mbt` 类型的值在统一代码中仍是 `VCon`，在边界逐构造子转换。带约束的函数同时生成原生版本和统一版本（统一版本接收实例值）。
+- **外部调用**：参数、结果为 `#mbt` 类型（包括导入的 `pub(all)` 类型）的 MoonBit 函数可以从统一代码调用（逐构造子转换），从原生代码调用则不转换。带 `#mbt` trait 约束的 MoonBit 泛型函数可以从原生代码调用。
+- **只读类型**：导入的 `pub` 类型不能在包外构造，所以不能从 `Value` 转回：原生代码直接传递这些值；统一代码只能检查它们（匹配）。需要把统一代码中的只读值传给 MoonBit 的调用会在编译时报错，并说明原因。
+- **编译期报错**：签名不受支持的外部函数如果被调用，现在是编译错误（以前是生成一个运行时报错的存根）。
+
+例子 `examples/mbt_types.mbtpp`，以及一个带 `pub(all) enum Shape`、`pub(all) struct Point`、`pub enum Handle`、`pub(open) trait HasArea` 的本地依赖包的项目，编译后与解释执行（或预期结果）一致；生成代码中可以看到 `enum Tree[T0]`、`trait Size`、`impl[T0 : Size] Size for Tree[T0]`、`@shapes.Shape::Circle(...)`、`impl @shapes.HasArea for Square`。
+
+### 7.5 验证
+
+- 11 个示例（基本、向量、依赖结构、单子、异常/循环、依赖类型、证明、STLC、带标签参数、trait、`#mbt`）编译后与解释执行输出逐字一致；
 - 导入示例在编译后真正调用了 `@math.hypot`（输出 5）与 `@conv.parse_int(…, base=16)`（输出 255）；
 - 项目模式下使用 `.mooncakes` 中的依赖（`@stack.Stack`）编译运行成功；
 - `src/codegen_test.mbt` 对生成代码的关键签名做快照测试（原生/统一、擦除、泛型、闭包）。
@@ -176,8 +191,10 @@ fn f19_parse_hex_t(s_183 : String) -> Int raise {
 - **语言**：未实现可恢复的代数效应和 `simp`/`omega`/`auto`；局部 `fn` 不能递归；没有可变字段和 trait 默认方法；`fn f()` 内部表示为接受一个 `Unit` 参数。
 - **导入**：解释器不能执行导入的函数；trait 对象 `&T`、`loc~` 自动填充参数、泛型 `impl` 以及 Show/Eq/Compare 之外的 `impl` 不导入。
 - **编译器**：
-  - 导入的 `pub(all)` enum/struct 在外部调用边界不做转换（这样的调用在运行时报错）；
-  - 数组在类型化代码中不是原生类型（与统一代码之间转换会复制，破坏共享修改的语义，所以没有做）；
+  - 数组在类型化代码中不是原生类型（与统一代码之间转换会复制，破坏共享修改的语义，所以没有做）；因此含 `Array` 字段的类型不能是 `#mbt`（导入时这样的类型不自动标注），以数组传递约束类型的 MoonBit 泛型函数（如 `fn[T : Tr] f(Array[T])`）也不能调用；
+  - `#mbt` 类型在统一代码中按值转换（复制）；MoonBit 函数修改传入的 `mut` 字段时，MoonBit++ 一侧看不到（MoonBit++ 本身没有可变字段）；
+  - 被约束的类型参数必须出现在函数的参数或结果中（MoonBit 不能显式给出类型参数），否则函数走统一表示；
+  - 导入包中 `impl @pkg.Tr for @pkg.T` 这类实例不导入，MoonBit++ 只知道自己写的实例；
   - 统一代码与类型化代码之间按值转换，频繁跨边界传递大型数据结构可能较慢；
   - 编译输出中被擦除的字段不再出现在 `show_value` 的错误信息里（与解释器的显示略有不同）。
 - **工具**：`moon add`/`moon install` 本身在本机环境下无法连接 mooncakes.io，未能端到端实测；之后的接口生成与导入已用离线副本验证。

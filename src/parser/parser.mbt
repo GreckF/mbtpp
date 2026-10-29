@@ -96,6 +96,18 @@ fn Parser::ident(self : Parser) -> String raise ParseError {
 }
 
 ///|
+/// A name, or `@pkg.Name` from an imported package.
+fn Parser::qual_ident(self : Parser) -> String raise ParseError {
+  if self.accept("@") {
+    let pkg = self.ident()
+    self.expect(".")
+    "@" + pkg + "." + self.ident()
+  } else {
+    self.ident()
+  }
+}
+
+///|
 fn Parser::is_ident(self : Parser) -> Bool {
   self.peek().tok is TIdent(_)
 }
@@ -1152,6 +1164,30 @@ fn Parser::con_decls(self : Parser) -> Array[ConDecl] raise ParseError {
 
 ///|
 fn Parser::decl(self : Parser) -> Decl raise ParseError {
+  let pos = self.pos()
+  if self.accept("#") {
+    // `#mbt` or `#mbt("name")`
+    if self.ident() != "mbt" {
+      self.fail("unknown attribute (only #mbt is supported)")
+    }
+    let name = if self.is_same_line("(") {
+      ignore(self.advance())
+      let n = match self.advance().tok {
+        TStr([SPStr(s)]) => s
+        _ => self.fail("expected the MoonBit name as a string")
+      }
+      self.expect(")")
+      Some(n)
+    } else {
+      None
+    }
+    let d = self.decl()
+    match d {
+      DEnum({ is_error: false, .. }) | DStruct(_) | DTrait(_) => ()
+      _ => raise ParseError(pos, "#mbt applies to enums, structs and traits")
+    }
+    return DMbt(pos, name, false, d)
+  }
   self.skip_visibility()
   let pos = self.pos()
   if self.accept("fn") {
@@ -1272,9 +1308,9 @@ fn Parser::decl(self : Parser) -> Decl raise ParseError {
     }
     let supers : Array[String] = []
     if self.accept(":") {
-      supers.push(self.ident())
+      supers.push(self.qual_ident())
       while self.accept("+") {
-        supers.push(self.ident())
+        supers.push(self.qual_ident())
       }
     }
     self.expect("{")
@@ -1311,7 +1347,7 @@ fn Parser::decl(self : Parser) -> Decl raise ParseError {
   }
   if self.accept("impl") {
     let impl_bs = self.impl_binders()
-    let tr = self.ident()
+    let tr = self.qual_ident()
     self.expect("for")
     let ty = self.expr()
     self.expect("with")

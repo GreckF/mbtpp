@@ -140,3 +140,19 @@ test "example labelled" {
     ),
   )
 }
+
+///|
+test "example mbt_types" {
+  inspect(
+    run_example("mbt_types.mbtpp"),
+    content=(
+      #|25
+      #|10
+      #|0
+      #|2510
+      #|Some(5)
+      #|None
+      #|
+    ),
+  )
+}

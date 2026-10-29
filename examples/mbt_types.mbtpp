@@ -1,0 +1,87 @@
+// `#mbt` types and traits translate trivially to MoonBit: the compiled
+// program uses the MoonBit enum `Tree[T]`, the struct `Point`, the trait
+// `Size` with real `impl`s, and `fn[T0 : Size]` bounds.
+
+#mbt
+enum Tree[T] {
+  Leaf
+  Node(Tree[T], T, Tree[T])
+}
+
+#mbt
+struct Point {
+  x : Int
+  y : Int
+}
+
+#mbt
+trait Size {
+  size(Self) -> Int
+  zero() -> Self
+}
+
+impl Size for Int with size(self) { self }
+impl Size for Int with zero() { 0 }
+
+impl Size for Point with size(self) { self.x + self.y }
+impl Size for Point with zero() { { x: 0, y: 0 } }
+
+impl[T : Size] Size for Tree[T] with size(self) {
+  match self {
+    Leaf => 0
+    Node(l, x, r) => l.size() + x.size() + r.size()
+  }
+}
+impl[T : Size] Size for Tree[T] with zero() { Leaf }
+
+fn[T : Size] total(xs : Tree[T]) -> Int {
+  xs.size()
+}
+
+fn[T] insert(t : Tree[T], x : T, lt : (T, T) -> Bool) -> Tree[T] {
+  match t {
+    Leaf => Node(Leaf, x, Leaf)
+    Node(l, y, r) =>
+      if lt(x, y) {
+        Node(insert(l, x, lt), y, r)
+      } else {
+        Node(l, y, insert(r, x, lt))
+      }
+  }
+}
+
+fn[T : Size] sum_zero() -> Int {
+  let z : T = Size::zero()
+  z.size()
+}
+
+// `Option` is the MoonBit `Option` (`#mbt("Option")` in the prelude)
+fn first_big(t : Tree[Int], n : Int) -> Int? {
+  match t {
+    Leaf => None
+    Node(l, x, r) =>
+      match first_big(l, n) {
+        Some(y) => Some(y)
+        None => if x > n { Some(x) } else { first_big(r, n) }
+      }
+  }
+}
+
+// native code calling `total` at concrete types: MoonBit resolves the impls
+fn sizes(t : Tree[Int], ps : Tree[Point]) -> Int {
+  total(t) * 100 + total(ps) + sum_zero[Point]()
+}
+
+fn main {
+  let mut t : Tree[Int] = Leaf
+  for i = 0; i < 6; i = i + 1 {
+    t = insert(t, (i * 7) % 10, (a, b) => a < b)
+  }
+  println(total(t))
+  let ps : Tree[Point] = Node(Leaf, { x: 1, y: 2 }, Node(Leaf, { x: 3, y: 4 }, Leaf))
+  println(total(ps))
+  println(sum_zero[Point]())
+  println(sizes(t, ps))
+  println(first_big(t, 4))
+  println(first_big(t, 100))
+}

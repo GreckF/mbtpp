@@ -44,8 +44,12 @@ The compiler translates MoonBit++ to MoonBit: functions over types MoonBit
 can express (numbers, strings, datatypes with type parameters, functions)
 become ordinary MoonBit code, e.g. `Vector[T](n)` becomes
 `enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }`; the rest (dependent
-types computed at run time, traits, ...) uses a uniform value
-representation.
+types computed at run time, ...) uses a uniform value representation.
+Types and traits marked `#mbt` translate trivially: `#mbt enum Tree[T]`
+becomes the MoonBit `enum Tree[T0]`, a `#mbt trait` a MoonBit trait with
+real `impl`s and bounds; imported `pub(all)` types and `pub(open)` traits
+are `#mbt` automatically, so MoonBit functions over them can be called
+(see [examples/mbt_types.mbtpp](examples/mbt_types.mbtpp)).
 
 `moon test` runs the examples in `examples/` and the tests in `src/*_test.mbt`.
 

@@ -52,6 +52,8 @@ pub fn infer(Cxt, @parser.Expr) -> (Tm, Val) raise ElabError
 
 pub fn inst(Closure, Val) -> Val
 
+pub fn instances_of(String) -> Array[String]
+
 pub fn is_opaque_trait(String) -> Bool
 
 pub fn is_proof(Array[Val?], Val) -> Bool
@@ -63,6 +65,10 @@ pub fn lit_type(@parser.Lit) -> Val
 pub fn lookup_global(String) -> GEntry?
 
 pub fn match_vals_opt(Array[Val], Array[Val], Array[Clause]) -> Val?
+
+pub fn mbt_info(String) -> MbtInfo?
+
+pub let mbt_types : Map[String, MbtInfo]
 
 pub fn meta_sol(Int) -> Val?
 
@@ -99,6 +105,12 @@ pub fn show_global_type(String) -> String?
 pub fn show_tm(Array[String], Tm) -> String
 
 pub fn snapshot_metas() -> Array[Val?]
+
+pub fn trait_method_names(String) -> Array[String]
+
+pub fn trait_method_type(String, String) -> Tm?
+
+pub fn trait_supers(String) -> Array[String]
 
 pub fn type_of(Array[Val?], Val) -> Val?
 
@@ -218,6 +230,12 @@ pub(all) struct Import {
   alias : String
   path : String
   mbti : String
+}
+
+pub(all) struct MbtInfo {
+  name : String
+  defined : Bool
+  read_only : Bool
 }
 
 pub(all) struct MetaEntry {

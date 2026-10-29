@@ -84,6 +84,13 @@
     "declarations": {
       "patterns": [
         {
+          "comment": "#mbt / #mbt(\"name\"): the declaration translates to MoonBit",
+          "match": "^\\s*(#mbt)\\b",
+          "captures": {
+            "1": { "name": "entity.other.attribute-name.mbtpp" }
+          }
+        },
+        {
           "comment": "fn name / fn Type::method / lemma name",
           "match": "\\b(fn|lemma)\\s+(?:([A-Z]\\w*)(::))?([a-z_]\\w*)",
           "captures": {

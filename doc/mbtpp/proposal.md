@@ -218,8 +218,12 @@ fn parse_hex(s : String) -> Int raise { @conv.parse_int(s, base=16) }
   `~/.moon/lib/core`），其他包在源文件所在目录或上级目录的 `.mooncakes/` 中。
 - 导入的函数只有类型、没有定义：类型检查时它们是不透明常量，不会展开；
   解释器运行到导入的函数时会报错（导入目前只用于类型检查）。
-- 名字：包里的函数、类型、构造子分别为 `@pkg.f`、`@pkg.T`、`@pkg.T::C`（构造子也可以按期望类型
-  直接写 `C`），方法照常用 `x.m()` 调用。`#as_free_fn` 的方法也可以写成 `@pkg.m`。
+- 名字：包里的函数、类型、构造子分别为 `@pkg.f`、`@pkg.T`、`@pkg.T::C`（构造子也可以写
+  `@pkg.C`，或按期望类型直接写 `C`），方法照常用 `x.m()` 调用。`#as_free_fn` 的方法也可以写成
+  `@pkg.m`。`impl @pkg.Tr for T`、`trait A : @pkg.Tr` 可以使用导入的 trait。
+- 导入的 `pub(all)` enum/struct 与 `pub(open)` trait 自动带 `#mbt("@pkg.T")`（见第 10 节），
+  只要它们满足 `#mbt` 的条件；`pub` 的 enum/struct 是只读的（不能构造，可以匹配），`pub` 的
+  trait 不能实现。
 - 不支持的项会被跳过（`--verbose` 列出）：trait 对象 `&T`、自动填充的 `loc~`、泛型 `impl`，
   以及 `Show`/`Eq`/`Compare` 之外的 `impl`。`#deprecated` 的项不导入。
 - 接口中出现但未定义的类型（如 `Int64`、`Map`）成为不透明类型；未知的 trait 约束
@@ -227,7 +231,41 @@ fn parse_hex(s : String) -> Int raise { @conv.parse_int(s, base=16) }
   `String`、`Array[T]`。
 - 为此新增了 `Double` 字面量与运算，以及多个 trait 约束 `[T : Eq + Show]`。
 
-## 10. MoonBit++ → MoonBit 编译器
+## 10. `#mbt`：平凡地翻译到 MoonBit 的类型与 trait
+
+```moonbit
+#mbt
+enum Tree[T] { Leaf; Node(Tree[T], T, Tree[T]) }   // 编译为同名的 MoonBit enum
+
+#mbt
+struct Point { x : Int; y : Int }                  // 编译为同名的 MoonBit struct
+
+#mbt("Option")
+enum Option[T] { None; Some(T) }                   // 就是 MoonBit 已有的 Option（prelude 中）
+
+#mbt
+trait Size { size(Self) -> Int; zero() -> Self }  // 编译为 MoonBit trait
+
+impl[T : Size] Size for Tree[T] with size(self) { ... }   // 编译为 MoonBit impl
+fn[T : Size] total(t : Tree[T]) -> Int { t.size() }      // 编译为 fn[T0 : Size]
+```
+
+条件（类型检查时验证，违反直接报错）：
+
+- 类型：只有类型参数，没有索引、不是命题、不是 suberror；构造子没有隐式字段；字段类型是
+  “MoonBit 类型”：`Int`、`Double`、`Bool`、`Char`、`String`、`Unit`、类型参数、`#mbt` 类型，
+  以及它们之间的（不依赖的）函数类型。由编译器生成的类型（`#mbt` 不带名字）名字和构造子
+  须以大写字母开头，且不能与 `Value`、`Option` 等已有名字冲突。
+- trait：`Self : Type`；父 trait 也是 `#mbt`；方法不是泛型的，参数与结果是 MoonBit 类型
+  （`Self` 可以出现）。
+- `#mbt` trait 的 `impl`：只有类型参数和 `#mbt` 约束；`Self` 是 MoonBit 类型（不能只是类型
+  参数）；遵守 MoonBit 的孤儿规则——已有的 trait（`#mbt("name")`、导入的）只能为本程序生成的
+  类型实现；只读（`pub`）的 trait 不能实现。
+- 只读类型（导入的 `pub` enum/struct）不能构造。
+
+`#mbt` 不改变类型检查和解释执行的语义，只影响编译（见第 11 节）。
+
+## 11. MoonBit++ → MoonBit 编译器
 
 见之前的讨论：可行，但做法是混合的。能用 MoonBit 类型表达的部分生成原生代码，
 其余部分（GADT 细化、类型层计算、HKT trait）退化为统一的值表示。核心语言为此保留

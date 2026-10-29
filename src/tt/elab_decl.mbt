@@ -807,10 +807,38 @@ fn shared_thunk(names : Array[String], th : () -> Unit raise ElabError) -> Unit 
 /// are already taken, or that fail to elaborate, are skipped and their names
 /// added to `skipped`.
 pub fn check_decls(
-  decls : Array[@parser.Decl],
+  decls0 : Array[@parser.Decl],
   lenient? : Bool = false,
   skipped? : Array[String] = [],
 ) -> Unit raise ElabError {
+  // `#mbt` marks are recorded first, so that the declarations see each other
+  let marked : Array[(Pos, String)] = []
+  let mbt_impls : Array[(Pos, String, String)] = []
+  let decls : Array[@parser.Decl] = []
+  for d in decls0 {
+    match d {
+      DMbt(pos, mbt_name, read_only, inner) => {
+        let n = match inner {
+          DEnum(ed) => ed.name
+          DStruct(sd) => sd.name
+          DTrait(td) => td.name
+          _ => continue
+        }
+        if lenient && (globals.contains(n) || st.thunks.contains(n)) {
+          decls.push(inner)
+          continue
+        }
+        mbt_types.set(n, {
+          name: mbt_name.unwrap_or(n),
+          defined: mbt_name is None,
+          read_only,
+        })
+        marked.push((pos, n))
+        decls.push(inner)
+      }
+      _ => decls.push(d)
+    }
+  }
   // Datatypes first; then, in source order, each function's signature
   // directly followed by its body, so that later signatures can compute with
   // earlier functions. Forward references get their signatures on demand.
@@ -828,6 +856,7 @@ pub fn check_decls(
         DStruct(sd) => sd.name
         DTrait(td) => td.name
         DImpl(id) => "impl$" + id.trait_name + "$" + impl_head(id.for_ty)
+        DMbt(_, _, _, _) => continue
       }
       if taken(name) && !(d is DImpl(_) && impl_groups.contains(name)) {
         skipped.push(name)
@@ -835,6 +864,7 @@ pub fn check_decls(
       }
     }
     match d {
+      DMbt(_, _, _, _) => ()
       DOpaque(_, name, k) => {
         add_thunk(name, () => {
           let mut ty = U
@@ -905,6 +935,7 @@ pub fn check_decls(
           Some(g) => g.push(id)
           None => {
             impl_groups.set(key, [id])
+            mbt_impls.push((id.pos, key, id.trait_name))
             map_push(st.instance_heads, id.trait_name, h)
             map_push(st.impl_sigs, id.trait_name, key)
             add_thunk(key, () => elab_impl_sig(key, id))
@@ -926,6 +957,7 @@ pub fn check_decls(
       ensure(nowhere, name)
     }
   }
+  check_mbt_decls(marked, lenient)
   for k = 0; k < steps.length(); k = k + 1 {
     if lenient {
       let npending = st.pending.length()
@@ -943,4 +975,5 @@ pub fn check_decls(
       steps[k]()
     }
   }
+  check_mbt_impls(mbt_impls, lenient)
 }

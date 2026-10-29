@@ -176,3 +176,73 @@ test "codegen: dependent results stay uniform" {
     ),
   )
 }
+
+///|
+/// The MoonBit declarations generated for `#mbt` types and traits.
+fn mbt_decls(src : String) -> String {
+  @tt.check_program("t.mbtpp", src) catch {
+    @tt.CheckError(msg) => return msg
+  }
+  let code = @codegen.generate([]) catch {
+    @codegen.CodegenError(msg) => return msg
+  }
+  let out : Array[String] = []
+  let mut inside = false
+  for line in code.split("\n") {
+    let l = line.to_string()
+    if l.has_prefix("enum Tree") ||
+      l.has_prefix("struct ") ||
+      l.has_prefix("trait ") ||
+      l.has_prefix("impl") {
+      inside = !l.has_prefix("impl")
+      out.push(l)
+    } else if inside {
+      out.push(l)
+      if l == "}" {
+        inside = false
+      }
+    }
+  }
+  out.join("\n")
+}
+
+///|
+test "codegen: #mbt types and traits" {
+  inspect(
+    mbt_decls(
+      (
+        #|#mbt
+        #|enum Tree[T] { Leaf; Node(Tree[T], T, Tree[T]) }
+        #|#mbt
+        #|struct P { x : Int; y : Int }
+        #|#mbt
+        #|trait Size { size(Self) -> Int }
+        #|impl Size for P with size(self) { self.x + self.y }
+        #|impl[T : Size] Size for Tree[T] with size(self) {
+        #|  match self {
+        #|    Leaf => 0
+        #|    Node(l, x, r) => l.size() + x.size() + r.size()
+        #|  }
+        #|}
+        #|fn[T : Size] total(t : Tree[T]) -> Int { t.size() }
+        #|fn sizes(t : Tree[P]) -> Int { total(t) }
+        #|fn main { println(sizes(Node(Leaf, { x: 1, y: 2 }, Leaf))) }
+      ),
+    ),
+    content=(
+      #|enum Tree[T0] {
+      #|  Leaf
+      #|  Node(Tree[T0], T0, Tree[T0])
+      #|}
+      #|struct P {
+      #|  x : Int
+      #|  y : Int
+      #|}
+      #|trait Size {
+      #|  size(Self) -> Int raise
+      #|}
+      #|impl Size for P with size(a0) {
+      #|impl[T0 : Size] Size for Tree[T0] with size(a0) {
+    ),
+  )
+}

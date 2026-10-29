@@ -1,5 +1,7 @@
 # MoonBit++ 手册
 
+<p align="center"><img src="images/mascot.jpg" alt="MoonBit++ 吉祥物：穿白大褂、戴护目镜、捧腹大笑的紫红色兔子" width="320"></p>
+
 MoonBit++ 是一门依赖类型语言，语法取自 MoonBit：同样的 `fn`、`enum`、`struct`、`trait`、
 `match`、`let mut`、`for`、`raise`，加上依赖类型、索引类型、依赖模式匹配、命题与证明。
 

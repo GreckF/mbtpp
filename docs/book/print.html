@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-6c4141fa.js";
+            window.path_to_searchindex_js = "searchindex-1a219928.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-393214f6.js"></script>
@@ -1357,8 +1357,10 @@ moon run main
 <li><strong>诊断</strong>：编辑时（默认停顿 300 毫秒后）检查文件所在的包，未保存的内容也算在内。检查器遇到
 第一个错误就停止，所以一次显示一个错误。可以标 <code>#mbt</code> 的 <code>pub</code> 声明显示为提示，快速修复
 （灯泡）“Add #mbt” 会插入标注，“Add #mbt everywhere possible” 运行 <code>moonpp fix</code>。</li>
-<li><strong>悬停</strong>：变量、函数、构造子、类型的类型。</li>
-<li><strong>跳转到定义</strong>：包中的全局定义。</li>
+<li><strong>悬停</strong>：变量、函数、方法、字段、构造子（包括模式中的）、类型的类型。</li>
+<li><strong>跳转到定义</strong>（Ctrl+单击、F12）：包中的全局定义。</li>
+<li><strong>符号</strong>：大纲和 Ctrl+Shift+O 列出文件中的声明（构造子、字段、方法在其类型之下）；Ctrl+T 在
+工作区所有 <code>.mbtpp</code> 文件的声明中搜索。</li>
 <li><strong>Info view</strong>（编辑器标题栏的按钮，或 Ctrl+Shift+Enter）：光标在 <code>proof { ... }</code> 中时，显示
 光标处策略执行后的目标（假设和 <code>⊢ 目标</code>）；在第一个策略之前显示初始目标；策略失败时显示
 执行它之前的目标和错误。光标在其他地方时显示光标处名字的类型。</li>
@@ -1386,7 +1388,7 @@ n_0 : Nat
 <h2 id="工作方式"><a class="header" href="#工作方式">工作方式</a></h2>
 <p>插件运行 <code>moonpp ide &lt;文件&gt; --overlay &lt;json&gt;</code>：检查文件所在的包（目录中有 <code>moon.pkg</code> 时是
 整个目录，否则只是这个文件），<code>--overlay</code> 给出未保存文件的内容。输出是一个 JSON：错误和
-提示（<code>diagnostics</code>）、用到的名字及其类型和定义位置（<code>names</code>）、每个策略块在开始和每个策略
+提示（<code>diagnostics</code>）、用到的名字及其类型和定义位置（<code>names</code>）、包中的声明（<code>symbols</code>）、每个策略块在开始和每个策略
 之后的目标（<code>proofs</code>）。其他编辑器也可以用这个命令实现同样的功能。</p>
 <h2 id="设置"><a class="header" href="#设置">设置</a></h2>
 <div class="table-wrapper">

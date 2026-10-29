@@ -711,9 +711,7 @@ fn infer_head(
         None => None
       }
       let n = resolve_name(c, x, prefer_type, h)
-      record_name(p, x, Some(n), () => {
-        n + " : " + show_global_type(n).unwrap_or("?")
-      })
+      record_global(p, x, n)
       check_constructible(c, n)
       let g = global_entry(c, n)
       (Global(n), g.vty, nparams_of(n))
@@ -826,10 +824,14 @@ fn elab_method(
   m : String,
   impl_args : Array[@parser.Expr]?,
   args : Array[Arg],
+  at? : Pos,
 ) -> (Tm, Val) raise ElabError {
   let (recv, recv_ty) = insert(cxt, recv, recv_ty)
   match resolve_method(cxt, recv_ty, m) {
     Some(name) => {
+      if at is Some(p) {
+        record_global(p, m, name)
+      }
       let g = global_entry(cxt, name)
       app_core(
         cxt,
@@ -1254,13 +1256,13 @@ pub fn infer(cxt0 : Cxt, e : @parser.Expr) -> (Tm, Val) raise ElabError {
       let a = cxt.eval(check_type(cxt, t))
       (check(cxt, x, a), a)
     }
-    EField(_, x, f) => {
+    EField(p, x, f) => {
       let (t, ty) = infer_ins(cxt, x)
-      elab_field(cxt, t, ty, f)
+      elab_field(cxt, t, ty, f, at=p)
     }
-    EMethod(_, x, m, i, args) => {
+    EMethod(p, x, m, i, args) => {
       let (t, ty) = infer_ins(cxt, x)
-      elab_method(cxt, t, ty, m, i, args.map(AE(_)))
+      elab_method(cxt, t, ty, m, i, args.map(AE(_)), at=p)
     }
     EBin(_, op, a, b) => infer_bin(cxt, op, a, b)
     EUn(_, "-", x) => {
@@ -1351,6 +1353,7 @@ fn elab_field(
   t : Tm,
   ty : Val,
   f : String,
+  at? : Pos,
 ) -> (Tm, Val) raise ElabError {
   match head_name(ty) {
     Some(d) =>
@@ -1358,6 +1361,9 @@ fn elab_field(
         Some({ fields: Some(fs), .. }) if fs.contains("_" + f) || fs.contains(f) => {
           let fname = if fs.contains(f) { f } else { "_" + f }
           let name = d + "::" + fname
+          if at is Some(p) {
+            record_global(p, f, name)
+          }
           let g = global_entry(cxt, name)
           app_core(cxt, Global(name), g.vty, 0, None, Some([AV(t, ty)]))
         }

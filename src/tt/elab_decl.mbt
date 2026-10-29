@@ -1014,27 +1014,32 @@ pub fn check_decls(
 ///|
 /// Where the globals of a declaration are declared (for go to definition).
 fn record_decl_pos(d : @parser.Decl) -> Unit {
-  let set = (n : String, p : Pos) => if in_package(p) { decl_pos.set(n, p) }
+  let set = (n : String, p : Pos, kind : String) => {
+    if in_package(p) {
+      decl_pos.set(n, p)
+      decl_kinds.set(n, kind)
+    }
+  }
   match d {
-    DFn(fd) => set(fd.name, fd.pos)
-    DDef(p, n, _, _, _) | DOpaque(p, n, _) => set(n, p)
+    DFn(fd) => set(fd.name, fd.pos, if fd.is_lemma { "lemma" } else { "fn" })
+    DDef(p, n, _, _, _) => set(n, p, "let")
+    DOpaque(p, n, _) => set(n, p, "type")
     DEnum(ed) => {
-      set(ed.name, ed.pos)
+      set(ed.name, ed.pos, "enum")
       for c in ed.cons {
-        set(ed.name + "::" + c.name, c.pos)
+        set(ed.name + "::" + c.name, c.pos, "constructor")
       }
     }
     DStruct(sd) => {
-      set(sd.name, sd.pos)
-      set(sd.name + "::mk", sd.pos)
+      set(sd.name, sd.pos, "struct")
       for f in sd.fields {
-        set(sd.name + "::" + f.1, f.0)
+        set(sd.name + "::" + f.1, f.0, "field")
       }
     }
     DTrait(td) => {
-      set(td.name, td.pos)
+      set(td.name, td.pos, "trait")
       for m in td.methods {
-        set(td.name + "::" + m.name, m.pos)
+        set(td.name + "::" + m.name, m.pos, "method")
       }
     }
     DImpl(_) | DMbt(_, _, _, _) | DPub(_) => ()

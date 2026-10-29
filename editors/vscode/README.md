@@ -8,8 +8,12 @@ Support for MoonBit++ (`.mbtpp`) files:
 - **Diagnostics** while typing: the type error of the package (one at a
   time, as the checker stops at the first), and hints for `pub`
   declarations that could be `#mbt`, with a quick fix that adds it.
-- **Hover**: the type of a variable, function, constructor or type.
-- **Go to definition** for the globals of the package.
+- **Hover**: the type of a variable, function, method, field, constructor
+  (also in patterns) or type.
+- **Go to definition** (Ctrl+click, F12) for the globals of the package.
+- **Symbols**: the outline and Ctrl+Shift+O list the declarations of the
+  file (constructors, fields and methods under their type); Ctrl+T searches
+  the declarations of all `.mbtpp` files of the workspace.
 - **Info view** (the ⊢ button in the editor title, or Ctrl+Shift+Enter):
   inside a `proof { ... }` block, the goals after the tactic at the cursor
   (hypotheses and ⊢ goal), or the goals before a tactic that failed; outside,

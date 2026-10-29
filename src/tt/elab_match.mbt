@@ -63,7 +63,7 @@ fn check_pat(
         scrut,
         refine_scrut,
       )
-    PCon(_, name, impl_ps, expl_ps) => {
+    PCon(cpos, name, impl_ps, expl_ps) => {
       let (d, sp) = match ty {
         VData(d, sp) => (d, sp)
         _ =>
@@ -72,6 +72,7 @@ fn check_pat(
           )
       }
       let c = resolve_name(cxt, name, false, Some(d))
+      record_global(cpos, name, c)
       let ci = match con_info(c) {
         Some(ci) if ci.data == d => ci
         _ => cxt.fail(name + " is not a constructor of " + d)

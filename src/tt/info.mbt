@@ -41,6 +41,12 @@ pub let proof_infos : Array[ProofInfo] = []
 pub let decl_pos : Map[String, Pos] = {}
 
 ///|
+/// What the globals of `decl_pos` are: "fn", "lemma", "let", "enum",
+/// "struct", "trait", "type", "constructor", "field" or "method" (of a
+/// trait).
+pub let decl_kinds : Map[String, String] = {}
+
+///|
 /// Only the files of the checked package are recorded.
 fn in_package(p : Pos) -> Bool {
   p.line >= file_stride
@@ -56,6 +62,13 @@ fn record_name(
   if in_package(p) {
     name_infos.push({ pos: p, name: x, global, show, })
   }
+}
+
+///|
+fn record_global(p : Pos, x : String, n : String) -> Unit {
+  record_name(p, x, Some(n), () => {
+    n + " : " + show_global_type(n).unwrap_or("?")
+  })
 }
 
 ///|
@@ -88,4 +101,5 @@ fn clear_infos() -> Unit {
   name_infos.clear()
   proof_infos.clear()
   decl_pos.clear()
+  decl_kinds.clear()
 }

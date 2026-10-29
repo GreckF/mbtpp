@@ -481,6 +481,8 @@ fn Parser::postfix(self : Parser, e0 : Expr) -> Expr raise ParseError {
           e = EField(pos, e, n.to_string())
         }
         _ => {
+          // field and method calls are at the position of their name
+          let npos = self.pos()
           let name = self.ident()
           if self.is_same_line("[") || self.is_same_line("(") {
             let impl_args = if self.is_same_line("[") {
@@ -491,14 +493,14 @@ fn Parser::postfix(self : Parser, e0 : Expr) -> Expr raise ParseError {
             }
             if impl_args is Some(idx) && !self.is_same_line("(") {
               // `e.f[i]`: index into a field
-              e = EApp(pos, EField(pos, e, name), Some(idx), None)
+              e = EApp(pos, EField(npos, e, name), Some(idx), None)
             } else {
               self.expect("(")
               let args = self.args(")")
-              e = EMethod(pos, e, name, impl_args, args)
+              e = EMethod(npos, e, name, impl_args, args)
             }
           } else {
-            e = EField(pos, e, name)
+            e = EField(npos, e, name)
           }
         }
       }

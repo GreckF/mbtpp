@@ -5,7 +5,8 @@
 /// - `diagnostics`: the error (if any) and the `#mbt` hints;
 /// - `names`: the names used, with their types and definitions (hover, go
 ///   to definition);
-/// - `proofs`: the goals of tactic blocks (info view).
+/// - `proofs`: the goals of tactic blocks (info view);
+/// - `symbols`: the declarations of the package (outline, symbol search).
 ///
 /// The package is the directory of the file if it has a `moon.pkg`, else
 /// the file alone. `--overlay` names a JSON file mapping paths to contents
@@ -160,9 +161,23 @@ fn cmd_ide(
       }),
     )
   }
+  let symbols : Array[Json] = []
+  for name, p in @tt.decl_pos {
+    guard loc(p) is Some((f, line, col)) else { continue }
+    symbols.push(
+      Json::object({
+        "name": Json::string(name),
+        "kind": Json::string(@tt.decl_kinds.get(name).unwrap_or("fn")),
+        "file": Json::string(f),
+        "line": line.to_json(),
+        "col": col.to_json(),
+      }),
+    )
+  }
   println(
     Json::object({
       "files": Json::array(files.map(Json::string(_))),
+      "symbols": Json::array(symbols),
       "diagnostics": Json::array(diags),
       "names": Json::array(names),
       "proofs": Json::array(proofs),

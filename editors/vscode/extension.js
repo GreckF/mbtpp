@@ -12,7 +12,7 @@ const path = require("path");
 
 /** @type {vscode.DiagnosticCollection} */
 let diagnostics;
-/** Results of `moonpp ide`, by file key: { names, proofs, diags }. */
+/** Results of `moonpp ide`, by file key: { names, proofs, diags, symbols }. */
 const results = new Map();
 /** The package (directory or file) of each checked file, and its run. */
 const runs = new Map();
@@ -53,11 +53,15 @@ function scheduleCheck(doc, delay) {
   const t = target(doc.uri.fsPath);
   const k = key(t.path);
   clearTimeout(timers.get(k));
-  timers.set(k, setTimeout(() => check(doc), delay));
+  timers.set(k, setTimeout(() => check(doc.uri.fsPath), delay));
 }
 
-function check(doc) {
-  const file = doc.uri.fsPath;
+/** Check the package of `file`; resolves when the result is applied (or superseded). */
+function check(file) {
+  return new Promise((resolve) => checkThen(file, resolve));
+}
+
+function checkThen(file, done) {
   const t = target(file);
   const k = key(t.path);
   const id = ++seq;
@@ -83,7 +87,7 @@ function check(doc) {
     (err, stdout, stderr) => {
       fs.rm(tmp, () => {});
       const run = runs.get(k);
-      if (!run || run.id !== id) return; // superseded
+      if (!run || run.id !== id) return done(); // superseded
       run.proc = undefined;
       let res;
       try {
@@ -92,9 +96,10 @@ function check(doc) {
         const msg = (stderr || stdout || String(err)).trim();
         output.appendLine(`$ ${cmd}\n${msg}`);
         setStatus("failed", msg.split("\n")[0]);
-        return;
+        return done();
       }
       apply(res);
+      done();
     },
   );
   runs.set(k, { id, proc });
@@ -102,13 +107,15 @@ function check(doc) {
 
 function apply(res) {
   const byFile = new Map();
-  for (const f of res.files) byFile.set(key(f), { file: f, names: [], proofs: [], diags: [] });
+  const empty = (f) => ({ file: f, names: [], proofs: [], diags: [], symbols: [] });
+  for (const f of res.files) byFile.set(key(f), empty(f));
   const entry = (f) => {
     const k = key(f);
-    if (!byFile.has(k)) byFile.set(k, { file: f, names: [], proofs: [], diags: [] });
+    if (!byFile.has(k)) byFile.set(k, empty(f));
     return byFile.get(k);
   };
   for (const n of res.names) entry(n.file).names.push(n);
+  for (const s of res.symbols || []) entry(s.file).symbols.push(s);
   for (const p of res.proofs) entry(p.file).proofs.push(p);
   const hints = config().get("mbtHints");
   for (const d of res.diagnostics) {
@@ -203,12 +210,23 @@ const definitionProvider = {
   provideDefinition(doc, pos) {
     const n = nameAt(doc, pos);
     if (!n || !n.def) return undefined;
-    return new vscode.Location(
-      vscode.Uri.file(n.def.file),
-      new vscode.Position(n.def.line - 1, n.def.col - 1),
-    );
+    // the declaration is at `fn`, `enum`, ...: go to the name after it
+    const g = n.type.slice(0, n.type.indexOf(" : "));
+    const s = { name: g, line: n.def.line, col: n.def.col };
+    return new vscode.Location(vscode.Uri.file(n.def.file), symbolRange(s, lineOf(n.def.file, n.def.line)));
   },
 };
+
+/** A line of a file, from its open document or from disk. */
+function lineOf(file, line) {
+  const doc = vscode.workspace.textDocuments.find((d) => key(d.uri.fsPath) === key(file));
+  try {
+    const text = doc ? doc.getText() : fs.readFileSync(file, "utf8");
+    return text.split("\n")[line - 1];
+  } catch (e) {
+    return undefined;
+  }
+}
 
 const codeActionProvider = {
   provideCodeActions(doc, _range, context) {
@@ -233,6 +251,120 @@ const codeActionProvider = {
       actions.push(all);
     }
     return actions;
+  },
+};
+
+// ---------------------------------------------------------------- symbols
+
+function symbolKind(kind) {
+  const K = vscode.SymbolKind;
+  return (
+    {
+      fn: K.Function,
+      lemma: K.Function,
+      let: K.Variable,
+      enum: K.Enum,
+      struct: K.Struct,
+      trait: K.Interface,
+      type: K.Class,
+      constructor: K.EnumMember,
+      field: K.Field,
+      method: K.Method,
+    }[kind] || K.Function
+  );
+}
+
+/** The range of the name of a declaration (its position is that of `fn`, `enum`, ...). */
+function symbolRange(s, lineText) {
+  const i = s.name.lastIndexOf("::");
+  const short = i >= 0 ? s.name.slice(i + 2) : s.name;
+  let col = s.col - 1;
+  if (lineText !== undefined) {
+    const k = lineText.indexOf(short, col);
+    if (k >= 0) col = k;
+  }
+  return new vscode.Range(s.line - 1, col, s.line - 1, col + short.length);
+}
+
+/** Outline: `Vector::Cons` is `Cons` under `Vector` when both are in the file. */
+const documentSymbolProvider = {
+  async provideDocumentSymbols(doc) {
+    if (!resultFor(doc)) await check(doc.uri.fsPath);
+    const r = resultFor(doc);
+    if (!r) return [];
+    const syms = [...r.symbols].sort((a, b) => a.line - b.line || a.col - b.col);
+    const top = new Map();
+    const out = [];
+    const mk = (s, name) => {
+      const l = doc.lineAt(Math.min(s.line - 1, doc.lineCount - 1));
+      const line = l.range;
+      const sel = symbolRange(s, l.text);
+      return new vscode.DocumentSymbol(
+        name,
+        s.kind,
+        symbolKind(s.kind),
+        line.contains(sel) ? line : sel,
+        sel,
+      );
+    };
+    for (const s of syms) {
+      const i = s.name.lastIndexOf("::");
+      const parent = i > 0 ? top.get(s.name.slice(0, i)) : undefined;
+      if (parent) {
+        parent.children.push(mk(s, s.name.slice(i + 2)));
+      } else {
+        const d = mk(s, s.name);
+        top.set(s.name, d);
+        out.push(d);
+      }
+    }
+    return out;
+  },
+};
+
+/** Symbol search (Ctrl+T): all .mbtpp files of the workspace are checked the first time. */
+let workspaceChecked;
+const workspaceSymbolProvider = {
+  async provideWorkspaceSymbols(query) {
+    if (!workspaceChecked) {
+      workspaceChecked = (async () => {
+        const files = await vscode.workspace.findFiles(
+          "**/*.mbtpp",
+          "**/{_build,.mooncakes,mbtpp_out,_mbtpp_build,node_modules,.git}/**",
+          2000,
+        );
+        const seen = new Set();
+        for (const f of files) {
+          const t = target(f.fsPath);
+          if (results.has(key(f.fsPath)) || seen.has(key(t.path))) continue;
+          seen.add(key(t.path));
+          await check(f.fsPath);
+        }
+      })();
+    }
+    await workspaceChecked;
+    const q = query.toLowerCase();
+    const matches = (name) => {
+      let i = 0;
+      for (const c of name.toLowerCase()) if (i < q.length && c === q[i]) i++;
+      return i === q.length;
+    };
+    const out = [];
+    for (const r of results.values()) {
+      for (const s of r.symbols) {
+        const i = s.name.lastIndexOf("::");
+        if (!matches(i > 0 ? s.name.slice(i + 2) : s.name)) continue;
+        out.push(
+          new vscode.SymbolInformation(
+            i > 0 ? s.name.slice(i + 2) : s.name,
+            symbolKind(s.kind),
+            i > 0 ? s.name.slice(0, i) : path.basename(r.file),
+            new vscode.Location(vscode.Uri.file(r.file), symbolRange(s)),
+          ),
+        );
+      }
+    }
+    return out;
   },
 };
 
@@ -419,6 +551,8 @@ function activate(context) {
     statusItem,
     vscode.languages.registerHoverProvider(sel, hoverProvider),
     vscode.languages.registerDefinitionProvider(sel, definitionProvider),
+    vscode.languages.registerDocumentSymbolProvider(sel, documentSymbolProvider),
+    vscode.languages.registerWorkspaceSymbolProvider(workspaceSymbolProvider),
     vscode.languages.registerCodeActionsProvider(sel, codeActionProvider, {
       providedCodeActionKinds: [vscode.CodeActionKind.QuickFix],
     }),

@@ -2,7 +2,7 @@
   "name": "mbtpp",
   "displayName": "MoonBit++",
   "description": "MoonBit++ (.mbtpp): highlighting, type checking, hover, go to definition, an info view for proofs, and moonpp commands",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publisher": "greckf",
   "license": "Apache-2.0",
   "repository": {

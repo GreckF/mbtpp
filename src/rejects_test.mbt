@@ -680,7 +680,9 @@ test "editor info: names and goals" {
       #|Point : Type (global)
       #|Int : Type (global)
       #|p : Point
+      #|Point::x : (self : Point) -> Int (global)
       #|p : Point
+      #|Point::y : (self : Point) -> Int (global)
     ),
   )
   inspect(

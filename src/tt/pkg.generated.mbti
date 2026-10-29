@@ -28,6 +28,8 @@ pub fn[T] concat(Array[T], Array[T]) -> Array[T]
 
 pub fn data_info(String) -> DataInfo?
 
+pub let decl_kinds : Map[String, String]
+
 pub let decl_pos : Map[String, @parser.Pos]
 
 pub fn empty_cxt(@parser.Pos) -> Cxt
@@ -91,8 +93,6 @@ pub fn new_meta() -> Int32
 pub fn nf(Array[Val], Tm) -> Tm
 
 pub fn normalize(Tm) -> String
-
-pub fn package_line(Int32, Int32) -> Int32
 
 pub fn param_labels(String) -> Array[(String, Bool)?]?
 

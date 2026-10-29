@@ -157,3 +157,17 @@ test "example mbt_types" {
     ),
   )
 }
+
+///|
+test "example progress" {
+  inspect(
+    run_example("progress.mbtpp"),
+    content=(
+      #|tt after 1 steps
+      #|tt after 2 steps
+      #|tt after 2 steps
+      #|(fn wk(tt)) after 1 steps
+      #|
+    ),
+  )
+}

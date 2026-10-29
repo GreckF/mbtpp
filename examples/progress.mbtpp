@@ -1,0 +1,154 @@
+// Intrinsically typed STLC with de Bruijn indices, substitution and a
+// small-step semantics; `progress` proves that a closed term is a value or
+// steps. `Tm` and `lookup` are mutually dependent: the type of `Var(i)` is
+// `lookup(i)`.
+
+enum Ty {
+  Top
+  Arr(Ty, Ty)
+}
+
+enum Ctx {
+  Empty
+  Extend(Ctx, Ty)
+}
+
+enum Ix : (Ctx) -> Type {
+  IZ[g : Ctx, a : Ty] : Ix(Extend(g, a))
+  IS[g : Ctx, a : Ty](Ix(g)) : Ix(Extend(g, a))
+}
+
+// No case for `Ix(Empty)`: it is empty.
+fn[g : Ctx] lookup(i : Ix(g)) -> Ty {
+  match i {
+    IZ[_, a] => a
+    IS(j) => lookup(j)
+  }
+}
+
+enum Tm : (Ctx, Ty) -> Type {
+  TT[g : Ctx] : Tm(g, Top)
+  Lam[g : Ctx, a : Ty, b : Ty](Tm(Extend(g, a), b)) : Tm(g, Arr(a, b))
+  App[g : Ctx, a : Ty, b : Ty](Tm(g, Arr(a, b)), Tm(g, a)) : Tm(g, b)
+  Var[g : Ctx](i : Ix(g)) : Tm(g, lookup(i))
+  Wk[g : Ctx, a : Ty, b : Ty](Tm(g, a)) : Tm(Extend(g, b), a)
+}
+
+enum Val : [a : Ty] -> (Tm(Empty, a)) -> Type {
+  VLam[a : Ty, b : Ty](t : Tm(Extend(Empty, a), b)) : Val(Lam(t))
+  VTT : Val(TT)
+}
+
+// ---- substitution -----------------------------------------------------------
+
+enum Sub : (Ctx, Ctx) -> Type {
+  SEmpty[g : Ctx] : Sub(g, Empty)
+  SId[g : Ctx] : Sub(g, g)
+  SExtend[d : Ctx, g : Ctx, a : Ty](Sub(d, g), Tm(d, a)) : Sub(d, Extend(g, a))
+  SShift[d : Ctx, g : Ctx](Sub(d, g), a : Ty) : Sub(Extend(d, a), Extend(g, a))
+}
+
+fn[g : Ctx, a : Ty] from_emp(t : Tm(Empty, a)) -> Tm(g, a) {
+  match g {
+    Empty => t
+    Extend(_, _) => Wk(from_emp(t))
+  }
+}
+
+fn[d : Ctx, g : Ctx, a : Ty] apply_sub(s : Sub(d, g), t : Tm(g, a)) -> Tm(d, a) {
+  match (s, t) {
+    (SEmpty, t) => from_emp(t)
+    (SId, t) => t
+    (_, TT) => TT
+    (s, Lam(t)) => Lam(apply_sub(SShift(s, _), t))
+    (s, App(t1, t2)) => App(apply_sub(s, t1), apply_sub(s, t2))
+    (SExtend(_, a), Var(IZ)) => a
+    (SExtend(s, _), Var(IS(i))) => apply_sub(s, Var(i))
+    (SExtend(s, _), Wk(t)) => apply_sub(s, t)
+    (SShift(_, _), Var(IZ)) => Var(IZ)
+    (SShift(s, _), Var(IS(i))) => Wk(apply_sub(s, Var(i)))
+    (SShift(s, _), Wk(t)) => Wk(apply_sub(s, t))
+  }
+}
+
+// ---- small-step semantics and progress ----------------------------------------
+
+enum Step1 : [a : Ty] -> (Tm(Empty, a), Tm(Empty, a)) -> Type {
+  StApp[a : Ty, b : Ty](t1 : Tm(Extend(Empty, a), b), t2 : Tm(Empty, a)) : Step1(
+    App(Lam(t1), t2),
+    apply_sub(SExtend(SId, t2), t1),
+  )
+  StApp1[a : Ty, b : Ty](
+    t1 : Tm(Empty, Arr(a, b)),
+    u1 : Tm(Empty, Arr(a, b)),
+    t2 : Tm(Empty, a),
+    Step1(t1, u1),
+  ) : Step1(App(t1, t2), App(u1, t2))
+  StApp2[a : Ty, b : Ty](
+    t1 : Tm(Empty, Arr(a, b)),
+    t2 : Tm(Empty, a),
+    u2 : Tm(Empty, a),
+    Step1(t2, u2),
+  ) : Step1(App(t1, t2), App(t1, u2))
+}
+
+enum Progress : [a : Ty] -> (Tm(Empty, a)) -> Type {
+  PrStep[a : Ty](t : Tm(Empty, a), u : Tm(Empty, a), Step1(t, u)) : Progress(t)
+  PrDone[a : Ty](t : Tm(Empty, a), Val(t)) : Progress(t)
+}
+
+// `Var` is impossible in the empty context.
+fn[a : Ty] progress(t : Tm(Empty, a)) -> Progress(t) {
+  match t {
+    TT => PrDone(TT, VTT)
+    Lam(b) => PrDone(Lam(b), VLam(b))
+    App(t1, t2) => {
+      match progress(t1) {
+        PrStep(_, u1, st1) => PrStep(_, _, StApp1(t1, u1, t2, st1))
+        PrDone(_, VLam(b)) => PrStep(_, _, StApp(b, t2))
+      }
+    }
+  }
+}
+
+// ---- running it -------------------------------------------------------------
+
+// Substitution computes during type checking.
+lemma subst_var : apply_sub[Empty](SExtend(SId, TT), Var(IZ)) === TT = Refl
+
+fn[g : Ctx] Ix::to_int(self : Ix(g)) -> Int {
+  match self {
+    IZ => 0
+    IS(j) => j.to_int() + 1
+  }
+}
+
+fn[g : Ctx, a : Ty] Tm::to_string(self : Tm(g, a)) -> String {
+  match self {
+    TT => "tt"
+    Lam(b) => "(fn " + b.to_string() + ")"
+    App(f, x) => "(" + f.to_string() + " " + x.to_string() + ")"
+    Var(i) => "#" + i.to_int().to_string()
+    Wk(t) => "wk(" + t.to_string() + ")"
+  }
+}
+
+// Evaluate by repeated steps (`progress` says what to do next).
+fn[a : Ty] eval(t : Tm(Empty, a), steps : Int) -> String {
+  match progress(t) {
+    PrStep(_, u, _) => eval(u, steps + 1)
+    PrDone(_, _) => t.to_string() + " after " + steps.to_string() + " steps"
+  }
+}
+
+fn main {
+  let id : Tm(Empty, Arr(Top, Top)) = Lam(Var(IZ))
+  println(eval(App(id, TT), 0))
+  // (fn f => f(tt))(id)
+  let apply_tt : Tm(Empty, Arr(Arr(Top, Top), Top)) = Lam(App(Var(IZ), TT))
+  println(eval(App(apply_tt, id), 0))
+  // (fn x => fn y => x)(tt)(tt)
+  let k : Tm(Empty, Arr(Top, Arr(Top, Top))) = Lam(Lam(Var(IS(IZ))))
+  println(eval(App(App(k, TT), TT), 0))
+  println(eval(App(k, TT), 0))
+}

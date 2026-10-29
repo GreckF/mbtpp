@@ -960,6 +960,53 @@ fn Gen::uniform_fn(
 }
 
 ///|
+fn Gen::new(imports : Array[(String, String)]) -> Gen {
+  let g : Gen = {
+    ids: {},
+    todo: [],
+    files: {},
+    cur_file: imports_file,
+    foreign: {},
+    foreign_order: [],
+    aliases: {},
+    er: compute_erasure(),
+    fresh: 0,
+    enums_ok: {},
+    enums_done: [],
+    typed_set: [],
+    cur_result: None,
+    dry: false,
+    scheduled: {},
+    cur_bounds: [],
+    mbt_impls: [],
+    impls_done: [],
+    traits_done: [],
+    diagnose: false,
+    culprit: None,
+    ctors: {},
+    ctor_order: [],
+  }
+  for im in imports {
+    g.aliases.set(im.0, im.1)
+  }
+  g
+}
+
+///|
+/// Which of the functions `names` have a native translation, so that they
+/// could be `#mbt` (see `@tt.mbt_hints`).
+pub fn native_fns(
+  imports : Array[(String, String)],
+  names : Array[String],
+) -> Array[String] {
+  let g = Gen::new(imports)
+  g.dry = true
+  g.compute_typed()
+  let reserved = [..runtime_fns(), "con_name", "con_fields", "main"]
+  names.filter(n => g.typed_set.contains(n) && !reserved.contains(n))
+}
+
+///|
 /// The generated program (all files but the runtime) as one text, each file
 /// introduced by a `// ==== name ====` line.
 pub fn generate(imports : Array[(String, String)]) -> String raise CodegenError {
@@ -990,34 +1037,7 @@ pub fn generate_files(
   if !@tt.globals.contains("main") {
     raise CodegenError("no main function")
   }
-  let g : Gen = {
-    ids: {},
-    todo: [],
-    files: {},
-    cur_file: imports_file,
-    foreign: {},
-    foreign_order: [],
-    aliases: {},
-    er: compute_erasure(),
-    fresh: 0,
-    enums_ok: {},
-    enums_done: [],
-    typed_set: [],
-    cur_result: None,
-    dry: false,
-    scheduled: {},
-    cur_bounds: [],
-    mbt_impls: [],
-    impls_done: [],
-    traits_done: [],
-    diagnose: false,
-    culprit: None,
-    ctors: {},
-    ctor_order: [],
-  }
-  for im in imports {
-    g.aliases.set(im.0, im.1)
-  }
+  let g = Gen::new(imports)
   g.dry = true
   g.compute_typed()
   g.check_mbt_fns()

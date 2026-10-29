@@ -5,7 +5,9 @@ let help_msg : String =
   #|
   #|usage:
   #|  moonpp new <name>          create a new project
-  #|  moonpp check [path]        type check the project (or a package directory or file)
+  #|  moonpp check [path]        type check the project (or a package directory or file);
+  #|                             also lists the `pub` declarations that could be #mbt
+  #|  moonpp fix [path]          add #mbt to the `pub` declarations that could have it
   #|  moonpp run [path]          run the main package (or a package directory or file)
   #|  moonpp build [path]        compile to a MoonBit project and `moon build` it: by default
   #|                             mbtpp_out/<pkg> in the project (or _mbtpp_build/<file> for a
@@ -74,7 +76,7 @@ fn check_files(
   opts : Options,
   dir : String,
   files : Array[String],
-) -> Unit raise Failure {
+) -> Array[@tt.Import] raise Failure {
   let srcs : Array[(String, String)] = []
   let cwd = current_dir()
   for f in ordered_files(dir, files) {
@@ -93,6 +95,32 @@ fn check_files(
       println("  " + s)
     }
   }
+  imports
+}
+
+///|
+/// The `pub` declarations of the package just checked that could be `#mbt`.
+fn mbt_hints(imports : Array[@tt.Import]) -> Array[@tt.MbtHint] {
+  let aliases = imports.map(i => (i.path, i.alias))
+  @tt.mbt_hints(names => @codegen.native_fns(aliases, names))
+}
+
+///|
+fn show_hint(h : @tt.MbtHint) -> String {
+  h.file +
+  ":" +
+  h.line.to_string() +
+  ": hint: pub " +
+  h.kind +
+  " " +
+  h.name +
+  " could be #mbt (" +
+  (match h.kind {
+    "fn" => "it would be exported as a MoonBit function"
+    "trait" => "it would be a MoonBit trait"
+    _ => "it would be a MoonBit type"
+  }) +
+  ")"
 }
 
 ///|
@@ -134,12 +162,19 @@ fn cmd_check(opts : Options, path : String?) -> Bool raise Failure {
   for pkg in pkgs {
     let (dir, files) = pkg
     let name = relative(dir, base)
-    check_files(opts, dir, files) catch {
+    let imports = check_files(opts, dir, files) catch {
       Failure(msg) => {
         println(msg)
         ok = false
         continue
       }
+    }
+    let hints = mbt_hints(imports)
+    for h in hints {
+      println(show_hint(h))
+    }
+    if hints.length() > 0 {
+      println("  (`moonpp fix` adds #mbt to them)")
     }
     println(
       "ok: " +
@@ -147,6 +182,71 @@ fn cmd_check(opts : Options, path : String?) -> Bool raise Failure {
     )
   }
   ok
+}
+
+///|
+/// Add `#mbt` to the `pub` declarations that could have it, on a line of its
+/// own above the declaration. The package is checked again afterwards; if
+/// that fails, the files are restored.
+fn cmd_fix(opts : Options, path : String?) -> Bool raise Failure {
+  let (_, pkgs) = targets(path)
+  let mut count = 0
+  for pkg in pkgs {
+    let (dir, files) = pkg
+    let hints = mbt_hints(check_files(opts, dir, files))
+    let originals : Array[(String, String)] = []
+    for
+      file in hints
+      .map(h => h.file)
+      .iter()
+      .fold(init=[], (acc : Array[String], f) => {
+        if !acc.contains(f) {
+          acc.push(f)
+        }
+        acc
+      }) {
+      let src = @fs.read_file_to_string(file) catch {
+        @fs.IOError(msg) => die("cannot read " + file + ": " + msg)
+      }
+      originals.push((file, src))
+      let nl = if src.contains("\r\n") { "\r\n" } else { "\n" }
+      let lines = src.split(nl).map(l => l.to_string()).to_array()
+      // from the bottom, so that the line numbers stay valid
+      let lns = hints.filter(h => h.file == file).map(h => h.line)
+      lns.sort()
+      lns.rev_in_place()
+      for ln in lns {
+        let line = lines[ln - 1]
+        let mut k = 0
+        while k < line.length() && (line[k] == ' ' || line[k] == '\t') {
+          k = k + 1
+        }
+        lines.insert(ln - 1, line.unsafe_substring(start=0, end=k) + "#mbt")
+      }
+      write_file(file, lines.join(nl))
+    }
+    let restore = () => {
+      for o in originals {
+        write_file(o.0, o.1) catch {
+          _ => ()
+        }
+      }
+    }
+    ignore(check_files(opts, dir, files)) catch {
+      Failure(msg) => {
+        restore()
+        die("adding #mbt broke the package (the files are restored): " + msg)
+      }
+    }
+    for h in hints {
+      println(h.file + ":" + h.line.to_string() + ": #mbt " + h.name)
+    }
+    count = count + hints.length()
+  }
+  if count == 0 {
+    println("nothing to fix")
+  }
+  true
 }
 
 ///|
@@ -249,7 +349,7 @@ fn output_module(
 /// directory and the name of the generated package in it.
 fn compile(opts : Options, path : String?) -> (String, String) raise Failure {
   let (dir, files) = main_package(path)
-  check_files(opts, dir, files)
+  ignore(check_files(opts, dir, files))
   let imports = load_imports(dir)
   let code = @codegen.generate_files(imports.map(i => (i.path, i.alias))) catch {
     @codegen.CodegenError(msg) => die("cannot compile: " + msg)
@@ -402,7 +502,7 @@ fn cmd_run(opts : Options, path : String?) -> Bool raise Failure {
     }
   }
   ignore(base)
-  check_files(opts, dir, files)
+  ignore(check_files(opts, dir, files))
   let out = { buf: StringBuilder::new(), }
   @interp.run_main(s => out.write(s)) catch {
     @interp.RunError(msg) => {
@@ -539,6 +639,8 @@ fn run_cli(args : Array[String]) -> Bool raise Failure {
     }
     ["check"] => cmd_check(opts, None)
     ["check", p] => cmd_check(opts, Some(p))
+    ["fix"] => cmd_fix(opts, None)
+    ["fix", p] => cmd_fix(opts, Some(p))
     ["build"] => cmd_build(opts, None)
     ["build", p] => cmd_build(opts, Some(p))
     ["run"] => cmd_run(opts, None)

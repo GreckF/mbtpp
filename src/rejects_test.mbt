@@ -614,3 +614,49 @@ test "file order: a hint when a later file's function is needed" {
   )
   inspect(check_files([shapes, facts]), content="ok")
 }
+
+///|
+/// The `pub` declarations of a checked program that could be `#mbt`.
+fn mbt_hints(src : String) -> String {
+  @tt.check_program("a.mbtpp", src) catch {
+    @tt.CheckError(msg) => return msg
+  }
+  @tt.mbt_hints(names => @codegen.native_fns([], names))
+  .map(h => h.line.to_string() + " " + h.kind + " " + h.name)
+  .join("\n")
+}
+
+///|
+test "#mbt hints: pub declarations that translate" {
+  let src =
+    #|pub enum Shape { Circle(Double); Rect(Double, Double) }
+    #|pub struct Point { x : Int; y : Int }
+    #|pub enum Vec : Nat -> Type {
+    #|  VNil : Vec(0)
+    #|  VCons[n : Nat](Int, Vec(n)) : Vec(S(n))
+    #|}
+    #|pub struct Holder { v : Vec(0) }
+    #|pub struct Pair { s : Shape; p : Point }
+    #|pub trait Area { area(Self) -> Double }
+    #|pub trait Len { len(Self) -> Nat }
+    #|pub fn norm1(p : Point) -> Int { p.x + p.y }
+    #|pub fn[n : Nat] vlen(v : Vec(n)) -> Int { 0 }
+    #|pub fn nat_len(n : Nat) -> Nat { n }
+    #|fn private_one(p : Point) -> Int { p.x }
+    #|#mbt
+    #|pub fn marked(x : Int) -> Int { x }
+    #|pub lemma l : 1 === 1 = Refl
+  inspect(
+    mbt_hints(src),
+    content=(
+      #|1 type Shape
+      #|2 type Point
+      #|8 type Pair
+      #|9 trait Area
+      #|11 fn norm1
+    ),
+  )
+  // the tentative marks are removed
+  inspect(@tt.mbt_info("Shape") is None, content="true")
+  inspect(@tt.mbt_fns.contains("norm1"), content="false")
+}

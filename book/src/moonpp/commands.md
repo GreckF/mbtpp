@@ -3,7 +3,8 @@
 | 命令 | 作用 |
 | --- | --- |
 | `moonpp new <名字>` | 创建项目 |
-| `moonpp check [路径]` | 类型检查整个项目、一个包目录或一个文件 |
+| `moonpp check [路径]` | 类型检查整个项目、一个包目录或一个文件；并提示可以标 `#mbt` 的 `pub` 声明 |
+| `moonpp fix [路径]` | 给这些 `pub` 声明加上 `#mbt` |
 | `moonpp run [路径]` | 用解释器运行 main 包（或指定的包、文件） |
 | `moonpp run --compiled [路径]` | 编译到 MoonBit 并用 `moon run` 运行 |
 | `moonpp build [路径] [-o 目录]` | 编译成 MoonBit 项目并 `moon build` |

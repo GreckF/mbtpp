@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-0a64dc98.js";
+            window.path_to_searchindex_js = "../searchindex-5b294885.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-9775a42a.js"></script>
@@ -242,6 +242,23 @@ fn main {
 <li>遵守 MoonBit 的孤儿规则：已有的 trait（<code>#mbt("…")</code>、导入的）只能为本程序生成的类型实现。</li>
 <li>只读（<code>pub</code>）的 trait 不能实现。</li>
 <li>方法在原生片段中的实例生成 MoonBit <code>impl</code>。</li>
+</ul>
+<h2 id="自动发现可以标-mbt-的声明"><a class="header" href="#自动发现可以标-mbt-的声明">自动发现可以标 <code>#mbt</code> 的声明</a></h2>
+<p><code>#mbt</code> 是显式的约定，编译器不会自动给声明加上它。但 <code>moonpp check</code> 会检查写了 <code>pub</code> 却没有
+<code>#mbt</code> 的 enum、struct、trait 和函数，对能满足 <code>#mbt</code> 条件的给出提示：</p>
+<pre><code class="language-text">src/main/shapes.mbtpp:2: hint: pub type Shape could be #mbt (it would be a MoonBit type)
+src/main/shapes.mbtpp:23: hint: pub trait Area could be #mbt (it would be a MoonBit trait)
+src/main/shapes.mbtpp:41: hint: pub fn norm1 could be #mbt (it would be exported as a MoonBit function)
+  (`moonpp fix` adds #mbt to them)
+ok: src/main
+</code></pre>
+<p><code>moonpp fix</code> 在这些声明上方插入一行 <code>#mbt</code>，然后重新检查包；如果检查失败，就恢复原文件。</p>
+<ul>
+<li>只看 <code>pub</code> 声明：<code>pub</code> 在 MoonBit++ 中没有别的含义，这里用它表示“打算给 MoonBit 用“。</li>
+<li>类型和 trait 一起判断：互相引用的几个类型可以同时成为 <code>#mbt</code>。</li>
+<li>函数需要签名能翻译（假设上面提示的类型都已标注），且函数体在原生片段中（与编译器的检查
+相同）。</li>
+<li>带索引的类型、提到这些类型的类型和函数、<code>lemma</code> 不会被提示。</li>
 </ul>
 
                     </main>

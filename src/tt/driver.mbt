@@ -49,7 +49,7 @@ fn format_pos(file : String, p : Pos) -> String {
 /// The globals a declaration defines.
 fn decl_global_names(d : @parser.Decl) -> Array[String] {
   match d {
-    DMbt(_, _, _, inner) => decl_global_names(inner)
+    DMbt(_, _, _, inner) | DPub(inner) => decl_global_names(inner)
     DFn(fd) => [fd.name]
     DDef(_, n, _, _, _) | DOpaque(_, n, _) => [n]
     DEnum(ed) => [ed.name, ..ed.cons.map(c => ed.name + "::" + c.name)]

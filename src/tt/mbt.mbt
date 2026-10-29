@@ -508,3 +508,105 @@ fn check_mbt_fns(fns : Array[(Pos, String)]) -> Unit raise ElabError {
     }
   }
 }
+
+///|
+/// Declarations written with `pub` and without `#mbt` (position, name,
+/// whether it is a function): candidates for a `#mbt` hint.
+pub let pub_decls : Array[(Pos, String, Bool)] = []
+
+///|
+/// A `pub` declaration that could be `#mbt`.
+pub(all) struct MbtHint {
+  /// The source file and line of the declaration.
+  file : String
+  line : Int32
+  name : String
+  /// "type", "trait" or "fn".
+  kind : String
+}
+
+///|
+/// The `pub` declarations of the checked package that could be marked
+/// `#mbt`. Datatypes and traits are found together (marking one may allow
+/// another): all candidates are marked tentatively, and those that do not
+/// hold are dropped until nothing changes. Functions are then those whose
+/// signatures translate, assuming these marks, and that `native_fns` (the
+/// compiler) accepts. The tentative marks are removed afterwards.
+pub fn mbt_hints(
+  native_fns : (Array[String]) -> Array[String],
+) -> Array[MbtHint] {
+  let in_package = (n : String) => {
+    match global_files.get(n) {
+      Some(f) => source_files.contains(f)
+      None => false
+    }
+  }
+  let types : Array[(Pos, String)] = []
+  let fns : Array[(Pos, String)] = []
+  for d in pub_decls {
+    let (pos, n, is_fn) = d
+    if !globals.contains(n) || !in_package(n) {
+      continue
+    }
+    if is_fn {
+      if !mbt_fns.contains(n) {
+        fns.push((pos, n))
+      }
+    } else if !mbt_types.contains(n) {
+      types.push((pos, n))
+    }
+  }
+  for t in types {
+    mbt_types.set(t.1, { name: t.1, defined: true, read_only: false, })
+  }
+  let mut changed = true
+  while changed {
+    changed = false
+    for t in types {
+      let n = t.1
+      if !mbt_types.contains(n) {
+        continue
+      }
+      let problem = if is_mbt_trait(n) {
+        mbt_trait_problem(n)
+      } else {
+        mbt_data_problem(n)
+      }
+      if problem is Some(_) {
+        mbt_types.remove(n)
+        changed = true
+      }
+    }
+  }
+  let ok_types = types.filter(t => mbt_types.contains(t.1))
+  for f in fns {
+    mbt_fns.set(f.1, f.1)
+  }
+  let sig_ok = fns.filter(f => mbt_fn_problem(f.1) is None).map(f => f.1)
+  let native = native_fns(sig_ok)
+  let ok_fns = fns.filter(f => native.contains(f.1))
+  // undo the tentative marks
+  for f in fns {
+    mbt_fns.remove(f.1)
+  }
+  for t in ok_types {
+    mbt_types.remove(t.1)
+  }
+  let hint = (p : Pos, n : String, kind : String) => {
+    file: global_files.get(n).unwrap(),
+    line: p.line % file_stride,
+    name: n,
+    kind,
+  }
+  [
+    ..ok_types.map(t => {
+      hint(t.0, t.1, if is_trait_name(t.1) { "trait" } else { "type" })
+    }),
+    ..ok_fns.map(f => hint(f.0, f.1, "fn")),
+  ]
+}
+
+///|
+fn is_trait_name(n : String) -> Bool {
+  data_info(n) is Some({ is_trait: true, .. })
+}

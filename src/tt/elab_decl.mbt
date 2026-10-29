@@ -822,7 +822,21 @@ pub fn check_decls(
   let decls : Array[@parser.Decl] = []
   for d in decls0 {
     match d {
+      DPub(inner) => {
+        if !lenient {
+          match inner {
+            DEnum({ is_error: false, name, pos, .. })
+            | DStruct({ name, pos, .. })
+            | DTrait({ name, pos, .. })
+            | DFn({ is_lemma: false, name, pos, .. }) =>
+              pub_decls.push((pos, name, inner is DFn(_)))
+            _ => ()
+          }
+        }
+        decls.push(inner)
+      }
       DMbt(pos, mbt_name, read_only, inner) => {
+        let inner = inner.inner()
         let n = match inner {
           DEnum(ed) => ed.name
           DStruct(sd) => sd.name
@@ -867,7 +881,7 @@ pub fn check_decls(
         DStruct(sd) => sd.name
         DTrait(td) => td.name
         DImpl(id) => "impl$" + id.trait_name + "$" + impl_head(id.for_ty)
-        DMbt(_, _, _, _) => continue
+        DMbt(_, _, _, _) | DPub(_) => continue
       }
       if taken(name) && !(d is DImpl(_) && impl_groups.contains(name)) {
         skipped.push(name)
@@ -875,7 +889,7 @@ pub fn check_decls(
       }
     }
     match d {
-      DMbt(_, _, _, _) => ()
+      DMbt(_, _, _, _) | DPub(_) => ()
       DOpaque(_, name, k) => {
         add_thunk(name, () => {
           let mut ty = U

@@ -235,13 +235,17 @@ pub(all) enum Decl {
   /// On a function: it is compiled to a public MoonBit function of that
   /// name.
   DMbt(Pos, String?, Bool, Decl)
+  /// A declaration written with `pub` (`pub(all)`, ...). The visibility has
+  /// no meaning in MoonBit++; it marks what may be worth exporting to
+  /// MoonBit (see the `#mbt` hints).
+  DPub(Decl)
 } derive(Show)
 
 ///|
 /// The declaration under its attributes.
 pub fn Decl::inner(self : Decl) -> Decl {
   match self {
-    DMbt(_, _, _, d) => d.inner()
+    DMbt(_, _, _, d) | DPub(d) => d.inner()
     d => d
   }
 }

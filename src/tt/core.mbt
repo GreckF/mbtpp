@@ -263,6 +263,7 @@ pub fn reset_state() -> Unit {
   globals.clear()
   global_files.clear()
   source_files.clear()
+  pub_decls.clear()
   mbt_types.clear()
   mbt_fns.clear()
   metas.clear()

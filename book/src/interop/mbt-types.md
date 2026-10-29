@@ -67,3 +67,24 @@ fn main {
 - 遵守 MoonBit 的孤儿规则：已有的 trait（`#mbt("…")`、导入的）只能为本程序生成的类型实现。
 - 只读（`pub`）的 trait 不能实现。
 - 方法在原生片段中的实例生成 MoonBit `impl`。
+
+## 自动发现可以标 `#mbt` 的声明
+
+`#mbt` 是显式的约定，编译器不会自动给声明加上它。但 `moonpp check` 会检查写了 `pub` 却没有
+`#mbt` 的 enum、struct、trait 和函数，对能满足 `#mbt` 条件的给出提示：
+
+```text
+src/main/shapes.mbtpp:2: hint: pub type Shape could be #mbt (it would be a MoonBit type)
+src/main/shapes.mbtpp:23: hint: pub trait Area could be #mbt (it would be a MoonBit trait)
+src/main/shapes.mbtpp:41: hint: pub fn norm1 could be #mbt (it would be exported as a MoonBit function)
+  (`moonpp fix` adds #mbt to them)
+ok: src/main
+```
+
+`moonpp fix` 在这些声明上方插入一行 `#mbt`，然后重新检查包；如果检查失败，就恢复原文件。
+
+- 只看 `pub` 声明：`pub` 在 MoonBit++ 中没有别的含义，这里用它表示"打算给 MoonBit 用"。
+- 类型和 trait 一起判断：互相引用的几个类型可以同时成为 `#mbt`。
+- 函数需要签名能翻译（假设上面提示的类型都已标注），且函数体在原生片段中（与编译器的检查
+  相同）。
+- 带索引的类型、提到这些类型的类型和函数、`lemma` 不会被提示。

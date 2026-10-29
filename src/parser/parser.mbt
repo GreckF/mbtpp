@@ -1175,6 +1175,14 @@ fn Parser::con_decls(self : Parser) -> Array[ConDecl] raise ParseError {
 }
 
 ///|
+fn Decl::without_pub(self : Decl) -> Decl {
+  match self {
+    DPub(d) => d
+    d => d
+  }
+}
+
+///|
 fn Parser::decl(self : Parser) -> Decl raise ParseError {
   let pos = self.pos()
   if self.accept("#") {
@@ -1194,7 +1202,7 @@ fn Parser::decl(self : Parser) -> Decl raise ParseError {
       None
     }
     let d = self.decl()
-    match d {
+    match d.without_pub() {
       DEnum({ is_error: false, .. })
       | DStruct(_)
       | DTrait(_)
@@ -1206,7 +1214,17 @@ fn Parser::decl(self : Parser) -> Decl raise ParseError {
     }
     return DMbt(pos, name, false, d)
   }
+  if self.at("pub") {
+    self.skip_visibility()
+    return DPub(self.decl_body())
+  }
   self.skip_visibility()
+  self.decl_body()
+}
+
+///|
+/// A declaration after its attributes and visibility.
+fn Parser::decl_body(self : Parser) -> Decl raise ParseError {
   let pos = self.pos()
   if self.accept("fn") {
     return DFn(self.fn_rest(pos, false))

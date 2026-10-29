@@ -39,7 +39,8 @@ npm install -g .
 ```sh
 moonpp new hello && cd hello   # create a project
 moonpp run                     # run the main package
-moonpp check                   # type check all packages
+moonpp check                   # type check all packages (and list `pub` declarations that could be #mbt)
+moonpp fix                     # add #mbt to those declarations
 moonpp add moonbitlang/x       # add a dependency (runs `moon add`, generates missing .mbti)
 moonpp install                 # install dependencies (runs `moon install`)
 moonpp run examples/vector.mbtpp   # a single file also works

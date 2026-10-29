@@ -70,6 +70,8 @@ pub fn match_vals_opt(Array[Val], Array[Val], Array[Clause]) -> Val?
 
 pub let mbt_fns : Map[String, String]
 
+pub fn mbt_hints((Array[String]) -> Array[String]) -> Array[MbtHint]
+
 pub fn mbt_info(String) -> MbtInfo?
 
 pub let mbt_types : Map[String, MbtInfo]
@@ -93,6 +95,8 @@ pub fn pats_slots(Array[CPat]) -> Int32
 pub let prelude_src : String
 
 pub fn prim_pure(String, Array[@parser.Lit]) -> @parser.Lit?
+
+pub let pub_decls : Array[(@parser.Pos, String, Bool)]
 
 pub fn quote(Int32, Val) -> Tm
 
@@ -234,6 +238,13 @@ pub(all) struct Import {
   alias : String
   path : String
   mbti : String
+}
+
+pub(all) struct MbtHint {
+  file : String
+  line : Int32
+  name : String
+  kind : String
 }
 
 pub(all) struct MbtInfo {

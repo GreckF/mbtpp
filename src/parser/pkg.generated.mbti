@@ -50,6 +50,7 @@ pub(all) enum Decl {
   DImpl(ImplDecl)
   DOpaque(Pos, String, Int32)
   DMbt(Pos, String?, Bool, Decl)
+  DPub(Decl)
 } derive(Show)
 pub fn Decl::inner(Self) -> Self
 

@@ -17,3 +17,6 @@ self.onmessage = (e) => {
   }
   self.postMessage({ id, result });
 };
+
+// the imports above are loaded: calls are timed from now on
+self.postMessage({ ready: true });

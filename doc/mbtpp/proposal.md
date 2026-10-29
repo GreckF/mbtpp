@@ -203,19 +203,24 @@ fn main {
 
 ## 9. 导入 MoonBit 包
 
-与 MoonBit 一样，依赖写在源文件旁边的 `moon.pkg.json` 里，代码中用 `@pkg.name` 引用：
+与 MoonBit 一样，依赖写在源文件旁边的 `moon.pkg` 里（旧的 `moon.pkg.json` 也能读），代码中用
+`@pkg.name` 引用：
 
-```json
-{ "import": [ "moonbitlang/core/math", { "path": "moonbitlang/core/strconv", "alias": "conv" } ] }
+```
+import {
+  "moonbitlang/core/math",
+  "moonbitlang/core/string" @str,
+}
 ```
 
 ```moonbit
 fn distance(x : Double, y : Double) -> Double { @math.hypot(x, y) }
-fn parse_hex(s : String) -> Int raise { @conv.parse_int(s, base=16) }
+fn parse_hex(s : String) -> Int raise { @str.parse_int(s, base=16) }
 ```
 
 - 接口从包的 `.mbti` 文件读取：`moonbitlang/core/*` 在 `$MOON_HOME/lib/core`（默认
-  `~/.moon/lib/core`），其他包在源文件所在目录或上级目录的 `.mooncakes/` 中。
+  `~/.moon/lib/core`），其他包在源文件所在目录或上级目录的 `.mooncakes/` 中，或在工作区
+  （`moon.work`）的本地模块中。MoonBit 的 `Int32` 就是 MoonBit++ 的 `Int`。
 - 导入的函数只有类型、没有定义：类型检查时它们是不透明常量，不会展开；
   解释器运行到导入的函数时会报错（导入目前只用于类型检查）。
 - 名字：包里的函数、类型、构造子分别为 `@pkg.f`、`@pkg.T`、`@pkg.T::C`（构造子也可以写

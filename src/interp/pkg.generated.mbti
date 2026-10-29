@@ -2,6 +2,7 @@
 package "username/mbtpp/interp"
 
 import {
+  "moonbitlang/core/ref",
   "username/mbtpp/parser",
   "username/mbtpp/tt",
 }
@@ -20,13 +21,13 @@ pub suberror RunError {
 
 // Types and methods
 pub(all) enum Partial {
-  PCon(String, Int, Int)
-  PPrim(String, Int)
+  PCon(String, Int32, Int32)
+  PPrim(String, Int32)
 }
 
 pub(all) enum REnv {
   ENil
-  ECons(Ref[RVal], REnv)
+  ECons(@ref.Ref[RVal], REnv)
 }
 
 pub(all) enum RVal {
@@ -41,4 +42,3 @@ pub(all) enum RVal {
 // Type aliases
 
 // Traits
-

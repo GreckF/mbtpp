@@ -9,8 +9,8 @@
 /// Parameters whose type is a sort are always erased; instance arguments
 /// and explicit arguments are never erased.
 priv enum Owner {
-  OFun(String, Int)
-  OCon(String, Int)
+  OFun(String, Int32)
+  OCon(String, Int32)
   ONone
 }
 
@@ -49,7 +49,7 @@ fn Erasure::mark(self : Erasure, o : Owner) -> Unit {
 }
 
 ///|
-fn Erasure::fun_erased(self : Erasure, f : String, i : Int) -> Bool {
+fn Erasure::fun_erased(self : Erasure, f : String, i : Int32) -> Bool {
   match self.funs.get(f) {
     Some(flags) => i < flags.length() && flags[i]
     None => false
@@ -57,7 +57,7 @@ fn Erasure::fun_erased(self : Erasure, f : String, i : Int) -> Bool {
 }
 
 ///|
-fn Erasure::con_erased(self : Erasure, c : String, j : Int) -> Bool {
+fn Erasure::con_erased(self : Erasure, c : String, j : Int32) -> Bool {
   match self.cons.get(c) {
     Some(flags) => j < flags.length() && flags[j]
     None => false
@@ -213,7 +213,7 @@ fn Erasure::walk(
 ///|
 /// Compute the erasure of all functions and constructors of the program.
 fn compute_erasure() -> Erasure {
-  let er : Erasure = { funs: {}, cons: {}, always: {}, changed: true }
+  let er : Erasure = { funs: {}, cons: {}, always: {}, changed: true, }
   for name, g in @tt.globals {
     match g.kind {
       GFunc(Some(_), _, _) if func_arity(name) is Some(n) => {

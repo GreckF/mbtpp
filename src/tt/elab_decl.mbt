@@ -1,11 +1,11 @@
 ///|
 /// Top-level declarations.
 fn register(name : String, ty : Tm, kind : GKind) -> Unit {
-  globals.set(name, { name, ty, vty: eval([], ty), kind })
+  globals.set(name, { name, ty, vty: eval([], ty), kind, })
 }
 
 ///|
-fn set_body(name : String, body : Tm, arity : Int) -> Unit {
+fn set_body(name : String, body : Tm, arity : Int32) -> Unit {
   match globals.get(name) {
     Some(g) => g.kind = GFunc(Some(body), contains_imperative(body), arity)
     None => ()
@@ -40,11 +40,13 @@ fn contains_imperative(t : Tm) -> Bool {
 
 ///|
 /// Replace solved metas.
-fn zonk(lvl : Int, t : Tm) -> Tm {
+fn zonk(lvl : Int32, t : Tm) -> Tm {
   let go = (x : Tm) => zonk(lvl, x)
-  let solved_head = (h : Tm) => match h {
-    Meta(m) | InsertedMeta(m, _) => metas[m].sol is Some(_)
-    _ => false
+  let solved_head = (h : Tm) => {
+    match h {
+      Meta(m) | InsertedMeta(m, _) => metas[m].sol is Some(_)
+      _ => false
+    }
   }
   match t {
     Meta(_) | InsertedMeta(_, _) =>
@@ -120,7 +122,7 @@ fn finish(
   cxt : Cxt,
   what : String,
   ts : Array[Tm],
-  lvl? : Int = 0,
+  lvl~ : Int32 = 0,
 ) -> Array[Tm] raise ElabError {
   solve_pending(false)
   for d in st.type_defaults {
@@ -149,7 +151,7 @@ fn finish(
 fn telescope_cxt(
   cxt0 : Cxt,
   ty : Tm,
-  n : Int,
+  n : Int32,
 ) -> (Cxt, Array[(String, Icit, Bool)], Val) {
   let mut cxt = cxt0
   let mut t = eval([], ty)
@@ -276,7 +278,7 @@ fn elab_fn_body(fd : @parser.FnDecl) -> Unit raise ElabError {
     VRaises(a, _) => (a, true)
     other => (other, false)
   }
-  let bc = { ..cxt, can_raise, ret_ty: Some(body_ty) }
+  let bc = { ..cxt, can_raise, ret_ty: Some(body_ty), }
   let t = check(bc, body, body_ty)
   let res = finish(cxt, fd.name, [wrap_lams(bs, t), g.ty])
   globals.set(fd.name, {
@@ -327,7 +329,7 @@ fn elab_def_body(
     _ => 0
   }
   let (cxt, bs, rty) = telescope_cxt(empty_cxt(pos), g.ty, n)
-  let t = check({ ..cxt, ret_ty: Some(rty) }, body, rty)
+  let t = check({ ..cxt, ret_ty: Some(rty), }, body, rty)
   let res = finish(cxt, name, [wrap_lams(bs, t)])
   set_body(name, res[0], n)
 }
@@ -556,7 +558,7 @@ fn elab_struct_decl(sd : @parser.StructDecl) -> Unit raise ElabError {
     let body = lams(
       concat(pbs2, [("self", Expl, self_ty)]),
       Match([Var(0)], [
-        { pats: [CPCon(d + "::mk", vars)], body: Var(n - 1 - k) },
+        { pats: [CPCon(d + "::mk", vars)], body: Var(n - 1 - k), },
       ]),
     )
     register(fname, pty, GFunc(Some(body), false, np + 1))
@@ -687,7 +689,7 @@ fn elab_trait(td : @parser.TraitDecl) -> Unit raise ElabError {
         Inst,
         false,
         Match([Var(0)], [
-          { pats: [CPCon(tr + "::mk", vars)], body: Var(n - 1 - k) },
+          { pats: [CPCon(tr + "::mk", vars)], body: Var(n - 1 - k), },
         ]),
       ),
     )
@@ -793,9 +795,11 @@ fn add_thunk(name : String, th : () -> Unit raise ElabError) -> Unit {
 /// A thunk shared by several names, run at most once.
 fn shared_thunk(names : Array[String], th : () -> Unit raise ElabError) -> Unit {
   let done = Ref::new(false)
-  let f = () => if !done.val {
-    done.val = true
-    th()
+  let f = () => {
+    if !done.val {
+      done.val = true
+      th()
+    }
   }
   for n in names {
     add_thunk(n, f)
@@ -808,8 +812,8 @@ fn shared_thunk(names : Array[String], th : () -> Unit raise ElabError) -> Unit 
 /// added to `skipped`.
 pub fn check_decls(
   decls0 : Array[@parser.Decl],
-  lenient? : Bool = false,
-  skipped? : Array[String] = [],
+  lenient~ : Bool = false,
+  skipped~ : Array[String] = [],
 ) -> Unit raise ElabError {
   // `#mbt` marks are recorded first, so that the declarations see each other
   let marked : Array[(Pos, String)] = []
@@ -852,7 +856,7 @@ pub fn check_decls(
   let types : Array[String] = []
   let steps : Array[() -> Unit raise ElabError] = []
   let impl_groups : Map[String, Array[@parser.ImplDecl]] = {}
-  let nowhere = empty_cxt({ line: 0, col: 0 })
+  let nowhere = empty_cxt({ line: 0, col: 0, })
   let taken = (n : String) => globals.contains(n) || st.thunks.contains(n)
   for d in decls {
     if lenient {

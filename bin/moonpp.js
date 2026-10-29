@@ -7,11 +7,17 @@ const path = require("path");
 const fs = require("fs");
 
 const root = path.resolve(__dirname, "..");
-const main = path.join(root, "_build", "js", "release", "build", "moonpp", "moonpp.js");
-if (!fs.existsSync(main)) {
-  console.error(`moonpp is not built yet; run \`moon build --target js\` in ${root}`);
+// the release build (`moon build --target js --release`), or else the debug
+// build, whichever is newer
+const builds = ["release", "debug"]
+  .map((p) => path.join(root, "_build", "js", p, "build", "moonpp", "moonpp.js"))
+  .filter((f) => fs.existsSync(f))
+  .sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs);
+if (builds.length === 0) {
+  console.error(`moonpp is not built yet; run \`moon build --target js --release\` in ${root}`);
   process.exit(1);
 }
+const main = builds[0];
 const worker = new Worker(main, {
   argv: process.argv.slice(2),
   resourceLimits: { stackSizeMb: 512 },

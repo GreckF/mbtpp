@@ -1,6 +1,0 @@
-{
-  "import": [
-    "moonbitlang/core/math",
-    { "path": "moonbitlang/core/strconv", "alias": "conv" }
-  ]
-}

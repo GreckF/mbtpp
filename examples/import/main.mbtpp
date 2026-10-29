@@ -1,4 +1,4 @@
-// Importing MoonBit packages (listed in moon.pkg.json next to this file).
+// Importing MoonBit packages (listed in moon.pkg next to this file).
 // Imported functions are only type checked: `mbtpp check` accepts this
 // program, while running it stops at the first call of an imported function.
 
@@ -15,7 +15,7 @@ fn[T : Show] show_or(r : Result[T, Error], default : String) -> String {
 
 // a function that may raise, called with an optional labelled argument
 fn parse_hex(s : String) -> Int raise {
-  @conv.parse_int(s, base=16)
+  @str.parse_int(s, base=16)
 }
 
 fn main {

@@ -6,7 +6,7 @@ import { copyFileSync, readdirSync, readFileSync, writeFileSync } from "node:fs"
 import { join } from "node:path";
 
 const root = new URL("..", import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1");
-execSync("moon build --target js", { cwd: root, stdio: "inherit" });
+execSync("moon build --target js --release", { cwd: root, stdio: "inherit" });
 copyFileSync(
   join(root, "_build/js/release/build/web/web.js"),
   join(root, "docs/mbtpp.js"),

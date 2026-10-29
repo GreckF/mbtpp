@@ -21,9 +21,9 @@ pub fn eval(env : Env, t : Tm) -> Val {
       }
       v
     }
-    Lam(x, i, g, b) => VLam(x, i, g, { env, body: b })
+    Lam(x, i, g, b) => VLam(x, i, g, { env, body: b, })
     App(f, a, i) => app_val(eval(env, f), eval(env, a), i)
-    Pi(x, i, g, a, b) => VPi(x, i, g, eval(env, a), { env, body: b })
+    Pi(x, i, g, a, b) => VPi(x, i, g, eval(env, a), { env, body: b, })
     Let(_, _, v, b) => eval(env_push(env, eval(env, v)), b)
     U => VU
     PropU => VProp
@@ -295,7 +295,7 @@ fn match_vals(env : Env, vs : Array[Val], cls : Array[Clause]) -> Val {
 // Quotation
 
 ///|
-fn quote_sp(lvl : Int, h : Tm, sp : Spine, full : Bool) -> Tm {
+fn quote_sp(lvl : Int32, h : Tm, sp : Spine, full : Bool) -> Tm {
   let mut t = h
   for a in sp {
     t = App(t, quote_with(lvl, a.0, full), a.1)
@@ -304,7 +304,7 @@ fn quote_sp(lvl : Int, h : Tm, sp : Spine, full : Bool) -> Tm {
 }
 
 ///|
-pub fn fresh_vars(lvl : Int, k : Int) -> Array[Val] {
+pub fn fresh_vars(lvl : Int32, k : Int32) -> Array[Val] {
   let out : Array[Val] = []
   for j = 0; j < k; j = j + 1 {
     out.push(v_var(lvl + j))
@@ -314,24 +314,24 @@ pub fn fresh_vars(lvl : Int, k : Int) -> Array[Val] {
 
 ///|
 /// Evaluate the body of a clause of a blocked match under fresh variables.
-pub fn clause_body_val(env : Env, lvl : Int, cl : Clause) -> Val {
+pub fn clause_body_val(env : Env, lvl : Int32, cl : Clause) -> Val {
   eval(concat(env, fresh_vars(lvl, pats_slots(cl.pats))), cl.body)
 }
 
 ///|
-pub fn quote(lvl : Int, v : Val) -> Tm {
+pub fn quote(lvl : Int32, v : Val) -> Tm {
   quote_with(lvl, v, false)
 }
 
 ///|
 /// Quote, unfolding global functions where they reduce.
-pub fn quote_full(lvl : Int, v : Val) -> Tm {
+pub fn quote_full(lvl : Int32, v : Val) -> Tm {
   quote_with(lvl, v, true)
 }
 
 ///|
-fn quote_with(lvl : Int, v : Val, full : Bool) -> Tm {
-  let q = (l : Int, x : Val) => quote_with(l, x, full)
+fn quote_with(lvl : Int32, v : Val, full : Bool) -> Tm {
+  let q = (l : Int32, x : Val) => quote_with(l, x, full)
   match (if full { force(v) } else { force_meta(v) }) {
     VRigid(l, sp) => quote_sp(lvl, Var(lvl - 1 - l), sp, full)
     VFlex(m, sp) => quote_sp(lvl, Meta(m), sp, full)

@@ -1,7 +1,7 @@
 ///|
 struct Parser {
   toks : Array[Token]
-  mut i : Int
+  mut i : Int32
 }
 
 ///|
@@ -10,7 +10,7 @@ fn Parser::peek(self : Parser) -> Token {
 }
 
 ///|
-fn Parser::peek_at(self : Parser, k : Int) -> Token {
+fn Parser::peek_at(self : Parser, k : Int32) -> Token {
   let j = self.i + k
   if j < self.toks.length() {
     self.toks[j]
@@ -39,7 +39,7 @@ fn Parser::at(self : Parser, s : String) -> Bool {
 }
 
 ///|
-fn Parser::at_k(self : Parser, k : Int, s : String) -> Bool {
+fn Parser::at_k(self : Parser, k : Int32, s : String) -> Bool {
   self.peek_at(k).tok == TSym(s)
 }
 
@@ -170,7 +170,7 @@ fn Parser::impl_binders(self : Parser) -> Array[Binder] raise ParseError {
     let pos = self.pos()
     let name = if self.accept("_") { "_" } else { self.ident() }
     let ty = if self.accept(":") { Some(self.expr()) } else { None }
-    bs.push({ pos, name, ty, kind: Positional })
+    bs.push({ pos, name, ty, kind: Positional, })
     if !self.accept(",") {
       break
     }
@@ -206,16 +206,16 @@ fn Parser::params(
       } else {
         Labelled(None)
       }
-      bs.push({ pos, name, ty: Some(ty), kind })
+      bs.push({ pos, name, ty: Some(ty), kind, })
     } else if (self.is_ident() || self.at("_")) && self.at_k(1, ":") {
       let name = if self.accept("_") { "_" } else { self.ident() }
       ignore(self.advance())
-      bs.push({ pos, name, ty: Some(self.expr()), kind: Positional })
+      bs.push({ pos, name, ty: Some(self.expr()), kind: Positional, })
     } else if names_only {
       let name = if self.accept("_") { "_" } else { self.ident() }
-      bs.push({ pos, name, ty: None, kind: Positional })
+      bs.push({ pos, name, ty: None, kind: Positional, })
     } else {
-      bs.push({ pos, name: "_", ty: Some(self.expr()), kind: Positional })
+      bs.push({ pos, name: "_", ty: Some(self.expr()), kind: Positional, })
     }
     if !self.accept(",") {
       break
@@ -228,34 +228,46 @@ fn Parser::params(
 ///|
 /// Turn the elements of a parenthesised list into Pi binders.
 fn exprs_to_binders(es : Array[Expr]) -> Array[Binder] {
-  es.map(e => match e {
-    EAnn(p, EVar(_, x), t) => { pos: p, name: x, ty: Some(t), kind: Positional }
-    EAnn(p, EHole(_), t) => { pos: p, name: "_", ty: Some(t), kind: Positional }
-    _ => { pos: e.pos(), name: "_", ty: Some(e), kind: Positional }
+  es.map(e => {
+    match e {
+      EAnn(p, EVar(_, x), t) =>
+        { pos: p, name: x, ty: Some(t), kind: Positional, }
+      EAnn(p, EHole(_), t) =>
+        { pos: p, name: "_", ty: Some(t), kind: Positional, }
+      _ => { pos: e.pos(), name: "_", ty: Some(e), kind: Positional, }
+    }
   })
 }
 
 ///|
 /// Turn the elements of a parenthesised list into lambda parameters.
 fn exprs_to_params(es : Array[Expr]) -> Array[Binder] raise ParseError {
-  es.map(e => match e {
-    EVar(p, x) => { pos: p, name: x, ty: None, kind: Positional }
-    EHole(p) => { pos: p, name: "_", ty: None, kind: Positional }
-    EAnn(p, EVar(_, x), t) => { pos: p, name: x, ty: Some(t), kind: Positional }
-    EAnn(p, EHole(_), t) => { pos: p, name: "_", ty: Some(t), kind: Positional }
-    _ => raise ParseError(e.pos(), "invalid lambda parameter")
+  es.map(e => {
+    match e {
+      EVar(p, x) => { pos: p, name: x, ty: None, kind: Positional, }
+      EHole(p) => { pos: p, name: "_", ty: None, kind: Positional, }
+      EAnn(p, EVar(_, x), t) =>
+        { pos: p, name: x, ty: Some(t), kind: Positional, }
+      EAnn(p, EHole(_), t) =>
+        { pos: p, name: "_", ty: Some(t), kind: Positional, }
+      _ => raise ParseError(e.pos(), "invalid lambda parameter")
+    }
   })
 }
 
 ///|
 /// Turn the elements of a `[...]` list into implicit binders.
 fn exprs_to_impl_binders(es : Array[Expr]) -> Array[Binder] raise ParseError {
-  es.map(e => match e {
-    EVar(p, x) => { pos: p, name: x, ty: None, kind: Positional }
-    EHole(p) => { pos: p, name: "_", ty: None, kind: Positional }
-    EAnn(p, EVar(_, x), t) => { pos: p, name: x, ty: Some(t), kind: Positional }
-    EAnn(p, EHole(_), t) => { pos: p, name: "_", ty: Some(t), kind: Positional }
-    _ => raise ParseError(e.pos(), "invalid implicit binder")
+  es.map(e => {
+    match e {
+      EVar(p, x) => { pos: p, name: x, ty: None, kind: Positional, }
+      EHole(p) => { pos: p, name: "_", ty: None, kind: Positional, }
+      EAnn(p, EVar(_, x), t) =>
+        { pos: p, name: x, ty: Some(t), kind: Positional, }
+      EAnn(p, EHole(_), t) =>
+        { pos: p, name: "_", ty: Some(t), kind: Positional, }
+      _ => raise ParseError(e.pos(), "invalid implicit binder")
+    }
   })
 }
 
@@ -327,7 +339,7 @@ fn Parser::pipe(self : Parser) -> Expr raise ParseError {
 }
 
 ///|
-fn bin_prec(op : String) -> Int {
+fn bin_prec(op : String) -> Int32 {
   match op {
     "||" => 1
     "&&" => 2
@@ -343,7 +355,7 @@ fn bin_prec(op : String) -> Int {
 }
 
 ///|
-fn Parser::binary(self : Parser, min_prec : Int) -> Expr raise ParseError {
+fn Parser::binary(self : Parser, min_prec : Int32) -> Expr raise ParseError {
   let mut lhs = self.unary()
   while true {
     let t = self.peek()
@@ -606,7 +618,7 @@ fn Parser::primary(self : Parser) -> Expr raise ParseError {
             match p {
               SPStr(s) => out.push(IStr(s))
               SPExpr(src, line, col) => {
-                let sub = { toks: tokenize(src, line0=line, col0=col), i: 0 }
+                let sub = { toks: tokenize(src, line0=line, col0=col), i: 0, }
                 let e = sub.expr()
                 if sub.peek().tok != TEOF {
                   sub.fail("unexpected token in interpolation")
@@ -626,7 +638,7 @@ fn Parser::primary(self : Parser) -> Expr raise ParseError {
         return ELam(
           pos,
           [],
-          [{ pos, name: x, ty: None, kind: Positional }],
+          [{ pos, name: x, ty: None, kind: Positional, }],
           None,
           self.lambda_body(),
         )
@@ -644,7 +656,7 @@ fn Parser::primary(self : Parser) -> Expr raise ParseError {
         return ELam(
           pos,
           [],
-          [{ pos, name: "_", ty: None, kind: Positional }],
+          [{ pos, name: "_", ty: None, kind: Positional, }],
           None,
           self.lambda_body(),
         )
@@ -790,7 +802,7 @@ fn Parser::primary(self : Parser) -> Expr raise ParseError {
       let ty = if self.accept(":") { Some(self.expr()) } else { None }
       self.expect(",")
       let body = self.expr()
-      let bs = names.map(pn => { pos: pn.0, name: pn.1, ty, kind: Positional })
+      let bs = names.map(pn => { pos: pn.0, name: pn.1, ty, kind: Positional, })
       EPi(pos, [], Some(bs), body, None)
     }
     _ => self.fail("expected an expression")
@@ -822,7 +834,7 @@ fn Parser::match_expr(self : Parser) -> Expr raise ParseError {
   let mr = if as_name is None && in_ty is None && ret is None {
     None
   } else {
-    Some({ as_name, in_ty, ret })
+    Some({ as_name, in_ty, ret, })
   }
   EMatch(pos, scrut, mr, self.arms())
 }
@@ -848,7 +860,7 @@ fn Parser::arms(self : Parser) -> Array[Arm] raise ParseError {
     } else {
       None
     }
-    arms.push({ pos, pat, rhs })
+    arms.push({ pos, pat, rhs, })
     if !self.at("}") {
       self.end_stmt()
     }
@@ -1137,7 +1149,7 @@ fn Parser::fn_rest(
   } else {
     BodyExpr(self.block())
   }
-  { pos, name, impl_params: impl_bs, params, ret, raises, body, is_lemma }
+  { pos, name, impl_params: impl_bs, params, ret, raises, body, is_lemma, }
 }
 
 ///|
@@ -1153,7 +1165,7 @@ fn Parser::con_decls(self : Parser) -> Array[ConDecl] raise ParseError {
     let impl_bs = self.impl_binders()
     let params = if self.is_same_line("(") { self.params(false) } else { [] }
     let ret = if self.accept(":") { Some(self.expr()) } else { None }
-    cs.push({ pos, name, impl_params: impl_bs, params, ret })
+    cs.push({ pos, name, impl_params: impl_bs, params, ret, })
     if !self.at("}") {
       self.end_stmt()
     }
@@ -1251,7 +1263,7 @@ fn Parser::decl(self : Parser) -> Decl raise ParseError {
     let cons = if self.at("{") {
       self.con_decls()
     } else if self.at_stmt_end() || self.is_same_line("derive") {
-      [{ pos, name, impl_params: [], params: [], ret: None }]
+      [{ pos, name, impl_params: [], params: [], ret: None, }]
     } else {
       let ty = self.expr()
       [
@@ -1259,7 +1271,7 @@ fn Parser::decl(self : Parser) -> Decl raise ParseError {
           pos,
           name,
           impl_params: [],
-          params: [{ pos, name: "_", ty: Some(ty), kind: Positional }],
+          params: [{ pos, name: "_", ty: Some(ty), kind: Positional, }],
           ret: None,
         },
       ]
@@ -1296,7 +1308,7 @@ fn Parser::decl(self : Parser) -> Decl raise ParseError {
     }
     self.expect("}")
     self.skip_derive()
-    return DStruct({ pos, name, impl_params: impl_bs, params, fields })
+    return DStruct({ pos, name, impl_params: impl_bs, params, fields, })
   }
   if self.accept("trait") {
     let name = self.ident()
@@ -1349,7 +1361,7 @@ fn Parser::decl(self : Parser) -> Decl raise ParseError {
       }
     }
     self.expect("}")
-    return DTrait({ pos, name, self_kind, supers, methods })
+    return DTrait({ pos, name, self_kind, supers, methods, })
   }
   if self.accept("impl") {
     let impl_bs = self.impl_binders()
@@ -1380,9 +1392,9 @@ fn Parser::decl(self : Parser) -> Decl raise ParseError {
 ///|
 pub fn parse_program(
   src : String,
-  line0? : Int = 1,
+  line0~ : Int32 = 1,
 ) -> Array[Decl] raise ParseError {
-  let p = { toks: tokenize(src, line0~), i: 0 }
+  let p = { toks: tokenize(src, line0~), i: 0, }
   let ds : Array[Decl] = []
   while p.peek().tok != TEOF {
     if p.accept(";") {
@@ -1395,7 +1407,7 @@ pub fn parse_program(
 
 ///|
 pub fn parse_expr(src : String) -> Expr raise ParseError {
-  let p = { toks: tokenize(src), i: 0 }
+  let p = { toks: tokenize(src), i: 0, }
   let e = p.expr()
   if p.peek().tok != TEOF {
     p.fail("unexpected token")

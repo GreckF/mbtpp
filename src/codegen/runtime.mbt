@@ -155,6 +155,14 @@ let runtime_src : String =
   #|  }
   #|}
   #|
+  #|fn value_id(v : Value) -> Value {
+  #|  v
+  #|}
+  #|
+  #|fn value_id_raise(v : Value) -> Value raise {
+  #|  v
+  #|}
+  #|
   #|fn show_value(v : Value) -> String {
   #|  match v {
   #|    VInt(n) => n.to_string()

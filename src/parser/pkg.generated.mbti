@@ -4,15 +4,15 @@ package "username/mbtpp/parser"
 // Values
 pub fn decl_bound_names(Decl) -> Array[String]
 
-pub fn decl_type_names(Decl) -> Map[String, Int]
+pub fn decl_type_names(Decl) -> Map[String, Int32]
 
 pub fn parse_expr(String) -> Expr raise ParseError
 
 pub fn parse_mbti(String, String, String, Map[String, String]) -> MbtiResult
 
-pub fn parse_program(String, line0? : Int) -> Array[Decl] raise ParseError
+pub fn parse_program(String, line0? : Int32) -> Array[Decl] raise ParseError
 
-pub fn tokenize(String, line0? : Int, col0? : Int) -> Array[Token] raise ParseError
+pub fn tokenize(String, line0? : Int32, col0? : Int32) -> Array[Token] raise ParseError
 
 // Errors
 pub suberror ParseError {
@@ -24,16 +24,14 @@ pub(all) struct Arm {
   pos : Pos
   pat : Pat
   rhs : Expr?
-}
-pub impl Show for Arm
+} derive(Show)
 
 pub(all) struct Binder {
   pos : Pos
   name : String
   ty : Expr?
   kind : ParamKind
-}
-pub impl Show for Binder
+} derive(Show)
 
 pub(all) struct ConDecl {
   pos : Pos
@@ -41,8 +39,7 @@ pub(all) struct ConDecl {
   impl_params : Array[Binder]
   params : Array[Binder]
   ret : Expr?
-}
-pub impl Show for ConDecl
+} derive(Show)
 
 pub(all) enum Decl {
   DFn(FnDecl)
@@ -51,11 +48,10 @@ pub(all) enum Decl {
   DStruct(StructDecl)
   DTrait(TraitDecl)
   DImpl(ImplDecl)
-  DOpaque(Pos, String, Int)
+  DOpaque(Pos, String, Int32)
   DMbt(Pos, String?, Bool, Decl)
-}
+} derive(Show)
 pub fn Decl::inner(Self) -> Self
-pub impl Show for Decl
 
 pub(all) struct EnumDecl {
   pos : Pos
@@ -65,8 +61,7 @@ pub(all) struct EnumDecl {
   sig : Expr?
   cons : Array[ConDecl]
   is_error : Bool
-}
-pub impl Show for EnumDecl
+} derive(Show)
 
 pub(all) enum Expr {
   EVar(Pos, String)
@@ -100,15 +95,13 @@ pub(all) enum Expr {
   EContinue(Pos)
   ERange(Pos, Expr, Expr, Bool)
   ETagged(Pos, String, Expr, Bool)
-}
+} derive(Show)
 pub fn Expr::pos(Self) -> Pos
-pub impl Show for Expr
 
 pub(all) enum FnBody {
   BodyExpr(Expr)
   BodyExtern(String)
-}
-pub impl Show for FnBody
+} derive(Show)
 
 pub(all) struct FnDecl {
   pos : Pos
@@ -119,8 +112,7 @@ pub(all) struct FnDecl {
   raises : Expr?
   body : FnBody
   is_lemma : Bool
-}
-pub impl Show for FnDecl
+} derive(Show)
 
 pub(all) struct ImplDecl {
   pos : Pos
@@ -130,32 +122,27 @@ pub(all) struct ImplDecl {
   meth : String
   params : Array[Binder]
   body : Expr
-}
-pub impl Show for ImplDecl
+} derive(Show)
 
 pub(all) enum InterpPart {
   IStr(String)
   IExpr(Expr)
-}
-pub impl Show for InterpPart
+} derive(Show)
 
 pub(all) enum Lit {
-  LInt(Int)
+  LInt(Int32)
   LStr(String)
   LChar(Char)
   LBool(Bool)
   LUnit
   LDouble(Double)
-}
-pub impl Eq for Lit
-pub impl Show for Lit
+} derive(Eq, Show)
 
 pub(all) struct MatchRet {
   as_name : String?
   in_ty : Expr?
   ret : Expr?
-}
-pub impl Show for MatchRet
+} derive(Show)
 
 pub(all) struct MbtiResult {
   decls : Array[Decl]
@@ -166,8 +153,7 @@ pub(all) enum ParamKind {
   Positional
   Labelled(Expr?)
   Optional
-}
-pub impl Show for ParamKind
+} derive(Show)
 
 type Parser
 pub fn Parser::expr(Self) -> Expr raise ParseError
@@ -178,17 +164,14 @@ pub(all) enum Pat {
   PCon(Pos, String, Array[Pat]?, Array[Pat])
   PLit(Pos, Lit)
   PTuple(Pos, Array[Pat])
-}
+} derive(Show)
 pub fn Pat::pos(Self) -> Pos
-pub impl Show for Pat
 
 pub(all) struct Pos {
-  line : Int
-  col : Int
-}
+  line : Int32
+  col : Int32
+} derive(Eq, Show)
 pub fn Pos::to_string(Self) -> String
-pub impl Eq for Pos
-pub impl Show for Pos
 
 pub(all) enum Stmt {
   SLet(Pos, Pat, Expr?, Expr)
@@ -200,15 +183,12 @@ pub(all) enum Stmt {
   SFor(Pos, Array[(String, Expr)], Expr?, Array[(String, Expr)], Expr)
   SForIn(Pos, String, Expr, Expr)
   SExpr(Pos, Expr)
-}
-pub impl Show for Stmt
+} derive(Show)
 
 pub(all) enum StrPart {
   SPStr(String)
-  SPExpr(String, Int, Int)
-}
-pub impl Eq for StrPart
-pub impl Show for StrPart
+  SPExpr(String, Int32, Int32)
+} derive(Eq, Show)
 
 pub(all) struct StructDecl {
   pos : Pos
@@ -216,8 +196,7 @@ pub(all) struct StructDecl {
   impl_params : Array[Binder]
   params : Array[Binder]?
   fields : Array[(Pos, String, Expr)]
-}
-pub impl Show for StructDecl
+} derive(Show)
 
 pub(all) enum Tactic {
   TIntros(Pos, Array[String])
@@ -227,27 +206,23 @@ pub(all) enum Tactic {
   TRewrite(Pos, Expr, Bool)
   TApply(Pos, Expr)
   TAssume(Pos, String, Expr)
-}
-pub impl Show for Tactic
+} derive(Show)
 
 pub(all) enum Tok {
   TIdent(String)
-  TInt(Int)
+  TInt(Int32)
   TDouble(Double)
   TStr(Array[StrPart])
   TChar(Char)
   TSym(String)
   TEOF
-}
-pub impl Eq for Tok
-pub impl Show for Tok
+} derive(Eq, Show)
 
 pub(all) struct Token {
   tok : Tok
   pos : Pos
   nl : Bool
-}
-pub impl Show for Token
+} derive(Show)
 
 pub(all) struct TraitDecl {
   pos : Pos
@@ -255,8 +230,7 @@ pub(all) struct TraitDecl {
   self_kind : Expr?
   supers : Array[String]
   methods : Array[TraitMethod]
-}
-pub impl Show for TraitDecl
+} derive(Show)
 
 pub(all) struct TraitMethod {
   pos : Pos
@@ -265,10 +239,8 @@ pub(all) struct TraitMethod {
   params : Array[Binder]
   ret : Expr
   raises : Expr?
-}
-pub impl Show for TraitMethod
+} derive(Show)
 
 // Type aliases
 
 // Traits
-

@@ -80,10 +80,12 @@ fn source_name(n : String) -> String {
 ///|
 /// Why the term `t` is not in the native fragment.
 fn Gen::explain(self : Gen, env : Array[TLocal], t : @tt.Tm) -> String {
-  let names = env.map(l => match l {
-    TVar(n, _) | TMut(n, _) => source_name(n)
-    TType(_) => "T"
-    TNone => "_"
+  let names = env.map(l => {
+    match l {
+      TVar(n, _) | TMut(n, _) => source_name(n)
+      TType(_) => "T"
+      TNone => "_"
+    }
   })
   let shown = @tt.show_tm(names, t)
   let shown = if shown.length() > 60 {
@@ -141,7 +143,7 @@ let mbt_keywords : Array[String] = [
 
 ///|
 /// Does the codomain of a function type of `n` parameters raise?
-fn result_raises(ty : @tt.Tm, n : Int) -> Bool {
+fn result_raises(ty : @tt.Tm, n : Int32) -> Bool {
   let mut t = ty
   for _ in 0..<n {
     match t {

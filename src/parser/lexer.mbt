@@ -1,7 +1,7 @@
 ///|
 pub(all) enum Tok {
   TIdent(String)
-  TInt(Int)
+  TInt(Int32)
   TDouble(Double)
   TStr(Array[StrPart])
   TChar(Char)
@@ -14,7 +14,7 @@ pub(all) enum Tok {
 pub(all) enum StrPart {
   SPStr(String)
   /// Source of an interpolated expression and its position.
-  SPExpr(String, Int, Int)
+  SPExpr(String, Int32, Int32)
 } derive(Show, Eq)
 
 ///|
@@ -60,8 +60,8 @@ fn is_ident_char(c : Char) -> Bool {
 ///|
 pub fn tokenize(
   src : String,
-  line0? : Int = 1,
-  col0? : Int = 1,
+  line0~ : Int32 = 1,
+  col0~ : Int32 = 1,
 ) -> Array[Token] raise ParseError {
   let cs : Array[Char] = src.iter().collect()
   let n = cs.length()
@@ -70,7 +70,7 @@ pub fn tokenize(
   let mut line = line0
   let mut col = col0
   let mut nl = true
-  fn peek(k : Int) -> Char {
+  fn peek(k : Int32) -> Char {
     if i + k < n {
       cs[i + k]
     } else {
@@ -105,7 +105,7 @@ pub fn tokenize(
       }
       continue
     }
-    let pos = { line, col }
+    let pos = { line, col, }
     if c >= '0' && c <= '9' {
       let mut v = 0
       while i < n && ((cs[i] >= '0' && cs[i] <= '9') || cs[i] == '_') {
@@ -132,11 +132,11 @@ pub fn tokenize(
           }
           adv()
         }
-        toks.push({ tok: TDouble(d), pos, nl })
+        toks.push({ tok: TDouble(d), pos, nl, })
         nl = false
         continue
       }
-      toks.push({ tok: TInt(v), pos, nl })
+      toks.push({ tok: TInt(v), pos, nl, })
       nl = false
       continue
     }
@@ -148,7 +148,7 @@ pub fn tokenize(
       }
       let s = buf.to_string()
       let tok = if keywords.contains(s) { TSym(s) } else { TIdent(s) }
-      toks.push({ tok, pos, nl })
+      toks.push({ tok, pos, nl, })
       nl = false
       continue
     }
@@ -170,7 +170,7 @@ pub fn tokenize(
         raise ParseError(pos, "unterminated character literal")
       }
       adv()
-      toks.push({ tok: TChar(ch), pos, nl })
+      toks.push({ tok: TChar(ch), pos, nl, })
       nl = false
       continue
     }
@@ -227,7 +227,7 @@ pub fn tokenize(
       if buf.to_string() != "" || parts.length() == 0 {
         parts.push(SPStr(buf.to_string()))
       }
-      toks.push({ tok: TStr(parts), pos, nl })
+      toks.push({ tok: TStr(parts), pos, nl, })
       nl = false
       continue
     }
@@ -246,7 +246,7 @@ pub fn tokenize(
           for k = 0; k < len; k = k + 1 {
             adv()
           }
-          toks.push({ tok: TSym(s), pos, nl })
+          toks.push({ tok: TSym(s), pos, nl, })
           nl = false
           matched = true
           break
@@ -257,7 +257,7 @@ pub fn tokenize(
       raise ParseError(pos, "unexpected character '" + c.to_string() + "'")
     }
   }
-  toks.push({ tok: TEOF, pos: { line, col }, nl: true })
+  toks.push({ tok: TEOF, pos: { line, col, }, nl: true, })
   toks
 }
 

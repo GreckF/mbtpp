@@ -16,7 +16,7 @@ priv enum Binder {
 }
 
 ///|
-fn lookup(stack : Array[Binder], ix : Int) -> Binder? {
+fn lookup(stack : Array[Binder], ix : Int32) -> Binder? {
   let i = stack.length() - 1 - ix
   if i >= 0 && i < stack.length() {
     Some(stack[i])
@@ -59,9 +59,11 @@ fn is_tyvar(stack : Array[Binder], t : @tt.Tm) -> Bool {
 /// A `#mbt` datatype of a signature, as a native type (its type variables
 /// are `Value`s, so they need no conversion).
 fn Gen::ffi_mbt_type(self : Gen, stack : Array[Binder], t : @tt.Tm) -> NTy? {
-  let ctx = stack.map(b => match b {
-    TyVar => TyIs(NVar(0))
-    Explicit => TyOther
+  let ctx = stack.map(b => {
+    match b {
+      TyVar => TyIs(NVar(0))
+      Explicit => TyOther
+    }
   })
   match self.native_ty_in(ctx, t) {
     Some(NEnum(d, _) as nt) if is_mbt_type(d) && mbt_only(nt) => Some(nt)
@@ -318,7 +320,7 @@ fn Gen::ffi_body(
   name : String,
   prim : String,
   ty : @tt.Tm,
-  arity : Int,
+  arity : Int32,
 ) -> Result[String, String] {
   let target = prim.unsafe_substring(start=5, end=prim.length())
   let stack : Array[Binder] = []
@@ -444,7 +446,7 @@ fn Gen::ffi_fn(
   name : String,
   prim : String,
   ty : @tt.Tm,
-  arity : Int,
+  arity : Int32,
 ) -> String raise CodegenError {
   let f = self.name("ffi")
   let body = match self.ffi_body(name, prim, ty, arity) {

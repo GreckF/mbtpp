@@ -13,7 +13,7 @@ pub(all) struct Cxt {
   types : Array[Val]
   bound : Array[Bool]
   muts : Array[Bool]
-  lvl : Int
+  lvl : Int32
   pos : Pos
   can_raise : Bool
   ret_ty : Val?
@@ -104,7 +104,7 @@ pub fn Cxt::subst(self : Cxt, v : Val) -> Val {
 }
 
 ///|
-pub fn Cxt::lookup(self : Cxt, x : String) -> Int? {
+pub fn Cxt::lookup(self : Cxt, x : String) -> Int32? {
   for l = self.lvl - 1; l >= 0; l = l - 1 {
     if self.names[l] == x {
       return Some(l)
@@ -162,7 +162,7 @@ pub fn Cxt::try_unify(self : Cxt, a : Val, b : Val) -> Bool {
 ///|
 /// Define a bound variable (pattern refinement) and re-substitute the
 /// context.
-pub fn Cxt::define_var(self : Cxt, x : Int, v : Val) -> Cxt {
+pub fn Cxt::define_var(self : Cxt, x : Int32, v : Val) -> Cxt {
   let env = self.env.copy()
   env[x] = v
   let lvl = self.lvl
@@ -170,11 +170,11 @@ pub fn Cxt::define_var(self : Cxt, x : Int, v : Val) -> Cxt {
   let bound = self.bound.copy()
   bound[x] = false
   let types = self.types.map(t => eval(env2, quote(lvl, t)))
-  { ..self, env: env2, bound, types }
+  { ..self, env: env2, bound, types, }
 }
 
 ///|
-fn occurs(lvl : Int, x : Int, v : Val) -> Bool {
+fn occurs(lvl : Int32, x : Int32, v : Val) -> Bool {
   fn sp_occ(sp : Spine) -> Bool {
     sp.iter().any(a => occurs(lvl, x, a.0))
   }

@@ -1,6 +1,11 @@
 ///|
 /// Entry points of the type checker.
-fn builtin_data(name : String, ty : Tm, nparams : Int, is_error : Bool) -> Unit {
+fn builtin_data(
+  name : String,
+  ty : Tm,
+  nparams : Int32,
+  is_error : Bool,
+) -> Unit {
   register(
     name,
     ty,
@@ -70,8 +75,8 @@ pub let import_skipped : Array[String] = []
 pub fn check_program(
   file : String,
   src : String,
-  prelude? : Bool = true,
-  imports? : Array[Import] = [],
+  prelude~ : Bool = true,
+  imports~ : Array[Import] = [],
 ) -> Unit raise CheckError {
   check_package([(file, src)], prelude~, imports~)
 }
@@ -79,13 +84,13 @@ pub fn check_program(
 ///|
 /// Lines of the k-th file of a package are numbered from `(k + 1) * stride`,
 /// so that a position tells which file it is in.
-let file_stride : Int = 1000000
+let file_stride : Int32 = 1000000
 
 ///|
 fn package_pos(files : Array[(String, String)], p : Pos) -> String {
   let k = p.line / file_stride - 1
   if k >= 0 && k < files.length() {
-    format_pos(files[k].0, { line: p.line % file_stride, col: p.col })
+    format_pos(files[k].0, { line: p.line % file_stride, col: p.col, })
   } else {
     format_pos("<unknown>", p)
   }
@@ -96,8 +101,8 @@ fn package_pos(files : Array[(String, String)], p : Pos) -> String {
 /// in MoonBit.
 pub fn check_package(
   files : Array[(String, String)],
-  prelude? : Bool = true,
-  imports? : Array[Import] = [],
+  prelude~ : Bool = true,
+  imports~ : Array[Import] = [],
 ) -> Unit raise CheckError {
   setup()
   if prelude {
@@ -147,13 +152,13 @@ fn load_imports(imports : Array[Import]) -> Unit raise CheckError {
   let decls : Array[@parser.Decl] = []
   // Views are taken to be the containers themselves (MoonBit converts a
   // string literal to a `StringView`, for example).
-  let p0 : Pos = { line: 0, col: 0 }
+  let p0 : Pos = { line: 0, col: 0, }
   let view_aliases : Array[@parser.Decl] = [
     DDef(p0, "StringView", [], Some(EType(p0)), EVar(p0, "String")),
     DDef(
       p0,
       "ArrayView",
-      [{ pos: p0, name: "T", ty: None, kind: Positional }],
+      [{ pos: p0, name: "T", ty: None, kind: Positional, }],
       Some(EType(p0)),
       EApp(p0, EVar(p0, "Array"), Some([EVar(p0, "T")]), None),
     ),
@@ -194,18 +199,20 @@ fn load_imports(imports : Array[Import]) -> Unit raise CheckError {
       }
     }
   }
-  let trait_stubs : Array[@parser.Decl] = bounds.map(n => @parser.DTrait({
-    pos: { line: 0, col: 0 },
-    name: n,
-    self_kind: None,
-    supers: [],
-    methods: [],
-  }))
+  let trait_stubs : Array[@parser.Decl] = bounds.map(n => {
+    @parser.DTrait({
+      pos: { line: 0, col: 0, },
+      name: n,
+      self_kind: None,
+      supers: [],
+      methods: [],
+    })
+  })
   for n in bounds {
     declared.push(n)
     st.opaque_traits.push(n)
   }
-  let needed : Map[String, Int] = {}
+  let needed : Map[String, Int32] = {}
   for d in decls {
     for n, k in @parser.decl_type_names(d) {
       if is_type_like(n) && !declared.contains(n) && !globals.contains(n) {
@@ -216,7 +223,7 @@ fn load_imports(imports : Array[Import]) -> Unit raise CheckError {
   }
   let stubs : Array[@parser.Decl] = []
   for n, k in needed {
-    stubs.push(DOpaque({ line: 0, col: 0 }, n, k))
+    stubs.push(DOpaque({ line: 0, col: 0, }, n, k))
   }
   check_decls(
     concat(concat(trait_stubs, stubs), decls),
@@ -260,10 +267,12 @@ pub fn param_labels(name : String) -> Array[(String, Bool)?]? {
   match st.labels.get(name) {
     Some(infos) =>
       Some(
-        infos.map(i => match i {
-          LPos => None
-          LReq(l) | LDefault(l, _) => Some((l, false))
-          LOpt(l) => Some((l, true))
+        infos.map(i => {
+          match i {
+            LPos => None
+            LReq(l) | LDefault(l, _) => Some((l, false))
+            LOpt(l) => Some((l, true))
+          }
         }),
       )
     None => None

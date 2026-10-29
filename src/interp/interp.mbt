@@ -14,8 +14,8 @@ pub(all) enum RVal {
 
 ///|
 pub(all) enum Partial {
-  PCon(String, Int, Int)
-  PPrim(String, Int)
+  PCon(String, Int32, Int32)
+  PPrim(String, Int32)
 }
 
 ///|
@@ -45,7 +45,7 @@ priv struct Machine {
 }
 
 ///|
-fn lookup(env : REnv, ix : Int) -> Ref[RVal] raise Ctl {
+fn lookup(env : REnv, ix : Int32) -> Ref[RVal] raise Ctl {
   let mut e = env
   let mut k = ix
   while true {
@@ -353,7 +353,7 @@ fn Machine::prim(
 ///|
 /// Run `main` of the program that was last type checked.
 pub fn run_main(write : (String) -> Unit) -> Unit raise RunError {
-  let m = { cache: {}, write }
+  let m = { cache: {}, write, }
   let body = match @tt.global_body("main") {
     Some(b) => b
     None => raise RunError("no main function")
@@ -369,7 +369,7 @@ pub fn run_main(write : (String) -> Unit) -> Unit raise RunError {
 ///|
 /// Evaluate a global constant (for tests).
 pub fn eval_global(name : String) -> String raise RunError {
-  let m = { cache: {}, write: _ => () }
+  let m = { cache: {}, write: _ => (), }
   show_rval(m.global(name)) catch {
     CRaise(e) => raise RunError("uncaught error: " + show_rval(e))
     CAbort(msg) => raise RunError("runtime error: " + msg)

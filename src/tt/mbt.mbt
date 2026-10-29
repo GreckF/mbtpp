@@ -401,10 +401,12 @@ fn is_mbt_ident(s : String) -> Bool {
     Some(c) if (c >= 'a' && c <= 'z') || c == '_' =>
       s
       .iter()
-      .all(c => (c >= 'a' && c <= 'z') ||
+      .all(c => {
+        (c >= 'a' && c <= 'z') ||
         (c >= 'A' && c <= 'Z') ||
         (c >= '0' && c <= '9') ||
-        c == '_')
+        c == '_'
+      })
     _ => false
   }
 }

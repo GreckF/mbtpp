@@ -37,7 +37,7 @@ fn flatten_app(t : Tm) -> (Tm, Array[(Tm, Icit)]) {
 }
 
 ///|
-fn nat_lit(t : Tm) -> Int? {
+fn nat_lit(t : Tm) -> Int32? {
   match flatten_app(t) {
     (Global("Nat::Z"), []) => Some(0)
     (Global("Nat::S"), [(a, Expl)]) =>
@@ -129,7 +129,7 @@ fn paren(b : Bool, s : String) -> String {
 }
 
 ///|
-fn show_prec(names : Array[String], t : Tm, prec : Int) -> String {
+fn show_prec(names : Array[String], t : Tm, prec : Int32) -> String {
   match t {
     Var(ix) => {
       let i = names.length() - 1 - ix

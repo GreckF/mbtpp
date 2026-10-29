@@ -1,7 +1,7 @@
 ///|
 fn run_example(name : String) -> String {
   let path = "examples/" + name
-  let src = @fs.read_file_to_string(path) catch { e => return e.to_string() }
+  let src = @fs.read_file_to_string(path) catch { @fs.IOError(msg) => return msg }
   run_source(path, src)
 }
 

@@ -42,7 +42,7 @@
 - **命令式特性**：`let mut`、赋值、`while`、`for`、`for .. in`、`break`/`continue`/`return`；`raise`、`try ... catch`、`try?`。
 - **带标签参数**（与 MoonBit 相同）：`x~ : T`、`x~ : T = 默认值`、`x? : T`；调用时 `x=e`、`x~`、`x?=e`、`x?`；`T?` 是 `Option[T]` 的简写。
 - **策略**：`proof { intros; exact; rfl; destruct; rewrite; apply; assume }`，策略生成普通的证明项。
-- **导入 MoonBit 包**：在 `moon.pkg.json` 中声明，以 `@pkg.name` 使用。
+- **导入 MoonBit 包**：在 `moon.pkg` 中声明，以 `@pkg.name` 使用。
 - **`Double`** 字面量与运算。
 
 **未实现**：可恢复的代数效应（`effect`/`perform`/`resume`）、`simp`/`omega`/`auto`、局部递归函数、可变字段、trait 默认方法。
@@ -69,7 +69,7 @@
 
 ## 5. 导入 MoonBit 包（`.mbti`）
 
-- `moon.pkg.json` 的 `import` 字段声明依赖；`moonbitlang/core/*` 的接口从 MoonBit 安装目录读取，其他包从项目的 `.mooncakes` 读取（会读取依赖模块的 `source` 字段）。
+- `moon.pkg` 的 `import` 块（或旧的 `moon.pkg.json` 的 `import` 字段）声明依赖；`moonbitlang/core/*` 的接口从 MoonBit 安装目录读取，其他包从项目的 `.mooncakes` 或工作区（`moon.work`）的本地模块读取（会读取模块的 `source` 字段）。`moon.mod`/`moon.pkg`/`moon.work` 由一个小解析器读取（`src/moonpp/moonfile.mbt`）。
 - `.mbti` 按顶层项拆分，每项用 MoonBit++ 解析器解析并翻译成声明，函数是 extern（`@mbt:<包>.<名>`），类型检查时不展开。
 - 命名：`@pkg.f`、`@pkg.T`、`@pkg.T::C`（也可写 `@pkg.C`），方法照常 `x.m()`，`#as_free_fn` 的方法也可写 `@pkg.m`；`impl @pkg.Tr for T` 实现导入的 trait。
 - `pub(all)` enum/struct 与 `pub(open)` trait 自动成为 `#mbt("@pkg.T")`（满足条件时，见 7.4）；`pub` 的 enum/struct 只读（不能构造），`pub` trait 不能实现。
@@ -84,10 +84,10 @@
 
 | 命令 | 功能 |
 | --- | --- |
-| `moonpp new <name>` | 创建项目：`moon.mod.json`、`src/main/{moon.pkg.json, main.mbtpp}` 等 |
+| `moonpp new <name>` | 创建项目：`moon.mod`、`src/main/{moon.pkg, main.mbtpp}` 等 |
 | `moonpp check [路径]` | 类型检查整个项目、一个包目录或一个文件；一个包可由多个文件组成，报错定位到具体文件 |
 | `moonpp run [路径]` | 解释执行主包（或指定的包/文件） |
-| `moonpp build [路径]` | 编译为 MoonBit 并 `moon build` |
+| `moonpp build [路径] [-o 目录]` | 编译为一个完整的 MoonBit 项目（默认 `mbtpp_out/<包>`：`moon.mod` 带原项目的依赖，`moon.work` 列出本地模块，包含 `main.mbt`、`runtime.mbt` 的包），并 `moon build` |
 | `moonpp run --compiled [路径]` | 编译为 MoonBit 并 `moon run` |
 | `moonpp add <模块>` / `install` | 调用 `moon add` / `moon install`，再为缺少 `.mbti` 的依赖运行 `moon info` 生成接口 |
 | `moonpp remove`、`tree` | 转交给 `moon` |
@@ -205,7 +205,7 @@ fn f19_parse_hex_t(s_183 : String) -> Int raise {
 ## 9. 常用命令
 
 ```bash
-moon build --target js          # 构建 moonpp（之后使用 bin/moonpp）
+moon build --target js --release   # 构建 moonpp（之后使用 bin/moonpp）
 moon test                        # 56 个测试
 bin/moonpp new hello && cd hello && ../bin/moonpp run
 bin/moonpp run examples/vector.mbtpp

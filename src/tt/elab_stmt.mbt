@@ -58,7 +58,7 @@ fn check_block(
             None => e
           }
           let m : @parser.Expr = EMatch(p, scr, None, [
-            { pos: p, pat, rhs: Some(EBlock(p, rest)) },
+            { pos: p, pat, rhs: Some(EBlock(p, rest)), },
           ])
           match goal {
             Some(g) => (check(c, m, g), g)
@@ -120,7 +120,7 @@ fn check_block(
     SWhile(p, cond, body) => {
       let c = cxt.at(p)
       let tc = check(c, cond, bool_ty())
-      let tb = check({ ..c, in_loop: true }, body, unit_ty())
+      let tb = check({ ..c, in_loop: true, }, body, unit_ty())
       let (r, rty) = check_block(cxt, rest, goal)
       (Seq(While(tc, tb, Lit(LUnit)), r), rty)
     }
@@ -136,7 +136,7 @@ fn check_block(
         Some(e) => check(c, e, bool_ty())
         None => Lit(LBool(true))
       }
-      let tb = check({ ..c, in_loop: true }, body, unit_ty())
+      let tb = check({ ..c, in_loop: true, }, body, unit_ty())
       let mut step = Lit(LUnit)
       for k = updates.length() - 1; k >= 0; k = k - 1 {
         let (x, e) = updates[k]
@@ -217,12 +217,18 @@ fn monad_bind(p : Pos, m : @parser.Expr, f : @parser.Expr) -> @parser.Expr {
 fn pat_lam(p : Pos, pat : @parser.Pat, body : @parser.Expr) -> @parser.Expr {
   match pat {
     PVar(q, x) =>
-      ELam(p, [], [{ pos: q, name: x, ty: None, kind: Positional }], None, body)
+      ELam(
+        p,
+        [],
+        [{ pos: q, name: x, ty: None, kind: Positional, }],
+        None,
+        body,
+      )
     PWild(q) =>
       ELam(
         p,
         [],
-        [{ pos: q, name: "_", ty: None, kind: Positional }],
+        [{ pos: q, name: "_", ty: None, kind: Positional, }],
         None,
         body,
       )
@@ -231,9 +237,9 @@ fn pat_lam(p : Pos, pat : @parser.Pat, body : @parser.Expr) -> @parser.Expr {
       ELam(
         p,
         [],
-        [{ pos: p, name: x, ty: None, kind: Positional }],
+        [{ pos: p, name: x, ty: None, kind: Positional, }],
         None,
-        EMatch(p, EVar(p, x), None, [{ pos: p, pat, rhs: Some(body) }]),
+        EMatch(p, EVar(p, x), None, [{ pos: p, pat, rhs: Some(body), }]),
       )
     }
   }
@@ -277,9 +283,11 @@ fn lift_binds(
     EInterp(p, parts) =>
       EInterp(
         p,
-        parts.map(q => match q {
-          IExpr(x) => IExpr(go(x))
-          other => other
+        parts.map(q => {
+          match q {
+            IExpr(x) => IExpr(go(x))
+            other => other
+          }
         }),
       )
     _ => e
@@ -297,7 +305,7 @@ fn desugar_monad(b : @parser.Expr) -> @parser.Expr {
 ///|
 fn desugar_stmts(stmts : Array[@parser.Stmt]) -> @parser.Expr {
   if stmts.length() == 0 {
-    return ELit({ line: 0, col: 0 }, LUnit)
+    return ELit({ line: 0, col: 0, }, LUnit)
   }
   let rest = stmts[1:].to_array()
   let last = rest.length() == 0

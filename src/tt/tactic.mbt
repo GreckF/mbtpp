@@ -7,7 +7,7 @@ priv struct Goal {
 }
 
 ///|
-fn tm_shift(t : Tm, d : Int, c : Int) -> Tm {
+fn tm_shift(t : Tm, d : Int32, c : Int32) -> Tm {
   let go = (x : Tm) => tm_shift(x, d, c)
   match t {
     Var(ix) => if ix >= c { Var(ix + d) } else { t }
@@ -47,12 +47,12 @@ fn tm_eq(a : Tm, b : Tm) -> Bool {
 ///|
 /// Replace occurrences of `a` (shifted under binders) by the variable bound
 /// at depth `d`.
-fn tm_abstract(t : Tm, a : Tm, d : Int) -> (Tm, Bool) {
+fn tm_abstract(t : Tm, a : Tm, d : Int32) -> (Tm, Bool) {
   if tm_eq(t, tm_shift(a, d, 0)) {
     return (Var(d), true)
   }
   let mut found = false
-  let go = (x : Tm, k : Int) => {
+  let go = (x : Tm, k : Int32) => {
     let (r, f) = tm_abstract(x, a, d + k)
     if f {
       found = true
@@ -67,7 +67,7 @@ fn tm_abstract(t : Tm, a : Tm, d : Int) -> (Tm, Bool) {
     Match(ss, cls) =>
       Match(
         ss.map(x => go(x, 0)),
-        cls.map(cl => { pats: cl.pats, body: go(cl.body, pats_slots(cl.pats)) }),
+        cls.map(cl => { pats: cl.pats, body: go(cl.body, pats_slots(cl.pats)), }),
       )
     Raises(s, e) => Raises(go(s, 0), go(e, 0))
     _ => t
@@ -82,7 +82,7 @@ fn solve_goal(g : Goal, t : Tm) -> Unit raise ElabError {
 
 ///|
 fn new_goal(cxt : Cxt, ty : Val) -> Goal {
-  { cxt, ty, meta: cxt.fresh_meta() }
+  { cxt, ty, meta: cxt.fresh_meta(), }
 }
 
 ///|
@@ -107,7 +107,7 @@ fn run_tactics(
       cxt.at(pos).fail("no goals left")
     }
     let g0 = goals.remove(0)
-    let g = { ..g0, cxt: g0.cxt.at(pos) }
+    let g = { ..g0, cxt: g0.cxt.at(pos), }
     let new_goals : Array[Goal] = []
     match tac {
       TIntros(_, names) => {
@@ -212,7 +212,7 @@ fn run_tactics(
           }
           let h = new_goal(out.cxt, out.cxt.subst(g.ty))
           new_goals.push(h)
-          clauses.push({ pats: [out.pat], body: h.meta })
+          clauses.push({ pats: [out.pat], body: h.meta, })
         }
         solve_goal(g, Match([Var(g.cxt.lvl - 1 - l)], clauses))
       }
@@ -262,7 +262,7 @@ fn run_tactics(
         new_goals.push(h2)
         solve_goal(
           g,
-          Match([eq_tm], [{ pats: [CPCon("Id::Refl", [])], body: h2.meta }]),
+          Match([eq_tm], [{ pats: [CPCon("Id::Refl", [])], body: h2.meta, }]),
         )
       }
       TAssume(_, x, pe) => {

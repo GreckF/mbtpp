@@ -3,14 +3,14 @@
 priv struct PatOut {
   cxt : Cxt
   pat : CPat
-  slot : Int
+  slot : Int32
   conflict : Bool
   /// For constructor patterns: the constructor's return type.
   ret_ty : Val?
 }
 
 ///|
-fn nat_pat(p : Pos, n : Int) -> @parser.Pat {
+fn nat_pat(p : Pos, n : Int32) -> @parser.Pat {
   if n == 0 {
     PCon(p, "Nat::Z", None, [])
   } else {
@@ -39,7 +39,7 @@ fn check_pat(
       Some(v) => cxt.define_local(x, ty, v)
       None => cxt.bind(x, ty)
     }
-    { cxt: c2, pat: cp, slot: cxt.lvl, conflict: false, ret_ty: None }
+    { cxt: c2, pat: cp, slot: cxt.lvl, conflict: false, ret_ty: None, }
   }
   match p {
     PVar(_, x) => simple(x, CPVar(x))
@@ -272,17 +272,21 @@ fn elab_match(
     ETuple(_, es) if ret is None &&
       arms
       .iter()
-      .all(a => match a.pat {
-        PTuple(_, ps) => ps.length() == es.length()
-        PWild(_) => true
-        _ => false
+      .all(a => {
+        match a.pat {
+          PTuple(_, ps) => ps.length() == es.length()
+          PWild(_) => true
+          _ => false
+        }
       }) => es
     _ => [scr]
   }
-  let pats = arms.map(a => match a.pat {
-    PTuple(_, ps) if scrs.length() > 1 => ps
-    PWild(q) if scrs.length() > 1 => scrs.map(_ => @parser.PWild(q))
-    p => [p]
+  let pats = arms.map(a => {
+    match a.pat {
+      PTuple(_, ps) if scrs.length() > 1 => ps
+      PWild(q) if scrs.length() > 1 => scrs.map(_ => @parser.PWild(q))
+      p => [p]
+    }
   })
   match ret {
     Some(mr) => elab_match_ret(cxt, scr, mr, arms, goal)
@@ -323,7 +327,7 @@ fn elab_match(
             }
           (false, Some(rhs)) => {
             let body = check(cur, rhs, cur.subst(goal))
-            clauses.push({ pats: cps, body })
+            clauses.push({ pats: cps, body, })
           }
         }
       }
@@ -459,7 +463,7 @@ fn elab_match_ret(
     }
     let env = concat(concat(out.cxt.env[0:cxt.lvl].to_array(), idx), [xv])
     let g = out.cxt.subst(eval(env, r))
-    clauses.push({ pats: [out.pat], body: check(out.cxt, rhs, g) })
+    clauses.push({ pats: [out.pat], body: check(out.cxt, rhs, g), })
   }
   check_prop_elim(cxt, [a], arms.map(x => [x.pat]), res_ty)
   // coverage over a generalised scrutinee
@@ -494,7 +498,7 @@ fn elab_match_ret(
 priv enum Cov {
   CYes
   CNo
-  CBlocked(Int)
+  CBlocked(Int32)
   CUnknown
 }
 
@@ -544,7 +548,7 @@ fn cov_combine(rs : Array[Cov]) -> Cov {
 }
 
 ///|
-fn split_var(cxt : Cxt, l : Int) -> Array[Cxt]? raise ElabError {
+fn split_var(cxt : Cxt, l : Int32) -> Array[Cxt]? raise ElabError {
   let ty = force(cxt.subst(cxt.types[l]))
   match ty {
     VData("Bool", _) =>
@@ -611,7 +615,7 @@ fn cover(
   problem : Array[Val],
   clauses : Array[Clause],
   missing : Array[String],
-  depth : Int,
+  depth : Int32,
 ) -> Unit raise ElabError {
   let show_problem = () => {
     let s = problem.map(v => cxt.show(cxt.subst(v)))
@@ -701,7 +705,7 @@ fn elab_try(
   arms : Array[@parser.Arm],
   goal : Val?,
 ) -> (Tm, Val) raise ElabError {
-  let bc = { ..cxt, can_raise: true }
+  let bc = { ..cxt, can_raise: true, }
   let (tb, ty) = match goal {
     Some(g) => (check(bc, body, g), g)
     None => infer_ins(bc, body)
@@ -724,7 +728,7 @@ fn elab_try(
       Some(x) => x
       None => c.fail("missing handler body")
     }
-    clauses.push({ pats: [out.pat], body: check(out.cxt, rhs, ty) })
+    clauses.push({ pats: [out.pat], body: check(out.cxt, rhs, ty), })
   }
   (Try(tb, clauses), ty)
 }

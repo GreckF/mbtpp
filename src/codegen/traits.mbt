@@ -85,7 +85,7 @@ fn mbt_only(t : NTy) -> Bool {
 
 ///|
 /// A `#mbt` bound `Tr(T)` of a type parameter: (its index, the trait).
-fn bound_of(ctx : Array[TyCtx], a : @tt.Tm) -> (Int, String)? {
+fn bound_of(ctx : Array[TyCtx], a : @tt.Tm) -> (Int32, String)? {
   match a {
     App(Global(tr), Var(ix), _) if is_mbt_trait(tr) => {
       let i = ctx.length() - 1 - ix
@@ -205,8 +205,8 @@ fn Gen::need_trait(self : Gen, tr : String) -> Unit {
 /// `[T0 : A + B, T1]`: type parameters with their bounds.
 fn Gen::tvars_with_bounds(
   self : Gen,
-  n : Int,
-  bounds : Array[(Int, String)],
+  n : Int32,
+  bounds : Array[(Int32, String)],
 ) -> String {
   let tvs : Array[String] = []
   for k = 0; k < n; k = k + 1 {
@@ -262,9 +262,11 @@ fn Gen::satisfies(self : Gen, t : NTy, tr : String) -> Bool {
         }
         let ok = bounds
           .iter()
-          .all(bd => match sub[bd.0] {
-            Some(u) => self.satisfies(u, bd.1)
-            None => false
+          .all(bd => {
+            match sub[bd.0] {
+              Some(u) => self.satisfies(u, bd.1)
+              None => false
+            }
           })
         if ok {
           self.need_impl(i)
@@ -282,13 +284,13 @@ fn Gen::satisfies(self : Gen, t : NTy, tr : String) -> Bool {
 fn Gen::impl_info(
   self : Gen,
   i : String,
-) -> (Int, Array[(Int, String)], NTy, String)? {
+) -> (Int32, Array[(Int32, String)], NTy, String)? {
   let mut t = match @tt.globals.get(i) {
     Some(g) => g.ty
     None => return None
   }
   let ctx : Array[TyCtx] = []
-  let bounds : Array[(Int, String)] = []
+  let bounds : Array[(Int32, String)] = []
   let mut ntv = 0
   while t is Pi(_, icit, _, a, b) {
     match (icit, a) {
@@ -357,7 +359,7 @@ fn Gen::impl_code(self : Gen, i : String) -> String? {
   let saved_result = self.cur_result
   self.cur_bounds = bounds
   let out = StringBuilder::new()
-  let ok = try? {
+  let ok : Result[Unit, NotTyped] = try {
     // MoonBit needs the impls of the supertraits too
     for s in @tt.trait_supers(tr) {
       if !self.satisfies(self_t, s) {
@@ -409,6 +411,9 @@ fn Gen::impl_code(self : Gen, i : String) -> String? {
         header + m + "(" + names.join(", ") + ") {\n" + call + "\n}\n",
       )
     }
+    Ok(())
+  } catch {
+    err => Err(err)
   }
   self.cur_bounds = saved_bounds
   self.cur_result = saved_result
@@ -537,9 +542,11 @@ fn Gen::wrappable(self : Gen, sig : TSig) -> Bool {
   sig.bounds.length() == 0 &&
   sig.params
   .iter()
-  .all(p => match p {
-    Some(nt) => self.convertible(nt, true)
-    None => true
+  .all(p => {
+    match p {
+      Some(nt) => self.convertible(nt, true)
+      None => true
+    }
   }) &&
   self.convertible(sig.result, false)
 }

@@ -37,46 +37,6 @@ fn mbti_in(dir : String) -> String? {
 }
 
 ///|
-/// Is `dir` a MoonBit module? Newer modules describe themselves in
-/// `moon.mod` (`key = value` lines) instead of `moon.mod.json`.
-fn is_module_dir(dir : String) -> Bool {
-  @fs.path_exists(dir + "/moon.mod.json") || @fs.path_exists(dir + "/moon.mod")
-}
-
-///|
-/// The `source` directory of a MoonBit module (`""` for the module root).
-fn module_source(mod_dir : String) -> String {
-  match read_json(mod_dir + "/moon.mod.json") {
-    Some(j) =>
-      match j.value("source") {
-        Some(String(s)) => s
-        _ => ""
-      }
-    None => {
-      // `source = "src"` in `moon.mod`
-      let text = @fs.read_file_to_string(mod_dir + "/moon.mod") catch {
-        _ => return ""
-      }
-      for line in text.split("\n") {
-        let l = line.trim(chars=" \t\r").to_string()
-        if l.has_prefix("source") {
-          let rest = l.unsafe_substring(start=6, end=l.length())
-            .trim(chars=" \t")
-            .to_string()
-          if rest.has_prefix("=") {
-            return rest
-              .unsafe_substring(start=1, end=rest.length())
-              .trim(chars=" \t\"")
-              .to_string()
-          }
-        }
-      }
-      ""
-    }
-  }
-}
-
-///|
 /// The directory of package `pkg` (`user/module/sub/pkg`) of a module
 /// downloaded into a `.mooncakes` directory above `dir`.
 fn mooncakes_package_dir(pkg : String, dir : String) -> String? {
@@ -115,39 +75,21 @@ fn find_mbti(pkg : String, dir : String) -> String? {
   }
   match mooncakes_package_dir(pkg, dir) {
     Some(pd) => mbti_in(pd)
-    None => None
+    None =>
+      match local_package_dir(pkg, dir) {
+        Some(pd) => mbti_in(pd)
+        None => None
+      }
   }
 }
 
 ///|
-/// The packages imported by the package in `dir`, read from its
-/// `moon.pkg.json` (if there is one).
+/// The packages imported by the package in `dir` (its `moon.pkg` or
+/// `moon.pkg.json`), with their interfaces.
 fn load_imports(dir : String) -> Array[@tt.Import] raise Failure {
-  let cfg = dir + "/moon.pkg.json"
-  if !@fs.path_exists(cfg) {
-    return []
-  }
-  let json = match read_json(cfg) {
-    Some(j) => j
-    None => die(cfg + ": invalid JSON")
-  }
-  let entries = match json.value("import") {
-    Some(Array(xs)) => xs
-    Some(_) => die(cfg + ": \"import\" must be an array")
-    None => []
-  }
   let out : Array[@tt.Import] = []
-  for e in entries {
-    let (path, alias) = match e {
-      String(p) => (p, last_segment(p))
-      Object(o) =>
-        match (o.get("path"), o.get("alias")) {
-          (Some(String(p)), Some(String(a))) => (p, a)
-          (Some(String(p)), None) => (p, last_segment(p))
-          _ => die(cfg + ": an import needs a \"path\"")
-        }
-      _ => die(cfg + ": invalid import entry")
-    }
+  for imp in package_imports(dir) {
+    let (path, alias) = imp
     let mbti = match find_mbti(path, dir) {
       Some(p) => p
       None =>
@@ -158,7 +100,7 @@ fn load_imports(dir : String) -> Array[@tt.Import] raise Failure {
         )
     }
     let src = @fs.read_file_to_string(mbti) catch {
-      err => die("cannot read " + mbti + ": " + err.to_string())
+      @fs.IOError(msg) => die("cannot read " + mbti + ": " + msg)
     }
     out.push({ alias, path, mbti: src })
   }

@@ -7,8 +7,9 @@ let help_msg : String =
   #|  moonpp new <name>          create a new project
   #|  moonpp check [path]        type check the project (or a package directory or file)
   #|  moonpp run [path]          run the main package (or a package directory or file)
-  #|  moonpp build [path]        compile to MoonBit (`moon build`); the generated code is in
-  #|                             src/mbtpp_out/<pkg> (or _mbtpp_build/<file> for a single file)
+  #|  moonpp build [path]        compile to a MoonBit project and `moon build` it: by default
+  #|                             mbtpp_out/<pkg> in the project (or _mbtpp_build/<file> for a
+  #|                             single file), with the dependencies of the project
   #|  moonpp run --compiled [path]  compile to MoonBit and run it with `moon run`
   #|  moonpp add <user/module>   add a dependency (`moon add`) and extract its interfaces
   #|  moonpp remove <module>     remove a dependency (`moon remove`)
@@ -22,10 +23,12 @@ let help_msg : String =
   #|  --no-prelude   do not load the prelude
   #|  --verbose      list the interface items that could not be imported
   #|  --compiled     (run) run the program compiled to MoonBit instead of interpreting it
+  #|  -o, --output <dir>  (build, run --compiled) where to generate the MoonBit project
   #|
   #|A package is a directory of .mbtpp files. The MoonBit packages it uses are
-  #|listed in the "import" field of its moon.pkg.json and referred to as
-  #|@pkg.name; imported functions are type checked but cannot be run.
+  #|listed in the `import` block of its moon.pkg (or the "import" field of a
+  #|moon.pkg.json) and referred to as @pkg.name; imported functions are type
+  #|checked by the interpreter, and called by the compiled program.
 
 ///|
 let version : String = "moonpp 0.1.0"
@@ -61,6 +64,8 @@ struct Options {
   prelude : Bool
   verbose : Bool
   compiled : Bool
+  /// The directory of the generated MoonBit project.
+  output : String?
 }
 
 ///|
@@ -74,7 +79,7 @@ fn check_files(
   let cwd = current_dir()
   for f in files {
     let src = @fs.read_file_to_string(f) catch {
-      e => die("cannot read " + f + ": " + e.to_string())
+      @fs.IOError(msg) => die("cannot read " + f + ": " + msg)
     }
     srcs.push((relative(f, cwd), src))
   }
@@ -110,7 +115,7 @@ fn targets(
         Some(r) => r
         None =>
           die(
-            "not in a MoonBit++ project (no moon.mod.json found); try `moonpp new`",
+            "not in a MoonBit++ project (no moon.mod found); try `moonpp new`",
           )
       }
       let pkgs = project_packages(root)
@@ -155,7 +160,7 @@ fn main_package(path : String?) -> (String, Array[String]) raise Failure {
       Some(p) => p
       None =>
         die(
-          "no main package; mark one with \"is-main\": true in its moon.pkg.json",
+          "no main package; mark one with options(\"is-main\": true) in its moon.pkg",
         )
     }
   }
@@ -164,7 +169,7 @@ fn main_package(path : String?) -> (String, Array[String]) raise Failure {
 ///|
 fn write_file(path : String, content : String) -> Unit raise Failure {
   @fs.write_string_to_file(path, content) catch {
-    e => die("cannot write " + path + ": " + e.to_string())
+    @fs.IOError(msg) => die("cannot write " + path + ": " + msg)
   }
 }
 
@@ -183,8 +188,65 @@ fn make_dirs(path : String) -> Unit {
 }
 
 ///|
-/// Compile a package (or file) to MoonBit. Returns the module directory and
-/// the path of the generated package in it.
+/// The configuration files of the generated project (`moon.mod`,
+/// `moon.work`): the name, version and dependencies of the MoonBit++ project
+/// (`root`, if any). Local modules (workspace members, or local dependencies
+/// of an old `moon.mod.json`) are members of the generated workspace, by
+/// absolute path.
+fn output_module(
+  root : String?,
+  default_name : String,
+) -> (String, String) raise Failure {
+  let info = match root {
+    Some(r) => module_info(r)
+    None => { name: None, version: None, source: "", deps: [], local_deps: [] }
+  }
+  let deps = info.deps.copy()
+  let members : Array[String] = []
+  match root {
+    Some(r) => {
+      for m in workspace_members(r) {
+        if normalize_path(m) != normalize_path(r) && is_module_dir(m) {
+          members.push(m)
+        }
+      }
+      for ld in info.local_deps {
+        members.push(normalize_path(ld.1))
+        let v = (module_info(ld.1) catch { _ => info }).version
+        deps.push(
+          match v {
+            Some(v) if is_module_dir(ld.1) => ld.0 + "@" + v
+            _ => ld.0
+          },
+        )
+      }
+    }
+    None => ()
+  }
+  let m = StringBuilder::new()
+  m.write_string("name = " + mstr(info.name.unwrap_or(default_name)) + "\n\n")
+  m.write_string("version = " + mstr(info.version.unwrap_or("0.1.0")) + "\n")
+  if deps.length() > 0 {
+    m.write_string("\nimport {\n")
+    for d in deps {
+      m.write_string("  " + mstr(d) + ",\n")
+    }
+    m.write_string("}\n")
+  }
+  // the generated project is a workspace of its own (also so that a
+  // `moon.work` of the MoonBit++ project does not apply to it)
+  let w = StringBuilder::new()
+  w.write_string("members = [\n  \".\",\n")
+  for mem in members {
+    w.write_string("  " + mstr(mem) + ",\n")
+  }
+  w.write_string("]\n")
+  (m.to_string(), w.to_string())
+}
+
+///|
+/// Compile a package (or file) to a MoonBit project. Returns the project
+/// directory and the name of the generated package in it.
 fn compile(opts : Options, path : String?) -> (String, String) raise Failure {
   let (dir, files) = main_package(path)
   check_files(opts, dir, files)
@@ -197,67 +259,105 @@ fn compile(opts : Options, path : String?) -> (String, String) raise Failure {
     None => false
   }
   let project = if single { None } else { find_project(dir) }
-  let (mod_dir, pkg_rel) = match project {
+  let (out, pkg, default_name) = match project {
     Some(root) => {
-      let src = module_source(root)
-      let rel = (if src == "" { "" } else { src + "/" }) +
-        "mbtpp_out/" +
-        last_segment(dir)
-      (root, rel)
+      let pkg = last_segment(dir)
+      // generated by older versions of moonpp, inside the project's module
+      let old = (if module_source(root) == "" {
+          root
+        } else {
+          root + "/" + module_source(root)
+        }) +
+        "/mbtpp_out"
+      if @fs.path_exists(old) {
+        println(
+          "note: " +
+          relative(old, current_dir()) +
+          " was generated by an older moonpp and can be deleted",
+        )
+      }
+      (root + "/mbtpp_out/" + pkg, pkg, "mbtpp/" + pkg)
     }
     None => {
       let stem = last_segment(files[0]).replace(old=".mbtpp", new="")
-      let m = dir_of(files[0]) + "/_mbtpp_build/" + stem
-      make_dirs(m)
-      write_file(
-        m + "/moon.mod.json",
-        (
-          $|{
-          $|  "name": "mbtpp/\{stem}",
-          $|  "version": "0.1.0"
-          $|}
-          $|
-        ),
-      )
-      (m, "main")
+      (dir_of(files[0]) + "/_mbtpp_build/" + stem, "main", "mbtpp/" + stem)
     }
   }
-  let out = mod_dir + "/" + pkg_rel
-  make_dirs(out)
-  let imports_json = imports
-    .map(i => "    { \"path\": " +
-      i.path.escape() +
-      ", \"alias\": " +
-      i.alias.escape() +
-      " }")
-    .join(",\n")
+  let out = opts.output.unwrap_or(out)
+  make_dirs(out + "/" + pkg)
+  let (mod_file, work_file) = output_module(project, default_name)
+  // files of older versions of moonpp
+  for old in ["/moon.mod.json", "/" + pkg + "/moon.pkg.json"] {
+    if @fs.path_exists(out + old) {
+      @fs.remove_file(out + old) catch {
+        _ => ()
+      }
+    }
+  }
+  write_file(out + "/moon.mod", mod_file)
+  write_file(out + "/moon.work", work_file)
   write_file(
-    out + "/moon.pkg.json",
+    out + "/.gitignore",
     (
-      $|{
-      $|  "is-main": true,
-      $|  "warn-list": "-a",
-      $|  "import": [
-      $|\{imports_json}
-      $|  ]
-      $|}
+      #|_build/
+      #|target/
+      #|.mooncakes/
+      #|moon.work.lock
+      #|
+    ),
+  )
+  let source = match project {
+    Some(root) => relative(dir, root)
+    None => files[0]
+  }
+  write_file(
+    out + "/README.md",
+    (
+      $|# MoonBit code generated from MoonBit++
+      $|
+      $|Generated by `moonpp build` from `\{source}`; it is overwritten by the
+      $|next build. A standalone MoonBit project:
+      $|
+      $|```bash
+      $|moon run \{pkg}
+      $|moon build
+      $|```
+      $|
+      $|`\{pkg}/main.mbt` is the program, `\{pkg}/runtime.mbt` its runtime support.
       $|
     ),
   )
-  write_file(out + "/main.mbt", code)
-  write_file(out + "/runtime.mbt", @codegen.runtime_code())
+  let pkg_file = StringBuilder::new()
+  pkg_file.write_string("warnings = \"-a\"\n")
+  if imports.length() > 0 {
+    pkg_file.write_string("\nimport {\n")
+    for i in imports {
+      pkg_file.write_string("  " + mstr(i.path) + " @" + i.alias + ",\n")
+    }
+    pkg_file.write_string("}\n")
+  }
+  pkg_file.write_string("\noptions(\n  \"is-main\": true,\n)\n")
+  write_file(out + "/" + pkg + "/moon.pkg", pkg_file.to_string())
+  write_file(out + "/" + pkg + "/main.mbt", code)
+  write_file(out + "/" + pkg + "/runtime.mbt", @codegen.runtime_code())
   // format the generated code (best effort)
   if can_run_commands {
-    ignore(run_quiet("moon fmt", mod_dir))
+    ignore(run_quiet("moon fmt", out))
   }
-  (mod_dir, pkg_rel)
+  (out, pkg)
 }
 
 ///|
 fn cmd_build(opts : Options, path : String?) -> Bool raise Failure {
-  let (mod_dir, pkg) = compile(opts, path)
-  moon("build", mod_dir)
-  println("compiled to " + relative(mod_dir + "/" + pkg, current_dir()))
+  let (out, pkg) = compile(opts, path)
+  moon("build", out)
+  println(
+    "compiled to the MoonBit project " +
+    relative(out, current_dir()) +
+    " (run it there with `moon run " +
+    pkg +
+    "`)",
+  )
   true
 }
 
@@ -276,13 +376,13 @@ fn cmd_run(opts : Options, path : String?) -> Bool raise Failure {
       Some(p) => p
       None =>
         die(
-          "no main package; mark one with \"is-main\": true in its moon.pkg.json",
+          "no main package; mark one with options(\"is-main\": true) in its moon.pkg",
         )
     }
   }
   ignore(base)
   check_files(opts, dir, files)
-  let out = { buf: StringBuilder::new() }
+  let out = { buf: StringBuilder::new(), }
   @interp.run_main(s => out.write(s)) catch {
     @interp.RunError(msg) => {
       out.flush()
@@ -302,7 +402,21 @@ fn moon(args : String, dir : String) -> Unit raise Failure {
   }
   let status = run_command("moon " + args, dir)
   if status != 0 {
-    die("`moon " + args + "` failed (exit status " + status.to_string() + ")")
+    let hint = match find_project(dir) {
+      Some(root) if !@fs.path_exists(root + "/moon.mod") =>
+        "\nhint: the project uses moon.mod.json, which newer versions of moon no longer accept; run `moon fmt` in " +
+        root +
+        " to migrate it to moon.mod (moonpp reads both)"
+      _ => ""
+    }
+    die(
+      "`moon " +
+      args +
+      "` failed (exit status " +
+      status.to_string() +
+      ")" +
+      hint,
+    )
   }
 }
 
@@ -359,7 +473,7 @@ fn extract_interfaces(root : String) -> Unit raise Failure {
 fn project_root() -> String raise Failure {
   match find_project(current_dir()) {
     Some(r) => r
-    None => die("not in a MoonBit++ project (no moon.mod.json found)")
+    None => die("not in a MoonBit++ project (no moon.mod found)")
   }
 }
 
@@ -369,15 +483,25 @@ fn run_cli(args : Array[String]) -> Bool raise Failure {
   let mut prelude = true
   let mut verbose = false
   let mut compiled = false
-  for a in args {
-    match a {
+  let mut output : String? = None
+  let mut i = 0
+  while i < args.length() {
+    match args[i] {
       "--no-prelude" => prelude = false
       "--verbose" => verbose = true
       "--compiled" => compiled = true
-      _ => rest.push(a)
+      "-o" | "--output" =>
+        if i + 1 < args.length() {
+          i = i + 1
+          output = Some(args[i])
+        } else {
+          die("missing directory after " + args[i])
+        }
+      a => rest.push(a)
     }
+    i = i + 1
   }
-  let opts = { prelude, verbose, compiled }
+  let opts = { prelude, verbose, compiled, output, }
   match rest {
     [] | ["help"] | ["--help"] | ["-h"] => {
       println(help_msg)
@@ -403,12 +527,17 @@ fn run_cli(args : Array[String]) -> Bool raise Failure {
       let root = project_root()
       moon("add " + m, root)
       extract_interfaces(root)
+      // `user/module@version`
+      let name = match m.find("@") {
+        Some(k) => m.unsafe_substring(start=0, end=k)
+        None => m
+      }
       println(
         "added " +
         m +
         "; list its packages (e.g. \"" +
-        m +
-        "/<pkg>\") in the \"import\" field of a moon.pkg.json",
+        name +
+        "/<pkg>\") in the import block of a moon.pkg",
       )
       true
     }

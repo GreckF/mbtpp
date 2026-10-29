@@ -20,7 +20,7 @@ pub fn check_package(Array[(String, String)], prelude? : Bool, imports? : Array[
 
 pub fn check_program(String, String, prelude? : Bool, imports? : Array[Import]) -> Unit raise CheckError
 
-pub fn clause_body_val(Array[Val], Int, Clause) -> Val
+pub fn clause_body_val(Array[Val], Int32, Clause) -> Val
 
 pub fn con_info(String) -> ConInfo?
 
@@ -38,7 +38,7 @@ pub fn force(Val) -> Val
 
 pub fn force_meta(Val) -> Val
 
-pub fn fresh_vars(Int, Int) -> Array[Val]
+pub fn fresh_vars(Int32, Int32) -> Array[Val]
 
 pub fn global_body(String) -> Tm?
 
@@ -72,11 +72,11 @@ pub fn mbt_info(String) -> MbtInfo?
 
 pub let mbt_types : Map[String, MbtInfo]
 
-pub fn meta_sol(Int) -> Val?
+pub fn meta_sol(Int32) -> Val?
 
 pub let metas : Array[MetaEntry]
 
-pub fn new_meta() -> Int
+pub fn new_meta() -> Int32
 
 pub fn nf(Array[Val], Tm) -> Tm
 
@@ -84,17 +84,17 @@ pub fn normalize(Tm) -> String
 
 pub fn param_labels(String) -> Array[(String, Bool)?]?
 
-pub fn pat_slots(CPat) -> Int
+pub fn pat_slots(CPat) -> Int32
 
-pub fn pats_slots(Array[CPat]) -> Int
+pub fn pats_slots(Array[CPat]) -> Int32
 
 pub let prelude_src : String
 
 pub fn prim_pure(String, Array[@parser.Lit]) -> @parser.Lit?
 
-pub fn quote(Int, Val) -> Tm
+pub fn quote(Int32, Val) -> Tm
 
-pub fn quote_full(Int, Val) -> Tm
+pub fn quote_full(Int32, Val) -> Tm
 
 pub fn reset_state() -> Unit
 
@@ -122,7 +122,7 @@ pub fn unfold_any(String, Array[(Val, Icit)]) -> Val?
 
 pub fn unify(Array[Val?], Val, Val) -> Unit raise UnifyError
 
-pub fn v_var(Int) -> Val
+pub fn v_var(Int32) -> Val
 
 // Errors
 pub suberror CheckError {
@@ -143,14 +143,12 @@ pub(all) enum CPat {
   CPWild
   CPCon(String, Array[CPat])
   CPLit(@parser.Lit)
-}
-pub impl Show for CPat
+} derive(Show)
 
 pub(all) struct Clause {
   pats : Array[CPat]
   body : Tm
-}
-pub impl Show for Clause
+} derive(Show)
 
 pub(all) struct Closure {
   env : Array[Val]
@@ -160,9 +158,9 @@ pub(all) struct Closure {
 pub(all) struct ConInfo {
   name : String
   data : String
-  nparams : Int
-  nargs : Int
-  nimpl : Int
+  nparams : Int32
+  nargs : Int32
+  nimpl : Int32
 }
 
 pub(all) struct Cxt {
@@ -171,7 +169,7 @@ pub(all) struct Cxt {
   types : Array[Val]
   bound : Array[Bool]
   muts : Array[Bool]
-  lvl : Int
+  lvl : Int32
   pos : @parser.Pos
   can_raise : Bool
   ret_ty : Val?
@@ -181,11 +179,11 @@ pub fn Cxt::at(Self, @parser.Pos) -> Self
 pub fn Cxt::bind(Self, String, Val) -> Self
 pub fn Cxt::bind_mut(Self, String, Val) -> Self
 pub fn Cxt::define_local(Self, String, Val, Val) -> Self
-pub fn Cxt::define_var(Self, Int, Val) -> Self
+pub fn Cxt::define_var(Self, Int32, Val) -> Self
 pub fn Cxt::eval(Self, Tm) -> Val
 pub fn[T] Cxt::fail(Self, String) -> T raise ElabError
 pub fn Cxt::fresh_meta(Self) -> Tm
-pub fn Cxt::lookup(Self, String) -> Int?
+pub fn Cxt::lookup(Self, String) -> Int32?
 pub fn Cxt::ltypes(Self) -> Array[Val?]
 pub fn Cxt::quote(Self, Val) -> Tm
 pub fn Cxt::refine(Self, Array[(Val, Val)]) -> Refined
@@ -196,8 +194,8 @@ pub fn Cxt::unify(Self, Val, Val) -> Unit raise ElabError
 
 pub(all) struct DataInfo {
   name : String
-  nparams : Int
-  nindices : Int
+  nparams : Int32
+  nindices : Int32
   cons : Array[String]
   mut is_prop : Bool
   fields : Array[String]?
@@ -214,19 +212,17 @@ pub(all) struct GEntry {
 }
 
 pub(all) enum GKind {
-  GFunc(Tm?, Bool, Int)
+  GFunc(Tm?, Bool, Int32)
   GData(DataInfo)
   GCon(ConInfo)
-  GPrim(String, Int)
+  GPrim(String, Int32)
 }
 
 pub(all) enum Icit {
   Expl
   Impl
   Inst
-}
-pub impl Eq for Icit
-pub impl Show for Icit
+} derive(Eq, Show)
 
 pub(all) struct Import {
   alias : String
@@ -251,10 +247,10 @@ pub(all) enum Refined {
 }
 
 pub(all) enum Tm {
-  Var(Int)
+  Var(Int32)
   Global(String)
-  Meta(Int)
-  InsertedMeta(Int, Array[Bool])
+  Meta(Int32)
+  InsertedMeta(Int32, Array[Bool])
   Lam(String, Icit, Bool, Tm)
   App(Tm, Tm, Icit)
   Pi(String, Icit, Bool, Tm, Tm)
@@ -265,7 +261,7 @@ pub(all) enum Tm {
   Match(Array[Tm], Array[Clause])
   Raises(Tm, Tm)
   LetMut(String, Tm, Tm, Tm)
-  Assign(Int, Tm)
+  Assign(Int32, Tm)
   While(Tm, Tm, Tm)
   Break
   Continue
@@ -274,12 +270,11 @@ pub(all) enum Tm {
   Try(Tm, Array[Clause])
   ArrayLit(Array[Tm])
   Seq(Tm, Tm)
-}
-pub impl Show for Tm
+} derive(Show)
 
 pub(all) enum Val {
-  VRigid(Int, Array[(Val, Icit)])
-  VFlex(Int, Array[(Val, Icit)])
+  VRigid(Int32, Array[(Val, Icit)])
+  VFlex(Int32, Array[(Val, Icit)])
   VGlobal(String, Array[(Val, Icit)])
   VData(String, Array[(Val, Icit)])
   VCon(String, Array[(Val, Icit)])
@@ -307,4 +302,3 @@ pub using @parser {type Pos}
 pub type Spine = Array[(Val, Icit)]
 
 // Traits
-

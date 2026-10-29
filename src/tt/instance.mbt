@@ -17,7 +17,7 @@ fn instance_paths(
   t : Tm,
   ty : Val,
   out : Array[(Tm, Val)],
-  depth : Int,
+  depth : Int32,
 ) -> Unit {
   out.push((t, ty))
   if depth > 8 {
@@ -44,7 +44,7 @@ fn instance_paths(
 }
 
 ///|
-fn search_instance(cxt : Cxt, goal : Val, depth : Int) -> Tm? raise ElabError {
+fn search_instance(cxt : Cxt, goal : Val, depth : Int32) -> Tm? raise ElabError {
   if depth > 8 {
     return None
   }

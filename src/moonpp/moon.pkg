@@ -1,0 +1,14 @@
+import {
+  "username/mbtpp/tt",
+  "username/mbtpp/interp",
+  "username/mbtpp/codegen",
+  "moonbitlang/x/sys",
+  "moonbitlang/x/fs",
+  "moonbitlang/core/json",
+}
+
+options(
+  "is-main": true,
+  targets: { "host_js.mbt": [ "js" ], "host_stub.mbt": [ "not", "js" ] },
+  link: { "js": { "format": "cjs" } },
+)

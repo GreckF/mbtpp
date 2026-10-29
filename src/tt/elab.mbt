@@ -25,8 +25,8 @@ priv struct ElabState {
   pending : Array[PendingInst]
   /// Metas standing for the types of unannotated implicit binders, with the
   /// number of variables they abstract over; defaulted to `Type`.
-  type_defaults : Array[(Int, Int)]
-  mut fresh : Int
+  type_defaults : Array[(Int32, Int32)]
+  mut fresh : Int32
 }
 
 ///|
@@ -225,7 +225,7 @@ fn resolve_name(
 
 ///|
 fn add_pending(cxt : Cxt, m : Tm, ty : Val) -> Unit raise ElabError {
-  let p : PendingInst = { cxt, meta: m, ty }
+  let p : PendingInst = { cxt, meta: m, ty, }
   if !solve_instance(p, false) {
     st.pending.push(p)
   }
@@ -477,7 +477,7 @@ fn insert_until(
 
 ///|
 /// Number of explicit binders in the argument group at the head of `ty`.
-fn group_size(ty : Val, lvl : Int) -> Int {
+fn group_size(ty : Val, lvl : Int32) -> Int32 {
   let mut n = 0
   let mut t = force(ty)
   let mut l = lvl
@@ -497,7 +497,7 @@ fn app_core(
   cxt : Cxt,
   head : Tm,
   head_ty : Val,
-  skip_params : Int,
+  skip_params : Int32,
   impl_args : Array[@parser.Expr]?,
   expl_args : Array[Arg]?,
 ) -> (Tm, Val) raise ElabError {
@@ -681,7 +681,7 @@ fn place_tagged(
 }
 
 ///|
-fn nparams_of(name : String) -> Int {
+fn nparams_of(name : String) -> Int32 {
   match con_info(name) {
     Some(ci) => ci.nparams
     None => 0
@@ -694,7 +694,7 @@ fn infer_head(
   cxt : Cxt,
   f : @parser.Expr,
   expected : Val?,
-) -> (Tm, Val, Int) raise ElabError {
+) -> (Tm, Val, Int32) raise ElabError {
   match f {
     EVar(p, x) if !x.contains("::") && cxt.lookup(x) is Some(l) => {
       ignore(p)
@@ -869,8 +869,8 @@ fn bool_ty() -> Val {
 ///|
 fn if_tm(c : Tm, t : Tm, e : Tm) -> Tm {
   Match([c], [
-    { pats: [CPLit(LBool(true))], body: t },
-    { pats: [CPWild], body: e },
+    { pats: [CPLit(LBool(true))], body: t, },
+    { pats: [CPWild], body: e, },
   ])
 }
 
@@ -944,7 +944,7 @@ fn infer_bin(
 // Checking
 
 ///|
-fn nat_tm(n : Int) -> Tm {
+fn nat_tm(n : Int32) -> Tm {
   let mut t = Global("Nat::Z")
   for _ in 0..<n {
     t = App(Global("Nat::S"), t, Expl)
@@ -1123,7 +1123,9 @@ fn check_lam(
   }
   let n = group_size(ty, cxt.lvl)
   let ps = if ps.length() == 0 {
-    [({ pos: cxt.pos, name: "_", ty: None, kind: Positional } : @parser.Binder)]
+    [
+      ({ pos: cxt.pos, name: "_", ty: None, kind: Positional, } : @parser.Binder),
+    ]
   } else {
     ps
   }
@@ -1158,7 +1160,7 @@ fn check_lam(
     VRaises(a, _) => (a, true)
     _ => (ty, false)
   }
-  let bc = { ..cxt, can_raise, ret_ty: Some(body_ty), in_loop: false }
+  let bc = { ..cxt, can_raise, ret_ty: Some(body_ty), in_loop: false, }
   lams(wrap, check(bc, body, body_ty))
 }
 
@@ -1279,7 +1281,7 @@ pub fn infer(cxt0 : Cxt, e : @parser.Expr) -> (Tm, Val) raise ElabError {
     EStruct(_, fields) => elab_struct(cxt, fields, None)
     ETry(_, body, arms) => elab_try(cxt, body, arms, None)
     ETryQ(_, x) => {
-      let (t, ty) = infer_ins({ ..cxt, can_raise: true }, x)
+      let (t, ty) = infer_ins({ ..cxt, can_raise: true, }, x)
       let err = VData("Error", [])
       let res_ty = VData("Result", [(ty, Impl), (err, Impl)])
       ensure(cxt, "Result::Ok")
@@ -1293,7 +1295,7 @@ pub fn infer(cxt0 : Cxt, e : @parser.Expr) -> (Tm, Val) raise ElabError {
         (Global("Error"), Impl),
         (Var(0), Expl),
       ])
-      (Try(ok, [{ pats: [CPVar("e")], body: errv }]), res_ty)
+      (Try(ok, [{ pats: [CPVar("e")], body: errv, }]), res_ty)
     }
     ERaise(_, _)
     | EReturn(_, _)
@@ -1479,7 +1481,7 @@ fn elab_struct(
 
 ///|
 /// Does `v` mention a variable at a level in `[lo, hi)`?
-fn occurs_any(hi : Int, lo : Int, v : Val) -> Bool {
+fn occurs_any(hi : Int32, lo : Int32, v : Val) -> Bool {
   for x = lo; x < hi; x = x + 1 {
     if occurs(hi, x, v) {
       return true

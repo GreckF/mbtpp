@@ -1,0 +1,14 @@
+import {
+  "username/mbtpp/tt",
+  "username/mbtpp/interp",
+  "username/mbtpp/codegen",
+}
+
+options(
+  link: {
+    "js": {
+      "exports": [ "check", "run", "compile", "runtime" ],
+      "format": "esm",
+    },
+  },
+)

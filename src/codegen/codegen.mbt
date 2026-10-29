@@ -27,7 +27,7 @@ priv struct Gen {
   /// Package path -> alias, for imported packages.
   aliases : Map[String, String]
   er : Erasure
-  mut fresh : Int
+  mut fresh : Int32
   /// Datatypes that can be native enums (see typed.mbt).
   enums_ok : Map[String, Bool]
   enums_done : Array[String]
@@ -40,7 +40,7 @@ priv struct Gen {
   mut dry : Bool
   scheduled : Map[String, Bool]
   /// Bounds `(type parameter, trait)` of the function being translated.
-  mut cur_bounds : Array[(Int, String)]
+  mut cur_bounds : Array[(Int32, String)]
   /// Instances of `#mbt` traits that become MoonBit `impl`s.
   mbt_impls : Array[String]
   impls_done : Array[String]
@@ -61,7 +61,7 @@ fn Gen::name(self : Gen, base : String) -> String {
     if (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_' {
       buf.write_char(c)
     } else if c >= 'A' && c <= 'Z' {
-      buf.write_char(Int::unsafe_to_char(c.to_int() + 32))
+      buf.write_char(Int32::unsafe_to_char(c.to_int() + 32))
     }
   }
   let b = buf.to_string()
@@ -95,7 +95,7 @@ fn Gen::gid(self : Gen, name : String) -> String {
         if (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') {
           buf.write_char(c)
         } else if c >= 'A' && c <= 'Z' {
-          buf.write_char(Int::unsafe_to_char(c.to_int() + 32))
+          buf.write_char(Int32::unsafe_to_char(c.to_int() + 32))
         } else if c == ':' || c == '.' || c == '$' || c == '_' {
           if !buf.to_string().has_suffix("_") {
             buf.write_char('_')
@@ -123,7 +123,7 @@ fn Gen::schedule(self : Gen, name : String) -> Unit {
 
 ///|
 /// Number of leading lambdas of a term.
-fn lam_count(t : @tt.Tm) -> Int {
+fn lam_count(t : @tt.Tm) -> Int32 {
   match t {
     Lam(_, _, _, b) => 1 + lam_count(b)
     _ => 0
@@ -132,7 +132,7 @@ fn lam_count(t : @tt.Tm) -> Int {
 
 ///|
 /// The parameters of a global function (its arity), if it is one.
-fn func_arity(name : String) -> Int? {
+fn func_arity(name : String) -> Int32? {
   match @tt.globals.get(name) {
     Some({ kind: GFunc(Some(body), _, n), .. }) if n > 0 && lam_count(body) >= n =>
       Some(n)
@@ -152,7 +152,7 @@ fn is_sort_like(t : @tt.Tm) -> Bool {
 ///|
 /// Which of the first `n` parameters of a global are erased: implicit
 /// parameters whose type is a sort (type parameters).
-fn erased_params(name : String, n : Int) -> Array[Bool] {
+fn erased_params(name : String, n : Int32) -> Array[Bool] {
   let out : Array[Bool] = []
   let mut t = match @tt.globals.get(name) {
     Some(g) => g.ty
@@ -350,13 +350,13 @@ fn Gen::native_pat(self : Gen, p : @tt.CPat, names : Array[Local]) -> String {
 ///|
 /// Markers around the names bound by a generated pattern: they are turned
 /// into bindings, or dropped when unused, by `resolve_bindings`.
-let var_marker : String = Int::unsafe_to_char(1).to_string()
+let var_marker : String = Int32::unsafe_to_char(1).to_string()
 
 ///|
-let as_marker : String = Int::unsafe_to_char(3).to_string()
+let as_marker : String = Int32::unsafe_to_char(3).to_string()
 
 ///|
-let end_marker : String = Int::unsafe_to_char(2).to_string()
+let end_marker : String = Int32::unsafe_to_char(2).to_string()
 
 ///|
 fn is_ident(s : String) -> Bool {
@@ -652,8 +652,8 @@ fn if_parts(
     (
       [c],
       [
-        { pats: [CPLit(LBool(true))], body: a },
-        { pats: [CPWild | CPLit(LBool(false))], body: b },
+        { pats: [CPLit(LBool(true))], body: a, },
+        { pats: [CPWild | CPLit(LBool(false))], body: b, },
       ],
     ) => Some((c, a, b))
     _ => None
@@ -784,7 +784,7 @@ fn Gen::global_value(self : Gen, n : String) -> String {
 
 ///|
 /// Nested functions collecting `n` arguments `a0 .. a(n-1)`, then `final`.
-fn curried(n : Int, final_ : String) -> String {
+fn curried(n : Int32, final_ : String) -> String {
   let mut code = final_
   for k = n - 1; k >= 0; k = k - 1 {
     code = "VFun(a" + k.to_string() + " => " + code + ")"
@@ -794,7 +794,7 @@ fn curried(n : Int, final_ : String) -> String {
 
 ///|
 /// The icitness of the binders of a (closed) Pi type.
-fn binder_icits(ty : @tt.Tm, n : Int) -> Array[@tt.Icit] {
+fn binder_icits(ty : @tt.Tm, n : Int32) -> Array[@tt.Icit] {
   let out : Array[@tt.Icit] = []
   let mut t = ty
   for _ in 0..<n {
@@ -908,7 +908,7 @@ fn Gen::uniform_fn(
   name : String,
   id : String,
   body : @tt.Tm,
-  n : Int,
+  n : Int32,
 ) -> Unit {
   // a function: strip its n lambdas
   let erased : Array[Bool] = []

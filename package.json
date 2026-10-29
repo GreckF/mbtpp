@@ -1,7 +1,7 @@
 {
   "name": "moonpp",
   "version": "0.1.0",
-  "description": "The MoonBit++ build tool (build it first with `moon build --target js`)",
+  "description": "The MoonBit++ build tool (build it first with `moon build --target js --release`)",
   "private": true,
   "license": "Apache-2.0",
   "bin": {

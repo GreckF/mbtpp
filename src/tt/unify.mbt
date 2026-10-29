@@ -9,21 +9,21 @@ pub suberror UnifyError {
 /// Partial renaming from the context of a meta's solution (`dom` variables)
 /// to the current context (`cod` variables).
 priv struct PRen {
-  occ : Int
-  dom : Int
-  cod : Int
-  ren : Map[Int, Int]
+  occ : Int32
+  dom : Int32
+  cod : Int32
+  ren : Map[Int32, Int32]
 }
 
 ///|
 fn lift_pren(p : PRen) -> PRen {
   let ren = p.ren.copy()
   ren.set(p.cod, p.dom)
-  { occ: p.occ, dom: p.dom + 1, cod: p.cod + 1, ren }
+  { occ: p.occ, dom: p.dom + 1, cod: p.cod + 1, ren, }
 }
 
 ///|
-fn lift_pren_n(p : PRen, k : Int) -> PRen {
+fn lift_pren_n(p : PRen, k : Int32) -> PRen {
   let mut q = p
   for _ in 0..<k {
     q = lift_pren(q)
@@ -37,13 +37,13 @@ fn lift_pren_n(p : PRen, k : Int) -> PRen {
 /// to by pattern matching): the solution may then not mention them, which is
 /// correct but not most general, so it is only tried last.
 fn invert(
-  lvl : Int,
-  m : Int,
+  lvl : Int32,
+  m : Int32,
   sp : Spine,
   prune : Bool,
 ) -> PRen raise UnifyError {
-  let ren : Map[Int, Int] = {}
-  let dup : Array[Int] = []
+  let ren : Map[Int32, Int32] = {}
+  let dup : Array[Int32] = []
   for k = 0; k < sp.length(); k = k + 1 {
     match force(sp[k].0) {
       VRigid(x, []) => if ren.contains(x) { dup.push(x) } else { ren.set(x, k) }
@@ -56,7 +56,7 @@ fn invert(
   for x in dup {
     ren.remove(x)
   }
-  { occ: m, dom: sp.length(), cod: lvl, ren }
+  { occ: m, dom: sp.length(), cod: lvl, ren, }
 }
 
 ///|
@@ -125,11 +125,11 @@ fn rename(p : PRen, v : Val) -> Tm raise UnifyError {
 
 ///|
 fn solve(
-  lvl : Int,
-  m : Int,
+  lvl : Int32,
+  m : Int32,
   sp : Spine,
   rhs : Val,
-  prune? : Bool = false,
+  prune~ : Bool = false,
 ) -> Unit raise UnifyError {
   let p = invert(lvl, m, sp, prune)
   let mut t = rename(p, rhs)
@@ -145,7 +145,7 @@ fn solve(
 /// arguments like `M[T] = Option[Int]` are inferred.
 fn solve_fo(
   ts : LTypes,
-  m : Int,
+  m : Int32,
   sp : Spine,
   rhs : Val,
 ) -> Unit raise UnifyError {

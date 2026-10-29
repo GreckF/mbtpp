@@ -14,7 +14,7 @@ pub(all) struct MbtiResult {
 
 ///|
 priv struct MbtiItem {
-  line : Int
+  line : Int32
   text : String
   attrs : Array[String]
 }
@@ -82,7 +82,7 @@ fn mbti_items(src : String) -> (Array[String], Array[MbtiItem]) {
       }
       i = i + 1
     }
-    items.push({ line: start + 1, text: buf.to_string(), attrs })
+    items.push({ line: start + 1, text: buf.to_string(), attrs, })
     attrs = []
   }
   (imports, items)
@@ -105,7 +105,7 @@ fn binder_names(bs : Array[Binder]) -> Array[String] {
 /// Apply `f` to every name in a type expression.
 fn map_names(e : Expr, f : (Pos, String) -> Expr) -> Expr {
   let go = (x : Expr) => map_names(x, f)
-  let gob = (b : Binder) => { ..b, ty: b.ty.map(go) }
+  let gob = (b : Binder) => { ..b, ty: b.ty.map(go), }
   match e {
     EVar(p, n) => f(p, n)
     EApp(p, h, i, x) =>
@@ -131,7 +131,7 @@ fn map_names(e : Expr, f : (Pos, String) -> Expr) -> Expr {
 fn collect_names(
   e : Expr,
   bound : Array[String],
-  out : Map[String, Int],
+  out : Map[String, Int32],
 ) -> Unit {
   let go = (x : Expr) => collect_names(x, bound, out)
   match e {
@@ -209,10 +209,12 @@ pub fn decl_bound_names(d : Decl) -> Array[String] {
 
 ///|
 /// Names referred to by a declaration that may be types, with their arity.
-pub fn decl_type_names(d : Decl) -> Map[String, Int] {
-  let out : Map[String, Int] = {}
-  let tys = (bs : Array[Binder], bound : Array[String]) => for b in bs {
-    b.ty.map(t => collect_names(t, bound, out)) |> ignore
+pub fn decl_type_names(d : Decl) -> Map[String, Int32] {
+  let out : Map[String, Int32] = {}
+  let tys = (bs : Array[Binder], bound : Array[String]) => {
+    for b in bs {
+      b.ty.map(t => collect_names(t, bound, out)) |> ignore
+    }
   }
   match d.inner() {
     DFn(fd) => {
@@ -278,7 +280,7 @@ pub fn parse_mbti(
       None => item.text
     }
     try {
-      let p = { toks: tokenize(item.text, line0=item.line), i: 0 }
+      let p = { toks: tokenize(item.text, line0=item.line), i: 0, }
       for d in mbti_item(p, pkg_path) {
         raw.push((d, item.attrs))
       }
@@ -298,28 +300,33 @@ pub fn parse_mbti(
       _ => ()
     }
   }
-  let qualify = (self_ty : String?) => (p : Pos, n : String) => {
-    let e : Expr = if n == "Self" && self_ty is Some(t) {
-      EVar(p, t)
-    } else if local.contains(n) {
-      EVar(p, prefix + n)
-    } else if n.has_prefix("@") {
-      // `@pkg.T` refers to an import of this interface
-      match n.find(".") {
-        Some(k) => {
-          let a = n.unsafe_substring(start=1, end=k)
-          match import_alias.get(a) {
-            Some(u) =>
-              EVar(p, "@" + u + n.unsafe_substring(start=k, end=n.length()))
-            None => EVar(p, n)
+  let qualify = (self_ty : String?) => {
+    (p : Pos, n : String) => {
+      let e : Expr = if n == "Self" && self_ty is Some(t) {
+        EVar(p, t)
+      } else if n == "Int32" {
+        // MoonBit's `Int` is an alias of `Int32`
+        EVar(p, "Int")
+      } else if local.contains(n) {
+        EVar(p, prefix + n)
+      } else if n.has_prefix("@") {
+        // `@pkg.T` refers to an import of this interface
+        match n.find(".") {
+          Some(k) => {
+            let a = n.unsafe_substring(start=1, end=k)
+            match import_alias.get(a) {
+              Some(u) =>
+                EVar(p, "@" + u + n.unsafe_substring(start=k, end=n.length()))
+              None => EVar(p, n)
+            }
           }
+          None => EVar(p, n)
         }
-        None => EVar(p, n)
+      } else {
+        EVar(p, n)
       }
-    } else {
-      EVar(p, n)
+      e
     }
-    e
   }
   let decls : Array[Decl] = []
   for r in raw {
@@ -341,7 +348,7 @@ pub fn parse_mbti(
           None => (prefix + fd.name, None)
         }
         let f = qualify(self_ty)
-        let qb = (b : Binder) => { ..b, ty: b.ty.map(t => map_names(t, f)) }
+        let qb = (b : Binder) => { ..b, ty: b.ty.map(t => map_names(t, f)), }
         let fd2 = {
           ..fd,
           name,
@@ -368,7 +375,7 @@ pub fn parse_mbti(
               } else {
                 m
               }
-              decls.push(DFn({ ..fd2, name: prefix + free }))
+              decls.push(DFn({ ..fd2, name: prefix + free, }))
             }
           }
         }
@@ -378,7 +385,7 @@ pub fn parse_mbti(
       DOpaque(p, n, k) => decls.push(DOpaque(p, prefix + n, k))
       DEnum(ed) => {
         let f = qualify(None)
-        let qb = (b : Binder) => { ..b, ty: b.ty.map(t => map_names(t, f)) }
+        let qb = (b : Binder) => { ..b, ty: b.ty.map(t => map_names(t, f)), }
         decls.push(
           DEnum({
             ..ed,
@@ -404,15 +411,17 @@ pub fn parse_mbti(
       }
       DTrait(td) => {
         let f = qualify(None)
-        let qb = (b : Binder) => { ..b, ty: b.ty.map(t => map_names(t, f)) }
+        let qb = (b : Binder) => { ..b, ty: b.ty.map(t => map_names(t, f)), }
         decls.push(
           DTrait({
             ..td,
             name: prefix + td.name,
-            supers: td.supers.map(s => if local.contains(s) {
-              prefix + s
-            } else {
-              s
+            supers: td.supers.map(s => {
+              if local.contains(s) {
+                prefix + s
+              } else {
+                s
+              }
             }),
             methods: td.methods.map(m => {
               ..m,
@@ -425,7 +434,9 @@ pub fn parse_mbti(
         )
       }
       DImpl(id) =>
-        decls.push(DImpl({ ..id, for_ty: map_names(id.for_ty, qualify(None)) }))
+        decls.push(
+          DImpl({ ..id, for_ty: map_names(id.for_ty, qualify(None)), }),
+        )
     }
     // a type of the package is the MoonBit type `@alias.T`
     match d0 {
@@ -438,7 +449,7 @@ pub fn parse_mbti(
       _ => ()
     }
   }
-  { decls, skipped }
+  { decls, skipped, }
 }
 
 ///|
@@ -454,9 +465,9 @@ fn is_type_name(n : String) -> Bool {
 fn mbti_item(p : Parser, pkg_path : String) -> Array[Decl] raise ParseError {
   let pos = p.pos()
   p.skip_visibility()
-  let ext = (name : String) => FnBody::BodyExtern(
-    "@mbt:" + pkg_path + "." + name,
-  )
+  let ext = (name : String) => {
+    FnBody::BodyExtern("@mbt:" + pkg_path + "." + name)
+  }
   let out : Array[Decl] = match p.peek().tok {
     TSym("fn") => {
       ignore(p.advance())
@@ -567,28 +578,28 @@ fn impl_decls(
   }
   let self_b = (n : String) => (
     { pos, name: n, ty: Some(ty), kind: Positional } : Binder)
-  let var = (n : String) => EVar(pos, n)
+  let evar = (n : String) => EVar(pos, n)
   let (meth, params, ret, body) = match tr {
     "Show" =>
       (
         "to_string",
         [self_b("self")],
-        var("String"),
-        EMethod(pos, var("self"), "to_string", None, []),
+        evar("String"),
+        EMethod(pos, evar("self"), "to_string", None, []),
       )
     "Eq" =>
       (
         "op_equal",
         [self_b("self"), self_b("other")],
-        var("Bool"),
-        EBin(pos, "==", var("self"), var("other")),
+        evar("Bool"),
+        EBin(pos, "==", evar("self"), evar("other")),
       )
     "Compare" =>
       (
         "compare",
         [self_b("self"), self_b("other")],
-        var("Int"),
-        EMethod(pos, var("self"), "compare", None, [var("other")]),
+        evar("Int"),
+        EMethod(pos, evar("self"), "compare", None, [evar("other")]),
       )
     _ => raise ParseError(pos, "trait not imported")
   }

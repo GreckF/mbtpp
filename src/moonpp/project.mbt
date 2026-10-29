@@ -1,8 +1,8 @@
 ///|
-/// Projects: a MoonBit++ project is a MoonBit module (`moon.mod.json`, so
-/// that `moon add` / `moon install` manage its dependencies) whose packages
-/// are directories of `.mbtpp` files, each with an optional `moon.pkg.json`
-/// listing the MoonBit packages it imports.
+/// Projects: a MoonBit++ project is a MoonBit module (`moon.mod`, so that
+/// `moon add` / `moon install` manage its dependencies) whose packages are
+/// directories of `.mbtpp` files, each with an optional `moon.pkg` listing
+/// the MoonBit packages it imports. The old JSON files are read too.
 fn dir_of(path : String) -> String {
   let a = path.rev_find("/")
   let b = path.rev_find("\\")
@@ -44,7 +44,7 @@ fn last_segment(path : String) -> String {
 
 ///|
 fn list_dir(dir : String) -> Array[String] {
-  let names = @fs.read_dir(dir) catch { _ => return [] }
+  let names = (@fs.read_dir(dir) catch { _ => return [] }).to_array()
   names.sort()
   names
 }
@@ -68,11 +68,11 @@ fn read_json(path : String) -> Json? {
 
 ///|
 /// The root of the project containing `dir`: the nearest directory with a
-/// `moon.mod.json`.
+/// `moon.mod` (or `moon.mod.json`).
 fn find_project(dir : String) -> String? {
   let mut d : String? = Some(dir)
   while d is Some(cur) {
-    if @fs.path_exists(cur + "/moon.mod.json") {
+    if is_module_dir(cur) {
       return Some(cur)
     }
     d = parent_dir(cur)
@@ -116,13 +116,9 @@ fn project_packages(root : String) -> Array[String] {
 }
 
 ///|
-/// Is the package in `dir` a main package (`"is-main": true` in its
-/// `moon.pkg.json`)?
+/// Is the package in `dir` a main package?
 fn is_main_package(dir : String) -> Bool {
-  match read_json(dir + "/moon.pkg.json") {
-    Some(j) => j.value("is-main") is Some(Json::True)
-    None => false
-  }
+  package_is_main(dir)
 }
 
 ///|
@@ -172,24 +168,25 @@ fn new_project(name : String) -> Unit raise Failure {
   let module_name = "username/" + last_segment(name)
   let files : Array[(String, String)] = [
     (
-      "moon.mod.json",
+      "moon.mod",
       (
-        $|{
-        $|  "name": "\{module_name}",
-        $|  "version": "0.1.0",
-        $|  "deps": {},
-        $|  "source": "src"
-        $|}
+        $|name = "\{module_name}"
+        $|
+        $|version = "0.1.0"
+        $|
+        $|source = "src"
         $|
       ),
     ),
     (
-      "src/main/moon.pkg.json",
+      "src/main/moon.pkg",
       (
-        #|{
-        #|  "is-main": true,
-        #|  "import": []
+        #|import {
         #|}
+        #|
+        #|options(
+        #|  "is-main": true,
+        #|)
         #|
       ),
     ),
@@ -201,7 +198,7 @@ fn new_project(name : String) -> Unit raise Failure {
         #|_build/
         #|target/
         #|_mbtpp_build/
-        #|src/mbtpp_out/
+        #|mbtpp_out/
         #|
       ),
     ),
@@ -218,8 +215,9 @@ fn new_project(name : String) -> Unit raise Failure {
         $|moonpp add <user/module>   # add a dependency from mooncakes.io
         $|```
         $|
-        $|Imported MoonBit packages are listed in the `import` field of a
-        $|package's `moon.pkg.json` and used as `@pkg.name`.
+        $|Imported MoonBit packages are listed in the `import` block of a
+        $|package's `moon.pkg` and used as `@pkg.name`. `moonpp build`
+        $|compiles the main package to a MoonBit project in `mbtpp_out/`.
         $|
       ),
     ),
@@ -238,7 +236,7 @@ fn new_project(name : String) -> Unit raise Failure {
       }
     }
     @fs.write_string_to_file(path, f.1) catch {
-      e => die("cannot write " + path + ": " + e.to_string())
+      @fs.IOError(msg) => die("cannot write " + path + ": " + msg)
     }
   }
 }

@@ -1,5 +1,0 @@
-{
-  "import": [
-    { "path": "username/mbtpp/parser", "alias": "parser" }
-  ]
-}

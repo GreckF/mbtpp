@@ -33,10 +33,10 @@ pub(all) struct Clause {
 
 ///|
 pub(all) enum Tm {
-  Var(Int)
+  Var(Int32)
   Global(String)
-  Meta(Int)
-  InsertedMeta(Int, Array[Bool])
+  Meta(Int32)
+  InsertedMeta(Int32, Array[Bool])
   /// Name, icitness, whether this explicit binder starts a new argument group.
   Lam(String, Icit, Bool, Tm)
   App(Tm, Tm, Icit)
@@ -49,7 +49,7 @@ pub(all) enum Tm {
   /// `T raise E` in the codomain of a function type.
   Raises(Tm, Tm)
   LetMut(String, Tm, Tm, Tm)
-  Assign(Int, Tm)
+  Assign(Int32, Tm)
   /// Condition, body, step (run after the body and on `continue`).
   While(Tm, Tm, Tm)
   Break
@@ -75,8 +75,8 @@ pub(all) struct Closure {
 
 ///|
 pub(all) enum Val {
-  VRigid(Int, Spine)
-  VFlex(Int, Spine)
+  VRigid(Int32, Spine)
+  VFlex(Int32, Spine)
   /// A function application that is kept folded (see `force`).
   VGlobal(String, Spine)
   VData(String, Spine)
@@ -97,7 +97,7 @@ pub(all) enum Val {
 }
 
 ///|
-pub fn v_var(l : Int) -> Val {
+pub fn v_var(l : Int32) -> Val {
   VRigid(l, [])
 }
 
@@ -110,7 +110,7 @@ pub fn env_push(env : Env, v : Val) -> Env {
 
 ///|
 /// Number of variable slots bound by a pattern.
-pub fn pat_slots(p : CPat) -> Int {
+pub fn pat_slots(p : CPat) -> Int32 {
   match p {
     CPCon(_, ps) => {
       let mut n = 1
@@ -124,7 +124,7 @@ pub fn pat_slots(p : CPat) -> Int {
 }
 
 ///|
-pub fn pats_slots(ps : Array[CPat]) -> Int {
+pub fn pats_slots(ps : Array[CPat]) -> Int32 {
   let mut n = 0
   for p in ps {
     n = n + pat_slots(p)
@@ -149,8 +149,8 @@ pub(all) struct DataInfo {
   name : String
   /// Number of parameter binders (all leading binders of the type that are
   /// not indices).
-  nparams : Int
-  nindices : Int
+  nparams : Int32
+  nindices : Int32
   cons : Array[String]
   mut is_prop : Bool
   /// Field names, for structs and traits.
@@ -166,21 +166,21 @@ pub(all) struct DataInfo {
 pub(all) struct ConInfo {
   name : String
   data : String
-  nparams : Int
+  nparams : Int32
   /// Own arguments (implicit and explicit).
-  nargs : Int
-  nimpl : Int
+  nargs : Int32
+  nimpl : Int32
 }
 
 ///|
 pub(all) enum GKind {
   /// Body (None while it is being elaborated), opaque, number of leading
   /// lambdas.
-  GFunc(Tm?, Bool, Int)
+  GFunc(Tm?, Bool, Int32)
   GData(DataInfo)
   GCon(ConInfo)
   /// Primitive name, number of arguments.
-  GPrim(String, Int)
+  GPrim(String, Int32)
 }
 
 ///|
@@ -227,13 +227,13 @@ pub(all) struct MetaEntry {
 pub let metas : Array[MetaEntry] = []
 
 ///|
-pub fn new_meta() -> Int {
-  metas.push({ sol: None })
+pub fn new_meta() -> Int32 {
+  metas.push({ sol: None, })
   metas.length() - 1
 }
 
 ///|
-pub fn meta_sol(m : Int) -> Val? {
+pub fn meta_sol(m : Int32) -> Val? {
   metas[m].sol
 }
 

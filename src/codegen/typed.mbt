@@ -23,7 +23,7 @@ priv enum NTy {
   NUnit
   NEnum(String, Array[NTy])
   /// The k-th type parameter (of the enum or function being translated).
-  NVar(Int)
+  NVar(Int32)
   /// A function type `(A, B) -> C` (one argument group).
   NFun(Array[NTy], NTy)
   /// The type of `break`, `continue`, `return`, ... (any type).
@@ -37,11 +37,11 @@ priv struct TSig {
   /// Parameter index -> native type (`None` for erased parameters).
   params : Array[NTy?]
   /// For each parameter: the index of the type parameter it is, if any.
-  tparams : Array[Int?]
-  ntvars : Int
+  tparams : Array[Int32?]
+  ntvars : Int32
   result : NTy
   /// `#mbt` trait bounds of the type parameters.
-  bounds : Array[(Int, String)]
+  bounds : Array[(Int32, String)]
 }
 
 ///|
@@ -97,7 +97,7 @@ fn has_var(t : NTy) -> Bool {
 
 ///|
 /// Does the type parameter `k` occur in `t`?
-fn has_tvar(t : NTy, k : Int) -> Bool {
+fn has_tvar(t : NTy, k : Int32) -> Bool {
   match t {
     NVar(j) => j == k
     NEnum(_, xs) => xs.iter().any(x => has_tvar(x, k))
@@ -141,7 +141,7 @@ fn Gen::enum_ok(self : Gen, d : String) -> Bool {
 
 ///|
 /// Are all parameters of datatype `d` of type `Type`?
-fn data_params_are_types(d : String, n : Int) -> Bool {
+fn data_params_are_types(d : String, n : Int32) -> Bool {
   let mut t = @tt.globals.get(d).unwrap().ty
   for _ in 0..<n {
     match t {
@@ -276,7 +276,7 @@ fn enum_fn(d : String, what : String) -> String {
   let buf = StringBuilder::new()
   for c in d {
     if c >= 'A' && c <= 'Z' {
-      buf.write_char(Int::unsafe_to_char(c.to_int() + 32))
+      buf.write_char(Int32::unsafe_to_char(c.to_int() + 32))
     } else if is_ident_char(c) {
       buf.write_char(c)
     } else {
@@ -292,14 +292,14 @@ fn native_con(c : String) -> String {
   let s = short_con(c)
   match s.get_char(0) {
     Some(ch) if ch >= 'a' && ch <= 'z' =>
-      Int::unsafe_to_char(ch.to_int() - 32).to_string() +
+      Int32::unsafe_to_char(ch.to_int() - 32).to_string() +
       s.unsafe_substring(start=1, end=s.length())
     _ => s
   }
 }
 
 ///|
-fn tvar(k : Int) -> String {
+fn tvar(k : Int32) -> String {
   "T" + k.to_string()
 }
 
@@ -371,7 +371,13 @@ fn Gen::to_value(
       self.need_enum(d)
       let fs = args.map(a => {
         let x = self.name("x")
-        "(" + x + " => " + self.to_value(a, x, convs) + ")"
+        let c = self.to_value(a, x, convs)
+        // not `(x => x)`: `moon fmt` turns it into `x => { x }`, a record
+        if c == x {
+          "value_id"
+        } else {
+          "(" + x + " => " + c + ")"
+        }
       })
       enum_fn(d, "to_value") + "(" + [e, ..fs].join(", ") + ")"
     }
@@ -421,7 +427,13 @@ fn Gen::of_value(
       self.need_enum(d)
       let fs = args.map(a => {
         let x = self.name("x")
-        "(" + x + " => " + self.of_value(a, x, convs) + ")"
+        let c = self.of_value(a, x, convs)
+        // not `(x => x)`: `moon fmt` turns it into `x => { x }`, a record
+        if c == x {
+          "value_id_raise"
+        } else {
+          "(" + x + " => " + c + ")"
+        }
       })
       enum_fn(d, "of_value") + "(" + [e, ..fs].join(", ") + ")"
     }
@@ -446,10 +458,9 @@ fn Gen::need_enum(self : Gen, d : String) -> Unit {
   let to_convs = tvs.mapi((k, _) => "to" + k.to_string())
   let of_convs = tvs.mapi((k, _) => "of" + k.to_string())
   let to_params = tvs.mapi((k, tv) => to_convs[k] + " : (" + tv + ") -> Value")
-  let of_params = tvs.mapi((k, tv) => of_convs[k] +
-    " : (Value) -> " +
-    tv +
-    " raise")
+  let of_params = tvs.mapi((k, tv) => {
+    of_convs[k] + " : (Value) -> " + tv + " raise"
+  })
   let decl = StringBuilder::new()
   let to = StringBuilder::new()
   let of = StringBuilder::new()
@@ -570,9 +581,9 @@ fn Gen::native_sig(self : Gen, name : String) -> TSig? {
   }
   let mut t = @tt.globals.get(name).unwrap().ty
   let params : Array[NTy?] = []
-  let tparams : Array[Int?] = []
+  let tparams : Array[Int32?] = []
   let ctx : Array[TyCtx] = []
-  let bounds : Array[(Int, String)] = []
+  let bounds : Array[(Int32, String)] = []
   let mut ntvars = 0
   for i = 0; i < n; i = i + 1 {
     match t {
@@ -626,7 +637,7 @@ fn Gen::native_sig(self : Gen, name : String) -> TSig? {
           return None
         }
       }
-      Some({ params, tparams, ntvars, result: r, bounds })
+      Some({ params, tparams, ntvars, result: r, bounds, })
     }
     None => None
   }
@@ -691,9 +702,11 @@ fn unify_t(a : NTy, b : NTy) -> NTy raise NotTyped {
 ///|
 /// The context of type expressions corresponding to a typed environment.
 fn ty_ctx(env : Array[TLocal]) -> Array[TyCtx] {
-  env.map(l => match l {
-    TType(t) => TyIs(t)
-    _ => TyOther
+  env.map(l => {
+    match l {
+      TType(t) => TyIs(t)
+      _ => TyOther
+    }
   })
 }
 
@@ -754,7 +767,7 @@ fn Gen::typed_check(
       // `return` in the lambda returns from it
       let saved = self.cur_result
       self.cur_result = Some(r)
-      let res = try? self.typed(e, b)
+      let res = try Ok(self.typed(e, b)) catch { err => Err(err) }
       self.cur_result = saved
       let (cb, tb) = match res {
         Ok(x) => x
@@ -855,10 +868,12 @@ fn Gen::typed_app(
       // `1 + if c { a } else { b }` is not MoonBit
       let cs = self
         .typed_args(env, expl, tys)
-        .map(c => if c.has_prefix("if ") || c.has_prefix("match ") {
-          "(" + c + ")"
-        } else {
-          c
+        .map(c => {
+          if c.has_prefix("if ") || c.has_prefix("match ") {
+            "(" + c + ")"
+          } else {
+            c
+          }
         })
       (subst_args(tpl, cs), res)
     }
@@ -942,9 +957,11 @@ fn Gen::typed_ffi(
   let mut t = ty
   let mut expl = 0
   // a declared type, instantiated; its datatypes must be MoonBit types
-  let decl_ty = (a : @tt.Tm) => match self.native_ty_in(ctx, a) {
-    Some(nt) if mbt_only(nt) => Some(subst_nty(nt, inst))
-    _ => None
+  let decl_ty = (a : @tt.Tm) => {
+    match self.native_ty_in(ctx, a) {
+      Some(nt) if mbt_only(nt) => Some(subst_nty(nt, inst))
+      _ => None
+    }
   }
   for i = 0; i < args.length(); i = i + 1 {
     match t {
@@ -1322,7 +1339,7 @@ fn Gen::typed_fn(self : Gen, name : String) -> String? {
   }
   self.cur_result = Some(sig.result)
   self.cur_bounds = sig.bounds
-  let res = try? self.typed(env, b)
+  let res = try Ok(self.typed(env, b)) catch { err => Err(err) }
   self.cur_result = None
   self.cur_bounds = []
   match res {

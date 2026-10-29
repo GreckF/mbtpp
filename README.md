@@ -18,11 +18,12 @@ generates. The page lives in [docs/](docs); rebuild it with
 
 ## moonpp
 
-`moonpp` is the build tool, modelled on `moon`. It needs Node.js: build it
-once with
+`moonpp` is the build tool, modelled on `moon`. It needs Node.js and a
+MoonBit toolchain that uses `moon.mod` / `moon.pkg` (2026-10 or later):
+build it once with
 
 ```sh
-moon build --target js
+moon build --target js --release
 ```
 
 and install the command globally with
@@ -31,7 +32,7 @@ and install the command globally with
 npm install -g .
 ```
 
-(it links to this checkout, so later `moon build --target js` runs update it;
+(it links to this checkout, so later `moon build --target js --release` runs update it;
 `npm uninstall -g moonpp` removes it). You can also call `bin/moonpp` or
 `bin\moonpp.cmd` directly.
 
@@ -42,16 +43,24 @@ moonpp check                   # type check all packages
 moonpp add moonbitlang/x       # add a dependency (runs `moon add`, generates missing .mbti)
 moonpp install                 # install dependencies (runs `moon install`)
 moonpp run examples/vector.mbtpp   # a single file also works
-moonpp build                   # compile to MoonBit (src/mbtpp_out/<pkg>) and `moon build` it
+moonpp build                   # compile to a MoonBit project (mbtpp_out/<pkg>) and `moon build` it
+moonpp build -o out            # ... generated in out/ instead
 moonpp run --compiled          # compile to MoonBit and run it with `moon run`
 ```
 
-A project is a MoonBit module (`moon.mod.json`); a package is a directory of
-`.mbtpp` files. The MoonBit packages a package uses are listed in the `import`
-field of its `moon.pkg.json` and referred to as `@pkg.name`; they are only
-type checked by the interpreter (running a call to them stops with an
+A project is a MoonBit module (`moon.mod`); a package is a directory of
+`.mbtpp` files. The MoonBit packages a package uses are listed in the
+`import` block of its `moon.pkg` and referred to as `@pkg.name`; they are
+only type checked by the interpreter (running a call to them stops with an
 error), and really called by the compiled program (see
-[examples/import](examples/import)).
+[examples/import](examples/import)). Projects with the old `moon.mod.json` /
+`moon.pkg.json` are still read; `moon fmt` migrates them.
+
+`moonpp build` generates a complete MoonBit project: its own `moon.mod`
+(the name, version and dependencies of the MoonBit++ project), a `moon.work`
+(listing local modules of the workspace by absolute path) and the package
+`<pkg>` with `main.mbt` and `runtime.mbt`, so `moon run <pkg>` works there
+without moonpp.
 
 The compiler translates MoonBit++ to MoonBit: functions over types MoonBit
 can express (numbers, strings, datatypes with type parameters, functions)

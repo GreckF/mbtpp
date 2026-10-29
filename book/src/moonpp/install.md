@@ -5,6 +5,19 @@
 - Node.js（18 或更新）。
 - MoonBit 工具链 `moon`，使用 `moon.mod` / `moon.pkg` 的版本（2026-10 之后）。
 
+## 安装发布版
+
+[Releases](https://github.com/GreckF/mbtpp/releases) 页面的每个版本都附有 npm 包：
+
+```bash
+npm install -g https://github.com/GreckF/mbtpp/releases/download/v0.1.0/moonpp-0.1.0.tgz
+moonpp version
+```
+
+推送 `v*` tag 时，GitHub Actions 会测试、构建并发布（`.github/workflows/release.yml`）。
+
+## 从源码安装
+
 在仓库根目录：
 
 ```bash

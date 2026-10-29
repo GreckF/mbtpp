@@ -18,9 +18,16 @@ generates. The page lives in [docs/](docs); rebuild it with
 
 ## moonpp
 
-`moonpp` is the build tool, modelled on `moon`. It needs Node.js and a
-MoonBit toolchain that uses `moon.mod` / `moon.pkg` (2026-10 or later):
-build it once with
+`moonpp` is the build tool, modelled on `moon`. It needs Node.js, and a
+MoonBit toolchain that uses `moon.mod` / `moon.pkg` (2026-10 or later) for
+compiling and dependencies. Install a release (see
+[Releases](https://github.com/GreckF/mbtpp/releases) for the versions):
+
+```sh
+npm install -g https://github.com/GreckF/mbtpp/releases/download/v0.1.0/moonpp-0.1.0.tgz
+```
+
+or, from a checkout, build it once with
 
 ```sh
 moon build --target js --release

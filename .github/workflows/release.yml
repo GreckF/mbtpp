@@ -1,0 +1,72 @@
+# Build moonpp and publish a GitHub release when a version tag is pushed:
+#   git tag v0.1.0 && git push origin v0.1.0
+# The tag must match the version of package.json. The release carries the
+# npm package (moonpp-<version>.tgz), installable with `npm install -g <url>`.
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check the version
+        run: |
+          version=$(node -p "require('./package.json').version")
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "tag $GITHUB_REF_NAME does not match package.json version $version"
+            exit 1
+          fi
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+
+      - name: Install MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+
+      - name: Test
+        run: |
+          moon version
+          moon update
+          moon test
+
+      - name: Build
+        run: moon build --target js --release
+
+      - name: Package
+        run: |
+          npm pack
+          # the package works once installed
+          npm install -g "./moonpp-$VERSION.tgz"
+          moonpp version
+          moonpp check examples/basic.mbtpp
+          moonpp run examples/vector.mbtpp
+
+      - name: Publish
+        uses: softprops/action-gh-release@v2
+        with:
+          files: moonpp-${{ env.VERSION }}.tgz
+          generate_release_notes: true
+          body: |
+            MoonBit++ ${{ env.VERSION }}
+
+            - Documentation: https://greckf.github.io/mbtpp/book/
+            - Playground: https://greckf.github.io/mbtpp/
+
+            Install (needs Node.js >= 18; [MoonBit](https://www.moonbitlang.com/download/) is needed for `moonpp build`, `moonpp run --compiled` and dependencies):
+
+            ```sh
+            npm install -g https://github.com/GreckF/mbtpp/releases/download/v${{ env.VERSION }}/moonpp-${{ env.VERSION }}.tgz
+            moonpp version
+            ```

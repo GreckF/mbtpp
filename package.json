@@ -1,14 +1,15 @@
 {
   "name": "moonpp",
   "version": "0.1.0",
-  "description": "The MoonBit++ build tool (build it first with `moon build --target js --release`)",
+  "description": "The MoonBit++ build tool",
   "private": true,
   "license": "Apache-2.0",
   "bin": {
     "moonpp": "bin/moonpp.js"
   },
   "files": [
-    "bin/moonpp.js"
+    "bin/",
+    "_build/js/release/build/moonpp/moonpp.js"
   ],
   "engines": {
     "node": ">=18"

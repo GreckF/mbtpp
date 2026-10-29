@@ -1231,6 +1231,10 @@ fn Gen::typed_term(
     Lit(LUnit) => ("()", NUnit)
     Global(_) => self.typed_app(env, t)
     App(_, _, _) => self.typed_app(env, t)
+    // a proof is not computed
+    Let(_, ty, v, b) if @tt.is_prop_head(ty) ||
+      (flatten_app(v).0 is Global(g) && @tt.is_proof_global(g)) =>
+      self.typed(tpush(env, TNone), b)
     Let(x, _, v, b) => {
       let (cv, tv) = self.typed(env, v)
       let n = self.name(x)

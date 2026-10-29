@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-126d0dd7.js";
+            window.path_to_searchindex_js = "../searchindex-aec47b78.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-1277b054.js"></script>
@@ -237,7 +237,12 @@ registers in <code>fn init</code>. The two kinds of code convert values at their
 <ul>
 <li>Type parameters are always erased.</li>
 <li>Other implicit parameters and implicit constructor fields are erased when they are used only in types.</li>
-<li>Proofs are not erased: they are computed like ordinary values.</li>
+<li>Proofs are always erased: parameters and fields whose type is a proposition (implicit or not),
+<code>let</code>s of proofs and calls of lemmas produce no code, and lemmas themselves are not generated; a
+match on a proof runs its first arm (a match on a proof of an empty proposition becomes an
+<code>abort</code>). So a <code>#mbt fn</code> can have proof parameters, like
+<code>fn get(xs : Array[Int], i : Int, p : i &lt; n)</code>, and the exported MoonBit function does not have
+them.</li>
 </ul>
 <h2 id="performance"><a class="header" href="#performance">Performance</a></h2>
 <p>A <code>fib</code> program runs about 40 times faster when compiled (7.85 s interpreted, 0.18 s compiled). Before constructors became native

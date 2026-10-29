@@ -70,6 +70,10 @@ pub fn is_opaque_trait(String) -> Bool
 
 pub fn is_proof(Array[Val?], Val) -> Bool
 
+pub fn is_proof_global(String) -> Bool
+
+pub fn is_prop_head(Tm) -> Bool
+
 pub fn is_prop_type(Array[Val?], Val) -> Bool
 
 pub let last_error : Array[(@parser.Pos, String)]
@@ -116,7 +120,11 @@ pub let prelude_src : String
 
 pub fn prim_pure(String, Array[@parser.Lit]) -> @parser.Lit?
 
+pub fn proof_fields(String) -> Array[Bool]
+
 pub let proof_infos : Array[ProofInfo]
+
+pub fn proof_params(String, Int32) -> Array[Bool]
 
 pub let pub_decls : Array[(@parser.Pos, String, Bool)]
 

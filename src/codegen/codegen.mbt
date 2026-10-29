@@ -162,17 +162,18 @@ fn is_sort_like(t : @tt.Tm) -> Bool {
 /// parameters whose type is a sort (type parameters).
 fn erased_params(name : String, n : Int32) -> Array[Bool] {
   let out : Array[Bool] = []
+  let proofs = @tt.proof_params(name, n)
   let mut t = match @tt.globals.get(name) {
     Some(g) => g.ty
     None => @tt.Tm::U
   }
-  for _ in 0..<n {
+  for k = 0; k < n; k = k + 1 {
     match t {
       Pi(_, i, _, a, b) => {
-        out.push(i == Impl && is_sort_like(a))
+        out.push((i == Impl && is_sort_like(a)) || proofs[k])
         t = b
       }
-      _ => out.push(false)
+      _ => out.push(proofs[k])
     }
   }
   out
@@ -470,6 +471,19 @@ fn Gen::clauses_dynamic(
 }
 
 ///|
+/// Is `t` a proof (an erased local, or a use of a lemma or of a constructor
+/// of a proposition)? It is not computed.
+fn Gen::is_erased_tm(self : Gen, env : Array[Local], t : @tt.Tm) -> Bool {
+  match t {
+    Var(ix) => env[env.length() - 1 - ix] is LErased
+    _ => {
+      let (h, _) = flatten_app(t)
+      h is Global(n) && @tt.is_proof_global(n)
+    }
+  }
+}
+
+///|
 /// A match on already evaluated scrutinees (given as MoonBit expressions).
 fn Gen::match_code(
   self : Gen,
@@ -477,7 +491,29 @@ fn Gen::match_code(
   scruts : Array[String],
   cls : Array[@tt.Clause],
   fallback : String,
+  proofs? : Array[Bool],
 ) -> String {
+  // the columns of proofs: proofs are erased, and a match on a proof does
+  // not choose (a proposition is matched into a proposition, or is a
+  // subsingleton), so its patterns match anything and bind erased slots
+  let proofs = proofs.unwrap_or(scruts.map(_ => false))
+  if proofs.iter().any(p => p) {
+    if proofs.iter().all(p => p) {
+      return match cls {
+        [] => "abort(\"unreachable: a proof of an empty proposition\")"
+        [cl, ..] => {
+          let mut env2 = env
+          for _ in 0..<@tt.pats_slots(cl.pats) {
+            env2 = push_local(env2, LErased)
+          }
+          self.tm(env2, cl.body)
+        }
+      }
+    }
+    if cls.iter().any(cl => cl.pats.iter().any(has_double_pat)) {
+      return "abort(\"unsupported: a match on a proof and a Double literal\")"
+    }
+  }
   if cls.iter().any(cl => cl.pats.iter().any(has_double_pat)) {
     return self.clauses_dynamic(
       env,
@@ -495,7 +531,16 @@ fn Gen::match_code(
   buf.write_string("match " + subject + " {\n")
   for cl in cls {
     let names : Array[Local] = []
-    let ps = cl.pats.map(p => self.native_pat(p, names))
+    let ps = cl.pats.mapi((k, p) => {
+      if proofs[k] {
+        for _ in 0..<@tt.pats_slots([p]) {
+          names.push(LErased)
+        }
+        "_"
+      } else {
+        self.native_pat(p, names)
+      }
+    })
     let mut env2 = env
     for n in names {
       env2 = push_local(env2, n)
@@ -673,6 +718,9 @@ fn Gen::tm(self : Gen, env : Array[Local], t : @tt.Tm) -> String {
       "VFun(" + v + " => " + catch_return(has_return(b), body) + ")"
     }
     App(_, _, _) => self.app(env, t)
+    // a proof is not computed
+    Let(_, ty, v, b) if @tt.is_prop_head(ty) || self.is_erased_tm(env, v) =>
+      self.tm(push_local(env, LErased), b)
     Let(x, _, v, b) => {
       let n = self.name(x)
       "{\nlet " +
@@ -720,7 +768,12 @@ fn Gen::tm(self : Gen, env : Array[Local], t : @tt.Tm) -> String {
         }
         None => {
           let lets = StringBuilder::new()
-          let names = ss.map(s => {
+          // a column matching a proof matches anything (see match_code)
+          let proofs = ss.map(s => self.is_erased_tm(env, s))
+          let names = ss.mapi((k, s) => {
+            if proofs[k] {
+              return "VType"
+            }
             let code = self.tm(env, s)
             if is_ident(code) {
               code
@@ -730,7 +783,13 @@ fn Gen::tm(self : Gen, env : Array[Local], t : @tt.Tm) -> String {
               n
             }
           })
-          let m = self.match_code(env, names, cls, "rt_fail(\"no match\")")
+          let m = self.match_code(
+            env,
+            names,
+            cls,
+            "rt_fail(\"no match\")",
+            proofs~,
+          )
           if lets.is_empty() {
             m
           } else {

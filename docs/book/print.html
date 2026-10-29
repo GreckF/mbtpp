@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a7679546.js";
+            window.path_to_searchindex_js = "searchindex-19c48d11.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-73e1d097.js"></script>
@@ -797,8 +797,11 @@ lemma and_comm[A : Prop, B : Prop](p : And[A, B]) -&gt; And[B, A] {
 }
 </code></pre>
 <blockquote>
-<p>没有终止检查和严格正性检查：递归函数和递归证明都直接接受，因此可以“证明”假命题。证明在
-编译时也不擦除。</p>
+<p>没有终止检查和严格正性检查：递归函数和递归证明都直接接受，因此可以“证明”假命题。</p>
+<p>命题是证明无关的：同一命题的两个证明相等，证明只能消去到命题，或者在命题是子单例（至多一个
+构造子、字段都是证明，如 <code>===</code>）时消去到任意类型。所以没有值依赖于证明，编译时所有证明都被
+擦除（见<a href="#编译到-moonbit">编译到 MoonBit</a>）。用假证明做的转换（<code>Id::subst</code>）在编译后的
+程序中不会因无限递归而停住，而会在类型不符处报运行时错误。</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="命题相等"><a class="header" href="#命题相等">命题相等</a></h1>
@@ -1711,7 +1714,10 @@ enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
 <ul>
 <li>类型参数总是擦除。</li>
 <li>其他隐式参数和构造子的隐式字段只用于类型时擦除。</li>
-<li>证明不擦除：它们和普通值一样被计算。</li>
+<li>证明总是擦除：类型是命题的参数和字段（无论是否隐式）、类型是命题的 <code>let</code>、lemma 的调用都不
+生成代码，lemma 本身也不生成；对证明的匹配直接执行第一个分支（对空命题的证明的匹配变成
+<code>abort</code>）。因此 <code>#mbt fn</code> 可以有证明参数，例如 <code>fn get(xs : Array[Int], i : Int, p : i &lt; n)</code>，
+导出的 MoonBit 函数没有这个参数。</li>
 </ul>
 <h2 id="性能"><a class="header" href="#性能">性能</a></h2>
 <p>一个 <code>fib</code> 程序编译后约快 40 倍（解释器 7.85 秒，编译后 0.18 秒）。构造子成为 <code>Value</code> 的原生
@@ -1878,7 +1884,7 @@ pub fn[T0] Tree::depth(self : Tree[T0]) -&gt; Int32
 <ul>
 <li>隐式参数只能是类型参数 <code>[T]</code>；约束只能是类型参数上的 <code>#mbt</code> trait，被约束的类型参数要出现在
 参数或结果中。</li>
-<li>参数和结果是 MoonBit 类型。</li>
+<li>参数和结果是 MoonBit 类型；证明参数（类型是命题的参数）被擦除，不出现在 MoonBit 函数中。</li>
 <li>支持 <code>x~</code>、<code>x?</code> 参数，不支持默认值。</li>
 <li>方法只能属于本程序生成的 <code>#mbt</code> 类型。</li>
 <li><code>main</code> 不能标 <code>#mbt</code>。</li>
@@ -1926,7 +1932,6 @@ or a bound that is not #mbt)
 <ul>
 <li>数组在原生代码中不是原生类型：含数组的签名走统一表示，也不能是 <code>#mbt</code>。</li>
 <li>统一表示与原生代码之间按值转换，频繁跨边界传递大型数据会慢。</li>
-<li>证明不擦除。</li>
 </ul>
 <h2 id="工具"><a class="header" href="#工具">工具</a></h2>
 <ul>

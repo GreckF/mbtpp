@@ -6,8 +6,10 @@
 /// only used in erased positions: as an erased argument or field, or in
 /// types. Starting from "everything implicit is erased", uses in relevant
 /// positions are found until nothing changes (a greatest fixed point).
-/// Parameters whose type is a sort are always erased; instance arguments
-/// and explicit arguments are never erased.
+/// Parameters whose type is a sort are always erased, and so are proofs
+/// (parameters and fields whose type is a proposition, implicit or not:
+/// propositions are proof irrelevant, see tt/proofs.mbt); other instance
+/// arguments and explicit arguments are never erased.
 priv enum Owner {
   OFun(String, Int32)
   OCon(String, Int32)
@@ -20,8 +22,11 @@ priv struct Erasure {
   funs : Map[String, Array[Bool]]
   /// Constructor -> erased flags of its own arguments (without parameters).
   cons : Map[String, Array[Bool]]
-  /// Parameters that are erased whatever their uses (type parameters).
+  /// Parameters that are erased whatever their uses (type parameters,
+  /// proofs).
   always : Map[String, Array[Bool]]
+  /// Fields that are erased whatever their uses (proofs).
+  cons_always : Map[String, Array[Bool]]
   mut changed : Bool
 }
 
@@ -38,7 +43,7 @@ fn Erasure::mark(self : Erasure, o : Owner) -> Unit {
       }
     OCon(c, j) =>
       match self.cons.get(c) {
-        Some(flags) if flags[j] => {
+        Some(flags) if flags[j] && !self.cons_always.get(c).unwrap()[j] => {
           flags[j] = false
           self.changed = true
         }
@@ -149,8 +154,9 @@ fn Erasure::walk(
       }
     }
     Lam(_, _, _, b) => self.walk(owner_push(env, ONone), b, rel)
-    Let(_, _, v, b) | LetMut(_, _, v, b) => {
-      self.walk(env, v, rel)
+    Let(_, ty, v, b) | LetMut(_, ty, v, b) => {
+      // a proof is not computed
+      self.walk(env, v, rel && !@tt.is_prop_head(ty))
       self.walk(owner_push(env, ONone), b, rel)
     }
     Match(ss, cls) => {
@@ -213,7 +219,13 @@ fn Erasure::walk(
 ///|
 /// Compute the erasure of all functions and constructors of the program.
 fn compute_erasure() -> Erasure {
-  let er : Erasure = { funs: {}, cons: {}, always: {}, changed: true, }
+  let er : Erasure = {
+    funs: {},
+    cons: {},
+    always: {},
+    cons_always: {},
+    changed: true,
+  }
   for name, g in @tt.globals {
     match g.kind {
       GFunc(Some(_), _, _) if func_arity(name) is Some(n) => {
@@ -233,11 +245,16 @@ fn compute_erasure() -> Erasure {
         er.always.set(name, always)
       }
       GCon(ci) => {
+        let proofs = @tt.proof_fields(name)
+        let always : Array[Bool] = []
         let flags : Array[Bool] = []
         for j = 0; j < ci.nargs; j = j + 1 {
-          flags.push(j < ci.nimpl)
+          let p = j < proofs.length() && proofs[j]
+          always.push(p)
+          flags.push(j < ci.nimpl || p)
         }
         er.cons.set(name, flags)
+        er.cons_always.set(name, always)
       }
       _ => ()
     }

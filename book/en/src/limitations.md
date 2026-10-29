@@ -18,7 +18,6 @@
 
 - Arrays are not native types in native code: signatures containing arrays use the uniform representation and cannot be `#mbt`.
 - Values are converted by value between the uniform representation and native code, so frequently passing large data across the boundary is slow.
-- Proofs are not erased.
 
 ## Tooling
 

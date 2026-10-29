@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-a7679546.js";
+            window.path_to_searchindex_js = "../searchindex-19c48d11.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-73e1d097.js"></script>
@@ -237,7 +237,10 @@ enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
 <ul>
 <li>类型参数总是擦除。</li>
 <li>其他隐式参数和构造子的隐式字段只用于类型时擦除。</li>
-<li>证明不擦除：它们和普通值一样被计算。</li>
+<li>证明总是擦除：类型是命题的参数和字段（无论是否隐式）、类型是命题的 <code>let</code>、lemma 的调用都不
+生成代码，lemma 本身也不生成；对证明的匹配直接执行第一个分支（对空命题的证明的匹配变成
+<code>abort</code>）。因此 <code>#mbt fn</code> 可以有证明参数，例如 <code>fn get(xs : Array[Int], i : Int, p : i &lt; n)</code>，
+导出的 MoonBit 函数没有这个参数。</li>
 </ul>
 <h2 id="性能"><a class="header" href="#性能">性能</a></h2>
 <p>一个 <code>fib</code> 程序编译后约快 40 倍（解释器 7.85 秒，编译后 0.18 秒）。构造子成为 <code>Value</code> 的原生

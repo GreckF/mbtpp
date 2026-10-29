@@ -356,3 +356,38 @@ test "codegen: data are native variants of Value, without indices" {
     ),
   )
 }
+
+///|
+test "codegen: proofs are erased" {
+  inspect(
+    signatures(
+      (
+        #|enum Le : (Nat, Nat) -> Prop {
+        #|  LeZ[n : Nat] : Le(0, n)
+        #|  LeS[m : Nat, n : Nat](Le(m, n)) : Le(S(m), S(n))
+        #|}
+        #|lemma le_refl[n : Nat] : Le(n, n) = match n {
+        #|  Z => LeZ
+        #|  S(k) => LeS(le_refl[k])
+        #|}
+        #|#mbt
+        #|fn dec(n : Int, p : Le(1, 1)) -> Int { n - 1 }
+        #|fn[T] cast(p : (1 : Nat) === 1, v : T) -> T { v }
+        #|fn main {
+        #|  let q : Le(2, 2) = le_refl
+        #|  println(dec(cast(Id::Refl, 3), le_refl))
+        #|}
+      ),
+    ),
+    content=(
+      #|fn f_dec_t(n : Int) -> Int raise {
+      #|fn f_dec(a0 : Value) -> Value raise {
+      #|fn[T0] f_cast_t(v : T0) -> T0 raise {
+      #|fn f_cast(a2 : Value) -> Value raise {
+      #|fn main {
+      #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
+      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
+      #|fn f_show_to_string(inst : Value) -> Value raise {
+    ),
+  )
+}

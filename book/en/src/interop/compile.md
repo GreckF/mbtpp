@@ -74,7 +74,12 @@ Because `Value` can be extended from other files and other packages, this repres
 
 - Type parameters are always erased.
 - Other implicit parameters and implicit constructor fields are erased when they are used only in types.
-- Proofs are not erased: they are computed like ordinary values.
+- Proofs are always erased: parameters and fields whose type is a proposition (implicit or not),
+  `let`s of proofs and calls of lemmas produce no code, and lemmas themselves are not generated; a
+  match on a proof runs its first arm (a match on a proof of an empty proposition becomes an
+  `abort`). So a `#mbt fn` can have proof parameters, like
+  `fn get(xs : Array[Int], i : Int, p : i < n)`, and the exported MoonBit function does not have
+  them.
 
 ## Performance
 

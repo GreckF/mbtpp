@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-a7679546.js";
+            window.path_to_searchindex_js = "../searchindex-19c48d11.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-73e1d097.js"></script>
@@ -201,8 +201,11 @@ lemma and_comm[A : Prop, B : Prop](p : And[A, B]) -&gt; And[B, A] {
 }
 </code></pre>
 <blockquote>
-<p>没有终止检查和严格正性检查：递归函数和递归证明都直接接受，因此可以“证明”假命题。证明在
-编译时也不擦除。</p>
+<p>没有终止检查和严格正性检查：递归函数和递归证明都直接接受，因此可以“证明”假命题。</p>
+<p>命题是证明无关的：同一命题的两个证明相等，证明只能消去到命题，或者在命题是子单例（至多一个
+构造子、字段都是证明，如 <code>===</code>）时消去到任意类型。所以没有值依赖于证明，编译时所有证明都被
+擦除（见<a href="../interop/compile.html">编译到 MoonBit</a>）。用假证明做的转换（<code>Id::subst</code>）在编译后的
+程序中不会因无限递归而停住，而会在类型不符处报运行时错误。</p>
 </blockquote>
 
                     </main>

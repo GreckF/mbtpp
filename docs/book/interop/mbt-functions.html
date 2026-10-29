@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-a7679546.js";
+            window.path_to_searchindex_js = "../searchindex-19c48d11.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-73e1d097.js"></script>
@@ -231,7 +231,7 @@ pub fn[T0] Tree::depth(self : Tree[T0]) -&gt; Int32
 <ul>
 <li>隐式参数只能是类型参数 <code>[T]</code>；约束只能是类型参数上的 <code>#mbt</code> trait，被约束的类型参数要出现在
 参数或结果中。</li>
-<li>参数和结果是 MoonBit 类型。</li>
+<li>参数和结果是 MoonBit 类型；证明参数（类型是命题的参数）被擦除，不出现在 MoonBit 函数中。</li>
 <li>支持 <code>x~</code>、<code>x?</code> 参数，不支持默认值。</li>
 <li>方法只能属于本程序生成的 <code>#mbt</code> 类型。</li>
 <li><code>main</code> 不能标 <code>#mbt</code>。</li>

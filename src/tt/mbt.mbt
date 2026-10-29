@@ -495,6 +495,8 @@ fn mbt_fn_problem(f : String) -> String? {
           show_tm(names, a) +
           " is not a #mbt trait bound of a type parameter",
         )
+      // a proof is erased: not a parameter of the MoonBit function
+      (Expl, _) if is_prop_head(a) => ctx.push(false)
       (Expl, _) => {
         if !mbt_ty_ok(ctx, a) {
           return Some(

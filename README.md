@@ -25,8 +25,15 @@ once with
 moon build --target js
 ```
 
-and put `bin/` on your `PATH` (or call `bin/moonpp`, `bin\moonpp.cmd` on
-Windows).
+and install the command globally with
+
+```sh
+npm install -g .
+```
+
+(it links to this checkout, so later `moon build --target js` runs update it;
+`npm uninstall -g moonpp` removes it). You can also call `bin/moonpp` or
+`bin\moonpp.cmd` directly.
 
 ```sh
 moonpp new hello && cd hello   # create a project

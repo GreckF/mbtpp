@@ -1,8 +1,7 @@
 # MoonBit++
 
 > **声明：这是一个纯 vibe coding 的娱乐项目，请不要认真看待。**
-> 代码未经严格审查，类型检查器不保证可靠（没有终止检查，证明可以靠无限递归"证"出任何命题），
-> 不适合用于任何正式用途。
+> 代码未经严格审查。
 
 A small dependently typed language with MoonBit syntax: a type checker and a
 tree-walking interpreter, written in MoonBit.

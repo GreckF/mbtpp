@@ -1,11 +1,11 @@
 ///|
-/// Native data. The uniform representation `Value` is generated for each
-/// program: besides the fixed variants of the runtime (`VInt`, `VFun`, ...)
-/// it has one variant per constructor used, with one `Value` field per
-/// field that is not erased: `Exp::Add` of `Exp : [T] -> Type` becomes
+/// Native data. The uniform representation `Value` is an extensible enum of
+/// the runtime (`VInt`, `VFun`, ...), extended by each generated file with
+/// one variant per constructor used of its datatypes, with one `Value` field
+/// per field that is not erased: `Exp::Add` of `Exp : [T] -> Type` becomes
 /// `K_Exp_Add(Value, Value)`, its index gone. Constructing and matching are
 /// native MoonBit; the runtime inspects constructors generically through
-/// `con_name` and `con_fields`.
+/// `con_name` and `con_fields`, which use decoders registered by each file.
 
 ///|
 /// The variant of constructor `c` (registered on first use), and its arity.
@@ -63,63 +63,4 @@ fn Gen::con_code(self : Gen, c : String, args : Array[String]) -> String {
   } else {
     id + "(" + args.join(", ") + ")"
   }
-}
-
-///|
-/// The `Value` enum of the program, and the generic access to its
-/// constructors.
-fn Gen::value_decl(self : Gen) -> String {
-  let decl = StringBuilder::new()
-  let names = StringBuilder::new()
-  let fields = StringBuilder::new()
-  decl.write_string(
-    (
-      #|// ---- values -----------------------------------------------------------
-      #|
-      #|enum Value {
-      #|  VInt(Int)
-      #|  VDouble(Double)
-      #|  VStr(String)
-      #|  VChar(Char)
-      #|  VBool(Bool)
-      #|  VUnit
-      #|  VFun((Value) -> Value raise)
-      #|  VArr(Array[Value])
-      #|  VType
-      #|  VForeign(Foreign)
-      #|  /// A constructor that is not of the program (e.g. a MoonBit error).
-      #|  VDyn(String, Array[Value])
-      #|
-    ),
-  )
-  names.write_string(
-    "\n///|\n/// The constructor of a value, if it is one.\nfn con_name(v : Value) -> String? {\n  match v {\n    VDyn(c, _) => Some(c)\n",
-  )
-  fields.write_string(
-    "\n///|\n/// The fields of a constructor value.\nfn con_fields(v : Value) -> Array[Value] {\n  match v {\n    VDyn(_, xs) => xs\n",
-  )
-  for c in self.ctor_order {
-    let (id, n) = self.ctors.get(c).unwrap()
-    let xs : Array[String] = []
-    for k = 0; k < n; k = k + 1 {
-      xs.push("a" + k.to_string())
-    }
-    decl.write_string(
-      "  /// " +
-      c +
-      "\n  " +
-      id +
-      (if n == 0 { "" } else { "(" + xs.map(_ => "Value").join(", ") + ")" }) +
-      "\n",
-    )
-    let pat = if n == 0 { id } else { id + "(" + xs.join(", ") + ")" }
-    names.write_string("    " + pat + " => Some(" + c.escape() + ")\n")
-    if n > 0 {
-      fields.write_string("    " + pat + " => [" + xs.join(", ") + "]\n")
-    }
-  }
-  decl.write_string("}\n")
-  names.write_string("    _ => None\n  }\n}\n")
-  fields.write_string("    _ => []\n  }\n}\n")
-  decl.to_string() + names.to_string() + fields.to_string() + "\n"
 }

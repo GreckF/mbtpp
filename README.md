@@ -59,7 +59,8 @@ error), and really called by the compiled program (see
 `moonpp build` generates a complete MoonBit project: its own `moon.mod`
 (the name, version and dependencies of the MoonBit++ project), a `moon.work`
 (listing local modules of the workspace by absolute path) and the package
-`<pkg>` with `main.mbt` and `runtime.mbt`, so `moon run <pkg>` works there
+`<pkg>` with one `.mbt` file per `.mbtpp` file (plus `mbtpp_prelude.mbt`,
+`mbtpp_imports.mbt` and `mbtpp_runtime.mbt`), so `moon run <pkg>` works there
 without moonpp.
 
 The compiler translates MoonBit++ to MoonBit: functions over types MoonBit

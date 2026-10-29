@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-d91934f1.js";
+            window.path_to_searchindex_js = "searchindex-ddc88031.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-9775a42a.js"></script>
@@ -1293,17 +1293,24 @@ source = "src"
   README.md
   .gitignore
   main/
-    moon.pkg        导入的 MoonBit 包；main 包
-    main.mbt        生成的程序
-    runtime.mbt     运行时支持（值表示、模式匹配、原语）
+    moon.pkg            导入的 MoonBit 包；main 包
+    main.mbt            src/main/main.mbtpp 编译的结果
+    shapes.mbt          src/main/shapes.mbtpp 编译的结果（每个 .mbtpp 一个 .mbt）
+    mbtpp_prelude.mbt   用到的 Prelude 定义
+    mbtpp_imports.mbt   调用导入的 MoonBit 包的胶水代码（需要时）
+    mbtpp_runtime.mbt   运行时支持（值表示、模式匹配、原语）
 </code></pre>
+<p>源文件与生成文件一一对应：<code>x.mbtpp</code> 中的定义（函数、数据类型、trait、实例）编译到 <code>x.mbt</code>；
+没有运行时代码的文件（例如只有 lemma）也会生成一个只有注释头的 <code>x.mbt</code>。三个 <code>mbtpp_</code> 开头的
+文件名由 moonpp 使用，源文件不能叫这些名字。</p>
 <pre><code class="language-bash">cd mbtpp_out/main
 moon run main
 </code></pre>
 <ul>
 <li>默认位置是项目的 <code>mbtpp_out/&lt;包名&gt;</code>；单个文件是 <code>&lt;文件所在目录&gt;/_mbtpp_build/&lt;文件名&gt;</code>；
 <code>-o &lt;目录&gt;</code> 指定其他位置。</li>
-<li>每次构建会覆盖其中的文件。</li>
+<li>每次构建会覆盖其中的文件，并删除以前生成、现在不再生成的 <code>.mbt</code> 文件（只删除带 moonpp 生成
+标记的文件）。</li>
 <li>生成的项目自带 <code>moon.work</code>，所以上层目录中的工作区不会影响它。</li>
 <li>生成的代码经过 <code>moon fmt</code> 格式化。</li>
 </ul>
@@ -1412,9 +1419,10 @@ enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
 </code></pre>
 <p><code>#mbt</code> 类型使用自己的名字而不是 <code>E_…</code>（见 <a href="#mbt-类型与-trait">#mbt 类型与 trait</a>）。</p>
 <h2 id="统一表示"><a class="header" href="#统一表示">统一表示</a></h2>
-<p>其余部分（类型层计算、GADT 细化、非 <code>#mbt</code> 的 trait 等）使用统一值表示 <code>Value</code>。它也是
-为每个程序生成的：除了 <code>VInt</code>、<code>VFun</code> 等固定的变体，程序用到的每个构造子都是 <code>Value</code> 的一个
-原生变体，索引和被擦除的字段不出现，字段是 <code>Value</code>。例如 <code>basic.mbtpp</code> 的 GADT：</p>
+<p>其余部分（类型层计算、GADT 细化、非 <code>#mbt</code> 的 trait 等）使用统一值表示 <code>Value</code>。它是运行时
+中的一个可扩展 enum（MoonBit 的 <code>extenum</code>），固定变体是 <code>VInt</code>、<code>VFun</code> 等；每个生成的文件用
+<code>extenum Value += { … }</code> 加入自己的数据类型中用到的构造子，索引和被擦除的字段不出现，字段是
+<code>Value</code>。例如 <code>basic.mbtpp</code> 的 GADT：</p>
 <pre><code class="language-text">enum Exp : [T] -&gt; Type {
   IntLit(Int) : Exp[Int]
   Add(Exp[Int], Exp[Int]) : Exp[Int]
@@ -1422,8 +1430,15 @@ enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
   …
 }
 </code></pre>
-<p>编译为 <code>Value</code> 的变体 <code>K_Exp_IntLit(Value)</code>、<code>K_Exp_Add(Value, Value)</code>、
-<code>K_Exp_If(Value, Value, Value)</code>，<code>eval</code> 中的 <code>match</code> 是原生的：</p>
+<p>在 <code>basic.mbt</code> 中编译为</p>
+<pre><code class="language-text">extenum Value += {
+  K_Exp_IntLit(Value)
+  K_Exp_Add(Value, Value)
+  K_Exp_If(Value, Value, Value)
+  …
+}
+</code></pre>
+<p><code>eval</code> 中的 <code>match</code> 是原生的：</p>
 <pre><code class="language-text">fn f19_exp_eval(self : Value) -&gt; Value raise {
   match self {
     K_Exp_IntLit(n) =&gt; n
@@ -1434,7 +1449,9 @@ enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
 </code></pre>
 <p><code>eval</code> 的结果类型随索引变化（<code>IntLit</code> 分支返回 <code>Int</code>，<code>BoolLit</code> 分支返回 <code>Bool</code>），MoonBit
 的类型系统表达不了，所以它的结果仍是 <code>Value</code>。运行时支持（<code>apply</code>、原语、动态模式匹配器）在
-生成的 <code>runtime.mbt</code> 中。两种代码之间在边界上转换。</p>
+生成的 <code>mbtpp_runtime.mbt</code> 中；它通过各文件在 <code>fn init</code> 中注册的解码器得到构造子的名字和字段
+（用于显示与相等比较）。两种代码之间在边界上转换。</p>
+<p>因为 <code>Value</code> 可以从别的文件、别的包扩展，这种表示也适合将来分别编译多个 MoonBit++ 包。</p>
 <h2 id="擦除"><a class="header" href="#擦除">擦除</a></h2>
 <ul>
 <li>类型参数总是擦除。</li>

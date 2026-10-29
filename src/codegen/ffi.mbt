@@ -461,7 +461,8 @@ fn Gen::ffi_fn(
         why,
       )
   }
-  self.ffi.write_string(
+  self.write_to(
+    imports_file,
     "\n/// " +
     name +
     "\nfn " +

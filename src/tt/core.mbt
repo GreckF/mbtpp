@@ -195,6 +195,15 @@ pub(all) struct GEntry {
 pub let globals : Map[String, GEntry] = {}
 
 ///|
+/// The source file of each global defined by a program (`"<prelude>"` for
+/// the prelude; imported items are not recorded).
+pub let global_files : Map[String, String] = {}
+
+///|
+/// The source files of the last checked package, in order.
+pub let source_files : Array[String] = []
+
+///|
 pub fn lookup_global(name : String) -> GEntry? {
   globals.get(name)
 }
@@ -252,6 +261,8 @@ pub fn restore_metas(s : Array[Val?]) -> Unit {
 ///|
 pub fn reset_state() -> Unit {
   globals.clear()
+  global_files.clear()
+  source_files.clear()
   mbt_types.clear()
   mbt_fns.clear()
   metas.clear()

@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-d91934f1.js";
+            window.path_to_searchindex_js = "../searchindex-ddc88031.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-9775a42a.js"></script>
@@ -189,17 +189,24 @@
   README.md
   .gitignore
   main/
-    moon.pkg        导入的 MoonBit 包；main 包
-    main.mbt        生成的程序
-    runtime.mbt     运行时支持（值表示、模式匹配、原语）
+    moon.pkg            导入的 MoonBit 包；main 包
+    main.mbt            src/main/main.mbtpp 编译的结果
+    shapes.mbt          src/main/shapes.mbtpp 编译的结果（每个 .mbtpp 一个 .mbt）
+    mbtpp_prelude.mbt   用到的 Prelude 定义
+    mbtpp_imports.mbt   调用导入的 MoonBit 包的胶水代码（需要时）
+    mbtpp_runtime.mbt   运行时支持（值表示、模式匹配、原语）
 </code></pre>
+<p>源文件与生成文件一一对应：<code>x.mbtpp</code> 中的定义（函数、数据类型、trait、实例）编译到 <code>x.mbt</code>；
+没有运行时代码的文件（例如只有 lemma）也会生成一个只有注释头的 <code>x.mbt</code>。三个 <code>mbtpp_</code> 开头的
+文件名由 moonpp 使用，源文件不能叫这些名字。</p>
 <pre><code class="language-bash">cd mbtpp_out/main
 moon run main
 </code></pre>
 <ul>
 <li>默认位置是项目的 <code>mbtpp_out/&lt;包名&gt;</code>；单个文件是 <code>&lt;文件所在目录&gt;/_mbtpp_build/&lt;文件名&gt;</code>；
 <code>-o &lt;目录&gt;</code> 指定其他位置。</li>
-<li>每次构建会覆盖其中的文件。</li>
+<li>每次构建会覆盖其中的文件，并删除以前生成、现在不再生成的 <code>.mbt</code> 文件（只删除带 moonpp 生成
+标记的文件）。</li>
 <li>生成的项目自带 <code>moon.work</code>，所以上层目录中的工作区不会影响它。</li>
 <li>生成的代码经过 <code>moon fmt</code> 格式化。</li>
 </ul>

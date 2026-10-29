@@ -87,7 +87,7 @@
 | `moonpp new <name>` | 创建项目：`moon.mod`、`src/main/{moon.pkg, main.mbtpp}` 等 |
 | `moonpp check [路径]` | 类型检查整个项目、一个包目录或一个文件；一个包可由多个文件组成，报错定位到具体文件 |
 | `moonpp run [路径]` | 解释执行主包（或指定的包/文件） |
-| `moonpp build [路径] [-o 目录]` | 编译为一个完整的 MoonBit 项目（默认 `mbtpp_out/<包>`：`moon.mod` 带原项目的依赖，`moon.work` 列出本地模块，包含 `main.mbt`、`runtime.mbt` 的包），并 `moon build` |
+| `moonpp build [路径] [-o 目录]` | 编译为一个完整的 MoonBit 项目（默认 `mbtpp_out/<包>`：`moon.mod` 带原项目的依赖，`moon.work` 列出本地模块，每个 `.mbtpp` 文件对应一个 `.mbt` 文件，另有 `mbtpp_prelude.mbt`、`mbtpp_imports.mbt`、`mbtpp_runtime.mbt`），并 `moon build` |
 | `moonpp run --compiled [路径]` | 编译为 MoonBit 并 `moon run` |
 | `moonpp add <模块>` / `install` | 调用 `moon add` / `moon install`，再为缺少 `.mbti` 的依赖运行 `moon info` 生成接口 |
 | `moonpp remove`、`tree` | 转交给 `moon` |
@@ -101,7 +101,7 @@
 
 ### 7.1 结构
 
-1. **统一表示**（`codegen.mbt`、`data.mbt`、`runtime.mbt`）：所有值用 `enum Value` 表示，可以翻译语言的全部特性（GADT、类型层计算、trait、异常、循环）。`Value` 为每个程序生成：固定变体 `VInt`、`VFun`……，加上程序用到的每个构造子一个原生变体（如 `K_Exp_Add(Value, Value)`），索引与被擦除的字段不出现，匹配是原生的（以前是 `VCon(构造子名, 参数)`，要比较字符串；对 GADT 求值的测试快约 2 倍）。
+1. **统一表示**（`codegen.mbt`、`data.mbt`、`runtime.mbt`）：所有值用 `enum Value` 表示，可以翻译语言的全部特性（GADT、类型层计算、trait、异常、循环）。`Value` 是运行时中的可扩展 enum（`extenum`）：固定变体 `VInt`、`VFun`……，每个生成的文件用 `+=` 加入其数据类型用到的构造子（如 `K_Exp_Add(Value, Value)`），索引与被擦除的字段不出现，匹配是原生的（以前是 `VCon(构造子名, 参数)`，要比较字符串；对 GADT 求值的测试快约 2 倍）。
    - n 元函数成为 MoonBit 函数，饱和调用是直接调用，作为值使用时才构造闭包；
    - `match` 翻译为 MoonBit 原生 `match`；`if`、构造子、基本运算内联；
    - 只输出从 `main` 可达的定义；变量沿用源码名字；未使用的模式绑定被删除；输出经过 `moon fmt`。

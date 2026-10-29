@@ -18,7 +18,8 @@ fn signatures(src : String) -> String {
         !l.contains("_to_value") &&
         !l.contains("_of_value") &&
         !l.contains("fn con_name") &&
-        !l.contains("fn con_fields")
+        !l.contains("fn con_fields") &&
+        !l.has_prefix("fn init")
       ) ||
       l.has_prefix("enum E_") {
       // drop the counters: f12_fib -> f_fib, x_34 -> x
@@ -69,11 +70,11 @@ test "codegen: native functions over scalars" {
       ),
     ),
     content=(
-      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
-      #|fn f_show_to_string(inst : Value) -> Value raise {
       #|fn f_fib_t(n : Int) -> Int raise {
       #|fn f_fib(a0 : Value) -> Value raise {
       #|fn main {
+      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
+      #|fn f_show_to_string(inst : Value) -> Value raise {
     ),
   )
 }
@@ -135,17 +136,17 @@ test "codegen: an implicit field used at runtime is kept" {
       ),
     ),
     content=(
-      #|enum E_Nat {
       #|enum E_Vector[T0] {
-      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
-      #|fn f_show_to_string(inst : Value) -> Value raise {
       #|fn[T0] f_len_t(v : E_Vector[T0]) -> E_Nat raise {
       #|fn f_len(a2 : Value) -> Value raise {
+      #|fn main {
+      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
+      #|fn f_show_to_string(inst : Value) -> Value raise {
+      #|enum E_Nat {
       #|fn f_nat_to_string_t(self : E_Nat) -> String raise {
       #|fn f_nat_to_string(a0 : Value) -> Value raise {
       #|fn f_nat_to_int_t(self : E_Nat) -> Int raise {
       #|fn f_nat_to_int(a0 : Value) -> Value raise {
-      #|fn main {
     ),
   )
 }
@@ -171,10 +172,10 @@ test "codegen: dependent results stay uniform" {
       ),
     ),
     content=(
-      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
-      #|fn f_show_to_string(inst : Value) -> Value raise {
       #|fn f_sum_n(n : Value, acc : Value) -> Value raise {
       #|fn main {
+      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
+      #|fn f_show_to_string(inst : Value) -> Value raise {
     ),
   )
 }
@@ -264,9 +265,9 @@ test "codegen: #mbt functions must be native" {
     content=(
       #|fn f_twice_t(x : Int) -> Int raise {
       #|fn f_twice(a0 : Value) -> Value raise {
+      #|fn main {
       #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
       #|fn f_show_to_string(inst : Value) -> Value raise {
-      #|fn main {
     ),
   )
 }
@@ -339,14 +340,10 @@ test "codegen: data are native variants of Value, without indices" {
       #|K_Exp_IntLit(Value)
       #|K_Exp_If(Value, Value, Value)
       #|K_Exp_Add(Value, Value)
-      #|K_Exp_BoolLit(a0) => Some("Exp::BoolLit")
-      #|K_Exp_IntLit(a0) => Some("Exp::IntLit")
-      #|K_Exp_If(a0, a1, a2) => Some("Exp::If")
-      #|K_Exp_Add(a0, a1) => Some("Exp::Add")
-      #|K_Exp_BoolLit(a0) => [a0]
-      #|K_Exp_IntLit(a0) => [a0]
-      #|K_Exp_If(a0, a1, a2) => [a0, a1, a2]
-      #|K_Exp_Add(a0, a1) => [a0, a1]
+      #|K_Exp_BoolLit(a0) => Some(("Exp::BoolLit", [a0]))
+      #|K_Exp_IntLit(a0) => Some(("Exp::IntLit", [a0]))
+      #|K_Exp_If(a0, a1, a2) => Some(("Exp::If", [a0, a1, a2]))
+      #|K_Exp_Add(a0, a1) => Some(("Exp::Add", [a0, a1]))
     ),
   )
 }

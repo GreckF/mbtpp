@@ -560,7 +560,8 @@ fn Gen::need_enum(self : Gen, d : String) -> Unit {
     "    _ => rt_fail(\"expected a " + d + ", got \" + show_value(v))\n  }\n}\n",
   )
   let into = self.data_convertible(d, true, [])
-  self.enum_defs.write_string(
+  self.write_to(
+    self.file_of(d),
     (if emit_decl { decl.to_string() } else { "" }) +
     to.to_string() +
     (if into { of.to_string() } else { "" }),

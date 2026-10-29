@@ -5,8 +5,58 @@
 let runtime_src : String =
   #|// ---- MoonBit++ runtime -------------------------------------------------
   #|
-  #|// `Value` and its constructors (`con_name`, `con_fields`) are generated
-  #|// with the program, in main.mbt.
+  #|/// Values. Each generated file adds the constructors of its datatypes
+  #|/// (`extenum Value += { K_Exp_Add(Value, Value) }`) and registers a
+  #|/// decoder for them in `con_decoders`.
+  #|extenum Value {
+  #|  VInt(Int)
+  #|  VDouble(Double)
+  #|  VStr(String)
+  #|  VChar(Char)
+  #|  VBool(Bool)
+  #|  VUnit
+  #|  VFun((Value) -> Value raise)
+  #|  VArr(Array[Value])
+  #|  VType
+  #|  VForeign(Foreign)
+  #|  /// A constructor that is not of the program (e.g. a MoonBit error).
+  #|  VDyn(String, Array[Value])
+  #|}
+  #|
+  #|/// Values of foreign MoonBit types (extended by mbtpp_imports.mbt).
+  #|extenum Foreign {
+  #|  FNone
+  #|}
+  #|
+  #|/// The name and fields of a constructor value, by generated file.
+  #|let con_decoders : Array[(Value) -> (String, Array[Value])?] = []
+  #|
+  #|fn con_decode(v : Value) -> (String, Array[Value])? {
+  #|  match v {
+  #|    VDyn(c, xs) => return Some((c, xs))
+  #|    _ => ()
+  #|  }
+  #|  for d in con_decoders {
+  #|    match d(v) {
+  #|      Some(x) => return Some(x)
+  #|      None => ()
+  #|    }
+  #|  }
+  #|  None
+  #|}
+  #|
+  #|/// The constructor of a value, if it is one.
+  #|fn con_name(v : Value) -> String? {
+  #|  con_decode(v).map(x => x.0)
+  #|}
+  #|
+  #|/// The fields of a constructor value.
+  #|fn con_fields(v : Value) -> Array[Value] {
+  #|  match con_decode(v) {
+  #|    Some((_, xs)) => xs
+  #|    None => []
+  #|  }
+  #|}
   #|
   #|suberror Ctl {
   #|  CRaise(Value)

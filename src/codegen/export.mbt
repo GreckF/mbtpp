@@ -240,7 +240,8 @@ fn Gen::export_fn(self : Gen, name : String, sig : TSig) -> Unit {
     call +
     "\n} catch {\nCAbort(m) => abort(m)\ne => abort(e.to_string())\n}"
   }
-  self.defs.write_string(
+  self.write_to(
+    self.file_of(name),
     "\n///|\n/// MoonBit++ " +
     name +
     "\npub fn" +

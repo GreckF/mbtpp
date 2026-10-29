@@ -27,7 +27,8 @@ pub fn run(src : String) -> String {
 }
 
 ///|
-/// Type check and compile to MoonBit; returns the generated `main.mbt`, or
+/// Type check and compile to MoonBit; returns the generated files (one
+/// `// ==== name ====` section each), or
 /// an error starting with "error".
 pub fn compile(src : String) -> String {
   @tt.check_program(file, src) catch {
@@ -39,7 +40,7 @@ pub fn compile(src : String) -> String {
 }
 
 ///|
-/// The runtime support file of compiled programs (`runtime.mbt`).
+/// The runtime support file of compiled programs (`mbtpp_runtime.mbt`).
 pub fn runtime() -> String {
   @codegen.runtime_code()
 }

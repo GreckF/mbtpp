@@ -46,11 +46,43 @@ fn format_pos(file : String, p : Pos) -> String {
 }
 
 ///|
+/// The globals a declaration defines.
+fn decl_global_names(d : @parser.Decl) -> Array[String] {
+  match d {
+    DMbt(_, _, _, inner) => decl_global_names(inner)
+    DFn(fd) => [fd.name]
+    DDef(_, n, _, _, _) | DOpaque(_, n, _) => [n]
+    DEnum(ed) => [ed.name, ..ed.cons.map(c => ed.name + "::" + c.name)]
+    DStruct(sd) =>
+      [sd.name, sd.name + "::mk", ..sd.fields.map(f => sd.name + "::" + f.1)]
+    DTrait(td) =>
+      [
+        td.name,
+        td.name + "::mk",
+        ..td.methods.map(m => td.name + "::" + m.name),
+        ..td.supers.map(s => td.name + "::super$" + s),
+      ]
+    DImpl(id) => ["impl$" + id.trait_name + "$" + impl_head(id.for_ty)]
+  }
+}
+
+///|
+/// Remember that the declarations come from `file`.
+fn record_file(decls : Array[@parser.Decl], file : String) -> Unit {
+  for d in decls {
+    for n in decl_global_names(d) {
+      global_files.set(n, file)
+    }
+  }
+}
+
+///|
 fn check_src(file : String, src : String) -> Unit raise CheckError {
   let decls = @parser.parse_program(src) catch {
     @parser.ParseError(p, msg) =>
       raise CheckError(format_pos(file, p) + ": parse error: " + msg)
   }
+  record_file(decls, file)
   check_decls(decls) catch {
     ElabError(p, msg) =>
       raise CheckError(format_pos(file, p) + ": error: " + msg)
@@ -112,11 +144,13 @@ pub fn check_package(
   load_imports(imports)
   let decls : Array[@parser.Decl] = []
   for k = 0; k < files.length(); k = k + 1 {
-    let (_, src) = files[k]
+    let (file, src) = files[k]
+    source_files.push(file)
     let ds = @parser.parse_program(src, line0=(k + 1) * file_stride + 1) catch {
       @parser.ParseError(p, msg) =>
         raise CheckError(package_pos(files, p) + ": parse error: " + msg)
     }
+    record_file(ds, file)
     for d in ds {
       decls.push(d)
     }

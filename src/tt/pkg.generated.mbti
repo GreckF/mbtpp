@@ -42,6 +42,8 @@ pub fn fresh_vars(Int32, Int32) -> Array[Val]
 
 pub fn global_body(String) -> Tm?
 
+pub let global_files : Map[String, String]
+
 pub fn global_val(String) -> Val
 
 pub let globals : Map[String, GEntry]
@@ -107,6 +109,8 @@ pub fn show_global_type(String) -> String?
 pub fn show_tm(Array[String], Tm) -> String
 
 pub fn snapshot_metas() -> Array[Val?]
+
+pub let source_files : Array[String]
 
 pub fn trait_method_names(String) -> Array[String]
 

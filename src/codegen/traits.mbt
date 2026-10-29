@@ -198,7 +198,7 @@ fn Gen::need_trait(self : Gen, tr : String) -> Unit {
     }
   }
   buf.write_string("}\n")
-  self.trait_defs.write_string(buf.to_string())
+  self.write_to(self.file_of(tr), buf.to_string())
 }
 
 ///|
@@ -431,7 +431,7 @@ fn Gen::need_impl(self : Gen, i : String) -> Unit {
   }
   self.impls_done.push(i)
   match self.impl_code(i) {
-    Some(code) => self.trait_defs.write_string("\n/// " + i + "\n" + code)
+    Some(code) => self.write_to(self.file_of(i), "\n/// " + i + "\n" + code)
     None => ()
   }
 }

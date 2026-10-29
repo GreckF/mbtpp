@@ -30,12 +30,16 @@
 
 ## Compiler (`src/codegen`)
 
-- `runtime.mbt`: the support code emitted with every program: `apply`,
+- `files.mbt`: the output files: the definitions of `x.mbtpp` go to `x.mbt`,
+  the prelude's to `mbtpp_prelude.mbt`, glue for imports to
+  `mbtpp_imports.mbt` (the checker records the source file of each global).
+- `runtime.mbt`: the support code emitted with every program
+  (`mbtpp_runtime.mbt`): the extensible enum `Value`, `apply`,
   primitives, a pattern matcher for patterns MoonBit cannot express.
-- `data.mbt`: the uniform representation `Value`, generated per program:
-  the fixed variants (`VInt`, `VFun`, ...) and one variant per constructor
-  used (`K_Exp_Add(Value, Value)`), without indices and erased fields;
-  `con_name` / `con_fields` give the runtime generic access.
+- `data.mbt`: constructors as variants of `Value`: each file extends it
+  (`extenum Value += { K_Exp_Add(Value, Value) }`) with the constructors of
+  its datatypes, without indices and erased fields, and registers a decoder
+  (in `fn init`) that the runtime's `con_name` / `con_fields` use.
 - `codegen.mbt`: the uniform translation. Only globals reachable from
   `main` are emitted. A function of n parameters becomes a MoonBit function
   (saturated calls are direct, `<id>_v()` is its curried value); constants

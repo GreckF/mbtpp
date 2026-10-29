@@ -26,9 +26,10 @@ enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
 
 ## 统一表示
 
-其余部分（类型层计算、GADT 细化、非 `#mbt` 的 trait 等）使用统一值表示 `Value`。它也是
-为每个程序生成的：除了 `VInt`、`VFun` 等固定的变体，程序用到的每个构造子都是 `Value` 的一个
-原生变体，索引和被擦除的字段不出现，字段是 `Value`。例如 `basic.mbtpp` 的 GADT：
+其余部分（类型层计算、GADT 细化、非 `#mbt` 的 trait 等）使用统一值表示 `Value`。它是运行时
+中的一个可扩展 enum（MoonBit 的 `extenum`），固定变体是 `VInt`、`VFun` 等；每个生成的文件用
+`extenum Value += { … }` 加入自己的数据类型中用到的构造子，索引和被擦除的字段不出现，字段是
+`Value`。例如 `basic.mbtpp` 的 GADT：
 
 ```text
 enum Exp : [T] -> Type {
@@ -39,8 +40,18 @@ enum Exp : [T] -> Type {
 }
 ```
 
-编译为 `Value` 的变体 `K_Exp_IntLit(Value)`、`K_Exp_Add(Value, Value)`、
-`K_Exp_If(Value, Value, Value)`，`eval` 中的 `match` 是原生的：
+在 `basic.mbt` 中编译为
+
+```text
+extenum Value += {
+  K_Exp_IntLit(Value)
+  K_Exp_Add(Value, Value)
+  K_Exp_If(Value, Value, Value)
+  …
+}
+```
+
+`eval` 中的 `match` 是原生的：
 
 ```text
 fn f19_exp_eval(self : Value) -> Value raise {
@@ -54,7 +65,10 @@ fn f19_exp_eval(self : Value) -> Value raise {
 
 `eval` 的结果类型随索引变化（`IntLit` 分支返回 `Int`，`BoolLit` 分支返回 `Bool`），MoonBit
 的类型系统表达不了，所以它的结果仍是 `Value`。运行时支持（`apply`、原语、动态模式匹配器）在
-生成的 `runtime.mbt` 中。两种代码之间在边界上转换。
+生成的 `mbtpp_runtime.mbt` 中；它通过各文件在 `fn init` 中注册的解码器得到构造子的名字和字段
+（用于显示与相等比较）。两种代码之间在边界上转换。
+
+因为 `Value` 可以从别的文件、别的包扩展，这种表示也适合将来分别编译多个 MoonBit++ 包。
 
 ## 擦除
 

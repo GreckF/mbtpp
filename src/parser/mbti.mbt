@@ -593,6 +593,8 @@ fn mbti_item(p : Parser, pkg_path : String) -> Array[Decl] raise ParseError {
       if p.accept("=") {
         [DDef(pos, name, bs, Some(EType(pos)), p.expr())]
       } else {
+        // `derive(Eq, @debug.Debug)` does not matter here
+        p.i = p.toks.length() - 1
         [DOpaque(pos, name, bs.length())]
       }
     }

@@ -34,6 +34,8 @@ Operators resolve to methods, so defining the corresponding methods on your own 
 | --- | --- |
 | `a + b`, `a - b`, `a * b`, `a / b`, `a % b` | `op_add`, `op_sub`, `op_mul`, `op_div`, `op_mod` |
 | `-a` | `op_neg` |
+| `a & b`, `a \| b`, `a ^ b` | `op_land`, `op_lor`, `op_lxor` |
+| `a << n`, `a >> n` | `op_shl`, `op_shr` |
 | `a == b`, `a != b` | `op_equal` |
 | `a < b`, `a <= b`, `a > b`, `a >= b` | `op_lt`, `op_le`, `op_gt`, `op_ge` |
 

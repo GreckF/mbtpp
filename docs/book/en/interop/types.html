@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-d646c2d2.js";
+            window.path_to_searchindex_js = "../searchindex-6b05358c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-f86c1434.js"></script>
@@ -210,8 +210,9 @@
 <h2 id="impl"><a class="header" href="#impl">impl</a></h2>
 <p>The <code>impl</code>s of an interface (generic ones too, such as
 <code>impl[K : Show, V : Show] Show for HashMap[K, V]</code>) are imported as instances when their trait is
-one of the Prelude traits that are MoonBit’s (<code>Show</code>, <code>Eq</code>, <code>Compare</code>, <code>Add</code>, <code>Sub</code>, <code>Mul</code>, <code>Div</code>,
-<code>Mod</code>, <code>Neg</code>, <code>Default</code>; see <a href="../lang/traits.html">Traits</a>) or a trait of an imported package. The
+one of the Prelude traits that are MoonBit’s (<code>Show</code>, <code>Eq</code>, <code>Compare</code>, <code>Hash</code>, <code>ToJson</code>, <code>Default</code>,
+the operator traits, …; see <a href="../lang/traits.html">Traits</a>) or a trait of an imported package (such
+as <code>@json.FromJson</code> or <code>@debug.Debug</code>). The
 methods of the instance call the MoonBit trait method (e.g. <code>Show::to_string(x)</code>), and MoonBit
 finds the impl. For example:</p>
 <pre><code class="language-text">let a = @bigint.BigInt::from_int(1000)
@@ -238,8 +239,8 @@ re-exports are not imported.</p>
 <ul>
 <li><code>async</code> functions, and <code>async</code> function types in parameters;</li>
 <li>trait objects <code>&amp;T</code>;</li>
-<li><code>impl</code>s of traits that are neither the Prelude traits above nor imported traits (such as
-<code>Hash</code>, <code>ToJson</code>, <code>@debug.Debug</code>);</li>
+<li><code>impl</code>s of traits that are neither Prelude traits nor imported traits (e.g. <code>@debug.Debug</code>
+when <code>moonbitlang/core/debug</code> is not imported);</li>
 <li><code>#deprecated</code> items;</li>
 <li>trait re-exports (except those of <code>@builtin</code>), and re-exported functions whose package is not
 imported.</li>

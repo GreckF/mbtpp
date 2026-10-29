@@ -78,6 +78,7 @@ fn con_pat(d : String, c : String, subs : Array[String]) -> String {
 fn mbt_only(t : NTy) -> Bool {
   match t {
     NEnum(d, args) => is_mbt_type(d) && args.iter().all(mbt_only)
+    NForeign(_, args) => args.iter().all(mbt_only)
     NFun(ps, r) => ps.iter().all(mbt_only) && mbt_only(r)
     _ => true
   }
@@ -234,7 +235,7 @@ fn match_nty(pat : NTy, t : NTy, sub : Array[NTy?]) -> Bool {
           true
         }
       }
-    (NEnum(d, xs), NEnum(e, ys)) =>
+    (NEnum(d, xs), NEnum(e, ys)) | (NForeign(d, xs), NForeign(e, ys)) =>
       d == e &&
       xs.length() == ys.length() &&
       xs.mapi((k, x) => match_nty(x, ys[k], sub)).iter().all(b => b)
@@ -296,6 +297,13 @@ fn builtin_instance(t : NTy, tr : String) -> Bool {
     ("Sub" | "Mul" | "Div" | "Neg", NInt | NDouble) => true
     ("Mod", NInt) => true
     ("Default", NInt | NDouble | NString | NBool | NUnit) => true
+    ("BitAnd" | "BitOr" | "BitXOr" | "Shl" | "Shr", NInt) => true
+    ("Hash", NInt | NDouble | NString | NBool | NChar | NUnit) => true
+    ("ToJson", NInt | NDouble | NString | NBool | NChar | NUnit) => true
+    ("Show" | "Eq" | "ToJson", NForeign("Json", [])) => true
+    (d, NInt | NDouble | NString | NBool | NChar | NUnit) if d.has_suffix(
+        ".Debug",
+      ) => true
     _ => false
   }
 }
@@ -448,6 +456,16 @@ fn Gen::impl_code(self : Gen, i : String) -> String? {
         ("error in " + tr + "::" + m).escape() +
         ")\n}"
       }
+      if tr == "Hash" {
+        // MoonBit's `Hash` is defined by `hash_combine`
+        out.write_string(
+          header +
+          "hash_combine(a0, hasher) {\nhasher.combine_int(" +
+          call +
+          ")\n}\n",
+        )
+        continue
+      }
       out.write_string(
         header +
         @tt.mbt_method_name(tr, m) +
@@ -545,6 +563,8 @@ fn Gen::convertible(self : Gen, t : NTy, into : Bool) -> Bool {
     NFun(ps, r) =>
       ps.iter().all(p => self.convertible(p, !into)) &&
       self.convertible(r, into)
+    // boxed as is: the arguments would have to be `Value`s
+    NForeign(_, args) => args.length() == 0
     _ => true
   }
 }

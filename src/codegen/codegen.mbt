@@ -513,6 +513,11 @@ let inline_prims : Map[String, String] = {
   "%int_sub": "VInt(as_int($0) - as_int($1))",
   "%int_mul": "VInt(as_int($0) * as_int($1))",
   "%int_neg": "VInt(-as_int($0))",
+  "%int_land": "VInt(as_int($0) & as_int($1))",
+  "%int_lor": "VInt(as_int($0) | as_int($1))",
+  "%int_lxor": "VInt(as_int($0) ^ as_int($1))",
+  "%int_shl": "VInt(as_int($0) << as_int($1))",
+  "%int_shr": "VInt(as_int($0) >> as_int($1))",
   "%int_eq": "VBool(as_int($0) == as_int($1))",
   "%int_lt": "VBool(as_int($0) < as_int($1))",
   "%int_le": "VBool(as_int($0) <= as_int($1))",
@@ -866,7 +871,29 @@ fn Gen::global_def(self : Gen, name : String) -> Unit raise CodegenError {
       self.uniform_fn(name, id, body, n)
     GFunc(Some(body), _, _) => {
       self.write("\n/// " + name)
-      self.cached(id, catch_return(has_return(body), self.tm([], body)))
+      // a value (or `main`) whose definition is in the native fragment
+      let native = if has_return(body) || self.dry {
+        None
+      } else {
+        let saved = self.cur_result
+        let r = try {
+          let (code, t) = self.typed([], body)
+          if self.convertible(t, false) {
+            Some(self.to_value(t, code, None))
+          } else {
+            None
+          }
+        } catch {
+          _ => None
+        }
+        self.cur_result = saved
+        r
+      }
+      match native {
+        Some(code) => self.cached(id, code)
+        None =>
+          self.cached(id, catch_return(has_return(body), self.tm([], body)))
+      }
     }
     GFunc(None, _, _) =>
       self.cached(id, "rt_fail(\"" + name + " has no definition\")")

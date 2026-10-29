@@ -22,6 +22,9 @@ priv enum NTy {
   NString
   NUnit
   NEnum(String, Array[NTy])
+  /// An opaque MoonBit type (`Json`, `@bigint.BigInt`, `@hashmap.HashMap[K, V]`),
+  /// used as is.
+  NForeign(String, Array[NTy])
   /// The k-th type parameter (of the enum or function being translated).
   NVar(Int32)
   /// A function type `(A, B) -> C` (one argument group).
@@ -238,6 +241,20 @@ fn Gen::native_ty_in(self : Gen, ctx : Array[TyCtx], t : @tt.Tm) -> NTy? {
     _ => {
       let (h, args) = flatten_app(t)
       match h {
+        Global(d) if @tt.is_foreign_type(d) => {
+          let np = @tt.data_info(d).unwrap().nparams
+          if args.length() < np {
+            return None
+          }
+          let targs : Array[NTy] = []
+          for k = 0; k < np; k = k + 1 {
+            match self.native_ty_in(ctx, args[k]) {
+              Some(a) => targs.push(a)
+              None => return None
+            }
+          }
+          Some(NForeign(d, targs))
+        }
         Global(d) if self.enum_ok(d) => {
           let np = @tt.data_info(d).unwrap().nparams
           if args.length() < np {
@@ -328,7 +345,24 @@ fn Gen::mbt_ty(self : Gen, t : NTy) -> String {
         data_name(d) + "[" + args.map(a => self.mbt_ty(a)).join(", ") + "]"
       }
     }
+    NForeign(d, args) =>
+      if args.length() == 0 {
+        d
+      } else {
+        d + "[" + args.map(a => self.mbt_ty(a)).join(", ") + "]"
+      }
   }
+}
+
+///|
+/// The variant of `Foreign` boxing values of the opaque MoonBit type `ty` in
+/// the uniform representation.
+fn Gen::foreign_variant(self : Gen, ty : String) -> String {
+  if !self.foreign.contains(ty) {
+    self.foreign.set(ty, "F" + self.foreign.length().to_string())
+    self.foreign_order.push(ty)
+  }
+  self.foreign.get(ty).unwrap()
 }
 
 ///|
@@ -381,6 +415,9 @@ fn Gen::to_value(
       })
       enum_fn(d, "to_value") + "(" + [e, ..fs].join(", ") + ")"
     }
+    // only types without arguments are converted (see `convertible`)
+    NForeign(_, _) =>
+      "VForeign(" + self.foreign_variant(self.mbt_ty(t)) + "(" + e + "))"
   }
 }
 
@@ -436,6 +473,16 @@ fn Gen::of_value(
         }
       })
       enum_fn(d, "of_value") + "(" + [e, ..fs].join(", ") + ")"
+    }
+    NForeign(_, _) => {
+      let ty = self.mbt_ty(t)
+      "(match " +
+      e +
+      " {\nVForeign(" +
+      self.foreign_variant(ty) +
+      "(x)) => x\nv => rt_fail(\"expected a value of type " +
+      ty +
+      ", got \" + show_value(v))\n})"
     }
   }
 }
@@ -554,7 +601,15 @@ fn Gen::need_enum(self : Gen, d : String) -> Unit {
       "\n",
     )
   }
-  decl.write_string("}\n")
+  // traits that MoonBit derives (`derive(ToJson)` of a `#mbt` type)
+  let derives = @tt.mbt_derives.get(d).unwrap_or([])
+  decl.write_string(
+    if derives.length() == 0 {
+      "}\n"
+    } else {
+      "} derive(" + derives.join(", ") + ")\n"
+    },
+  )
   to.write_string("  }\n}\n")
   of.write_string(
     "    _ => rt_fail(\"expected a " + d + ", got \" + show_value(v))\n  }\n}\n",
@@ -646,6 +701,11 @@ let native_prims : Map[String, (String, Array[NTy], NTy)] = {
   "%int_add": ("($0 + $1)", [NInt, NInt], NInt),
   "%int_sub": ("($0 - $1)", [NInt, NInt], NInt),
   "%int_mul": ("($0 * $1)", [NInt, NInt], NInt),
+  "%int_land": ("($0 & $1)", [NInt, NInt], NInt),
+  "%int_lor": ("($0 | $1)", [NInt, NInt], NInt),
+  "%int_lxor": ("($0 ^ $1)", [NInt, NInt], NInt),
+  "%int_shl": ("($0 << $1)", [NInt, NInt], NInt),
+  "%int_shr": ("($0 >> $1)", [NInt, NInt], NInt),
   "%int_div": ("int_div($0, $1)", [NInt, NInt], NInt),
   "%int_mod": ("int_mod($0, $1)", [NInt, NInt], NInt),
   "%int_neg": ("(-$0)", [NInt], NInt),
@@ -1206,6 +1266,41 @@ fn Gen::typed_term(
         }
         _ => raise NotTyped
       }
+    // `try { e } catch { C(_) => ...; _ => ... }`: errors are `CRaise(v)`;
+    // a clause may test the constructor of the error, not bind its fields
+    Try(b, cls) => {
+      let (cb, tb) = self.typed(env, b)
+      let err = self.name("err")
+      let mut ty = tb
+      let arms : Array[String] = []
+      for cl in cls {
+        let (cond, env2) = match cl.pats {
+          [CPWild] => ("true", env)
+          [CPVar(_)] => ("true", tpush(env, TNone))
+          [CPCon(c, ps)] if ps.iter().all(p => p is CPWild) =>
+            ("con_name(" + err + ") == Some(" + c.escape() + ")", env)
+          _ => raise NotTyped
+        }
+        let (code, t) = self.typed(env2, cl.body)
+        ty = unify_t(ty, t)
+        arms.push("if " + cond + " {\n" + code + "\n}")
+      }
+      let handler = if arms.length() == 0 {
+        "raise CRaise(" + err + ")"
+      } else {
+        arms.join(" else ") + " else {\nraise CRaise(" + err + ")\n}"
+      }
+      (
+        "(try {\n" +
+        cb +
+        "\n} catch {\nCRaise(" +
+        err +
+        ") => " +
+        handler +
+        "\ne => raise e\n})",
+        ty,
+      )
+    }
     Match(ss, cls) =>
       match if_parts(ss, cls) {
         Some((c, a, b)) => {
@@ -1429,6 +1524,8 @@ fn Gen::compute_typed(self : Gen) -> Unit {
     if is_mbt_trait(tr) {
       for i in @tt.instances_of(tr) {
         match self.impl_info(i) {
+          // MoonBit has the impls of imports and of its own `derive`s
+          Some(_) if @tt.external_instances.contains(i) => ()
           Some((_, _, self_t, _)) if impl_allowed(tr, self_t) =>
             self.mbt_impls.push(i)
           _ => ()

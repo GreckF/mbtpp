@@ -341,14 +341,18 @@ test "codegen: data are native variants of Value, without indices" {
       ),
     ),
     content=(
-      #|K_Exp_BoolLit(Value)
       #|K_Exp_IntLit(Value)
-      #|K_Exp_If(Value, Value, Value)
+      #|K_Exp_BoolLit(Value)
       #|K_Exp_Add(Value, Value)
-      #|K_Exp_BoolLit(a0) => Some(("Exp::BoolLit", [a0]))
+      #|K_Exp_If(Value, Value, Value)
       #|K_Exp_IntLit(a0) => Some(("Exp::IntLit", [a0]))
-      #|K_Exp_If(a0, a1, a2) => Some(("Exp::If", [a0, a1, a2]))
+      #|K_Exp_BoolLit(a0) => Some(("Exp::BoolLit", [a0]))
       #|K_Exp_Add(a0, a1) => Some(("Exp::Add", [a0, a1]))
+      #|K_Exp_If(a0, a1, a2) => Some(("Exp::If", [a0, a1, a2]))
+      #|K_Exp_IntLit(a0) => E_Exp::IntLit(as_int(a0))
+      #|K_Exp_BoolLit(a0) => E_Exp::BoolLit(as_bool(a0))
+      #|K_Exp_Add(a0, a1) => E_Exp::Add(exp_of_value(a0), exp_of_value(a1))
+      #|K_Exp_If(a1, a2, a3) => E_Exp::If(exp_of_value(a1), exp_of_value(a2), exp_of_value(a3))
     ),
   )
 }

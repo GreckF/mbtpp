@@ -64,6 +64,8 @@ pub fn inst(Closure, Val) -> Val
 
 pub fn instances_of(String) -> Array[String]
 
+pub fn is_foreign_type(String) -> Bool
+
 pub fn is_opaque_trait(String) -> Bool
 
 pub fn is_proof(Array[Val?], Val) -> Bool
@@ -79,6 +81,8 @@ pub fn lookup_global(String) -> GEntry?
 pub fn match_vals_opt(Array[Val], Array[Val], Array[Clause]) -> Val?
 
 pub let mbt_builtin_traits : Map[String, Map[String, String]]
+
+pub let mbt_derives : Map[String, Array[String]]
 
 pub let mbt_fns : Map[String, String]
 

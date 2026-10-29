@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-d646c2d2.js";
+            window.path_to_searchindex_js = "../searchindex-6b05358c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-f86c1434.js"></script>
@@ -255,10 +255,19 @@ side of the colon refers to that parameter.</li>
 <tr><td><code>Add</code>, <code>Sub</code>, <code>Mul</code>, <code>Div</code>, <code>Mod</code></td><td><code>op_add</code> etc. (<code>+ - * / %</code>)</td><td><code>Add</code> (<code>add</code>) etc.</td></tr>
 <tr><td><code>Neg</code></td><td><code>op_neg(Self) -&gt; Self</code> (unary <code>-</code>)</td><td><code>Neg</code> (<code>neg</code>)</td></tr>
 <tr><td><code>Default</code></td><td><code>default() -&gt; Self</code>, called as <code>Default::default()</code></td><td><code>Default</code> (<code>default</code>)</td></tr>
+<tr><td><code>BitAnd</code>, <code>BitOr</code>, <code>BitXOr</code></td><td><code>op_land</code> etc. (<code>&amp; | ^</code>)</td><td><code>BitAnd</code> (<code>land</code>) etc.</td></tr>
+<tr><td><code>Shl</code>, <code>Shr</code></td><td><code>op_shl(Self, Int) -&gt; Self</code> etc. (<code>&lt;&lt;</code>, <code>&gt;&gt;</code>)</td><td><code>Shl</code> (<code>shl</code>) etc.</td></tr>
+<tr><td><code>Hash</code></td><td><code>hash(Self) -&gt; Int</code></td><td><code>Hash</code> (compiled impls define <code>hash_combine</code>)</td></tr>
+<tr><td><code>ToJson</code></td><td><code>to_json(Self) -&gt; Json</code></td><td><code>ToJson</code> (<code>to_json</code>)</td></tr>
 <tr><td><code>Monad</code></td><td>see <a href="monad.html">Higher-Kinded Traits and Monads</a></td><td>none</td></tr>
 </tbody>
 </table>
 </div>
+<p><code>Json</code> is MoonBit’s <code>Json</code> type, opaque in MoonBit++: MoonBit code (imported <code>@json</code> functions,
+<code>derive(ToJson)</code>) makes and uses its values, and <code>json.stringify()</code> gives the text. <code>FromJson</code> of
+<code>@json</code> and <code>Debug</code> of <code>@debug</code> are traits of imported packages (available once these packages
+are imported); see derive below.</p>
+<p><code>Hash</code> values differ between the interpreter and compiled programs (which use MoonBit’s hashes).</p>
 <p><code>println</code> requires <code>Show</code>. Except for <code>Monad</code>, these traits are MoonBit’s own traits: in the
 compiled program, the instances for <code>#mbt</code> types are real MoonBit impls (e.g.
 <code>impl Eq for Shape with equal(a0, a1)</code>), so MoonBit code can print, compare and sort these
@@ -293,11 +302,17 @@ fn main {
 <li><code>Eq</code>: the same constructor with equal fields.</li>
 <li><code>Compare</code>: by constructor, in declaration order, then by fields from left to right. <code>Compare</code>
 needs <code>Eq</code>, so write <code>derive(Eq, Compare)</code>.</li>
+<li><code>Hash</code>: the position of the constructor and the hashes of the fields.</li>
+<li><code>ToJson</code>, <code>FromJson</code>, <code>Debug</code>: derived by MoonBit itself, so the type must be <code>#mbt</code>; the
+generated MoonBit declaration has <code>derive(ToJson, @json.FromJson, Debug)</code> and the MoonBit++
+instances call these MoonBit methods (so they run in compiled programs only). <code>FromJson</code> needs
+<code>moonbitlang/core/json</code> among the imports, and the <code>Debug</code> instance <code>moonbitlang/core/debug</code>
+(without it, <code>Debug</code> is derived on the MoonBit side only). The format is MoonBit’s: <code>Rgb(1, 2, 3)</code>
+is <code>["Rgb",1,2,3]</code>, a struct is an object.</li>
 <li>Type parameters get the same bound: <code>enum Tree[T] derive(Eq)</code> generates
 <code>impl[T : Eq] Eq for Tree[T]</code>.</li>
 <li>Only types with type parameters alone are supported: indexed types, enums whose constructors
-have a return type (GADTs) and structs with explicit parameters are not. Other traits (such as
-<code>Hash</code>) cannot be derived.</li>
+have a return type (GADTs) and structs with explicit parameters are not.</li>
 <li>If the type of a field has no instance of the trait, the error is reported on the line of the
 <code>derive</code>.</li>
 </ul>

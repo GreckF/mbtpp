@@ -8,11 +8,24 @@
 /// - `Eq`: the same constructor with equal fields;
 /// - `Compare`: by constructor (in declaration order), then by fields from
 ///   left to right. `Compare` needs `Eq` (derive both).
+/// - `Hash`: the constructor's position and the hashes of the fields.
 ///
 /// Type parameters get the derived trait as a bound: `enum Tree[T] derive(Eq)`
 /// gives `impl[T : Eq] Eq for Tree[T]`. Indexed types, GADT constructors and
 /// explicit parameters are not supported.
-let derivable : Array[String] = ["Show", "Eq", "Compare"]
+let derivable : Array[String] = [
+  "Show", "Eq", "Compare", "Hash", "ToJson", "FromJson", "Debug",
+]
+
+///|
+/// Traits derived by MoonBit itself: for a `#mbt` type, the generated
+/// MoonBit declaration carries `derive(...)` and the MoonBit++ instance
+/// calls MoonBit's method (so it runs in compiled programs only).
+let mbt_derivable : Array[String] = ["ToJson", "FromJson", "Debug"]
+
+///|
+/// The MoonBit `derive`s of the `#mbt` types (by MoonBit++ name).
+pub let mbt_derives : Map[String, Array[String]] = {}
 
 ///|
 /// Lines with generated code: no editor information is recorded there.
@@ -29,7 +42,7 @@ fn expand_derives(
     out.push(strip_derives(d, ds))
     for x in ds {
       let (p, tr) = x
-      for g in derived_impls(d.inner(), p, tr) {
+      for g in derived_impls(d.inner(), p, tr, generated_mbt(d)) {
         out.push(g)
       }
     }
@@ -53,11 +66,37 @@ fn strip_derives(d : @parser.Decl, ds : Array[(Pos, String)]) -> @parser.Decl {
 }
 
 ///|
+/// Is the type declared `#mbt` (without a MoonBit name, so that the compiler
+/// generates its MoonBit declaration)?
+fn generated_mbt(d : @parser.Decl) -> Bool {
+  match d {
+    DMbt(_, None, _, _) => true
+    DPub(x) | DDerive(_, x) => generated_mbt(x)
+    _ => false
+  }
+}
+
+///|
+/// The imported trait `@pkg.<short>` (e.g. `@json.FromJson`), if any.
+fn imported_trait(short : String) -> String? {
+  for name, info in mbt_types {
+    if name.has_prefix("@") &&
+      name.has_suffix("." + short) &&
+      data_info(name) is Some({ is_trait: true, .. }) {
+      ignore(info)
+      return Some(name)
+    }
+  }
+  None
+}
+
+///|
 /// The impl of `tr` for the type declared by `d`, parsed.
 fn derived_impls(
   d : @parser.Decl,
   p : Pos,
   tr : String,
+  is_mbt : Bool,
 ) -> Array[@parser.Decl] raise ElabError {
   let cx = empty_cxt(p)
   if !derivable.contains(tr) {
@@ -118,6 +157,9 @@ fn derived_impls(
     ""
   } else {
     "[" + ts.map(t => t + " : " + tr).join(", ") + "]"
+  }
+  if mbt_derivable.contains(tr) {
+    return mbt_derived(cx, p, tr, name, ts, head, is_mbt)
   }
   let impl_head = "impl" + bounds + " " + tr + " for " + head + " with "
   let body = match d {
@@ -182,6 +224,14 @@ fn lex_compare(xs : Array[String], ys : Array[String]) -> String {
 /// number of explicit fields).
 fn enum_body(tr : String, cons : Array[(String, String, Int32)]) -> String {
   match tr {
+    "Hash" => {
+      let arms = cons.mapi((k, c) => {
+        let (q, _, n) = c
+        let xs = vars("x", n)
+        con_pat(q, xs) + " => " + hash_fold(k.to_string(), xs)
+      })
+      "hash(self) { match self { " + arms.join("; ") + " } }"
+    }
     "Show" => {
       let arms = cons.map(c => {
         let (q, short, n) = c
@@ -256,6 +306,8 @@ fn enum_body(tr : String, cons : Array[(String, String, Int32)]) -> String {
 /// The method of `tr` for a struct with the given fields.
 fn struct_body(tr : String, fields : Array[String]) -> String {
   match tr {
+    "Hash" =>
+      "hash(self) { " + hash_fold("0", fields.map(f => "self." + f)) + " }"
     "Show" => {
       let parts = fields.mapi((k, f) => {
         let sep = if k == 0 { "" } else { ", " }
@@ -276,4 +328,136 @@ fn struct_body(tr : String, fields : Array[String]) -> String {
       lex_compare(fields.map(f => "a." + f), fields.map(f => "b." + f)) +
       " }"
   }
+}
+
+///|
+/// `h * 31 + x.hash()` for each `x`, starting from `start`.
+fn hash_fold(start : String, xs : Array[String]) -> String {
+  let mut code = start
+  for x in xs {
+    code = "(" + code + ") * 31 + " + x + ".hash()"
+  }
+  code
+}
+
+///|
+/// `derive(ToJson)`, `derive(FromJson)`, `derive(Debug)` of a `#mbt` type:
+/// MoonBit derives the impl; the MoonBit++ instance calls it.
+fn mbt_derived(
+  cx : Cxt,
+  p : Pos,
+  tr : String,
+  name : String,
+  ts : Array[String],
+  head : String,
+  is_mbt : Bool,
+) -> Array[@parser.Decl] raise ElabError {
+  if !is_mbt {
+    cx.fail(
+      "derive(" + tr + ") uses MoonBit's derive, so " + name + " must be #mbt",
+    )
+  }
+  // the MoonBit++ trait, its MoonBit name, and the instance's method
+  let (trait_name, mbt_name, sig) = match tr {
+    "ToJson" =>
+      (
+        "ToJson",
+        "ToJson",
+        Some(("to_json", "(a0 : " + head + ") -> Json", "a0")),
+      )
+    "FromJson" =>
+      match imported_trait("FromJson") {
+        Some(t) => {
+          let pre = t.unsafe_substring(start=0, end=t.length() - 8)
+          (
+            t,
+            mbt_info(t).unwrap().name,
+            Some(
+              (
+                "from_json",
+                "(a0 : Json, a1 : " +
+                pre +
+                "JsonPath) -> " +
+                head +
+                " raise " +
+                pre +
+                "JsonDecodeError",
+                "a0, a1",
+              ),
+            ),
+          )
+        }
+        None =>
+          cx.fail(
+            "derive(FromJson) needs the package moonbitlang/core/json in the imports of the package",
+          )
+      }
+    _ =>
+      match imported_trait("Debug") {
+        Some(t) => {
+          let pre = t.unsafe_substring(start=0, end=t.length() - 5)
+          (
+            t,
+            "Debug",
+            Some(("to_repr", "(a0 : " + head + ") -> " + pre + "Repr", "a0")),
+          )
+        }
+        // without `@debug` there is no trait to give an instance of
+        None => ("Debug", "Debug", None)
+      }
+  }
+  match mbt_derives.get(name) {
+    Some(xs) => xs.push(mbt_name)
+    None => mbt_derives.set(name, [mbt_name])
+  }
+  let (m, params, args) = match sig {
+    Some(x) => x
+    None => return []
+  }
+  let ext = "mbtpp_derived_" + tr + "_" + name.replace_all(old=".", new="_")
+  let tparams = if ts.length() == 0 { "" } else { "[" + ts.join(", ") + "]" }
+  let bounds = if ts.length() == 0 {
+    ""
+  } else {
+    "[" + ts.map(t => t + " : " + trait_name).join(", ") + "]"
+  }
+  let src = "fn" +
+    tparams +
+    " " +
+    ext +
+    params +
+    " = \"@mbt:trait:" +
+    mbt_name +
+    "::" +
+    m +
+    "\"; impl" +
+    bounds +
+    " " +
+    trait_name +
+    " for " +
+    head +
+    " with " +
+    m +
+    "(" +
+    args +
+    ") { " +
+    ext +
+    "(" +
+    args +
+    ") }"
+  derived_lines.push(p.line)
+  let ds = @parser.parse_program(src, line0=p.line) catch {
+    @parser.ParseError(_, msg) =>
+      cx.fail("internal error in derive(" + tr + "): " + msg + "\n" + src)
+  }
+  match global_files.get(name) {
+    Some(f) => record_file(ds, f)
+    None => ()
+  }
+  // MoonBit has the impl: the compiler does not generate it
+  let key = "impl$" + trait_name + "$" + name
+  if !external_instances.contains(key) {
+    external_instances.push(key)
+  }
+  ds
 }

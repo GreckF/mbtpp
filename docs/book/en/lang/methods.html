@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-d646c2d2.js";
+            window.path_to_searchindex_js = "../searchindex-6b05358c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-f86c1434.js"></script>
@@ -213,6 +213,8 @@ fn main {
 <tbody>
 <tr><td><code>a + b</code>, <code>a - b</code>, <code>a * b</code>, <code>a / b</code>, <code>a % b</code></td><td><code>op_add</code>, <code>op_sub</code>, <code>op_mul</code>, <code>op_div</code>, <code>op_mod</code></td></tr>
 <tr><td><code>-a</code></td><td><code>op_neg</code></td></tr>
+<tr><td><code>a &amp; b</code>, <code>a | b</code>, <code>a ^ b</code></td><td><code>op_land</code>, <code>op_lor</code>, <code>op_lxor</code></td></tr>
+<tr><td><code>a &lt;&lt; n</code>, <code>a &gt;&gt; n</code></td><td><code>op_shl</code>, <code>op_shr</code></td></tr>
 <tr><td><code>a == b</code>, <code>a != b</code></td><td><code>op_equal</code></td></tr>
 <tr><td><code>a &lt; b</code>, <code>a &lt;= b</code>, <code>a &gt; b</code>, <code>a &gt;= b</code></td><td><code>op_lt</code>, <code>op_le</code>, <code>op_gt</code>, <code>op_ge</code></td></tr>
 </tbody>

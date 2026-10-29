@@ -51,6 +51,11 @@ pub let prelude_src : String =
   #|fn Int::op_div(self : Int, other : Int) -> Int = "%int_div"
   #|fn Int::op_mod(self : Int, other : Int) -> Int = "%int_mod"
   #|fn Int::op_neg(self : Int) -> Int = "%int_neg"
+  #|fn Int::op_land(self : Int, other : Int) -> Int = "%int_land"
+  #|fn Int::op_lor(self : Int, other : Int) -> Int = "%int_lor"
+  #|fn Int::op_lxor(self : Int, other : Int) -> Int = "%int_lxor"
+  #|fn Int::op_shl(self : Int, n : Int) -> Int = "%int_shl"
+  #|fn Int::op_shr(self : Int, n : Int) -> Int = "%int_shr"
   #|fn Int::op_equal(self : Int, other : Int) -> Bool = "%int_eq"
   #|fn Int::op_lt(self : Int, other : Int) -> Bool = "%int_lt"
   #|fn Int::op_le(self : Int, other : Int) -> Bool = "%int_le"
@@ -374,6 +379,103 @@ pub let prelude_src : String =
   #|impl Default for Unit with default() { () }
   #|impl[T] Default for Option[T] with default() { None }
   #|impl[T] Default for List[T] with default() { Nil }
+  #|
+  #|#mbt("BitAnd")
+  #|trait BitAnd {
+  #|  op_land(Self, Self) -> Self
+  #|}
+  #|
+  #|impl BitAnd for Int with op_land(a, b) { a & b }
+  #|
+  #|#mbt("BitOr")
+  #|trait BitOr {
+  #|  op_lor(Self, Self) -> Self
+  #|}
+  #|
+  #|impl BitOr for Int with op_lor(a, b) { a | b }
+  #|
+  #|#mbt("BitXOr")
+  #|trait BitXOr {
+  #|  op_lxor(Self, Self) -> Self
+  #|}
+  #|
+  #|impl BitXOr for Int with op_lxor(a, b) { a ^ b }
+  #|
+  #|#mbt("Shl")
+  #|trait Shl {
+  #|  op_shl(Self, Int) -> Self
+  #|}
+  #|
+  #|impl Shl for Int with op_shl(a, n) { a << n }
+  #|
+  #|#mbt("Shr")
+  #|trait Shr {
+  #|  op_shr(Self, Int) -> Self
+  #|}
+  #|
+  #|impl Shr for Int with op_shr(a, n) { a >> n }
+  #|
+  #|// `hash` is MoonBit's `Hash::hash`; the impls of `#mbt` types are MoonBit
+  #|// impls whose `hash_combine` combines this hash. The interpreter's hashes
+  #|// differ from those of compiled programs.
+  #|#mbt("Hash")
+  #|trait Hash {
+  #|  hash(Self) -> Int
+  #|}
+  #|
+  #|impl Hash for Int with hash(self) { self }
+  #|impl Hash for Bool with hash(self) { if self { 1 } else { 0 } }
+  #|impl Hash for Char with hash(self) { self.to_int() }
+  #|impl Hash for Unit with hash(_) { 0 }
+  #|impl Hash for Nat with hash(self) { self.to_int() }
+  #|impl Hash for String with hash(self) {
+  #|  let mut h = 0
+  #|  for i = 0; i < self.length(); i = i + 1 {
+  #|    h = h * 31 + self[i].to_int()
+  #|  }
+  #|  h
+  #|}
+  #|impl Hash for Double with hash(self) { self.to_string().hash() }
+  #|impl[T : Hash] Hash for Option[T] with hash(self) {
+  #|  match self {
+  #|    None => 0
+  #|    Some(x) => x.hash() * 31 + 1
+  #|  }
+  #|}
+  #|impl[T : Hash] Hash for List[T] with hash(self) {
+  #|  match self {
+  #|    Nil => 0
+  #|    Cons(x, xs) => x.hash() * 31 + xs.hash()
+  #|  }
+  #|}
+  #|
+  #|// `Json` is MoonBit's: its values are made and used by MoonBit code
+  #|// (compiled programs), e.g. `@json` functions or `derive(ToJson)` of `#mbt`
+  #|// types.
+  #|#mbt("ToJson")
+  #|trait ToJson {
+  #|  to_json(Self) -> Json
+  #|}
+  #|
+  #|fn int_to_json(x : Int) -> Json = "@mbt:trait:ToJson::to_json"
+  #|fn double_to_json(x : Double) -> Json = "@mbt:trait:ToJson::to_json"
+  #|fn string_to_json(x : String) -> Json = "@mbt:trait:ToJson::to_json"
+  #|fn bool_to_json(x : Bool) -> Json = "@mbt:trait:ToJson::to_json"
+  #|fn char_to_json(x : Char) -> Json = "@mbt:trait:ToJson::to_json"
+  #|fn unit_to_json(x : Unit) -> Json = "@mbt:trait:ToJson::to_json"
+  #|fn json_to_string(x : Json) -> String = "@mbt:trait:Show::to_string"
+  #|fn json_equal(x : Json, y : Json) -> Bool = "@mbt:trait:Eq::equal"
+  #|fn Json::stringify(self : Json) -> String = "@mbt:Json::stringify"
+  #|
+  #|impl ToJson for Int with to_json(self) { int_to_json(self) }
+  #|impl ToJson for Double with to_json(self) { double_to_json(self) }
+  #|impl ToJson for String with to_json(self) { string_to_json(self) }
+  #|impl ToJson for Bool with to_json(self) { bool_to_json(self) }
+  #|impl ToJson for Char with to_json(self) { char_to_json(self) }
+  #|impl ToJson for Unit with to_json(self) { unit_to_json(self) }
+  #|impl ToJson for Json with to_json(self) { self }
+  #|impl Show for Json with to_string(self) { json_to_string(self) }
+  #|impl Eq for Json with op_equal(a, b) { json_equal(a, b) }
   #|
   #|trait Monad(Self : [T] -> Type) {
   #|  fn[T] pure(T) -> Self[T]

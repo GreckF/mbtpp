@@ -353,12 +353,9 @@ test "import: generic impls, SourceLoc and re-exports" {
     ),
     content="ok",
   )
-  // `Hash` is not a Prelude trait: its impl is skipped; so is the
-  // re-export of a package that is not imported
+  // the re-export of a package that is not imported is left out silently
   inspect(
     @tt.import_skipped.filter(s => !s.has_prefix("pub fn")).join("\n"),
-    content=(
-      #|impl Hash for @coll.Bag
-    ),
+    content="",
   )
 }

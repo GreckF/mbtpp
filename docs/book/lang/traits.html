@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-1c73caeb.js";
+            window.path_to_searchindex_js = "../searchindex-5e198cdb.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-393214f6.js"></script>
@@ -251,10 +251,18 @@ fn main {
 <tr><td><code>Add</code>、<code>Sub</code>、<code>Mul</code>、<code>Div</code>、<code>Mod</code></td><td><code>op_add</code> 等（<code>+ - * / %</code>）</td><td><code>Add</code>（<code>add</code>）等</td></tr>
 <tr><td><code>Neg</code></td><td><code>op_neg(Self) -&gt; Self</code>（一元 <code>-</code>）</td><td><code>Neg</code>（<code>neg</code>）</td></tr>
 <tr><td><code>Default</code></td><td><code>default() -&gt; Self</code>，用 <code>Default::default()</code> 调用</td><td><code>Default</code>（<code>default</code>）</td></tr>
+<tr><td><code>BitAnd</code>、<code>BitOr</code>、<code>BitXOr</code></td><td><code>op_land</code> 等（<code>&amp; | ^</code>）</td><td><code>BitAnd</code>（<code>land</code>）等</td></tr>
+<tr><td><code>Shl</code>、<code>Shr</code></td><td><code>op_shl(Self, Int) -&gt; Self</code> 等（<code>&lt;&lt;</code>、<code>&gt;&gt;</code>）</td><td><code>Shl</code>（<code>shl</code>）等</td></tr>
+<tr><td><code>Hash</code></td><td><code>hash(Self) -&gt; Int</code></td><td><code>Hash</code>（编译出的 impl 定义 <code>hash_combine</code>）</td></tr>
+<tr><td><code>ToJson</code></td><td><code>to_json(Self) -&gt; Json</code></td><td><code>ToJson</code>（<code>to_json</code>）</td></tr>
 <tr><td><code>Monad</code></td><td>见<a href="monad.html">高阶 trait 与 monad</a></td><td>无</td></tr>
 </tbody>
 </table>
 </div>
+<p><code>Json</code> 是 MoonBit 的 <code>Json</code> 类型，在 MoonBit++ 中不透明：由 MoonBit 代码（导入的 <code>@json</code> 函数、
+<code>derive(ToJson)</code>）产生和使用，<code>json.stringify()</code> 得到文本。<code>@json</code> 的 <code>FromJson</code> 和 <code>@debug</code> 的
+<code>Debug</code> 是导入的包中的 trait（导入这两个包后可用），见下面的 derive。</p>
+<p><code>Hash</code> 的值在解释器和编译后的程序中不同（编译后用的是 MoonBit 的哈希）。</p>
 <p><code>println</code> 需要 <code>Show</code>。除 <code>Monad</code> 外，这些 trait 就是 MoonBit 自己的 trait：编译后，<code>#mbt</code>
 类型的实例是真正的 MoonBit impl（例如 <code>impl Eq for Shape with equal(a0, a1)</code>），MoonBit 代码
 可以直接打印、比较、排序这些值；带这些约束的 <code>#mbt fn</code>（<code>fn[T : Show + Eq]</code>）编译成带同样
@@ -286,9 +294,15 @@ fn main {
 <li><code>Eq</code>：构造子相同且字段都相等。</li>
 <li><code>Compare</code>：先按构造子的声明顺序，再从左到右比较字段。<code>Compare</code> 需要 <code>Eq</code>，所以写
 <code>derive(Eq, Compare)</code>。</li>
+<li><code>Hash</code>：构造子的位置与各字段的哈希。</li>
+<li><code>ToJson</code>、<code>FromJson</code>、<code>Debug</code>：由 MoonBit 自己 derive，所以类型必须是 <code>#mbt</code>；生成的
+MoonBit 声明带有 <code>derive(ToJson, @json.FromJson, Debug)</code>，MoonBit++ 的实例调用这些 MoonBit
+方法（因此只在编译后的程序中运行）。<code>FromJson</code> 需要导入 <code>moonbitlang/core/json</code>，<code>Debug</code>
+的实例需要导入 <code>moonbitlang/core/debug</code>（不导入时只在 MoonBit 一侧 derive）。格式与 MoonBit
+相同，例如 <code>Rgb(1, 2, 3)</code> 是 <code>["Rgb",1,2,3]</code>，struct 是对象。</li>
 <li>类型参数会加上同一个约束：<code>enum Tree[T] derive(Eq)</code> 生成 <code>impl[T : Eq] Eq for Tree[T]</code>。</li>
 <li>只支持只有类型参数的类型：带索引的类型、构造子带返回类型（GADT）的 enum、带显式参数的
-struct 都不支持。其他 trait（如 <code>Hash</code>）不能 derive。</li>
+struct 都不支持。</li>
 <li>某个字段的类型没有所需实例时，错误报告在 <code>derive</code> 所在的行。</li>
 </ul>
 <p>完整示例见 <a href="https://github.com/GreckF/mbtpp/blob/main/examples/derive.mbtpp">examples/derive.mbtpp</a>。</p>

@@ -72,7 +72,18 @@ Traits and types share one namespace and cannot have the same name, so there is 
 | `Add`, `Sub`, `Mul`, `Div`, `Mod` | `op_add` etc. (`+ - * / %`) | `Add` (`add`) etc. |
 | `Neg` | `op_neg(Self) -> Self` (unary `-`) | `Neg` (`neg`) |
 | `Default` | `default() -> Self`, called as `Default::default()` | `Default` (`default`) |
+| `BitAnd`, `BitOr`, `BitXOr` | `op_land` etc. (`& \| ^`) | `BitAnd` (`land`) etc. |
+| `Shl`, `Shr` | `op_shl(Self, Int) -> Self` etc. (`<<`, `>>`) | `Shl` (`shl`) etc. |
+| `Hash` | `hash(Self) -> Int` | `Hash` (compiled impls define `hash_combine`) |
+| `ToJson` | `to_json(Self) -> Json` | `ToJson` (`to_json`) |
 | `Monad` | see [Higher-Kinded Traits and Monads](monad.md) | none |
+
+`Json` is MoonBit's `Json` type, opaque in MoonBit++: MoonBit code (imported `@json` functions,
+`derive(ToJson)`) makes and uses its values, and `json.stringify()` gives the text. `FromJson` of
+`@json` and `Debug` of `@debug` are traits of imported packages (available once these packages
+are imported); see derive below.
+
+`Hash` values differ between the interpreter and compiled programs (which use MoonBit's hashes).
 
 `println` requires `Show`. Except for `Monad`, these traits are MoonBit's own traits: in the
 compiled program, the instances for `#mbt` types are real MoonBit impls (e.g.
@@ -112,11 +123,17 @@ fn main {
 - `Eq`: the same constructor with equal fields.
 - `Compare`: by constructor, in declaration order, then by fields from left to right. `Compare`
   needs `Eq`, so write `derive(Eq, Compare)`.
+- `Hash`: the position of the constructor and the hashes of the fields.
+- `ToJson`, `FromJson`, `Debug`: derived by MoonBit itself, so the type must be `#mbt`; the
+  generated MoonBit declaration has `derive(ToJson, @json.FromJson, Debug)` and the MoonBit++
+  instances call these MoonBit methods (so they run in compiled programs only). `FromJson` needs
+  `moonbitlang/core/json` among the imports, and the `Debug` instance `moonbitlang/core/debug`
+  (without it, `Debug` is derived on the MoonBit side only). The format is MoonBit's: `Rgb(1, 2, 3)`
+  is `["Rgb",1,2,3]`, a struct is an object.
 - Type parameters get the same bound: `enum Tree[T] derive(Eq)` generates
   `impl[T : Eq] Eq for Tree[T]`.
 - Only types with type parameters alone are supported: indexed types, enums whose constructors
-  have a return type (GADTs) and structs with explicit parameters are not. Other traits (such as
-  `Hash`) cannot be derived.
+  have a return type (GADTs) and structs with explicit parameters are not.
 - If the type of a field has no instance of the trait, the error is reported on the line of the
   `derive`.
 

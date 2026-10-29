@@ -68,7 +68,17 @@ trait 和类型在同一个命名空间中，不能同名，所以不会有歧�
 | `Add`、`Sub`、`Mul`、`Div`、`Mod` | `op_add` 等（`+ - * / %`） | `Add`（`add`）等 |
 | `Neg` | `op_neg(Self) -> Self`（一元 `-`） | `Neg`（`neg`） |
 | `Default` | `default() -> Self`，用 `Default::default()` 调用 | `Default`（`default`） |
+| `BitAnd`、`BitOr`、`BitXOr` | `op_land` 等（`& \| ^`） | `BitAnd`（`land`）等 |
+| `Shl`、`Shr` | `op_shl(Self, Int) -> Self` 等（`<<`、`>>`） | `Shl`（`shl`）等 |
+| `Hash` | `hash(Self) -> Int` | `Hash`（编译出的 impl 定义 `hash_combine`） |
+| `ToJson` | `to_json(Self) -> Json` | `ToJson`（`to_json`） |
 | `Monad` | 见[高阶 trait 与 monad](monad.md) | 无 |
+
+`Json` 是 MoonBit 的 `Json` 类型，在 MoonBit++ 中不透明：由 MoonBit 代码（导入的 `@json` 函数、
+`derive(ToJson)`）产生和使用，`json.stringify()` 得到文本。`@json` 的 `FromJson` 和 `@debug` 的
+`Debug` 是导入的包中的 trait（导入这两个包后可用），见下面的 derive。
+
+`Hash` 的值在解释器和编译后的程序中不同（编译后用的是 MoonBit 的哈希）。
 
 `println` 需要 `Show`。除 `Monad` 外，这些 trait 就是 MoonBit 自己的 trait：编译后，`#mbt`
 类型的实例是真正的 MoonBit impl（例如 `impl Eq for Shape with equal(a0, a1)`），MoonBit 代码
@@ -105,9 +115,15 @@ fn main {
 - `Eq`：构造子相同且字段都相等。
 - `Compare`：先按构造子的声明顺序，再从左到右比较字段。`Compare` 需要 `Eq`，所以写
   `derive(Eq, Compare)`。
+- `Hash`：构造子的位置与各字段的哈希。
+- `ToJson`、`FromJson`、`Debug`：由 MoonBit 自己 derive，所以类型必须是 `#mbt`；生成的
+  MoonBit 声明带有 `derive(ToJson, @json.FromJson, Debug)`，MoonBit++ 的实例调用这些 MoonBit
+  方法（因此只在编译后的程序中运行）。`FromJson` 需要导入 `moonbitlang/core/json`，`Debug`
+  的实例需要导入 `moonbitlang/core/debug`（不导入时只在 MoonBit 一侧 derive）。格式与 MoonBit
+  相同，例如 `Rgb(1, 2, 3)` 是 `["Rgb",1,2,3]`，struct 是对象。
 - 类型参数会加上同一个约束：`enum Tree[T] derive(Eq)` 生成 `impl[T : Eq] Eq for Tree[T]`。
 - 只支持只有类型参数的类型：带索引的类型、构造子带返回类型（GADT）的 enum、带显式参数的
-  struct 都不支持。其他 trait（如 `Hash`）不能 derive。
+  struct 都不支持。
 - 某个字段的类型没有所需实例时，错误报告在 `derive` 所在的行。
 
 完整示例见 [examples/derive.mbtpp](https://github.com/GreckF/mbtpp/blob/main/examples/derive.mbtpp)。

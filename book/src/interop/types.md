@@ -27,8 +27,9 @@ fn f() -> @h.Handle { H(1) }
 ## impl
 
 接口中的 `impl`（包括泛型的，如 `impl[K : Show, V : Show] Show for HashMap[K, V]`）导入为
-实例，条件是 trait 是 Prelude 中对应 MoonBit 的 trait（`Show`、`Eq`、`Compare`、`Add`、`Sub`、
-`Mul`、`Div`、`Mod`、`Neg`、`Default`，见 [trait](../lang/traits.md)），或是导入的包中的 trait。
+实例，条件是 trait 是 Prelude 中对应 MoonBit 的 trait（`Show`、`Eq`、`Compare`、`Hash`、
+`ToJson`、`Default`、运算符 trait 等，见 [trait](../lang/traits.md)），或是导入的包中的 trait
+（如 `@json.FromJson`、`@debug.Debug`）。
 实例的方法调用 MoonBit 的 trait 方法（如 `Show::to_string(x)`），由 MoonBit 找到对应的
 impl。例如：
 
@@ -62,7 +63,7 @@ MoonBit 填入。填入的位置是生成的 `.mbt` 中的位置。
 
 - `async` 函数，以及参数中的 `async` 函数类型；
 - trait 对象 `&T`；
-- trait 既不是上面列出的 Prelude trait、也不是导入的 trait 的 `impl`（如 `Hash`、`ToJson`、
-  `@debug.Debug`）；
+- trait 既不是 Prelude trait、也不是导入的 trait 的 `impl`（例如没有导入 `moonbitlang/core/debug`
+  时的 `@debug.Debug`）；
 - `#deprecated` 的项；
 - trait 的重新导出（`@builtin` 的除外），以及来源包未导入的函数的重新导出。

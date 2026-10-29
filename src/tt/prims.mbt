@@ -20,6 +20,11 @@ pub fn prim_pure(name : String, args : Array[Lit]) -> Lit? {
         Some(LInt(a % b))
       }
     ("%int_neg", [LInt(a)]) => Some(LInt(-a))
+    ("%int_land", [LInt(a), LInt(b)]) => Some(LInt(a & b))
+    ("%int_lor", [LInt(a), LInt(b)]) => Some(LInt(a | b))
+    ("%int_lxor", [LInt(a), LInt(b)]) => Some(LInt(a ^ b))
+    ("%int_shl", [LInt(a), LInt(b)]) => Some(LInt(a << b))
+    ("%int_shr", [LInt(a), LInt(b)]) => Some(LInt(a >> b))
     ("%int_eq", [LInt(a), LInt(b)]) => Some(LBool(a == b))
     ("%int_lt", [LInt(a), LInt(b)]) => Some(LBool(a < b))
     ("%int_le", [LInt(a), LInt(b)]) => Some(LBool(a <= b))

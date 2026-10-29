@@ -862,6 +862,8 @@ fn op_method(op : String) -> String {
     "&" => "op_land"
     "|" => "op_lor"
     "^" => "op_lxor"
+    "<<" => "op_shl"
+    ">>" => "op_shr"
     _ => "op_unknown"
   }
 }

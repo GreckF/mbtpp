@@ -28,8 +28,9 @@ For `#mbt`, see [#mbt Types and Traits](mbt-types.md).
 
 The `impl`s of an interface (generic ones too, such as
 `impl[K : Show, V : Show] Show for HashMap[K, V]`) are imported as instances when their trait is
-one of the Prelude traits that are MoonBit's (`Show`, `Eq`, `Compare`, `Add`, `Sub`, `Mul`, `Div`,
-`Mod`, `Neg`, `Default`; see [Traits](../lang/traits.md)) or a trait of an imported package. The
+one of the Prelude traits that are MoonBit's (`Show`, `Eq`, `Compare`, `Hash`, `ToJson`, `Default`,
+the operator traits, ...; see [Traits](../lang/traits.md)) or a trait of an imported package (such
+as `@json.FromJson` or `@debug.Debug`). The
 methods of the instance call the MoonBit trait method (e.g. `Show::to_string(x)`), and MoonBit
 finds the impl. For example:
 
@@ -65,8 +66,8 @@ The following items are skipped; `moonpp check --verbose` lists them:
 
 - `async` functions, and `async` function types in parameters;
 - trait objects `&T`;
-- `impl`s of traits that are neither the Prelude traits above nor imported traits (such as
-  `Hash`, `ToJson`, `@debug.Debug`);
+- `impl`s of traits that are neither Prelude traits nor imported traits (e.g. `@debug.Debug`
+  when `moonbitlang/core/debug` is not imported);
 - `#deprecated` items;
 - trait re-exports (except those of `@builtin`), and re-exported functions whose package is not
   imported.

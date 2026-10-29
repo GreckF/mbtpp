@@ -266,6 +266,7 @@ pub fn reset_state() -> Unit {
   pub_decls.clear()
   clear_infos()
   external_instances.clear()
+  mbt_derives.clear()
   mbt_types.clear()
   mbt_fns.clear()
   metas.clear()

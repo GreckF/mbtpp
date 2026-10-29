@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-1c73caeb.js";
+            window.path_to_searchindex_js = "../searchindex-5e198cdb.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-393214f6.js"></script>
@@ -209,8 +209,9 @@
 <p><code>#mbt</code> 见 <a href="mbt-types.html">#mbt 类型与 trait</a>。</p>
 <h2 id="impl"><a class="header" href="#impl">impl</a></h2>
 <p>接口中的 <code>impl</code>（包括泛型的，如 <code>impl[K : Show, V : Show] Show for HashMap[K, V]</code>）导入为
-实例，条件是 trait 是 Prelude 中对应 MoonBit 的 trait（<code>Show</code>、<code>Eq</code>、<code>Compare</code>、<code>Add</code>、<code>Sub</code>、
-<code>Mul</code>、<code>Div</code>、<code>Mod</code>、<code>Neg</code>、<code>Default</code>，见 <a href="../lang/traits.html">trait</a>），或是导入的包中的 trait。
+实例，条件是 trait 是 Prelude 中对应 MoonBit 的 trait（<code>Show</code>、<code>Eq</code>、<code>Compare</code>、<code>Hash</code>、
+<code>ToJson</code>、<code>Default</code>、运算符 trait 等，见 <a href="../lang/traits.html">trait</a>），或是导入的包中的 trait
+（如 <code>@json.FromJson</code>、<code>@debug.Debug</code>）。
 实例的方法调用 MoonBit 的 trait 方法（如 <code>Show::to_string(x)</code>），由 MoonBit 找到对应的
 impl。例如：</p>
 <pre><code class="language-text">let a = @bigint.BigInt::from_int(1000)
@@ -235,8 +236,8 @@ MoonBit 填入。填入的位置是生成的 <code>.mbt</code> 中的位置。</
 <ul>
 <li><code>async</code> 函数，以及参数中的 <code>async</code> 函数类型；</li>
 <li>trait 对象 <code>&amp;T</code>；</li>
-<li>trait 既不是上面列出的 Prelude trait、也不是导入的 trait 的 <code>impl</code>（如 <code>Hash</code>、<code>ToJson</code>、
-<code>@debug.Debug</code>）；</li>
+<li>trait 既不是 Prelude trait、也不是导入的 trait 的 <code>impl</code>（例如没有导入 <code>moonbitlang/core/debug</code>
+时的 <code>@debug.Debug</code>）；</li>
 <li><code>#deprecated</code> 的项；</li>
 <li>trait 的重新导出（<code>@builtin</code> 的除外），以及来源包未导入的函数的重新导出。</li>
 </ul>

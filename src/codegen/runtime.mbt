@@ -327,6 +327,11 @@ let runtime_src : String =
   #|    ("%int_add", [VInt(a), VInt(b)]) => VInt(a + b)
   #|    ("%int_sub", [VInt(a), VInt(b)]) => VInt(a - b)
   #|    ("%int_mul", [VInt(a), VInt(b)]) => VInt(a * b)
+  #|    ("%int_land", [VInt(a), VInt(b)]) => VInt(a & b)
+  #|    ("%int_lor", [VInt(a), VInt(b)]) => VInt(a | b)
+  #|    ("%int_lxor", [VInt(a), VInt(b)]) => VInt(a ^ b)
+  #|    ("%int_shl", [VInt(a), VInt(b)]) => VInt(a << b)
+  #|    ("%int_shr", [VInt(a), VInt(b)]) => VInt(a >> b)
   #|    ("%int_div", [VInt(_), VInt(0)]) | ("%int_mod", [VInt(_), VInt(0)]) =>
   #|      rt_fail("division by zero")
   #|    ("%int_div", [VInt(a), VInt(b)]) => VInt(a / b)

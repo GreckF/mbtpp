@@ -84,6 +84,8 @@ fn mbt_ty_ok(ctx : Array[Bool], t : Tm) -> Bool {
         h = f
       }
       match h {
+        Global(d) if is_foreign_type(d) =>
+          args.iter().all(a => mbt_ty_ok(ctx, a))
         Global(d) if mbt_types.contains(d) && !is_mbt_trait(d) =>
           match data_info(d) {
             Some(di) =>
@@ -94,6 +96,22 @@ fn mbt_ty_ok(ctx : Array[Bool], t : Tm) -> Bool {
         _ => false
       }
     }
+  }
+}
+
+///|
+/// Is `d` an opaque MoonBit type (imported, like `@bigint.BigInt` or
+/// `@hashmap.HashMap`, or the Prelude's `Json`)? It is the MoonBit type of the
+/// same name.
+pub fn is_foreign_type(d : String) -> Bool {
+  match data_info(d) {
+    Some(di) =>
+      di.builtin &&
+      !di.is_trait &&
+      ![
+        "Int", "Double", "Bool", "Char", "String", "Unit", "Array", "Error", "Type",
+      ].contains(d)
+    None => false
   }
 }
 
@@ -349,7 +367,9 @@ fn check_mbt_decls(
     changed = false
     for m in marked {
       let (pos, n) = m
-      if !mbt_types.contains(n) || !globals.contains(n) {
+      if !mbt_types.contains(n) ||
+        !globals.contains(n) ||
+        mbt_builtin_traits.contains(n) {
         continue
       }
       let problem = if is_mbt_trait(n) {
@@ -631,6 +651,13 @@ pub let mbt_builtin_traits : Map[String, Map[String, String]] = {
   "Mod": { "op_mod": "mod" },
   "Neg": { "op_neg": "neg" },
   "Default": { "default": "default" },
+  "BitAnd": { "op_land": "land" },
+  "BitOr": { "op_lor": "lor" },
+  "BitXOr": { "op_lxor": "lxor" },
+  "Shl": { "op_shl": "shl" },
+  "Shr": { "op_shr": "shr" },
+  "Hash": { "hash": "hash" },
+  "ToJson": { "to_json": "to_json" },
 }
 
 ///|

@@ -83,6 +83,12 @@ fn check_src(file : String, src : String) -> Unit raise CheckError {
     @parser.ParseError(p, msg) =>
       raise CheckError(format_pos(file, p) + ": parse error: " + msg)
   }
+  // MoonBit's `Json` is an opaque type of the Prelude
+  let decls = if file == "<prelude>" {
+    [@parser.DOpaque({ line: 0, col: 0, }, "Json", 0), ..decls]
+  } else {
+    decls
+  }
   record_file(decls, file)
   check_decls(decls) catch {
     ElabError(p, msg) =>

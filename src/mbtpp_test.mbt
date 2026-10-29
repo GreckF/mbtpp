@@ -115,6 +115,9 @@ test "example stlc" {
       #|tt after 2 steps
       #|tt after 2 steps
       #|(fn wk(tt)) after 1 steps
+      #|((fn (#0 tt)) (fn #0)) ~> ((fn #0) tt) ~> tt
+      #|(((fn (fn #1)) tt) tt) ~> ((fn wk(tt)) tt) ~> tt
+      #|(fn wk(tt))
       #|
     ),
   )

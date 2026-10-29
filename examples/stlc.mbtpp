@@ -1,7 +1,8 @@
 // Intrinsically typed STLC with de Bruijn indices, substitution and a
-// small-step semantics; `progress` proves that a closed term is a value or
-// steps. `Tm` and `lookup` are mutually dependent: the type of `Var(i)` is
-// `lookup(i)`.
+// small-step semantics. `progress` proves that a closed term is a value or
+// steps; `canonicity` proves that it reduces to a value, and running that
+// proof is an evaluator. `Tm` and `lookup` are mutually dependent: the type
+// of `Var(i)` is `lookup(i)`.
 
 enum Ty {
   Top
@@ -111,6 +112,221 @@ fn[a : Ty] progress(t : Tm(Empty, a)) -> Progress(t) {
   }
 }
 
+// ---- canonicity ---------------------------------------------------------------
+//
+// Every closed term reduces to a value: Tait's logical relation `red`, by
+// recursion on the type, holds of every closed term (`canonicity`). The proof
+// lives in `Type`, so it computes: it is an evaluator (see `normalize`).
+
+// Reduction sequences.
+enum Steps : [a : Ty] -> (Tm(Empty, a), Tm(Empty, a)) -> Type {
+  Done[a : Ty, t : Tm(Empty, a)] : Steps(t, t)
+  More[a : Ty, t : Tm(Empty, a), u : Tm(Empty, a), v : Tm(Empty, a)](
+    Step1(t, u),
+    Steps(u, v),
+  ) : Steps(t, v)
+}
+
+fn[a : Ty, x : Tm(Empty, a), y : Tm(Empty, a), z : Tm(Empty, a)] steps_trans(
+  s1 : Steps(x, y),
+  s2 : Steps(y, z),
+) -> Steps(x, z) {
+  match s1 {
+    Done => s2
+    More(st, rest) => More(st, steps_trans(rest, s2))
+  }
+}
+
+// Reduction in the function position of an application.
+fn[a : Ty, b : Ty, t : Tm(Empty, Arr(a, b)), t2 : Tm(Empty, Arr(a, b))] steps_app(
+  s : Steps(t, t2),
+  u : Tm(Empty, a),
+) -> Steps(App(t, u), App(t2, u)) {
+  match s {
+    Done => Done
+    More[_, t0, t1, _](st, rest) => More(StApp1(t0, t1, u, st), steps_app(rest, u))
+  }
+}
+
+// `red(a, t)`: `t` reduces to `tt` (at `Top`), or to a function that maps
+// related arguments to related results (at `Arr(a, b)`).
+fn red(a : Ty, t : Tm(Empty, a)) -> Type {
+  match a {
+    Top => Steps(t, TT)
+    Arr(a1, b1) => RedArr(a1, b1, t)
+  }
+}
+
+struct RedArr(a : Ty, b : Ty, t : Tm(Empty, Arr(a, b))) {
+  body : Tm(Extend(Empty, a), b)
+  steps : Steps(t, Lam(body))
+  app : (u : Tm(Empty, a), red(a, u)) -> red(b, App(t, u))
+}
+
+// `red` is closed under expansion.
+fn[a : Ty, t : Tm(Empty, a), t2 : Tm(Empty, a)] expand(
+  s : Steps(t, t2),
+  r : red(a, t2),
+) -> red(a, t) {
+  match a {
+    Top => steps_trans(s, r)
+    Arr(_, _) =>
+      {
+        body: r.body,
+        steps: steps_trans(s, r.steps),
+        app: (u, ru) => expand(steps_app(s, u), (r.app)(u, ru)),
+      }
+  }
+}
+
+// ---- the substitution lemma ----------------------------------------------------
+//
+// Substituting `u` for the variable bound by a lambda after pushing a closing
+// substitution `sigma` under it, is substituting `sigma` extended with `u`.
+// Under `dl` more binders (`shifts`), so that the induction goes under lambdas.
+
+enum Tel {
+  TNil
+  TSnoc(Tel, Ty)
+}
+
+fn ext(g : Ctx, dl : Tel) -> Ctx {
+  match dl {
+    TNil => g
+    TSnoc(d2, a) => Extend(ext(g, d2), a)
+  }
+}
+
+fn[d : Ctx, g : Ctx] shifts(s : Sub(d, g), dl : Tel) -> Sub(ext(d, dl), ext(g, dl)) {
+  match dl {
+    TNil => s
+    TSnoc(d2, a) => SShift(shifts(s, d2), a)
+  }
+}
+
+lemma[g : Ctx, a : Ty, b : Ty, x1 : Tm(g, Arr(a, b)), y1 : Tm(g, Arr(a, b)), x2 : Tm(g, a), y2 : Tm(g, a)] app_cong(
+  e1 : x1 === y1,
+  e2 : x2 === y2,
+) -> App(x1, x2) === App(y1, y2) {
+  match (e1, e2) {
+    (Refl, Refl) => Refl
+  }
+}
+
+lemma[g : Ctx, a1 : Ty, c : Ty] sub_comm(
+  dl : Tel,
+  sigma : Sub(Empty, g),
+  u : Tm(Empty, a1),
+  t : Tm(ext(Extend(g, a1), dl), c),
+) -> apply_sub(shifts(SExtend(SId, u), dl), apply_sub(shifts(SShift(sigma, a1), dl), t)) ===
+  apply_sub(shifts(SExtend(sigma, u), dl), t) {
+  match (dl, t) {
+    (TNil, TT) => Refl
+    (TNil, Lam(b)) => Id::cong(x => Lam(x), sub_comm(TSnoc(TNil, _), sigma, u, b))
+    (TNil, App(t1, t2)) =>
+      app_cong(sub_comm(TNil, sigma, u, t1), sub_comm(TNil, sigma, u, t2))
+    (TNil, Var(IZ)) => Refl
+    (TNil, Var(IS(_))) => Refl
+    (TNil, Wk(_)) => Refl
+    (TSnoc(_, _), TT) => Refl
+    (TSnoc(d2, a), Lam(b)) =>
+      Id::cong(x => Lam(x), sub_comm(TSnoc(TSnoc(d2, a), _), sigma, u, b))
+    (TSnoc(d2, a), App(t1, t2)) =>
+      app_cong(
+        sub_comm(TSnoc(d2, a), sigma, u, t1),
+        sub_comm(TSnoc(d2, a), sigma, u, t2),
+      )
+    (TSnoc(_, _), Var(IZ)) => Refl
+    (TSnoc(d2, a), Var(IS(i))) =>
+      Id::cong(x => Wk[_, _, a](x), sub_comm(d2, sigma, u, Var(i)))
+    (TSnoc(d2, a), Wk(t1)) => Id::cong(x => Wk[_, _, a](x), sub_comm(d2, sigma, u, t1))
+  }
+}
+
+// ---- the fundamental lemma and canonicity ---------------------------------------
+
+fn[a : Ty, x : Tm(Empty, a), y : Tm(Empty, a)] red_back(e : x === y, r : red(a, y)) -> red(a, x) {
+  match e {
+    Refl => r
+  }
+}
+
+// Closed terms are related.
+fn[a : Ty] canonicity(t : Tm(Empty, a)) -> red(a, t) {
+  match t {
+    TT => Done
+    Lam(b) =>
+      {
+        body: b,
+        steps: Done,
+        app: (u, ru) =>
+          expand(
+            More(StApp(b, u), Done),
+            fundamental(SId, u, b, i => match i {
+              IZ => ru
+            }),
+          ),
+      }
+    App(t1, t2) => (canonicity(t1).app)(t2, canonicity(t2))
+  }
+}
+
+// Open terms are related under a closing substitution `SExtend(sigma, u)`
+// whose variables are related (`rho`).
+fn[g : Ctx, c : Ty, a : Ty] fundamental(
+  sigma : Sub(Empty, g),
+  u : Tm(Empty, c),
+  t : Tm(Extend(g, c), a),
+  rho : (i : Ix(Extend(g, c))) -> red(lookup(i), apply_sub(SExtend(sigma, u), Var(i))),
+) -> red(a, apply_sub(SExtend(sigma, u), t)) {
+  match t {
+    TT => Done
+    Var(i) => rho(i)
+    Wk(t1) =>
+      // `sigma` closes `t1`: it is `SEmpty`/`SId` (closed) or an extension
+      match sigma {
+        SEmpty => canonicity(t1)
+        SId => canonicity(t1)
+        SExtend(s2, u2) => fundamental(s2, u2, t1, i => rho(IS(i)))
+      }
+    App(t1, t2) => (fundamental(sigma, u, t1, rho).app)(_, fundamental(sigma, u, t2, rho))
+    Lam(b) =>
+      {
+        body: _,
+        steps: Done,
+        app: (v, rv) =>
+          expand(
+            More(StApp(_, v), Done),
+            red_back(
+              sub_comm(TNil, SExtend(sigma, u), v, b),
+              fundamental(SExtend(sigma, u), v, b, i => match i {
+                IZ => rv
+                IS(j) => rho(j)
+              }),
+            ),
+          ),
+      }
+  }
+}
+
+// ---- the extracted evaluator ---------------------------------------------------
+
+// The reduction sequence of a closed term of the base type, from the proof.
+fn[t : Tm(Empty, Top)] Steps::trace(self : Steps(t, TT)) -> String {
+  match self {
+    Done => "tt"
+    More[_, t0, _, _](_, rest) => t0.to_string() + " ~> " + rest.trace()
+  }
+}
+
+// The value of a closed term, from the proof.
+fn[a : Ty] normalize(t : Tm(Empty, a)) -> Tm(Empty, a) {
+  match a {
+    Top => TT
+    Arr(_, _) => Lam(canonicity(t).body)
+  }
+}
+
 // ---- running it -------------------------------------------------------------
 
 // Substitution computes during type checking.
@@ -151,4 +367,8 @@ fn main {
   let k : Tm(Empty, Arr(Top, Arr(Top, Top))) = Lam(Lam(Var(IS(IZ))))
   println(eval(App(App(k, TT), TT), 0))
   println(eval(App(k, TT), 0))
+  // the evaluator extracted from canonicity
+  println(canonicity(App(apply_tt, id)).trace())
+  println(canonicity(App(App(k, TT), TT)).trace())
+  println(normalize(App(k, TT)).to_string())
 }

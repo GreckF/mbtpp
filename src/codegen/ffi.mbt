@@ -41,6 +41,11 @@ fn flatten(t : @tt.Tm) -> (@tt.Tm, Array[@tt.Tm]) {
 let scalar_types : Array[(String, String, String)] = [
   ("Int", "as_int", "VInt"),
   ("Double", "as_double", "VDouble"),
+  ("Int64", "as_int64", "VInt64"),
+  ("UInt", "as_uint", "VUInt"),
+  ("UInt64", "as_uint64", "VUInt64"),
+  ("Byte", "as_byte", "VByte"),
+  ("Float", "as_float", "VFloat"),
   ("Bool", "as_bool", "VBool"),
   ("Char", "as_char", "VChar"),
   ("String", "as_str", "VStr"),
@@ -79,9 +84,10 @@ fn Gen::foreign_type(self : Gen, stack : Array[Binder], t : @tt.Tm) -> String? {
     Global(n) =>
       match @tt.data_info(n) {
         Some(di) if di.builtin &&
-          !["Int", "Double", "Bool", "Char", "String", "Unit", "Array", "Error"].contains(
-            n,
-          ) &&
+          ![
+            "Int", "Double", "Bool", "Char", "String", "Unit", "Array", "Error",
+            "Int64", "UInt", "UInt64", "Byte", "Float",
+          ].contains(n) &&
           args.iter().all(a => is_tyvar(stack, a)) => {
           let ty = if args.length() == 0 {
             n

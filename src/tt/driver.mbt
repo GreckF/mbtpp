@@ -28,7 +28,11 @@ fn builtin_data(
 pub fn setup() -> Unit {
   reset_state()
   reset_elab()
-  for n in ["Int", "String", "Char", "Bool", "Unit", "Double"] {
+  for
+    n in [
+      "Int", "String", "Char", "Bool", "Unit", "Double", "Int64", "UInt", "UInt64",
+      "Byte", "Float",
+    ] {
     builtin_data(n, U, 0, false)
   }
   builtin_data("Error", U, 0, true)

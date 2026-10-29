@@ -11,6 +11,11 @@ let runtime_src : String =
   #|extenum Value {
   #|  VInt(Int)
   #|  VDouble(Double)
+  #|  VInt64(Int64)
+  #|  VUInt(UInt)
+  #|  VUInt64(UInt64)
+  #|  VByte(Byte)
+  #|  VFloat(Float)
   #|  VStr(String)
   #|  VChar(Char)
   #|  VBool(Bool)
@@ -127,6 +132,11 @@ let runtime_src : String =
   #|  match (a, b) {
   #|    (VInt(x), VInt(y)) => x == y
   #|    (VDouble(x), VDouble(y)) => x == y
+  #|    (VInt64(x), VInt64(y)) => x == y
+  #|    (VUInt(x), VUInt(y)) => x == y
+  #|    (VUInt64(x), VUInt64(y)) => x == y
+  #|    (VByte(x), VByte(y)) => x == y
+  #|    (VFloat(x), VFloat(y)) => x == y
   #|    (VStr(x), VStr(y)) => x == y
   #|    (VChar(x), VChar(y)) => x == y
   #|    (VBool(x), VBool(y)) => x == y
@@ -212,6 +222,11 @@ let runtime_src : String =
   #|  match v {
   #|    VInt(n) => n.to_string()
   #|    VDouble(d) => d.to_string()
+  #|    VInt64(n) => n.to_string()
+  #|    VUInt(n) => n.to_string()
+  #|    VUInt64(n) => n.to_string()
+  #|    VByte(n) => n.to_string()
+  #|    VFloat(n) => n.to_string()
   #|    VStr(s) => s.escape()
   #|    VChar(c) => c.to_string().escape()
   #|    VBool(b) => b.to_string()
@@ -242,6 +257,11 @@ let runtime_src : String =
   #|  match (self, other) {
   #|    (VInt(x), VInt(y)) => x.compare(y)
   #|    (VDouble(x), VDouble(y)) => x.compare(y)
+  #|    (VInt64(x), VInt64(y)) => x.compare(y)
+  #|    (VUInt(x), VUInt(y)) => x.compare(y)
+  #|    (VUInt64(x), VUInt64(y)) => x.compare(y)
+  #|    (VByte(x), VByte(y)) => x.compare(y)
+  #|    (VFloat(x), VFloat(y)) => x.compare(y)
   #|    (VStr(x), VStr(y)) => x.compare(y)
   #|    (VChar(x), VChar(y)) => x.compare(y)
   #|    (VBool(x), VBool(y)) => x.compare(y)
@@ -284,6 +304,41 @@ let runtime_src : String =
   #|  match v {
   #|    VDouble(d) => d
   #|    _ => rt_fail("expected a Double, got " + show_value(v))
+  #|  }
+  #|}
+  #|
+  #|fn as_int64(v : Value) -> Int64 raise {
+  #|  match v {
+  #|    VInt64(x) => x
+  #|    _ => rt_fail("expected a Int64, got " + show_value(v))
+  #|  }
+  #|}
+  #|
+  #|fn as_uint(v : Value) -> UInt raise {
+  #|  match v {
+  #|    VUInt(x) => x
+  #|    _ => rt_fail("expected a UInt, got " + show_value(v))
+  #|  }
+  #|}
+  #|
+  #|fn as_uint64(v : Value) -> UInt64 raise {
+  #|  match v {
+  #|    VUInt64(x) => x
+  #|    _ => rt_fail("expected a UInt64, got " + show_value(v))
+  #|  }
+  #|}
+  #|
+  #|fn as_byte(v : Value) -> Byte raise {
+  #|  match v {
+  #|    VByte(x) => x
+  #|    _ => rt_fail("expected a Byte, got " + show_value(v))
+  #|  }
+  #|}
+  #|
+  #|fn as_float(v : Value) -> Float raise {
+  #|  match v {
+  #|    VFloat(x) => x
+  #|    _ => rt_fail("expected a Float, got " + show_value(v))
   #|  }
   #|}
   #|
@@ -386,6 +441,125 @@ let runtime_src : String =
   #|    ("%double_compare", [VDouble(a), VDouble(b)]) => VInt(a.compare(b))
   #|    ("%double_to_string", [VDouble(a)]) => VStr(a.to_string())
   #|    ("%double_to_int", [VDouble(a)]) => VInt(a.to_int())
+  #|    ("%int64_add", [VInt64(a), VInt64(b)]) => VInt64(a + b)
+  #|    ("%int64_sub", [VInt64(a), VInt64(b)]) => VInt64(a - b)
+  #|    ("%int64_mul", [VInt64(a), VInt64(b)]) => VInt64(a * b)
+  #|    ("%int64_div", [VInt64(_), VInt64(b)]) if b == 0L => rt_fail("division by zero")
+  #|    ("%int64_div", [VInt64(a), VInt64(b)]) => VInt64(a / b)
+  #|    ("%int64_mod", [VInt64(_), VInt64(b)]) if b == 0L => rt_fail("division by zero")
+  #|    ("%int64_mod", [VInt64(a), VInt64(b)]) => VInt64(a % b)
+  #|    ("%int64_neg", [VInt64(a)]) => VInt64(-a)
+  #|    ("%int64_land", [VInt64(a), VInt64(b)]) => VInt64(a & b)
+  #|    ("%int64_lor", [VInt64(a), VInt64(b)]) => VInt64(a | b)
+  #|    ("%int64_lxor", [VInt64(a), VInt64(b)]) => VInt64(a ^ b)
+  #|    ("%int64_shl", [VInt64(a), VInt(b)]) => VInt64(a << b)
+  #|    ("%int64_shr", [VInt64(a), VInt(b)]) => VInt64(a >> b)
+  #|    ("%int64_eq", [VInt64(a), VInt64(b)]) => VBool(a == b)
+  #|    ("%int64_lt", [VInt64(a), VInt64(b)]) => VBool(a < b)
+  #|    ("%int64_le", [VInt64(a), VInt64(b)]) => VBool(a <= b)
+  #|    ("%int64_gt", [VInt64(a), VInt64(b)]) => VBool(a > b)
+  #|    ("%int64_ge", [VInt64(a), VInt64(b)]) => VBool(a >= b)
+  #|    ("%int64_compare", [VInt64(a), VInt64(b)]) => VInt(a.compare(b))
+  #|    ("%int64_to_string", [VInt64(a)]) => VStr(a.to_string())
+  #|    ("%int64_hash", [VInt64(a)]) => VInt(a.hash())
+  #|    ("%uint_add", [VUInt(a), VUInt(b)]) => VUInt(a + b)
+  #|    ("%uint_sub", [VUInt(a), VUInt(b)]) => VUInt(a - b)
+  #|    ("%uint_mul", [VUInt(a), VUInt(b)]) => VUInt(a * b)
+  #|    ("%uint_div", [VUInt(_), VUInt(b)]) if b == 0U => rt_fail("division by zero")
+  #|    ("%uint_div", [VUInt(a), VUInt(b)]) => VUInt(a / b)
+  #|    ("%uint_mod", [VUInt(_), VUInt(b)]) if b == 0U => rt_fail("division by zero")
+  #|    ("%uint_mod", [VUInt(a), VUInt(b)]) => VUInt(a % b)
+  #|    ("%uint_land", [VUInt(a), VUInt(b)]) => VUInt(a & b)
+  #|    ("%uint_lor", [VUInt(a), VUInt(b)]) => VUInt(a | b)
+  #|    ("%uint_lxor", [VUInt(a), VUInt(b)]) => VUInt(a ^ b)
+  #|    ("%uint_shl", [VUInt(a), VInt(b)]) => VUInt(a << b)
+  #|    ("%uint_shr", [VUInt(a), VInt(b)]) => VUInt(a >> b)
+  #|    ("%uint_eq", [VUInt(a), VUInt(b)]) => VBool(a == b)
+  #|    ("%uint_lt", [VUInt(a), VUInt(b)]) => VBool(a < b)
+  #|    ("%uint_le", [VUInt(a), VUInt(b)]) => VBool(a <= b)
+  #|    ("%uint_gt", [VUInt(a), VUInt(b)]) => VBool(a > b)
+  #|    ("%uint_ge", [VUInt(a), VUInt(b)]) => VBool(a >= b)
+  #|    ("%uint_compare", [VUInt(a), VUInt(b)]) => VInt(a.compare(b))
+  #|    ("%uint_to_string", [VUInt(a)]) => VStr(a.to_string())
+  #|    ("%uint_hash", [VUInt(a)]) => VInt(a.hash())
+  #|    ("%uint64_add", [VUInt64(a), VUInt64(b)]) => VUInt64(a + b)
+  #|    ("%uint64_sub", [VUInt64(a), VUInt64(b)]) => VUInt64(a - b)
+  #|    ("%uint64_mul", [VUInt64(a), VUInt64(b)]) => VUInt64(a * b)
+  #|    ("%uint64_div", [VUInt64(_), VUInt64(b)]) if b == 0UL => rt_fail("division by zero")
+  #|    ("%uint64_div", [VUInt64(a), VUInt64(b)]) => VUInt64(a / b)
+  #|    ("%uint64_mod", [VUInt64(_), VUInt64(b)]) if b == 0UL => rt_fail("division by zero")
+  #|    ("%uint64_mod", [VUInt64(a), VUInt64(b)]) => VUInt64(a % b)
+  #|    ("%uint64_land", [VUInt64(a), VUInt64(b)]) => VUInt64(a & b)
+  #|    ("%uint64_lor", [VUInt64(a), VUInt64(b)]) => VUInt64(a | b)
+  #|    ("%uint64_lxor", [VUInt64(a), VUInt64(b)]) => VUInt64(a ^ b)
+  #|    ("%uint64_shl", [VUInt64(a), VInt(b)]) => VUInt64(a << b)
+  #|    ("%uint64_shr", [VUInt64(a), VInt(b)]) => VUInt64(a >> b)
+  #|    ("%uint64_eq", [VUInt64(a), VUInt64(b)]) => VBool(a == b)
+  #|    ("%uint64_lt", [VUInt64(a), VUInt64(b)]) => VBool(a < b)
+  #|    ("%uint64_le", [VUInt64(a), VUInt64(b)]) => VBool(a <= b)
+  #|    ("%uint64_gt", [VUInt64(a), VUInt64(b)]) => VBool(a > b)
+  #|    ("%uint64_ge", [VUInt64(a), VUInt64(b)]) => VBool(a >= b)
+  #|    ("%uint64_compare", [VUInt64(a), VUInt64(b)]) => VInt(a.compare(b))
+  #|    ("%uint64_to_string", [VUInt64(a)]) => VStr(a.to_string())
+  #|    ("%uint64_hash", [VUInt64(a)]) => VInt(a.hash())
+  #|    ("%byte_add", [VByte(a), VByte(b)]) => VByte(a + b)
+  #|    ("%byte_sub", [VByte(a), VByte(b)]) => VByte(a - b)
+  #|    ("%byte_mul", [VByte(a), VByte(b)]) => VByte(a * b)
+  #|    ("%byte_div", [VByte(_), VByte(b)]) if b == b'\x00' => rt_fail("division by zero")
+  #|    ("%byte_div", [VByte(a), VByte(b)]) => VByte(a / b)
+  #|    ("%byte_mod", [VByte(_), VByte(b)]) if b == b'\x00' => rt_fail("division by zero")
+  #|    ("%byte_mod", [VByte(a), VByte(b)]) => VByte(a % b)
+  #|    ("%byte_land", [VByte(a), VByte(b)]) => VByte(a & b)
+  #|    ("%byte_lor", [VByte(a), VByte(b)]) => VByte(a | b)
+  #|    ("%byte_lxor", [VByte(a), VByte(b)]) => VByte(a ^ b)
+  #|    ("%byte_shl", [VByte(a), VInt(b)]) => VByte(a << b)
+  #|    ("%byte_shr", [VByte(a), VInt(b)]) => VByte(a >> b)
+  #|    ("%byte_eq", [VByte(a), VByte(b)]) => VBool(a == b)
+  #|    ("%byte_lt", [VByte(a), VByte(b)]) => VBool(a < b)
+  #|    ("%byte_le", [VByte(a), VByte(b)]) => VBool(a <= b)
+  #|    ("%byte_gt", [VByte(a), VByte(b)]) => VBool(a > b)
+  #|    ("%byte_ge", [VByte(a), VByte(b)]) => VBool(a >= b)
+  #|    ("%byte_compare", [VByte(a), VByte(b)]) => VInt(a.compare(b))
+  #|    ("%byte_to_string", [VByte(a)]) => VStr(a.to_string())
+  #|    ("%byte_hash", [VByte(a)]) => VInt(a.hash())
+  #|    ("%float_add", [VFloat(a), VFloat(b)]) => VFloat(a + b)
+  #|    ("%float_sub", [VFloat(a), VFloat(b)]) => VFloat(a - b)
+  #|    ("%float_mul", [VFloat(a), VFloat(b)]) => VFloat(a * b)
+  #|    ("%float_div", [VFloat(a), VFloat(b)]) => VFloat(a / b)
+  #|    ("%float_neg", [VFloat(a)]) => VFloat(-a)
+  #|    ("%float_eq", [VFloat(a), VFloat(b)]) => VBool(a == b)
+  #|    ("%float_lt", [VFloat(a), VFloat(b)]) => VBool(a < b)
+  #|    ("%float_le", [VFloat(a), VFloat(b)]) => VBool(a <= b)
+  #|    ("%float_gt", [VFloat(a), VFloat(b)]) => VBool(a > b)
+  #|    ("%float_ge", [VFloat(a), VFloat(b)]) => VBool(a >= b)
+  #|    ("%float_compare", [VFloat(a), VFloat(b)]) => VInt(a.compare(b))
+  #|    ("%float_to_string", [VFloat(a)]) => VStr(a.to_string())
+  #|    ("%float_hash", [VFloat(a)]) => VInt(a.hash())
+  #|    ("%int64_to_int", [VInt64(a)]) => VInt(a.to_int())
+  #|    ("%int64_to_double", [VInt64(a)]) => VDouble(a.to_double())
+  #|    ("%int_to_int64", [VInt(a)]) => VInt64(a.to_int64())
+  #|    ("%uint_to_int", [VUInt(a)]) => VInt(a.to_int())
+  #|    ("%uint_to_double", [VUInt(a)]) => VDouble(a.to_double())
+  #|    ("%int_to_uint", [VInt(a)]) => VUInt(a.to_uint())
+  #|    ("%uint64_to_int", [VUInt64(a)]) => VInt(a.to_int())
+  #|    ("%uint64_to_double", [VUInt64(a)]) => VDouble(a.to_double())
+  #|    ("%int_to_uint64", [VInt(a)]) => VUInt64(a.to_uint64())
+  #|    ("%byte_to_int", [VByte(a)]) => VInt(a.to_int())
+  #|    ("%byte_to_double", [VByte(a)]) => VDouble(a.to_double())
+  #|    ("%int_to_byte", [VInt(a)]) => VByte(a.to_byte())
+  #|    ("%float_to_int", [VFloat(a)]) => VInt(a.to_int())
+  #|    ("%float_to_double", [VFloat(a)]) => VDouble(a.to_double())
+  #|    ("%int_to_float", [VInt(a)]) => VFloat(Float::from_int(a))
+  #|    ("%double_to_float", [VDouble(a)]) => VFloat(Float::from_double(a))
+  #|    ("%int64_to_uint64", [VInt64(a)]) => VUInt64(a.to_uint64())
+  #|    ("%uint64_to_int64", [VUInt64(a)]) => VInt64(a.to_int64())
+  #|    ("%uint_to_uint64", [VUInt(a)]) => VUInt64(a.to_uint64())
+  #|    ("%uint64_to_uint", [VUInt64(a)]) => VUInt(a.to_uint())
+  #|    ("%uint_to_int64", [VUInt(a)]) => VInt64(a.to_int64())
+  #|    ("%byte_to_int64", [VByte(a)]) => VInt64(a.to_int64())
+  #|    ("%byte_to_uint", [VByte(a)]) => VUInt(a.to_uint())
+  #|    ("%byte_to_uint64", [VByte(a)]) => VUInt64(a.to_uint64())
+  #|    ("%int64_to_byte", [VInt64(a)]) => VByte(a.to_byte())
   #|    ("%print", [VStr(s)]) => {
   #|      rt_write(s)
   #|      VUnit

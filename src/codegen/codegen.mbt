@@ -278,7 +278,23 @@ fn lit_code(l : @tt.Lit) -> String {
     LBool(b) => "VBool(" + b.to_string() + ")"
     LUnit => "VUnit"
     LDouble(d) => "VDouble(" + double_lit(d) + ")"
+    LInt64(n) => "VInt64(" + n.to_string() + "L)"
+    LUInt(n) => "VUInt(" + n.to_string() + "U)"
+    LUInt64(n) => "VUInt64(" + n.to_string() + "UL)"
+    LByte(b) => "VByte(" + byte_lit(b) + ")"
+    LFloat(f) => "VFloat((" + double_lit(f.to_double()) + " : Float))"
   }
+}
+
+///|
+/// A MoonBit byte literal.
+fn byte_lit(b : Byte) -> String {
+  let n = b.to_int()
+  let hex = "0123456789abcdef"
+  "b'\\x" +
+  hex[n / 16:n / 16 + 1].to_string() +
+  hex[n % 16:n % 16 + 1].to_string() +
+  "'"
 }
 
 ///|
@@ -294,7 +310,7 @@ fn pat_code(p : @tt.CPat) -> String {
 ///|
 fn has_double_pat(p : @tt.CPat) -> Bool {
   match p {
-    CPLit(LDouble(_)) => true
+    CPLit(LDouble(_) | LFloat(_)) => true
     CPCon(_, ps) => ps.iter().any(has_double_pat)
     _ => false
   }
@@ -346,7 +362,11 @@ fn Gen::native_pat(self : Gen, p : @tt.CPat, names : Array[Local]) -> String {
         LChar(c) => "VChar(" + char_lit(c) + ")"
         LBool(b) => "VBool(" + b.to_string() + ")"
         LUnit => "VUnit"
-        LDouble(_) => "_"
+        LDouble(_) | LFloat(_) => "_"
+        LInt64(n) => "VInt64(" + n.to_string() + "L)"
+        LUInt(n) => "VUInt(" + n.to_string() + "U)"
+        LUInt64(n) => "VUInt64(" + n.to_string() + "UL)"
+        LByte(b) => "VByte(" + byte_lit(b) + ")"
       }
       "(" + lp + as_marker + n + end_marker + ")"
     }

@@ -6,6 +6,10 @@
 - No resumable algebraic effects, and no automation tactics such as `simp`, `omega`, or `auto`.
 - Recursive local functions cannot use the `let mut` variables around them.
 - A `match` with array patterns is not checked for coverage and does not refine types.
+- `Map` is implemented in MoonBit++ by the Prelude (in insertion order, with linear lookups); it is
+  not MoonBit's `Map`, so imported functions taking or returning a MoonBit `Map` cannot be called.
+- There are no `BigInt` literals (`1N`), `Int16` or `UInt16`; `Float` only has its operators,
+  comparisons and conversions.
 - When functions with mutable state are run during type checking, calls that use arrays, imported functions or lambdas capturing `let mut` variables are not run (see [Mutable State and Loops](lang/mutation.md)).
 - Time limits are measured in wall-clock time, so a file may time out on a slower machine (see [Time limits](lang/type-level.md#time-limits)).
 - Structs have no mutable fields, and there are no struct patterns.

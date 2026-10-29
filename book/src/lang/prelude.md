@@ -5,6 +5,9 @@
 | 名字 | 说明 |
 | --- | --- |
 | `Int`、`Double`、`Bool`、`Char`、`String`、`Unit`、`Array[T]`、`Error` | 内置类型 |
+| `Int64`、`UInt`、`UInt64`、`Byte`、`Float` | 其他数值类型：算术、比较、位运算（整数）、`to_string`、`hash`；`to_int`、`to_double`，`Int` 的 `to_int64`、`to_uint`、`to_uint64`、`to_byte`、`to_float` 等转换 |
+| `Map[K, V]` | 按插入顺序的映射：`Map::new()`、`Map::from_array`、`get`、`set`、`m[k]`（`V?`）、`m[k] = v`、`contains`、`remove`、`length`、`keys`、`values`、`to_array`；`for k, v in m` |
+| `assert_eq`、`assert_not_eq`、`assert_true`、`assert_false` | 测试断言（抛出 `Failure`） |
 | `Nat`（`Z`、`S`） | 自然数，整数字面量在 `Nat` 处展开；`n.to_int()`、`int_to_nat(i)`、`+`、`*`、`==` |
 | `Id[T](x)(y)`、`===`、`Refl` | 命题相等；`Id::sym`、`Id::trans`、`Id::cong`、`Id::subst` |
 | `Option[T]`（`None`、`Some`）、`T?` | 可选值 |

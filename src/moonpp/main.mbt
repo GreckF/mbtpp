@@ -433,13 +433,12 @@ fn compile(opts : Options, path : String?) -> (String, String) raise Failure {
   )
   let pkg_file = StringBuilder::new()
   pkg_file.write_string("warnings = \"-a\"\n")
-  if imports.length() > 0 {
-    pkg_file.write_string("\nimport {\n")
-    for i in imports {
-      pkg_file.write_string("  " + mstr(i.path) + " @" + i.alias + ",\n")
-    }
-    pkg_file.write_string("}\n")
+  // the runtime uses the conversions of `Float` (moonbitlang/core/float)
+  pkg_file.write_string("\nimport {\n  \"moonbitlang/core/float\",\n")
+  for i in imports {
+    pkg_file.write_string("  " + mstr(i.path) + " @" + i.alias + ",\n")
   }
+  pkg_file.write_string("}\n")
   pkg_file.write_string("\noptions(\n  \"is-main\": true,\n)\n")
   write_file(out + "/" + pkg + "/moon.pkg", pkg_file.to_string())
   let pkg_dir = out + "/" + pkg

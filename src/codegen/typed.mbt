@@ -17,6 +17,11 @@
 priv enum NTy {
   NInt
   NDouble
+  NInt64
+  NUInt
+  NUInt64
+  NByte
+  NFloat
   NBool
   NChar
   NString
@@ -216,6 +221,11 @@ fn Gen::native_ty_in(self : Gen, ctx : Array[TyCtx], t : @tt.Tm) -> NTy? {
     }
     Global("Int") => Some(NInt)
     Global("Double") => Some(NDouble)
+    Global("Int64") => Some(NInt64)
+    Global("UInt") => Some(NUInt)
+    Global("UInt64") => Some(NUInt64)
+    Global("Byte") => Some(NByte)
+    Global("Float") => Some(NFloat)
     Global("Bool") => Some(NBool)
     Global("Char") => Some(NChar)
     Global("String") => Some(NString)
@@ -332,6 +342,11 @@ fn Gen::mbt_ty(self : Gen, t : NTy) -> String {
   match t {
     NInt => "Int"
     NDouble => "Double"
+    NInt64 => "Int64"
+    NUInt => "UInt"
+    NUInt64 => "UInt64"
+    NByte => "Byte"
+    NFloat => "Float"
     NBool => "Bool"
     NChar => "Char"
     NString => "String"
@@ -382,6 +397,11 @@ fn Gen::to_value(
   match t {
     NInt => "VInt(" + e + ")"
     NDouble => "VDouble(" + e + ")"
+    NInt64 => "VInt64(" + e + ")"
+    NUInt => "VUInt(" + e + ")"
+    NUInt64 => "VUInt64(" + e + ")"
+    NByte => "VByte(" + e + ")"
+    NFloat => "VFloat(" + e + ")"
     NBool => "VBool(" + e + ")"
     NChar => "VChar(" + e + ")"
     NString => "VStr(" + e + ")"
@@ -443,6 +463,11 @@ fn Gen::of_value(
   match t {
     NInt => "as_int(" + e + ")"
     NDouble => "as_double(" + e + ")"
+    NInt64 => "as_int64(" + e + ")"
+    NUInt => "as_uint(" + e + ")"
+    NUInt64 => "as_uint64(" + e + ")"
+    NByte => "as_byte(" + e + ")"
+    NFloat => "as_float(" + e + ")"
     NBool => "as_bool(" + e + ")"
     NChar => "as_char(" + e + ")"
     NString => "as_str(" + e + ")"
@@ -746,6 +771,117 @@ let native_prims : Map[String, (String, Array[NTy], NTy)] = {
   "%double_compare": ("$0.compare($1)", [NDouble, NDouble], NInt),
   "%double_to_string": ("$0.to_string()", [NDouble], NString),
   "%double_to_int": ("$0.to_int()", [NDouble], NInt),
+  "%int64_add": ("($0 + $1)", [NInt64, NInt64], NInt64),
+  "%int64_sub": ("($0 - $1)", [NInt64, NInt64], NInt64),
+  "%int64_mul": ("($0 * $1)", [NInt64, NInt64], NInt64),
+  "%int64_div": ("($0 / $1)", [NInt64, NInt64], NInt64),
+  "%int64_mod": ("($0 % $1)", [NInt64, NInt64], NInt64),
+  "%int64_neg": ("(-$0)", [NInt64], NInt64),
+  "%int64_land": ("($0 & $1)", [NInt64, NInt64], NInt64),
+  "%int64_lor": ("($0 | $1)", [NInt64, NInt64], NInt64),
+  "%int64_lxor": ("($0 ^ $1)", [NInt64, NInt64], NInt64),
+  "%int64_shl": ("($0 << $1)", [NInt64, NInt], NInt64),
+  "%int64_shr": ("($0 >> $1)", [NInt64, NInt], NInt64),
+  "%int64_eq": ("($0 == $1)", [NInt64, NInt64], NBool),
+  "%int64_lt": ("($0 < $1)", [NInt64, NInt64], NBool),
+  "%int64_le": ("($0 <= $1)", [NInt64, NInt64], NBool),
+  "%int64_gt": ("($0 > $1)", [NInt64, NInt64], NBool),
+  "%int64_ge": ("($0 >= $1)", [NInt64, NInt64], NBool),
+  "%int64_compare": ("$0.compare($1)", [NInt64, NInt64], NInt),
+  "%int64_to_string": ("$0.to_string()", [NInt64], NString),
+  "%int64_hash": ("$0.hash()", [NInt64], NInt),
+  "%uint_add": ("($0 + $1)", [NUInt, NUInt], NUInt),
+  "%uint_sub": ("($0 - $1)", [NUInt, NUInt], NUInt),
+  "%uint_mul": ("($0 * $1)", [NUInt, NUInt], NUInt),
+  "%uint_div": ("($0 / $1)", [NUInt, NUInt], NUInt),
+  "%uint_mod": ("($0 % $1)", [NUInt, NUInt], NUInt),
+  "%uint_land": ("($0 & $1)", [NUInt, NUInt], NUInt),
+  "%uint_lor": ("($0 | $1)", [NUInt, NUInt], NUInt),
+  "%uint_lxor": ("($0 ^ $1)", [NUInt, NUInt], NUInt),
+  "%uint_shl": ("($0 << $1)", [NUInt, NInt], NUInt),
+  "%uint_shr": ("($0 >> $1)", [NUInt, NInt], NUInt),
+  "%uint_eq": ("($0 == $1)", [NUInt, NUInt], NBool),
+  "%uint_lt": ("($0 < $1)", [NUInt, NUInt], NBool),
+  "%uint_le": ("($0 <= $1)", [NUInt, NUInt], NBool),
+  "%uint_gt": ("($0 > $1)", [NUInt, NUInt], NBool),
+  "%uint_ge": ("($0 >= $1)", [NUInt, NUInt], NBool),
+  "%uint_compare": ("$0.compare($1)", [NUInt, NUInt], NInt),
+  "%uint_to_string": ("$0.to_string()", [NUInt], NString),
+  "%uint_hash": ("$0.hash()", [NUInt], NInt),
+  "%uint64_add": ("($0 + $1)", [NUInt64, NUInt64], NUInt64),
+  "%uint64_sub": ("($0 - $1)", [NUInt64, NUInt64], NUInt64),
+  "%uint64_mul": ("($0 * $1)", [NUInt64, NUInt64], NUInt64),
+  "%uint64_div": ("($0 / $1)", [NUInt64, NUInt64], NUInt64),
+  "%uint64_mod": ("($0 % $1)", [NUInt64, NUInt64], NUInt64),
+  "%uint64_land": ("($0 & $1)", [NUInt64, NUInt64], NUInt64),
+  "%uint64_lor": ("($0 | $1)", [NUInt64, NUInt64], NUInt64),
+  "%uint64_lxor": ("($0 ^ $1)", [NUInt64, NUInt64], NUInt64),
+  "%uint64_shl": ("($0 << $1)", [NUInt64, NInt], NUInt64),
+  "%uint64_shr": ("($0 >> $1)", [NUInt64, NInt], NUInt64),
+  "%uint64_eq": ("($0 == $1)", [NUInt64, NUInt64], NBool),
+  "%uint64_lt": ("($0 < $1)", [NUInt64, NUInt64], NBool),
+  "%uint64_le": ("($0 <= $1)", [NUInt64, NUInt64], NBool),
+  "%uint64_gt": ("($0 > $1)", [NUInt64, NUInt64], NBool),
+  "%uint64_ge": ("($0 >= $1)", [NUInt64, NUInt64], NBool),
+  "%uint64_compare": ("$0.compare($1)", [NUInt64, NUInt64], NInt),
+  "%uint64_to_string": ("$0.to_string()", [NUInt64], NString),
+  "%uint64_hash": ("$0.hash()", [NUInt64], NInt),
+  "%byte_add": ("($0 + $1)", [NByte, NByte], NByte),
+  "%byte_sub": ("($0 - $1)", [NByte, NByte], NByte),
+  "%byte_mul": ("($0 * $1)", [NByte, NByte], NByte),
+  "%byte_div": ("($0 / $1)", [NByte, NByte], NByte),
+  "%byte_mod": ("($0 % $1)", [NByte, NByte], NByte),
+  "%byte_land": ("($0 & $1)", [NByte, NByte], NByte),
+  "%byte_lor": ("($0 | $1)", [NByte, NByte], NByte),
+  "%byte_lxor": ("($0 ^ $1)", [NByte, NByte], NByte),
+  "%byte_shl": ("($0 << $1)", [NByte, NInt], NByte),
+  "%byte_shr": ("($0 >> $1)", [NByte, NInt], NByte),
+  "%byte_eq": ("($0 == $1)", [NByte, NByte], NBool),
+  "%byte_lt": ("($0 < $1)", [NByte, NByte], NBool),
+  "%byte_le": ("($0 <= $1)", [NByte, NByte], NBool),
+  "%byte_gt": ("($0 > $1)", [NByte, NByte], NBool),
+  "%byte_ge": ("($0 >= $1)", [NByte, NByte], NBool),
+  "%byte_compare": ("$0.compare($1)", [NByte, NByte], NInt),
+  "%byte_to_string": ("$0.to_string()", [NByte], NString),
+  "%byte_hash": ("$0.hash()", [NByte], NInt),
+  "%float_add": ("($0 + $1)", [NFloat, NFloat], NFloat),
+  "%float_sub": ("($0 - $1)", [NFloat, NFloat], NFloat),
+  "%float_mul": ("($0 * $1)", [NFloat, NFloat], NFloat),
+  "%float_div": ("($0 / $1)", [NFloat, NFloat], NFloat),
+  "%float_neg": ("(-$0)", [NFloat], NFloat),
+  "%float_eq": ("($0 == $1)", [NFloat, NFloat], NBool),
+  "%float_lt": ("($0 < $1)", [NFloat, NFloat], NBool),
+  "%float_le": ("($0 <= $1)", [NFloat, NFloat], NBool),
+  "%float_gt": ("($0 > $1)", [NFloat, NFloat], NBool),
+  "%float_ge": ("($0 >= $1)", [NFloat, NFloat], NBool),
+  "%float_compare": ("$0.compare($1)", [NFloat, NFloat], NInt),
+  "%float_to_string": ("$0.to_string()", [NFloat], NString),
+  "%float_hash": ("$0.hash()", [NFloat], NInt),
+  "%int64_to_int": ("$0.to_int()", [NInt64], NInt),
+  "%int64_to_double": ("$0.to_double()", [NInt64], NDouble),
+  "%int_to_int64": ("$0.to_int64()", [NInt], NInt64),
+  "%uint_to_int": ("$0.to_int()", [NUInt], NInt),
+  "%uint_to_double": ("$0.to_double()", [NUInt], NDouble),
+  "%int_to_uint": ("$0.to_uint()", [NInt], NUInt),
+  "%uint64_to_int": ("$0.to_int()", [NUInt64], NInt),
+  "%uint64_to_double": ("$0.to_double()", [NUInt64], NDouble),
+  "%int_to_uint64": ("$0.to_uint64()", [NInt], NUInt64),
+  "%byte_to_int": ("$0.to_int()", [NByte], NInt),
+  "%byte_to_double": ("$0.to_double()", [NByte], NDouble),
+  "%int_to_byte": ("$0.to_byte()", [NInt], NByte),
+  "%float_to_int": ("$0.to_int()", [NFloat], NInt),
+  "%float_to_double": ("$0.to_double()", [NFloat], NDouble),
+  "%int_to_float": ("Float::from_int($0)", [NInt], NFloat),
+  "%double_to_float": ("Float::from_double($0)", [NDouble], NFloat),
+  "%int64_to_uint64": ("$0.to_uint64()", [NInt64], NUInt64),
+  "%uint64_to_int64": ("$0.to_int64()", [NUInt64], NInt64),
+  "%uint_to_uint64": ("$0.to_uint64()", [NUInt], NUInt64),
+  "%uint64_to_uint": ("$0.to_uint()", [NUInt64], NUInt),
+  "%uint_to_int64": ("$0.to_int64()", [NUInt], NInt64),
+  "%byte_to_int64": ("$0.to_int64()", [NByte], NInt64),
+  "%byte_to_uint": ("$0.to_uint()", [NByte], NUInt),
+  "%byte_to_uint64": ("$0.to_uint64()", [NByte], NUInt64),
+  "%int64_to_byte": ("$0.to_byte()", [NInt64], NByte),
   "%str_add": ("($0 + $1)", [NString, NString], NString),
   "%str_eq": ("($0 == $1)", [NString, NString], NBool),
   "%str_compare": ("$0.compare($1)", [NString, NString], NInt),
@@ -1267,6 +1403,11 @@ fn Gen::typed_term(
     Lit(LInt(k)) =>
       (if k < 0 { "(" + k.to_string() + ")" } else { k.to_string() }, NInt)
     Lit(LDouble(d)) => (double_lit(d), NDouble)
+    Lit(LInt64(n)) => ("(" + n.to_string() + "L)", NInt64)
+    Lit(LUInt(n)) => (n.to_string() + "U", NUInt)
+    Lit(LUInt64(n)) => (n.to_string() + "UL", NUInt64)
+    Lit(LByte(b)) => (byte_lit(b), NByte)
+    Lit(LFloat(f)) => ("(" + double_lit(f.to_double()) + " : Float)", NFloat)
     Lit(LStr(s)) => (s.escape(), NString)
     Lit(LChar(c)) => (char_lit(c), NChar)
     Lit(LBool(b)) => (b.to_string(), NBool)

@@ -293,6 +293,35 @@ fn builtin_instance(t : NTy, tr : String) -> Bool {
   match (tr, t) {
     ("Show" | "Eq" | "Compare", NInt | NDouble | NString | NBool | NChar | NUnit
     ) => true
+    (
+      "Show"
+      | "Eq"
+      | "Compare"
+      | "Hash"
+      | "Default"
+      | "Add"
+      | "Sub"
+      | "Mul"
+      | "Div",
+      NInt64
+      | NUInt
+      | NUInt64
+      | NByte
+      | NFloat,
+    ) => true
+    (
+      "Mod"
+      | "BitAnd"
+      | "BitOr"
+      | "BitXOr"
+      | "Shl"
+      | "Shr",
+      NInt64
+      | NUInt
+      | NUInt64
+      | NByte,
+    ) => true
+    ("Neg", NInt64 | NFloat) => true
     ("Add", NInt | NDouble | NString) => true
     ("Sub" | "Mul" | "Div" | "Neg", NInt | NDouble) => true
     ("Mod", NInt) => true

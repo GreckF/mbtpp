@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a0393893.js";
+            window.path_to_searchindex_js = "searchindex-5d8e64dc.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-77b35725.js"></script>
@@ -254,6 +254,10 @@ fn main {
 <tbody>
 <tr><td>整数</td><td><code>0</code>、<code>42</code>、<code>1_000</code>、<code>-1</code>、<code>0xFF</code>、<code>0o17</code>、<code>0b1010</code></td><td><code>Int</code>；期望类型是 <code>Nat</code> 时展开为 <code>S(…S(Z))</code></td></tr>
 <tr><td>浮点</td><td><code>1.5</code>、<code>2.0</code></td><td><code>Double</code></td></tr>
+<tr><td>其他整数</td><td><code>1L</code>、<code>1U</code>、<code>1UL</code>、<code>0xFFU</code></td><td><code>Int64</code>、<code>UInt</code>、<code>UInt64</code></td></tr>
+<tr><td>单精度浮点</td><td><code>1.5F</code></td><td><code>Float</code></td></tr>
+<tr><td>字节</td><td><code>b'a'</code>、<code>b'\x01'</code></td><td><code>Byte</code></td></tr>
+<tr><td>Map</td><td><code>{ "a": 1, "b": 2 }</code></td><td><code>Map[String, Int]</code>；期望类型是 <code>Map</code> 时 <code>{}</code> 是空 Map</td></tr>
 <tr><td>字符</td><td><code>'a'</code>、<code>'\n'</code></td><td><code>Char</code></td></tr>
 <tr><td>字符串</td><td><code>"hello"</code></td><td><code>String</code></td></tr>
 <tr><td>布尔</td><td><code>true</code>、<code>false</code></td><td><code>Bool</code></td></tr>
@@ -1662,6 +1666,9 @@ done
 </thead>
 <tbody>
 <tr><td><code>Int</code>、<code>Double</code>、<code>Bool</code>、<code>Char</code>、<code>String</code>、<code>Unit</code>、<code>Array[T]</code>、<code>Error</code></td><td>内置类型</td></tr>
+<tr><td><code>Int64</code>、<code>UInt</code>、<code>UInt64</code>、<code>Byte</code>、<code>Float</code></td><td>其他数值类型：算术、比较、位运算（整数）、<code>to_string</code>、<code>hash</code>；<code>to_int</code>、<code>to_double</code>，<code>Int</code> 的 <code>to_int64</code>、<code>to_uint</code>、<code>to_uint64</code>、<code>to_byte</code>、<code>to_float</code> 等转换</td></tr>
+<tr><td><code>Map[K, V]</code></td><td>按插入顺序的映射：<code>Map::new()</code>、<code>Map::from_array</code>、<code>get</code>、<code>set</code>、<code>m[k]</code>（<code>V?</code>）、<code>m[k] = v</code>、<code>contains</code>、<code>remove</code>、<code>length</code>、<code>keys</code>、<code>values</code>、<code>to_array</code>；<code>for k, v in m</code></td></tr>
+<tr><td><code>assert_eq</code>、<code>assert_not_eq</code>、<code>assert_true</code>、<code>assert_false</code></td><td>测试断言（抛出 <code>Failure</code>）</td></tr>
 <tr><td><code>Nat</code>（<code>Z</code>、<code>S</code>）</td><td>自然数，整数字面量在 <code>Nat</code> 处展开；<code>n.to_int()</code>、<code>int_to_nat(i)</code>、<code>+</code>、<code>*</code>、<code>==</code></td></tr>
 <tr><td><code>Id[T](x)(y)</code>、<code>===</code>、<code>Refl</code></td><td>命题相等；<code>Id::sym</code>、<code>Id::trans</code>、<code>Id::cong</code>、<code>Id::subst</code></td></tr>
 <tr><td><code>Option[T]</code>（<code>None</code>、<code>Some</code>）、<code>T?</code></td><td>可选值</td></tr>
@@ -2326,6 +2333,9 @@ or a bound that is not #mbt)
 <li>没有可恢复的代数效应，没有 <code>simp</code>、<code>omega</code>、<code>auto</code> 等自动化策略。</li>
 <li>递归的局部函数不能使用外层的 <code>let mut</code> 变量。</li>
 <li>含数组模式的 <code>match</code> 不做覆盖检查，也不细化类型。</li>
+<li><code>Map</code> 是 Prelude 用 MoonBit++ 实现的（按插入顺序，查找是线性的），不是 MoonBit 的 <code>Map</code>：参数或返回值
+是 MoonBit <code>Map</code> 的导入函数不能调用。</li>
+<li>没有 <code>BigInt</code> 字面量（<code>1N</code>）、<code>Int16</code>、<code>UInt16</code>；<code>Float</code> 的方法只有运算、比较和转换。</li>
 <li>类型检查时执行非纯函数时，用到数组、导入函数或捕获 <code>let mut</code> 的 lambda 的调用不执行（见<a href="#可变状态与循环">可变状态与循环</a>）。</li>
 <li>检查时限按实际时间计算，同一个文件在较慢的机器上可能超时（见<a href="#检查时限">检查时限</a>）。</li>
 <li>结构体没有可变字段，没有结构体模式。</li>

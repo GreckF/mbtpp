@@ -10,6 +10,10 @@
 | --- | --- | --- |
 | Integer | `0`, `42`, `1_000`, `-1`, `0xFF`, `0o17`, `0b1010` | `Int`; expands to `S(…S(Z))` when the expected type is `Nat` |
 | Floating point | `1.5`, `2.0` | `Double` |
+| Other integers | `1L`, `1U`, `1UL`, `0xFFU` | `Int64`, `UInt`, `UInt64` |
+| Single-precision float | `1.5F` | `Float` |
+| Byte | `b'a'`, `b'\x01'` | `Byte` |
+| Map | `{ "a": 1, "b": 2 }` | `Map[String, Int]`; `{}` is the empty map where a `Map` is expected |
 | Character | `'a'`, `'\n'` | `Char` |
 | String | `"hello"` | `String` |
 | Boolean | `true`, `false` | `Bool` |

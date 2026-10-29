@@ -3,6 +3,8 @@ pub(all) enum Tok {
   TIdent(String)
   TInt(Int32)
   TDouble(Double)
+  /// A literal of another numeric type (`1L`, `1U`, `1UL`, `1.5F`, `b'a'`).
+  TLit(Lit)
   TStr(Array[StrPart])
   TChar(Char)
   /// Keywords and symbols.
@@ -123,7 +125,7 @@ pub fn tokenize(
       }
       adv()
       adv()
-      let mut v = 0
+      let mut v : UInt64 = 0
       let mut digits = 0
       while i < n {
         let d = cs[i]
@@ -142,14 +144,28 @@ pub fn tokenize(
         if dv >= base {
           break
         }
-        v = v * base + dv
+        v = v * base.to_uint64() + dv.to_uint64()
         digits = digits + 1
         adv()
       }
       if digits == 0 {
         raise ParseError(pos, "expected digits after the base prefix")
       }
-      toks.push({ tok: TInt(v), pos, nl, })
+      // `0xFFU`, `0xFFUL`, `0xFFL`
+      let tok = if peek(0) == 'U' && peek(1) == 'L' && !is_ident_char(peek(2)) {
+        adv()
+        adv()
+        TLit(LUInt64(v))
+      } else if peek(0) == 'U' && !is_ident_char(peek(1)) {
+        adv()
+        TLit(LUInt(v.to_uint()))
+      } else if peek(0) == 'L' && !is_ident_char(peek(1)) {
+        adv()
+        TLit(LInt64(v.reinterpret_as_int64()))
+      } else {
+        TInt(v.to_int())
+      }
+      toks.push({ tok, pos, nl, })
       nl = false
       continue
     }
@@ -228,11 +244,50 @@ pub fn tokenize(
       nl = false
       continue
     }
+    // `b'a'`: a Byte
+    if c == 'b' && peek(1) == '\'' {
+      adv()
+      adv()
+      let ch = if i < n && cs[i] == '\\' {
+        adv()
+        let e = cs[i]
+        adv()
+        if e == 'x' {
+          let mut b = 0
+          for _ in 0..<2 {
+            let d = cs[i]
+            b = b * 16 +
+              (if d >= '0' && d <= '9' {
+                d.to_int() - '0'.to_int()
+              } else if d >= 'a' && d <= 'f' {
+                d.to_int() - 'a'.to_int() + 10
+              } else {
+                d.to_int() - 'A'.to_int() + 10
+              })
+            adv()
+          }
+          b.unsafe_to_char()
+        } else {
+          escape_char(pos, e)
+        }
+      } else {
+        let ch = cs[i]
+        adv()
+        ch
+      }
+      if i >= n || cs[i] != '\'' {
+        raise ParseError(pos, "unterminated byte literal")
+      }
+      adv()
+      toks.push({ tok: TLit(LByte(ch.to_int().to_byte())), pos, nl, })
+      nl = false
+      continue
+    }
     if c >= '0' && c <= '9' {
-      let mut v = 0
+      let mut v : UInt64 = 0
       while i < n && ((cs[i] >= '0' && cs[i] <= '9') || cs[i] == '_') {
         if cs[i] != '_' {
-          v = v * 10 + (cs[i].to_int() - '0'.to_int())
+          v = v * 10 + (cs[i].to_int() - '0'.to_int()).to_uint64()
         }
         adv()
       }
@@ -254,11 +309,34 @@ pub fn tokenize(
           }
           adv()
         }
-        toks.push({ tok: TDouble(d), pos, nl, })
+        // `1.5F`: a Float
+        if peek(0) == 'F' && !is_ident_char(peek(1)) {
+          adv()
+          toks.push({ tok: TLit(LFloat(Float::from_double(d))), pos, nl, })
+        } else {
+          toks.push({ tok: TDouble(d), pos, nl, })
+        }
         nl = false
         continue
       }
-      toks.push({ tok: TInt(v), pos, nl, })
+      // `1L` Int64, `1U` UInt, `1UL` UInt64, `1F` Float
+      let tok = if peek(0) == 'U' && peek(1) == 'L' && !is_ident_char(peek(2)) {
+        adv()
+        adv()
+        TLit(LUInt64(v))
+      } else if peek(0) == 'U' && !is_ident_char(peek(1)) {
+        adv()
+        TLit(LUInt(v.to_uint()))
+      } else if peek(0) == 'L' && !is_ident_char(peek(1)) {
+        adv()
+        TLit(LInt64(v.reinterpret_as_int64()))
+      } else if peek(0) == 'F' && !is_ident_char(peek(1)) {
+        adv()
+        TLit(LFloat(Float::from_double(v.to_double())))
+      } else {
+        TInt(v.to_int())
+      }
+      toks.push({ tok, pos, nl, })
       nl = false
       continue
     }

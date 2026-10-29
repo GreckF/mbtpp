@@ -18,6 +18,16 @@ pub(all) enum Lit {
   LBool(Bool)
   LUnit
   LDouble(Double)
+  /// `1L`
+  LInt64(Int64)
+  /// `1U`
+  LUInt(UInt32)
+  /// `1UL`
+  LUInt64(UInt64)
+  /// `b'a'`
+  LByte(Byte)
+  /// `1.5F`
+  LFloat(Float)
 } derive(Show, Eq)
 
 ///|

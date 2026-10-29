@@ -5,6 +5,9 @@ The Prelude is loaded automatically into every program (`moonpp --no-prelude` tu
 | Name | Description |
 | --- | --- |
 | `Int`, `Double`, `Bool`, `Char`, `String`, `Unit`, `Array[T]`, `Error` | Built-in types |
+| `Int64`, `UInt`, `UInt64`, `Byte`, `Float` | Other numeric types: arithmetic, comparison, bitwise operators (integers), `to_string`, `hash`; conversions `to_int`, `to_double`, and `Int`'s `to_int64`, `to_uint`, `to_uint64`, `to_byte`, `to_float`, etc. |
+| `Map[K, V]` | A map in insertion order: `Map::new()`, `Map::from_array`, `get`, `set`, `m[k]` (a `V?`), `m[k] = v`, `contains`, `remove`, `length`, `keys`, `values`, `to_array`; `for k, v in m` |
+| `assert_eq`, `assert_not_eq`, `assert_true`, `assert_false` | Test assertions (they raise `Failure`) |
 | `Nat` (`Z`, `S`) | Natural numbers; integer literals expand at type `Nat`; `n.to_int()`, `int_to_nat(i)`, `+`, `*`, `==` |
 | `Id[T](x)(y)`, `===`, `Refl` | Propositional equality; `Id::sym`, `Id::trans`, `Id::cong`, `Id::subst` |
 | `Option[T]` (`None`, `Some`), `T?` | Optional values |

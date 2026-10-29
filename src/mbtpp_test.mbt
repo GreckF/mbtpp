@@ -289,3 +289,26 @@ test "example data" {
     ),
   )
 }
+
+///|
+test "example numbers" {
+  inspect(
+    run_example("numbers.mbtpp"),
+    content=(
+      #|7000000000000
+      #|52
+      #|18446744073709551615
+      #|100
+      #|zero small big
+      #|1.5
+      #|-9223372036854775808
+      #|{ann: 31, bob: 27, cy: 40}
+      #|Some(27)
+      #|ann 31
+      #|bob 27
+      #|cy 40
+      #|{x: 2, y: 1}
+      #|
+    ),
+  )
+}

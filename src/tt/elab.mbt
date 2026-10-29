@@ -1046,6 +1046,9 @@ pub fn check(cxt0 : Cxt, e : @parser.Expr, ty0 : Val) -> Tm raise ElabError {
       let c2 = cxt.bind(name, a)
       Lam(x, i, false, check(c2, e, inst(cl, v)))
     }
+    // `{}` where a map is expected: the empty map
+    (EBlock(p, []), VData("Map", _)) =>
+      check(cxt, EApp(p, EVar(p, "Map::new"), None, Some([])), ty)
     (EBlock(_, stmts), _) => check_block(cxt, stmts, Some(ty)).0
     (EIf(_, c, t, el), _) => {
       let tc = check(cxt, c, bool_ty())

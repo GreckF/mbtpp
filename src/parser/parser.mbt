@@ -65,6 +65,7 @@ fn tok_desc(t : Tok) -> String {
     TIdent(s) => "identifier '" + s + "'"
     TInt(n) => "number " + n.to_string()
     TDouble(d) => "number " + d.to_string()
+    TLit(_) => "literal"
     TStr(_) => "string literal"
     TChar(_) => "character literal"
     TSym(s) => "'" + s + "'"
@@ -447,6 +448,14 @@ fn Parser::unary(self : Parser) -> Expr raise ParseError {
         ignore(self.advance())
         return self.postfix(ELit(pos, LDouble(-d)))
       }
+      TLit(LInt64(n)) => {
+        ignore(self.advance())
+        return self.postfix(ELit(pos, LInt64(-n)))
+      }
+      TLit(LFloat(f)) => {
+        ignore(self.advance())
+        return self.postfix(ELit(pos, LFloat(-f)))
+      }
       _ => ()
     }
     return EUn(pos, "-", self.unary())
@@ -676,6 +685,10 @@ fn Parser::primary(self : Parser) -> Expr raise ParseError {
       ignore(self.advance())
       ELit(pos, LDouble(d))
     }
+    TLit(l) => {
+      ignore(self.advance())
+      ELit(pos, l)
+    }
     TSym("@") => {
       // `@pkg.name`: a name from an imported package
       ignore(self.advance())
@@ -821,6 +834,8 @@ fn Parser::primary(self : Parser) -> Expr raise ParseError {
     TSym("{") =>
       if self.is_struct_literal() {
         self.struct_literal()
+      } else if self.is_map_literal() {
+        self.map_literal()
       } else {
         self.block()
       }
@@ -970,10 +985,10 @@ fn Parser::arms(self : Parser) -> Array[Arm] raise ParseError {
     let cond = if self.accept("if") { Some(self.guard_expr()) } else { None }
     let rhs = if self.accept("=>") {
       Some(
-        if self.at("{") && !self.is_struct_literal() {
+        if self.at("{") && !self.is_struct_literal() && !self.is_map_literal() {
           self.block()
         } else {
-          self.expr()
+          self.expr_or_assign()
         },
       )
     } else {
@@ -1160,12 +1175,20 @@ fn Parser::pattern_atom1(self : Parser) -> Pat raise ParseError {
       ignore(self.advance())
       PLit(pos, LInt(n))
     }
+    TLit(l) => {
+      ignore(self.advance())
+      PLit(pos, l)
+    }
     TSym("-") => {
       ignore(self.advance())
       match self.peek().tok {
         TInt(n) => {
           ignore(self.advance())
           PLit(pos, LInt(-n))
+        }
+        TLit(LInt64(n)) => {
+          ignore(self.advance())
+          PLit(pos, LInt64(-n))
         }
         _ => self.fail("expected a number")
       }
@@ -1987,4 +2010,51 @@ fn Parser::accept_ident(self : Parser, s : String) -> Bool {
   } else {
     false
   }
+}
+
+///|
+/// `{ "a": 1, ... }`: a literal key and `:`.
+fn Parser::is_map_literal(self : Parser) -> Bool {
+  self.at("{") &&
+  (match self.peek_at(1).tok {
+    TStr(_) | TInt(_) | TChar(_) | TLit(_) | TDouble(_) => true
+    TSym("true" | "false" | "-") => true
+    _ => false
+  }) &&
+  (self.at_k(2, ":") || self.at_k(3, ":"))
+}
+
+///|
+/// `{ k: v, ... }`: `Map::from_array([(k, v), ...])`.
+fn Parser::map_literal(self : Parser) -> Expr raise ParseError {
+  let pos = self.pos()
+  self.expect("{")
+  let pairs : Array[Expr] = []
+  while !self.at("}") {
+    let kpos = self.pos()
+    let k = self.unary()
+    self.expect(":")
+    let v = self.expr()
+    pairs.push(ETuple(kpos, [k, v]))
+    if !self.accept(",") {
+      break
+    }
+  }
+  self.expect("}")
+  EApp(pos, EVar(pos, "Map::from_array"), None, Some([EArray(pos, pairs)]))
+}
+
+///|
+/// An expression, or an assignment (`x = e`, `a[i] += e`) as the body of an
+/// arm.
+fn Parser::expr_or_assign(self : Parser) -> Expr raise ParseError {
+  let pos = self.pos()
+  let e = self.expr()
+  for op in ["=", "+=", "-=", "*=", "/="] {
+    if self.at(op) {
+      ignore(self.advance())
+      return EBlock(pos, [SAssign(pos, e, op, self.expr())])
+    }
+  }
+  e
 }

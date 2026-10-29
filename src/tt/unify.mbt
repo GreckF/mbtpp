@@ -377,6 +377,11 @@ pub fn lit_type(l : Lit) -> Val {
     LBool(_) => VData("Bool", [])
     LDouble(_) => VData("Double", [])
     LUnit => VData("Unit", [])
+    LInt64(_) => VData("Int64", [])
+    LUInt(_) => VData("UInt", [])
+    LUInt64(_) => VData("UInt64", [])
+    LByte(_) => VData("Byte", [])
+    LFloat(_) => VData("Float", [])
   }
 }
 

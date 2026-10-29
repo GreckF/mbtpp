@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-320c42f5.js";
+            window.path_to_searchindex_js = "searchindex-dd5331c3.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-ec08c6a2.js"></script>
@@ -254,6 +254,10 @@ fn main {
 <tbody>
 <tr><td>Integer</td><td><code>0</code>, <code>42</code>, <code>1_000</code>, <code>-1</code>, <code>0xFF</code>, <code>0o17</code>, <code>0b1010</code></td><td><code>Int</code>; expands to <code>S(…S(Z))</code> when the expected type is <code>Nat</code></td></tr>
 <tr><td>Floating point</td><td><code>1.5</code>, <code>2.0</code></td><td><code>Double</code></td></tr>
+<tr><td>Other integers</td><td><code>1L</code>, <code>1U</code>, <code>1UL</code>, <code>0xFFU</code></td><td><code>Int64</code>, <code>UInt</code>, <code>UInt64</code></td></tr>
+<tr><td>Single-precision float</td><td><code>1.5F</code></td><td><code>Float</code></td></tr>
+<tr><td>Byte</td><td><code>b'a'</code>, <code>b'\x01'</code></td><td><code>Byte</code></td></tr>
+<tr><td>Map</td><td><code>{ "a": 1, "b": 2 }</code></td><td><code>Map[String, Int]</code>; <code>{}</code> is the empty map where a <code>Map</code> is expected</td></tr>
 <tr><td>Character</td><td><code>'a'</code>, <code>'\n'</code></td><td><code>Char</code></td></tr>
 <tr><td>String</td><td><code>"hello"</code></td><td><code>String</code></td></tr>
 <tr><td>Boolean</td><td><code>true</code>, <code>false</code></td><td><code>Bool</code></td></tr>
@@ -1713,6 +1717,9 @@ returns an async lambda, compilation fails.</li>
 </thead>
 <tbody>
 <tr><td><code>Int</code>, <code>Double</code>, <code>Bool</code>, <code>Char</code>, <code>String</code>, <code>Unit</code>, <code>Array[T]</code>, <code>Error</code></td><td>Built-in types</td></tr>
+<tr><td><code>Int64</code>, <code>UInt</code>, <code>UInt64</code>, <code>Byte</code>, <code>Float</code></td><td>Other numeric types: arithmetic, comparison, bitwise operators (integers), <code>to_string</code>, <code>hash</code>; conversions <code>to_int</code>, <code>to_double</code>, and <code>Int</code>’s <code>to_int64</code>, <code>to_uint</code>, <code>to_uint64</code>, <code>to_byte</code>, <code>to_float</code>, etc.</td></tr>
+<tr><td><code>Map[K, V]</code></td><td>A map in insertion order: <code>Map::new()</code>, <code>Map::from_array</code>, <code>get</code>, <code>set</code>, <code>m[k]</code> (a <code>V?</code>), <code>m[k] = v</code>, <code>contains</code>, <code>remove</code>, <code>length</code>, <code>keys</code>, <code>values</code>, <code>to_array</code>; <code>for k, v in m</code></td></tr>
+<tr><td><code>assert_eq</code>, <code>assert_not_eq</code>, <code>assert_true</code>, <code>assert_false</code></td><td>Test assertions (they raise <code>Failure</code>)</td></tr>
 <tr><td><code>Nat</code> (<code>Z</code>, <code>S</code>)</td><td>Natural numbers; integer literals expand at type <code>Nat</code>; <code>n.to_int()</code>, <code>int_to_nat(i)</code>, <code>+</code>, <code>*</code>, <code>==</code></td></tr>
 <tr><td><code>Id[T](x)(y)</code>, <code>===</code>, <code>Refl</code></td><td>Propositional equality; <code>Id::sym</code>, <code>Id::trans</code>, <code>Id::cong</code>, <code>Id::subst</code></td></tr>
 <tr><td><code>Option[T]</code> (<code>None</code>, <code>Some</code>), <code>T?</code></td><td>Optional values</td></tr>
@@ -2405,6 +2412,10 @@ test file <code>export_wbtest.mbt</code> to the <code>main/</code> directory of 
 <li>No resumable algebraic effects, and no automation tactics such as <code>simp</code>, <code>omega</code>, or <code>auto</code>.</li>
 <li>Recursive local functions cannot use the <code>let mut</code> variables around them.</li>
 <li>A <code>match</code> with array patterns is not checked for coverage and does not refine types.</li>
+<li><code>Map</code> is implemented in MoonBit++ by the Prelude (in insertion order, with linear lookups); it is
+not MoonBit’s <code>Map</code>, so imported functions taking or returning a MoonBit <code>Map</code> cannot be called.</li>
+<li>There are no <code>BigInt</code> literals (<code>1N</code>), <code>Int16</code> or <code>UInt16</code>; <code>Float</code> only has its operators,
+comparisons and conversions.</li>
 <li>When functions with mutable state are run during type checking, calls that use arrays, imported functions or lambdas capturing <code>let mut</code> variables are not run (see <a href="#mutable-state-and-loops">Mutable State and Loops</a>).</li>
 <li>Time limits are measured in wall-clock time, so a file may time out on a slower machine (see <a href="#time-limits">Time limits</a>).</li>
 <li>Structs have no mutable fields, and there are no struct patterns.</li>

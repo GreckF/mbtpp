@@ -147,6 +147,11 @@ pub(all) enum Lit {
   LBool(Bool)
   LUnit
   LDouble(Double)
+  LInt64(Int64)
+  LUInt(UInt32)
+  LUInt64(UInt64)
+  LByte(Byte)
+  LFloat(Float)
 } derive(Eq, Show)
 
 pub(all) struct MatchRet {
@@ -249,6 +254,7 @@ pub(all) enum Tok {
   TIdent(String)
   TInt(Int32)
   TDouble(Double)
+  TLit(Lit)
   TStr(Array[StrPart])
   TChar(Char)
   TSym(String)

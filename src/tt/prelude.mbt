@@ -224,6 +224,302 @@ pub let prelude_src : String =
   #|  }
   #|}
   #|
+  #|// ---- other numeric types ----------------------------------------------
+  #|fn Int64::op_add(self : Int64, other : Int64) -> Int64 = "%int64_add"
+  #|fn Int64::op_sub(self : Int64, other : Int64) -> Int64 = "%int64_sub"
+  #|fn Int64::op_mul(self : Int64, other : Int64) -> Int64 = "%int64_mul"
+  #|fn Int64::op_div(self : Int64, other : Int64) -> Int64 = "%int64_div"
+  #|fn Int64::op_mod(self : Int64, other : Int64) -> Int64 = "%int64_mod"
+  #|fn Int64::op_neg(self : Int64) -> Int64 = "%int64_neg"
+  #|fn Int64::op_land(self : Int64, other : Int64) -> Int64 = "%int64_land"
+  #|fn Int64::op_lor(self : Int64, other : Int64) -> Int64 = "%int64_lor"
+  #|fn Int64::op_lxor(self : Int64, other : Int64) -> Int64 = "%int64_lxor"
+  #|fn Int64::op_shl(self : Int64, n : Int) -> Int64 = "%int64_shl"
+  #|fn Int64::op_shr(self : Int64, n : Int) -> Int64 = "%int64_shr"
+  #|fn Int64::op_equal(self : Int64, other : Int64) -> Bool = "%int64_eq"
+  #|fn Int64::op_lt(self : Int64, other : Int64) -> Bool = "%int64_lt"
+  #|fn Int64::op_le(self : Int64, other : Int64) -> Bool = "%int64_le"
+  #|fn Int64::op_gt(self : Int64, other : Int64) -> Bool = "%int64_gt"
+  #|fn Int64::op_ge(self : Int64, other : Int64) -> Bool = "%int64_ge"
+  #|fn Int64::compare(self : Int64, other : Int64) -> Int = "%int64_compare"
+  #|fn Int64::to_string(self : Int64) -> String = "%int64_to_string"
+  #|fn Int64::hash(self : Int64) -> Int = "%int64_hash"
+  #|fn UInt::op_add(self : UInt, other : UInt) -> UInt = "%uint_add"
+  #|fn UInt::op_sub(self : UInt, other : UInt) -> UInt = "%uint_sub"
+  #|fn UInt::op_mul(self : UInt, other : UInt) -> UInt = "%uint_mul"
+  #|fn UInt::op_div(self : UInt, other : UInt) -> UInt = "%uint_div"
+  #|fn UInt::op_mod(self : UInt, other : UInt) -> UInt = "%uint_mod"
+  #|fn UInt::op_land(self : UInt, other : UInt) -> UInt = "%uint_land"
+  #|fn UInt::op_lor(self : UInt, other : UInt) -> UInt = "%uint_lor"
+  #|fn UInt::op_lxor(self : UInt, other : UInt) -> UInt = "%uint_lxor"
+  #|fn UInt::op_shl(self : UInt, n : Int) -> UInt = "%uint_shl"
+  #|fn UInt::op_shr(self : UInt, n : Int) -> UInt = "%uint_shr"
+  #|fn UInt::op_equal(self : UInt, other : UInt) -> Bool = "%uint_eq"
+  #|fn UInt::op_lt(self : UInt, other : UInt) -> Bool = "%uint_lt"
+  #|fn UInt::op_le(self : UInt, other : UInt) -> Bool = "%uint_le"
+  #|fn UInt::op_gt(self : UInt, other : UInt) -> Bool = "%uint_gt"
+  #|fn UInt::op_ge(self : UInt, other : UInt) -> Bool = "%uint_ge"
+  #|fn UInt::compare(self : UInt, other : UInt) -> Int = "%uint_compare"
+  #|fn UInt::to_string(self : UInt) -> String = "%uint_to_string"
+  #|fn UInt::hash(self : UInt) -> Int = "%uint_hash"
+  #|fn UInt64::op_add(self : UInt64, other : UInt64) -> UInt64 = "%uint64_add"
+  #|fn UInt64::op_sub(self : UInt64, other : UInt64) -> UInt64 = "%uint64_sub"
+  #|fn UInt64::op_mul(self : UInt64, other : UInt64) -> UInt64 = "%uint64_mul"
+  #|fn UInt64::op_div(self : UInt64, other : UInt64) -> UInt64 = "%uint64_div"
+  #|fn UInt64::op_mod(self : UInt64, other : UInt64) -> UInt64 = "%uint64_mod"
+  #|fn UInt64::op_land(self : UInt64, other : UInt64) -> UInt64 = "%uint64_land"
+  #|fn UInt64::op_lor(self : UInt64, other : UInt64) -> UInt64 = "%uint64_lor"
+  #|fn UInt64::op_lxor(self : UInt64, other : UInt64) -> UInt64 = "%uint64_lxor"
+  #|fn UInt64::op_shl(self : UInt64, n : Int) -> UInt64 = "%uint64_shl"
+  #|fn UInt64::op_shr(self : UInt64, n : Int) -> UInt64 = "%uint64_shr"
+  #|fn UInt64::op_equal(self : UInt64, other : UInt64) -> Bool = "%uint64_eq"
+  #|fn UInt64::op_lt(self : UInt64, other : UInt64) -> Bool = "%uint64_lt"
+  #|fn UInt64::op_le(self : UInt64, other : UInt64) -> Bool = "%uint64_le"
+  #|fn UInt64::op_gt(self : UInt64, other : UInt64) -> Bool = "%uint64_gt"
+  #|fn UInt64::op_ge(self : UInt64, other : UInt64) -> Bool = "%uint64_ge"
+  #|fn UInt64::compare(self : UInt64, other : UInt64) -> Int = "%uint64_compare"
+  #|fn UInt64::to_string(self : UInt64) -> String = "%uint64_to_string"
+  #|fn UInt64::hash(self : UInt64) -> Int = "%uint64_hash"
+  #|fn Byte::op_add(self : Byte, other : Byte) -> Byte = "%byte_add"
+  #|fn Byte::op_sub(self : Byte, other : Byte) -> Byte = "%byte_sub"
+  #|fn Byte::op_mul(self : Byte, other : Byte) -> Byte = "%byte_mul"
+  #|fn Byte::op_div(self : Byte, other : Byte) -> Byte = "%byte_div"
+  #|fn Byte::op_mod(self : Byte, other : Byte) -> Byte = "%byte_mod"
+  #|fn Byte::op_land(self : Byte, other : Byte) -> Byte = "%byte_land"
+  #|fn Byte::op_lor(self : Byte, other : Byte) -> Byte = "%byte_lor"
+  #|fn Byte::op_lxor(self : Byte, other : Byte) -> Byte = "%byte_lxor"
+  #|fn Byte::op_shl(self : Byte, n : Int) -> Byte = "%byte_shl"
+  #|fn Byte::op_shr(self : Byte, n : Int) -> Byte = "%byte_shr"
+  #|fn Byte::op_equal(self : Byte, other : Byte) -> Bool = "%byte_eq"
+  #|fn Byte::op_lt(self : Byte, other : Byte) -> Bool = "%byte_lt"
+  #|fn Byte::op_le(self : Byte, other : Byte) -> Bool = "%byte_le"
+  #|fn Byte::op_gt(self : Byte, other : Byte) -> Bool = "%byte_gt"
+  #|fn Byte::op_ge(self : Byte, other : Byte) -> Bool = "%byte_ge"
+  #|fn Byte::compare(self : Byte, other : Byte) -> Int = "%byte_compare"
+  #|fn Byte::to_string(self : Byte) -> String = "%byte_to_string"
+  #|fn Byte::hash(self : Byte) -> Int = "%byte_hash"
+  #|fn Float::op_add(self : Float, other : Float) -> Float = "%float_add"
+  #|fn Float::op_sub(self : Float, other : Float) -> Float = "%float_sub"
+  #|fn Float::op_mul(self : Float, other : Float) -> Float = "%float_mul"
+  #|fn Float::op_div(self : Float, other : Float) -> Float = "%float_div"
+  #|fn Float::op_neg(self : Float) -> Float = "%float_neg"
+  #|fn Float::op_equal(self : Float, other : Float) -> Bool = "%float_eq"
+  #|fn Float::op_lt(self : Float, other : Float) -> Bool = "%float_lt"
+  #|fn Float::op_le(self : Float, other : Float) -> Bool = "%float_le"
+  #|fn Float::op_gt(self : Float, other : Float) -> Bool = "%float_gt"
+  #|fn Float::op_ge(self : Float, other : Float) -> Bool = "%float_ge"
+  #|fn Float::compare(self : Float, other : Float) -> Int = "%float_compare"
+  #|fn Float::to_string(self : Float) -> String = "%float_to_string"
+  #|fn Float::hash(self : Float) -> Int = "%float_hash"
+  #|fn Int64::to_int(self : Int64) -> Int = "%int64_to_int"
+  #|fn Int64::to_double(self : Int64) -> Double = "%int64_to_double"
+  #|fn Int::to_int64(self : Int) -> Int64 = "%int_to_int64"
+  #|fn UInt::to_int(self : UInt) -> Int = "%uint_to_int"
+  #|fn UInt::to_double(self : UInt) -> Double = "%uint_to_double"
+  #|fn Int::to_uint(self : Int) -> UInt = "%int_to_uint"
+  #|fn UInt64::to_int(self : UInt64) -> Int = "%uint64_to_int"
+  #|fn UInt64::to_double(self : UInt64) -> Double = "%uint64_to_double"
+  #|fn Int::to_uint64(self : Int) -> UInt64 = "%int_to_uint64"
+  #|fn Byte::to_int(self : Byte) -> Int = "%byte_to_int"
+  #|fn Byte::to_double(self : Byte) -> Double = "%byte_to_double"
+  #|fn Int::to_byte(self : Int) -> Byte = "%int_to_byte"
+  #|fn Float::to_int(self : Float) -> Int = "%float_to_int"
+  #|fn Float::to_double(self : Float) -> Double = "%float_to_double"
+  #|fn Int::to_float(self : Int) -> Float = "%int_to_float"
+  #|fn Double::to_float(self : Double) -> Float = "%double_to_float"
+  #|fn Int64::to_uint64(self : Int64) -> UInt64 = "%int64_to_uint64"
+  #|fn UInt64::to_int64(self : UInt64) -> Int64 = "%uint64_to_int64"
+  #|fn UInt::to_uint64(self : UInt) -> UInt64 = "%uint_to_uint64"
+  #|fn UInt64::to_uint(self : UInt64) -> UInt = "%uint64_to_uint"
+  #|fn UInt::to_int64(self : UInt) -> Int64 = "%uint_to_int64"
+  #|fn Byte::to_int64(self : Byte) -> Int64 = "%byte_to_int64"
+  #|fn Byte::to_uint(self : Byte) -> UInt = "%byte_to_uint"
+  #|fn Byte::to_uint64(self : Byte) -> UInt64 = "%byte_to_uint64"
+  #|fn Int64::to_byte(self : Int64) -> Byte = "%int64_to_byte"
+  #|impl Show for Int64 with to_string(self) { self.to_string() }
+  #|impl Eq for Int64 with op_equal(a, b) { a == b }
+  #|impl Compare for Int64 with compare(a, b) { a.compare(b) }
+  #|impl Hash for Int64 with hash(self) { self.hash() }
+  #|impl Default for Int64 with default() { 0L }
+  #|impl Add for Int64 with op_add(a, b) { a + b }
+  #|impl Sub for Int64 with op_sub(a, b) { a - b }
+  #|impl Mul for Int64 with op_mul(a, b) { a * b }
+  #|impl Div for Int64 with op_div(a, b) { a / b }
+  #|impl Mod for Int64 with op_mod(a, b) { a % b }
+  #|impl Neg for Int64 with op_neg(a) { -a }
+  #|impl BitAnd for Int64 with op_land(a, b) { a & b }
+  #|impl BitOr for Int64 with op_lor(a, b) { a | b }
+  #|impl BitXOr for Int64 with op_lxor(a, b) { a ^ b }
+  #|impl Shl for Int64 with op_shl(a, n) { a << n }
+  #|impl Shr for Int64 with op_shr(a, n) { a >> n }
+  #|impl Show for UInt with to_string(self) { self.to_string() }
+  #|impl Eq for UInt with op_equal(a, b) { a == b }
+  #|impl Compare for UInt with compare(a, b) { a.compare(b) }
+  #|impl Hash for UInt with hash(self) { self.hash() }
+  #|impl Default for UInt with default() { 0U }
+  #|impl Add for UInt with op_add(a, b) { a + b }
+  #|impl Sub for UInt with op_sub(a, b) { a - b }
+  #|impl Mul for UInt with op_mul(a, b) { a * b }
+  #|impl Div for UInt with op_div(a, b) { a / b }
+  #|impl Mod for UInt with op_mod(a, b) { a % b }
+  #|impl BitAnd for UInt with op_land(a, b) { a & b }
+  #|impl BitOr for UInt with op_lor(a, b) { a | b }
+  #|impl BitXOr for UInt with op_lxor(a, b) { a ^ b }
+  #|impl Shl for UInt with op_shl(a, n) { a << n }
+  #|impl Shr for UInt with op_shr(a, n) { a >> n }
+  #|impl Show for UInt64 with to_string(self) { self.to_string() }
+  #|impl Eq for UInt64 with op_equal(a, b) { a == b }
+  #|impl Compare for UInt64 with compare(a, b) { a.compare(b) }
+  #|impl Hash for UInt64 with hash(self) { self.hash() }
+  #|impl Default for UInt64 with default() { 0UL }
+  #|impl Add for UInt64 with op_add(a, b) { a + b }
+  #|impl Sub for UInt64 with op_sub(a, b) { a - b }
+  #|impl Mul for UInt64 with op_mul(a, b) { a * b }
+  #|impl Div for UInt64 with op_div(a, b) { a / b }
+  #|impl Mod for UInt64 with op_mod(a, b) { a % b }
+  #|impl BitAnd for UInt64 with op_land(a, b) { a & b }
+  #|impl BitOr for UInt64 with op_lor(a, b) { a | b }
+  #|impl BitXOr for UInt64 with op_lxor(a, b) { a ^ b }
+  #|impl Shl for UInt64 with op_shl(a, n) { a << n }
+  #|impl Shr for UInt64 with op_shr(a, n) { a >> n }
+  #|impl Show for Byte with to_string(self) { self.to_string() }
+  #|impl Eq for Byte with op_equal(a, b) { a == b }
+  #|impl Compare for Byte with compare(a, b) { a.compare(b) }
+  #|impl Hash for Byte with hash(self) { self.hash() }
+  #|impl Default for Byte with default() { b'\x00' }
+  #|impl Add for Byte with op_add(a, b) { a + b }
+  #|impl Sub for Byte with op_sub(a, b) { a - b }
+  #|impl Mul for Byte with op_mul(a, b) { a * b }
+  #|impl Div for Byte with op_div(a, b) { a / b }
+  #|impl Mod for Byte with op_mod(a, b) { a % b }
+  #|impl BitAnd for Byte with op_land(a, b) { a & b }
+  #|impl BitOr for Byte with op_lor(a, b) { a | b }
+  #|impl BitXOr for Byte with op_lxor(a, b) { a ^ b }
+  #|impl Shl for Byte with op_shl(a, n) { a << n }
+  #|impl Shr for Byte with op_shr(a, n) { a >> n }
+  #|impl Show for Float with to_string(self) { self.to_string() }
+  #|impl Eq for Float with op_equal(a, b) { a == b }
+  #|impl Compare for Float with compare(a, b) { a.compare(b) }
+  #|impl Hash for Float with hash(self) { self.hash() }
+  #|impl Default for Float with default() { 0.0F }
+  #|impl Add for Float with op_add(a, b) { a + b }
+  #|impl Sub for Float with op_sub(a, b) { a - b }
+  #|impl Mul for Float with op_mul(a, b) { a * b }
+  #|impl Div for Float with op_div(a, b) { a / b }
+  #|impl Neg for Float with op_neg(a) { -a }
+  #|
+  #|// ---- Map ------------------------------------------------------------------
+  #|
+  #|// A map from keys to values, in insertion order: `{ "a": 1 }`, `m[k]`,
+  #|// `m[k] = v`, `for k, v in m`. (It is not MoonBit's `Map`: imported MoonBit
+  #|// functions taking or returning a `Map` cannot be called.)
+  #|struct Map[K, V] {
+  #|  mut map_keys : Array[K]
+  #|  mut map_values : Array[V]
+  #|}
+  #|
+  #|fn[K, V] Map::new() -> Map[K, V] {
+  #|  { map_keys: [], map_values: [] }
+  #|}
+  #|
+  #|fn[K : Eq, V] Map::index_of(self : Map[K, V], key : K) -> Int {
+  #|  let ks = self.map_keys
+  #|  for i = 0; i < ks.length(); i = i + 1 {
+  #|    if ks[i] == key {
+  #|      return i
+  #|    }
+  #|  }
+  #|  -1
+  #|}
+  #|
+  #|fn[K : Eq, V] Map::set(self : Map[K, V], key : K, value : V) -> Unit {
+  #|  let i = self.index_of(key)
+  #|  if i < 0 {
+  #|    self.map_keys.push(key)
+  #|    self.map_values.push(value)
+  #|  } else {
+  #|    self.map_values[i] = value
+  #|  }
+  #|}
+  #|
+  #|fn[K : Eq, V] Map::get(self : Map[K, V], key : K) -> V? {
+  #|  let i = self.index_of(key)
+  #|  if i < 0 { None } else { Some(self.map_values[i]) }
+  #|}
+  #|
+  #|fn[K : Eq, V] Map::op_get(self : Map[K, V], key : K) -> V? {
+  #|  self.get(key)
+  #|}
+  #|
+  #|fn[K : Eq, V] Map::op_set(self : Map[K, V], key : K, value : V) -> Unit {
+  #|  self.set(key, value)
+  #|}
+  #|
+  #|fn[K : Eq, V] Map::contains(self : Map[K, V], key : K) -> Bool {
+  #|  self.index_of(key) >= 0
+  #|}
+  #|
+  #|fn[K : Eq, V] Map::remove(self : Map[K, V], key : K) -> Unit {
+  #|  let i = self.index_of(key)
+  #|  if i >= 0 {
+  #|    let ks : Array[K] = Array::new()
+  #|    let vs : Array[V] = Array::new()
+  #|    for j = 0; j < self.map_keys.length(); j = j + 1 {
+  #|      if j != i {
+  #|        ks.push(self.map_keys[j])
+  #|        vs.push(self.map_values[j])
+  #|      }
+  #|    }
+  #|    self.map_keys = ks
+  #|    self.map_values = vs
+  #|  }
+  #|}
+  #|
+  #|fn[K, V] Map::length(self : Map[K, V]) -> Int {
+  #|  self.map_keys.length()
+  #|}
+  #|
+  #|fn[K, V] Map::size(self : Map[K, V]) -> Int {
+  #|  self.map_keys.length()
+  #|}
+  #|
+  #|fn[K, V] Map::is_empty(self : Map[K, V]) -> Bool {
+  #|  self.map_keys.length() == 0
+  #|}
+  #|
+  #|fn[K, V] Map::keys(self : Map[K, V]) -> Array[K] {
+  #|  self.map_keys.slice(0, self.map_keys.length())
+  #|}
+  #|
+  #|fn[K, V] Map::values(self : Map[K, V]) -> Array[V] {
+  #|  self.map_values.slice(0, self.map_values.length())
+  #|}
+  #|
+  #|fn[K, V] Map::to_array(self : Map[K, V]) -> Array[(K, V)] {
+  #|  let out : Array[(K, V)] = Array::new()
+  #|  for i = 0; i < self.map_keys.length(); i = i + 1 {
+  #|    out.push((self.map_keys[i], self.map_values[i]))
+  #|  }
+  #|  out
+  #|}
+  #|
+  #|fn[K : Eq, V] Map::from_array(xs : Array[(K, V)]) -> Map[K, V] {
+  #|  let m : Map[K, V] = Map::new()
+  #|  for i = 0; i < xs.length(); i = i + 1 {
+  #|    m.set(xs[i].0, xs[i].1)
+  #|  }
+  #|  m
+  #|}
+  #|
+  #|impl[K : Show, V : Show] Show for Map[K, V] with to_string(self) {
+  #|  let mut s = "{"
+  #|  for i = 0; i < self.map_keys.length(); i = i + 1 {
+  #|    if i > 0 { s = s + ", " }
+  #|    s = s + self.map_keys[i].to_string() + ": " + self.map_values[i].to_string()
+  #|  }
+  #|  s + "}"
+  #|}
+  #|
   #|// ---- traits -----------------------------------------------------------
   #|
   #|#mbt("Show")

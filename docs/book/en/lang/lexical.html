@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-320c42f5.js";
+            window.path_to_searchindex_js = "../searchindex-dd5331c3.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-ec08c6a2.js"></script>
@@ -196,6 +196,10 @@
 <tbody>
 <tr><td>Integer</td><td><code>0</code>, <code>42</code>, <code>1_000</code>, <code>-1</code>, <code>0xFF</code>, <code>0o17</code>, <code>0b1010</code></td><td><code>Int</code>; expands to <code>S(…S(Z))</code> when the expected type is <code>Nat</code></td></tr>
 <tr><td>Floating point</td><td><code>1.5</code>, <code>2.0</code></td><td><code>Double</code></td></tr>
+<tr><td>Other integers</td><td><code>1L</code>, <code>1U</code>, <code>1UL</code>, <code>0xFFU</code></td><td><code>Int64</code>, <code>UInt</code>, <code>UInt64</code></td></tr>
+<tr><td>Single-precision float</td><td><code>1.5F</code></td><td><code>Float</code></td></tr>
+<tr><td>Byte</td><td><code>b'a'</code>, <code>b'\x01'</code></td><td><code>Byte</code></td></tr>
+<tr><td>Map</td><td><code>{ "a": 1, "b": 2 }</code></td><td><code>Map[String, Int]</code>; <code>{}</code> is the empty map where a <code>Map</code> is expected</td></tr>
 <tr><td>Character</td><td><code>'a'</code>, <code>'\n'</code></td><td><code>Char</code></td></tr>
 <tr><td>String</td><td><code>"hello"</code></td><td><code>String</code></td></tr>
 <tr><td>Boolean</td><td><code>true</code>, <code>false</code></td><td><code>Bool</code></td></tr>

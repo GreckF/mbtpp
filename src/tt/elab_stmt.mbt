@@ -212,6 +212,19 @@ fn check_block(
       let (r, rty) = check_block(cxt, rest, goal)
       (Seq(loop_tm, r), rty)
     }
+    // `for k, v in m` on a map: its pairs
+    SForIn(p, [k, v], e, body) if infer_ins(cxt.at(p), e).1 is VData("Map", _) => {
+      let pair = fresh_name_gen("__kv")
+      let body2 : @parser.Expr = EBlock(p, [
+        SLet(p, PTuple(p, [PVar(p, k), PVar(p, v)]), None, EVar(p, pair)),
+        SExpr(p, body),
+      ])
+      check_block(
+        cxt,
+        [SForIn(p, [pair], EMethod(p, e, "to_array", None, []), body2), ..rest],
+        goal,
+      )
+    }
     SForIn(p, xs, e, body) => {
       let x = xs[xs.length() - 1]
       let i = fresh_name_gen("__i")

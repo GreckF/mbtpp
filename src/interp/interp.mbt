@@ -72,6 +72,11 @@ pub fn show_rval(v : RVal) -> String {
     RLit(LBool(b)) => b.to_string()
     RLit(LUnit) => "()"
     RLit(LDouble(d)) => d.to_string()
+    RLit(LInt64(n)) => n.to_string()
+    RLit(LUInt(n)) => n.to_string()
+    RLit(LUInt64(n)) => n.to_string()
+    RLit(LByte(b)) => b.to_string()
+    RLit(LFloat(f)) => f.to_string()
     RCon(c, args) => {
       let short = match c.rev_find("::") {
         Some(i) => c.unsafe_substring(start=i + 2, end=c.length())

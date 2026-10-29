@@ -90,7 +90,10 @@ moonpp run --compiled          # 编译到 MoonBit 并用 `moon run` 运行
 `enum Tree[T0]`，`#mbt trait` 变成带真正 `impl` 和约束的 MoonBit trait；导入的 `pub(all)`
 类型和 `pub(open)` trait 自动是 `#mbt`，因此可以调用处理它们的 MoonBit 函数。`#mbt fn`
 编译成同名的公开 MoonBit 函数，MoonBit 代码可以调用（见
-[examples/mbt_types.mbtpp](examples/mbt_types.mbtpp)）。
+[examples/mbt_types.mbtpp](examples/mbt_types.mbtpp)）。Prelude 中的 `Show`、`Eq`、`Compare`、
+`Add`、`Sub`、`Mul`、`Div`、`Mod`、`Neg`、`Default` 就是 MoonBit 自己的 trait，
+`derive(Show, Eq, Compare)` 生成它们的实例；对 `#mbt` 类型，这些实例编译成 MoonBit impl（见
+[examples/derive.mbtpp](examples/derive.mbtpp)）。
 
 `moon test` 运行 `examples/` 中的示例和 `src/*_test.mbt` 中的测试。
 

@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-5dce499f.js";
+            window.path_to_searchindex_js = "searchindex-4b7a1f05.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-f86c1434.js"></script>
@@ -991,6 +991,8 @@ parameter of a method is usually <code>Self</code>. Generic methods are written 
 <code>impl[T : Show] Show for Array[T] with to_string(self) { … }</code>.</li>
 <li><strong>Bounds</strong>: <code>fn[T : Tr]</code>; multiple bounds are written <code>[T : Eq + Show]</code>.</li>
 <li><strong>Calls</strong>: <code>x.m()</code> or <code>Tr::m(x)</code>.</li>
+<li><strong>Instance search</strong>: the instances for bounds are filled in by the checker. It first looks at
+local bounds (and their supertraits), then at global instances (including generic instances).</li>
 </ul>
 <h3 id="bounds-and-implicit-parameters"><a class="header" href="#bounds-and-implicit-parameters">Bounds and implicit parameters</a></h3>
 <p><code>[T : Add]</code> and <code>[n : Nat]</code> are written the same way; they are told apart by the name to the right
@@ -1011,12 +1013,68 @@ is an error: there are no MoonBit trait objects <code>&amp;Add</code>.</li>
 side of the colon refers to that parameter.</li>
 <li>Multiple bounds must have the same kind (the kind of <code>T</code> is taken from the first trait);
 <code>[M : Monad + Show]</code> is an error.</li>
-<li><strong>Instance search</strong>: the instances for bounds are filled in by the checker. It first looks at
-local bounds (and their supertraits), then at global instances (including generic instances).</li>
 </ul>
-<p>Traits in the Prelude: <code>Show</code> (<code>to_string</code>), <code>Eq</code> (<code>op_equal</code>), <code>Compare : Eq</code> (<code>compare</code>),
-<code>Add</code> (<code>op_add</code>), <code>Monad</code> (see <a href="#higher-kinded-traits-and-monads">Higher-Kinded Traits and Monads</a>). <code>println</code> requires
-<code>Show</code>.</p>
+<h2 id="traits-in-the-prelude"><a class="header" href="#traits-in-the-prelude">Traits in the Prelude</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Trait</th><th>Methods</th><th>MoonBit trait and method</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Show</code></td><td><code>to_string(Self) -&gt; String</code></td><td><code>Show</code> (<code>to_string</code>)</td></tr>
+<tr><td><code>Eq</code></td><td><code>op_equal(Self, Self) -&gt; Bool</code> (<code>==</code>)</td><td><code>Eq</code> (<code>equal</code>)</td></tr>
+<tr><td><code>Compare : Eq</code></td><td><code>compare(Self, Self) -&gt; Int</code></td><td><code>Compare</code> (<code>compare</code>)</td></tr>
+<tr><td><code>Add</code>, <code>Sub</code>, <code>Mul</code>, <code>Div</code>, <code>Mod</code></td><td><code>op_add</code> etc. (<code>+ - * / %</code>)</td><td><code>Add</code> (<code>add</code>) etc.</td></tr>
+<tr><td><code>Neg</code></td><td><code>op_neg(Self) -&gt; Self</code> (unary <code>-</code>)</td><td><code>Neg</code> (<code>neg</code>)</td></tr>
+<tr><td><code>Default</code></td><td><code>default() -&gt; Self</code>, called as <code>Default::default()</code></td><td><code>Default</code> (<code>default</code>)</td></tr>
+<tr><td><code>Monad</code></td><td>see <a href="#higher-kinded-traits-and-monads">Higher-Kinded Traits and Monads</a></td><td>none</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>println</code> requires <code>Show</code>. Except for <code>Monad</code>, these traits are MoonBit’s own traits: in the
+compiled program, the instances for <code>#mbt</code> types are real MoonBit impls (e.g.
+<code>impl Eq for Shape with equal(a0, a1)</code>), so MoonBit code can print, compare and sort these
+values; a <code>#mbt fn</code> with these bounds (<code>fn[T : Show + Eq]</code>) compiles to a MoonBit function with
+the same bounds. Instances for other types are only used inside MoonBit++ (MoonBit already has
+the instances for <code>Int</code>, <code>String</code>, etc.).</p>
+<h2 id="derive"><a class="header" href="#derive">derive</a></h2>
+<p>Write <code>derive(Show, Eq, Compare)</code> after an enum or a struct and the checker generates the
+instances:</p>
+<pre><code class="language-moonbit">enum Tree[T] {
+  Leaf
+  Node(Tree[T], T, Tree[T])
+} derive(Show, Eq, Compare)
+
+struct Point {
+  x : Int
+  y : Int
+} derive(Show, Eq)
+
+fn main {
+  let t : Tree[Int] = Node(Leaf, 1, Leaf)
+  println(t)                      // Node(Leaf, 1, Leaf)
+  println(t == t)                 // true
+  println(Leaf.compare(t))        // -1
+  let p : Point = { x: 1, y: 2 }
+  println(p)                      // {x: 1, y: 2}
+}
+</code></pre>
+<ul>
+<li><code>Show</code>: constructors as <code>C(x, y)</code>, structs as <code>{x: 1, y: 2}</code>, fields with their own
+<code>to_string</code>.</li>
+<li><code>Eq</code>: the same constructor with equal fields.</li>
+<li><code>Compare</code>: by constructor, in declaration order, then by fields from left to right. <code>Compare</code>
+needs <code>Eq</code>, so write <code>derive(Eq, Compare)</code>.</li>
+<li>Type parameters get the same bound: <code>enum Tree[T] derive(Eq)</code> generates
+<code>impl[T : Eq] Eq for Tree[T]</code>.</li>
+<li>Only types with type parameters alone are supported: indexed types, enums whose constructors
+have a return type (GADTs) and structs with explicit parameters are not. Other traits (such as
+<code>Hash</code>) cannot be derived.</li>
+<li>If the type of a field has no instance of the trait, the error is reported on the line of the
+<code>derive</code>.</li>
+</ul>
+<p>See <a href="https://github.com/GreckF/mbtpp/blob/main/examples/derive.mbtpp">examples/derive.mbtpp</a> for
+a complete example.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="higher-kinded-traits-and-monads"><a class="header" href="#higher-kinded-traits-and-monads">Higher-Kinded Traits and Monads</a></h1>
 <p><code>Self</code> can be a type constructor. <code>Monad</code> in the Prelude:</p>
@@ -1159,7 +1217,7 @@ match no arm keep propagating outward.</li>
 <tr><td><code>List[T]</code> (<code>Nil</code>, <code>Cons</code>)</td><td>Linked lists: <code>append</code>, <code>reverse</code>, <code>length</code>, <code>map</code>, <code>flat_map</code></td></tr>
 <tr><td><code>(a, b)</code>, <code>(a, b, c)</code></td><td>Tuples (<code>Tuple2</code>, <code>Tuple3</code>)</td></tr>
 <tr><td><code>Failure</code>, <code>fail(msg)</code></td><td>General-purpose error</td></tr>
-<tr><td><code>Show</code>, <code>Eq</code>, <code>Compare</code>, <code>Add</code>, <code>Monad</code></td><td>Traits</td></tr>
+<tr><td><code>Show</code>, <code>Eq</code>, <code>Compare</code>, <code>Add</code>, <code>Sub</code>, <code>Mul</code>, <code>Div</code>, <code>Mod</code>, <code>Neg</code>, <code>Default</code>, <code>Monad</code></td><td>Traits (see <a href="#traits">Traits</a>)</td></tr>
 <tr><td><code>println</code>, <code>print</code>, <code>print_string</code></td><td>Output (<code>println</code> and <code>print</code> require <code>Show</code>)</td></tr>
 <tr><td><code>abort(msg)</code>, <code>panic()</code></td><td>Terminate the program</td></tr>
 <tr><td><code>not(b)</code></td><td>Boolean negation</td></tr>

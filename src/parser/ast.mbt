@@ -239,13 +239,16 @@ pub(all) enum Decl {
   /// no meaning in MoonBit++; it marks what may be worth exporting to
   /// MoonBit (see the `#mbt` hints).
   DPub(Decl)
+  /// `derive(Show, Eq)` after an enum or struct: the traits (with their
+  /// positions) whose instances the checker generates.
+  DDerive(Array[(Pos, String)], Decl)
 } derive(Show)
 
 ///|
 /// The declaration under its attributes.
 pub fn Decl::inner(self : Decl) -> Decl {
   match self {
-    DMbt(_, _, _, d) | DPub(d) => d.inner()
+    DMbt(_, _, _, d) | DPub(d) | DDerive(_, d) => d.inner()
     d => d
   }
 }

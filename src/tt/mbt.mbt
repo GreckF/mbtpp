@@ -378,7 +378,10 @@ fn check_mbt_impls(
 ) -> Unit raise ElabError {
   for i in impls {
     let (pos, name, tr) = i
-    if lenient || !is_mbt_trait(tr) || !globals.contains(name) {
+    if lenient ||
+      !is_mbt_trait(tr) ||
+      !globals.contains(name) ||
+      mbt_builtin_traits.contains(tr) {
       continue
     }
     match mbt_impl_problem(name, tr) {
@@ -609,4 +612,32 @@ pub fn mbt_hints(
 ///|
 fn is_trait_name(n : String) -> Bool {
   data_info(n) is Some({ is_trait: true, .. })
+}
+
+///|
+/// Prelude traits that are MoonBit's own traits: trait -> (MoonBit++
+/// method -> MoonBit method). Unlike other `#mbt` traits, their instances
+/// need not be MoonBit impls: those for `#mbt` types of the program become
+/// impls of the MoonBit trait, the others are only used by the uniform
+/// code (and MoonBit already has the instances for its own types).
+pub let mbt_builtin_traits : Map[String, Map[String, String]] = {
+  "Show": { "to_string": "to_string" },
+  "Eq": { "op_equal": "equal" },
+  "Compare": { "compare": "compare" },
+  "Add": { "op_add": "add" },
+  "Sub": { "op_sub": "sub" },
+  "Mul": { "op_mul": "mul" },
+  "Div": { "op_div": "div" },
+  "Mod": { "op_mod": "mod" },
+  "Neg": { "op_neg": "neg" },
+  "Default": { "default": "default" },
+}
+
+///|
+/// The MoonBit name of method `m` of the `#mbt` trait `tr`.
+pub fn mbt_method_name(tr : String, m : String) -> String {
+  match mbt_builtin_traits.get(tr) {
+    Some(ms) => ms.get(m).unwrap_or(m)
+    None => m
+  }
 }

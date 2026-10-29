@@ -211,6 +211,7 @@ pub let prelude_src : String =
   #|
   #|// ---- traits -----------------------------------------------------------
   #|
+  #|#mbt("Show")
   #|trait Show {
   #|  to_string(Self) -> String
   #|}
@@ -246,6 +247,7 @@ pub let prelude_src : String =
   #|  }
   #|}
   #|
+  #|#mbt("Eq")
   #|trait Eq {
   #|  op_equal(Self, Self) -> Bool
   #|}
@@ -256,7 +258,25 @@ pub let prelude_src : String =
   #|impl Eq for Char with op_equal(a, b) { a == b }
   #|impl Eq for Nat with op_equal(a, b) { a == b }
   #|impl Eq for Double with op_equal(a, b) { a == b }
+  #|impl Eq for Unit with op_equal(_, _) { true }
   #|
+  #|impl[T : Eq] Eq for Option[T] with op_equal(a, b) {
+  #|  match (a, b) {
+  #|    (None, None) => true
+  #|    (Some(x), Some(y)) => x == y
+  #|    _ => false
+  #|  }
+  #|}
+  #|
+  #|impl[T : Eq] Eq for List[T] with op_equal(a, b) {
+  #|  match (a, b) {
+  #|    (Nil, Nil) => true
+  #|    (Cons(x, xs), Cons(y, ys)) => x == y && xs == ys
+  #|    _ => false
+  #|  }
+  #|}
+  #|
+  #|#mbt("Compare")
   #|trait Compare : Eq {
   #|  compare(Self, Self) -> Int
   #|}
@@ -265,7 +285,34 @@ pub let prelude_src : String =
   #|impl Compare for String with compare(a, b) { a.compare(b) }
   #|impl Compare for Char with compare(a, b) { a.compare(b) }
   #|impl Compare for Double with compare(a, b) { a.compare(b) }
+  #|impl Compare for Bool with compare(a, b) {
+  #|  if a == b { 0 } else if a { 1 } else { -1 }
+  #|}
+  #|impl Compare for Nat with compare(a, b) { a.to_int().compare(b.to_int()) }
+  #|impl Compare for Unit with compare(_, _) { 0 }
   #|
+  #|impl[T : Compare] Compare for Option[T] with compare(a, b) {
+  #|  match (a, b) {
+  #|    (None, None) => 0
+  #|    (None, Some(_)) => -1
+  #|    (Some(_), None) => 1
+  #|    (Some(x), Some(y)) => x.compare(y)
+  #|  }
+  #|}
+  #|
+  #|impl[T : Compare] Compare for List[T] with compare(a, b) {
+  #|  match (a, b) {
+  #|    (Nil, Nil) => 0
+  #|    (Nil, Cons(_, _)) => -1
+  #|    (Cons(_, _), Nil) => 1
+  #|    (Cons(x, xs), Cons(y, ys)) => {
+  #|      let c = x.compare(y)
+  #|      if c == 0 { xs.compare(ys) } else { c }
+  #|    }
+  #|  }
+  #|}
+  #|
+  #|#mbt("Add")
   #|trait Add {
   #|  op_add(Self, Self) -> Self
   #|}
@@ -274,6 +321,59 @@ pub let prelude_src : String =
   #|impl Add for String with op_add(a, b) { a + b }
   #|impl Add for Nat with op_add(a, b) { a + b }
   #|impl Add for Double with op_add(a, b) { a + b }
+  #|
+  #|#mbt("Sub")
+  #|trait Sub {
+  #|  op_sub(Self, Self) -> Self
+  #|}
+  #|
+  #|impl Sub for Int with op_sub(a, b) { a - b }
+  #|impl Sub for Double with op_sub(a, b) { a - b }
+  #|
+  #|#mbt("Mul")
+  #|trait Mul {
+  #|  op_mul(Self, Self) -> Self
+  #|}
+  #|
+  #|impl Mul for Int with op_mul(a, b) { a * b }
+  #|impl Mul for Double with op_mul(a, b) { a * b }
+  #|impl Mul for Nat with op_mul(a, b) { a * b }
+  #|
+  #|#mbt("Div")
+  #|trait Div {
+  #|  op_div(Self, Self) -> Self
+  #|}
+  #|
+  #|impl Div for Int with op_div(a, b) { a / b }
+  #|impl Div for Double with op_div(a, b) { a / b }
+  #|
+  #|#mbt("Mod")
+  #|trait Mod {
+  #|  op_mod(Self, Self) -> Self
+  #|}
+  #|
+  #|impl Mod for Int with op_mod(a, b) { a % b }
+  #|
+  #|#mbt("Neg")
+  #|trait Neg {
+  #|  op_neg(Self) -> Self
+  #|}
+  #|
+  #|impl Neg for Int with op_neg(a) { -a }
+  #|impl Neg for Double with op_neg(a) { -a }
+  #|
+  #|#mbt("Default")
+  #|trait Default {
+  #|  default() -> Self
+  #|}
+  #|
+  #|impl Default for Int with default() { 0 }
+  #|impl Default for Double with default() { 0.0 }
+  #|impl Default for String with default() { "" }
+  #|impl Default for Bool with default() { false }
+  #|impl Default for Unit with default() { () }
+  #|impl[T] Default for Option[T] with default() { None }
+  #|impl[T] Default for List[T] with default() { Nil }
   #|
   #|trait Monad(Self : [T] -> Type) {
   #|  fn[T] pure(T) -> Self[T]

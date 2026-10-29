@@ -820,6 +820,7 @@ pub fn check_decls(
   let mbt_fn_decls : Array[(Pos, String)] = []
   let mbt_impls : Array[(Pos, String, String)] = []
   let decls : Array[@parser.Decl] = []
+  let decls0 = expand_derives(decls0)
   if !lenient {
     for d in decls0 {
       record_decl_pos(d.inner())
@@ -886,7 +887,7 @@ pub fn check_decls(
         DStruct(sd) => sd.name
         DTrait(td) => td.name
         DImpl(id) => "impl$" + id.trait_name + "$" + impl_head(id.for_ty)
-        DMbt(_, _, _, _) | DPub(_) => continue
+        DMbt(_, _, _, _) | DPub(_) | DDerive(_, _) => continue
       }
       if taken(name) && !(d is DImpl(_) && impl_groups.contains(name)) {
         skipped.push(name)
@@ -894,7 +895,7 @@ pub fn check_decls(
       }
     }
     match d {
-      DMbt(_, _, _, _) | DPub(_) => ()
+      DMbt(_, _, _, _) | DPub(_) | DDerive(_, _) => ()
       DOpaque(_, name, k) => {
         add_thunk(name, () => {
           let mut ty = U
@@ -1042,6 +1043,6 @@ fn record_decl_pos(d : @parser.Decl) -> Unit {
         set(td.name + "::" + m.name, m.pos, "method")
       }
     }
-    DImpl(_) | DMbt(_, _, _, _) | DPub(_) => ()
+    DImpl(_) | DMbt(_, _, _, _) | DPub(_) | DDerive(_, _) => ()
   }
 }

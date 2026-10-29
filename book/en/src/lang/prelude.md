@@ -12,7 +12,7 @@ The Prelude is loaded automatically into every program (`moonpp --no-prelude` tu
 | `List[T]` (`Nil`, `Cons`) | Linked lists: `append`, `reverse`, `length`, `map`, `flat_map` |
 | `(a, b)`, `(a, b, c)` | Tuples (`Tuple2`, `Tuple3`) |
 | `Failure`, `fail(msg)` | General-purpose error |
-| `Show`, `Eq`, `Compare`, `Add`, `Monad` | Traits |
+| `Show`, `Eq`, `Compare`, `Add`, `Sub`, `Mul`, `Div`, `Mod`, `Neg`, `Default`, `Monad` | Traits (see [Traits](traits.md)) |
 | `println`, `print`, `print_string` | Output (`println` and `print` require `Show`) |
 | `abort(msg)`, `panic()` | Terminate the program |
 | `not(b)` | Boolean negation |

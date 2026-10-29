@@ -51,6 +51,7 @@ pub(all) enum Decl {
   DOpaque(Pos, String, Int32)
   DMbt(Pos, String?, Bool, Decl)
   DPub(Decl)
+  DDerive(Array[(Pos, String)], Decl)
 } derive(Show)
 pub fn Decl::inner(Self) -> Self
 

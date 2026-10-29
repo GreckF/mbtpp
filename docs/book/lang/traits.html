@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-91114ce1.js";
+            window.path_to_searchindex_js = "../searchindex-d2c97973.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-393214f6.js"></script>
@@ -219,6 +219,8 @@ fn main {
 <code>impl[T : Show] Show for Array[T] with to_string(self) { … }</code>。</li>
 <li><strong>约束</strong>：<code>fn[T : Tr]</code>，多个约束 <code>[T : Eq + Show]</code>。</li>
 <li><strong>调用</strong>：<code>x.m()</code> 或 <code>Tr::m(x)</code>。</li>
+<li><strong>实例搜索</strong>：约束对应的实例由检查器自动填充：先找局部约束（以及它们的父 trait），再找全局
+实例（包括泛型实例）。</li>
 </ul>
 <h3 id="约束与隐式参数"><a class="header" href="#约束与隐式参数">约束与隐式参数</a></h3>
 <p><code>[T : Add]</code> 和 <code>[n : Nat]</code> 写法相同，由冒号右边的名字区分：</p>
@@ -235,11 +237,61 @@ fn main {
 对象 <code>&amp;Add</code>。</li>
 <li>局部名字优先：如果外层有与 trait 同名的参数，冒号右边指的是那个参数。</li>
 <li>多个约束的种类要相同（<code>T</code> 的种类取自第一个 trait），<code>[M : Monad + Show]</code> 会报错。</li>
-<li><strong>实例搜索</strong>：约束对应的实例由检查器自动填充：先找局部约束（以及它们的父 trait），再找全局
-实例（包括泛型实例）。</li>
 </ul>
-<p>Prelude 中的 trait：<code>Show</code>（<code>to_string</code>）、<code>Eq</code>（<code>op_equal</code>）、<code>Compare : Eq</code>（<code>compare</code>）、
-<code>Add</code>（<code>op_add</code>）、<code>Monad</code>（见<a href="monad.html">高阶 trait 与 monad</a>）。<code>println</code> 需要 <code>Show</code>。</p>
+<h2 id="prelude-中的-trait"><a class="header" href="#prelude-中的-trait">Prelude 中的 trait</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>trait</th><th>方法</th><th>MoonBit 中的 trait 与方法</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Show</code></td><td><code>to_string(Self) -&gt; String</code></td><td><code>Show</code>（<code>to_string</code>）</td></tr>
+<tr><td><code>Eq</code></td><td><code>op_equal(Self, Self) -&gt; Bool</code>（<code>==</code>）</td><td><code>Eq</code>（<code>equal</code>）</td></tr>
+<tr><td><code>Compare : Eq</code></td><td><code>compare(Self, Self) -&gt; Int</code></td><td><code>Compare</code>（<code>compare</code>）</td></tr>
+<tr><td><code>Add</code>、<code>Sub</code>、<code>Mul</code>、<code>Div</code>、<code>Mod</code></td><td><code>op_add</code> 等（<code>+ - * / %</code>）</td><td><code>Add</code>（<code>add</code>）等</td></tr>
+<tr><td><code>Neg</code></td><td><code>op_neg(Self) -&gt; Self</code>（一元 <code>-</code>）</td><td><code>Neg</code>（<code>neg</code>）</td></tr>
+<tr><td><code>Default</code></td><td><code>default() -&gt; Self</code>，用 <code>Default::default()</code> 调用</td><td><code>Default</code>（<code>default</code>）</td></tr>
+<tr><td><code>Monad</code></td><td>见<a href="monad.html">高阶 trait 与 monad</a></td><td>无</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>println</code> 需要 <code>Show</code>。除 <code>Monad</code> 外，这些 trait 就是 MoonBit 自己的 trait：编译后，<code>#mbt</code>
+类型的实例是真正的 MoonBit impl（例如 <code>impl Eq for Shape with equal(a0, a1)</code>），MoonBit 代码
+可以直接打印、比较、排序这些值；带这些约束的 <code>#mbt fn</code>（<code>fn[T : Show + Eq]</code>）编译成带同样
+约束的 MoonBit 函数。其他类型的实例只在 MoonBit++ 内部使用（MoonBit 已经有 <code>Int</code>、<code>String</code>
+等类型的实例）。</p>
+<h2 id="derive"><a class="header" href="#derive">derive</a></h2>
+<p>在 enum 或 struct 后写 <code>derive(Show, Eq, Compare)</code>，检查器会生成对应的实例：</p>
+<pre><code class="language-moonbit">enum Tree[T] {
+  Leaf
+  Node(Tree[T], T, Tree[T])
+} derive(Show, Eq, Compare)
+
+struct Point {
+  x : Int
+  y : Int
+} derive(Show, Eq)
+
+fn main {
+  let t : Tree[Int] = Node(Leaf, 1, Leaf)
+  println(t)                      // Node(Leaf, 1, Leaf)
+  println(t == t)                 // true
+  println(Leaf.compare(t))        // -1
+  let p : Point = { x: 1, y: 2 }
+  println(p)                      // {x: 1, y: 2}
+}
+</code></pre>
+<ul>
+<li><code>Show</code>：构造子写成 <code>C(x, y)</code>，struct 写成 <code>{x: 1, y: 2}</code>，字段用各自的 <code>to_string</code>。</li>
+<li><code>Eq</code>：构造子相同且字段都相等。</li>
+<li><code>Compare</code>：先按构造子的声明顺序，再从左到右比较字段。<code>Compare</code> 需要 <code>Eq</code>，所以写
+<code>derive(Eq, Compare)</code>。</li>
+<li>类型参数会加上同一个约束：<code>enum Tree[T] derive(Eq)</code> 生成 <code>impl[T : Eq] Eq for Tree[T]</code>。</li>
+<li>只支持只有类型参数的类型：带索引的类型、构造子带返回类型（GADT）的 enum、带显式参数的
+struct 都不支持。其他 trait（如 <code>Hash</code>）不能 derive。</li>
+<li>某个字段的类型没有所需实例时，错误报告在 <code>derive</code> 所在的行。</li>
+</ul>
+<p>完整示例见 <a href="https://github.com/GreckF/mbtpp/blob/main/examples/derive.mbtpp">examples/derive.mbtpp</a>。</p>
 
                     </main>
 

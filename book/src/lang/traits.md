@@ -38,6 +38,8 @@ fn main {
   `impl[T : Show] Show for Array[T] with to_string(self) { … }`。
 - **约束**：`fn[T : Tr]`，多个约束 `[T : Eq + Show]`。
 - **调用**：`x.m()` 或 `Tr::m(x)`。
+- **实例搜索**：约束对应的实例由检查器自动填充：先找局部约束（以及它们的父 trait），再找全局
+  实例（包括泛型实例）。
 
 ### 约束与隐式参数
 
@@ -55,8 +57,57 @@ trait 和类型在同一个命名空间中，不能同名，所以不会有歧�
   对象 `&Add`。
 - 局部名字优先：如果外层有与 trait 同名的参数，冒号右边指的是那个参数。
 - 多个约束的种类要相同（`T` 的种类取自第一个 trait），`[M : Monad + Show]` 会报错。
-- **实例搜索**：约束对应的实例由检查器自动填充：先找局部约束（以及它们的父 trait），再找全局
-  实例（包括泛型实例）。
 
-Prelude 中的 trait：`Show`（`to_string`）、`Eq`（`op_equal`）、`Compare : Eq`（`compare`）、
-`Add`（`op_add`）、`Monad`（见[高阶 trait 与 monad](monad.md)）。`println` 需要 `Show`。
+## Prelude 中的 trait
+
+| trait | 方法 | MoonBit 中的 trait 与方法 |
+| --- | --- | --- |
+| `Show` | `to_string(Self) -> String` | `Show`（`to_string`） |
+| `Eq` | `op_equal(Self, Self) -> Bool`（`==`） | `Eq`（`equal`） |
+| `Compare : Eq` | `compare(Self, Self) -> Int` | `Compare`（`compare`） |
+| `Add`、`Sub`、`Mul`、`Div`、`Mod` | `op_add` 等（`+ - * / %`） | `Add`（`add`）等 |
+| `Neg` | `op_neg(Self) -> Self`（一元 `-`） | `Neg`（`neg`） |
+| `Default` | `default() -> Self`，用 `Default::default()` 调用 | `Default`（`default`） |
+| `Monad` | 见[高阶 trait 与 monad](monad.md) | 无 |
+
+`println` 需要 `Show`。除 `Monad` 外，这些 trait 就是 MoonBit 自己的 trait：编译后，`#mbt`
+类型的实例是真正的 MoonBit impl（例如 `impl Eq for Shape with equal(a0, a1)`），MoonBit 代码
+可以直接打印、比较、排序这些值；带这些约束的 `#mbt fn`（`fn[T : Show + Eq]`）编译成带同样
+约束的 MoonBit 函数。其他类型的实例只在 MoonBit++ 内部使用（MoonBit 已经有 `Int`、`String`
+等类型的实例）。
+
+## derive
+
+在 enum 或 struct 后写 `derive(Show, Eq, Compare)`，检查器会生成对应的实例：
+
+```moonbit
+enum Tree[T] {
+  Leaf
+  Node(Tree[T], T, Tree[T])
+} derive(Show, Eq, Compare)
+
+struct Point {
+  x : Int
+  y : Int
+} derive(Show, Eq)
+
+fn main {
+  let t : Tree[Int] = Node(Leaf, 1, Leaf)
+  println(t)                      // Node(Leaf, 1, Leaf)
+  println(t == t)                 // true
+  println(Leaf.compare(t))        // -1
+  let p : Point = { x: 1, y: 2 }
+  println(p)                      // {x: 1, y: 2}
+}
+```
+
+- `Show`：构造子写成 `C(x, y)`，struct 写成 `{x: 1, y: 2}`，字段用各自的 `to_string`。
+- `Eq`：构造子相同且字段都相等。
+- `Compare`：先按构造子的声明顺序，再从左到右比较字段。`Compare` 需要 `Eq`，所以写
+  `derive(Eq, Compare)`。
+- 类型参数会加上同一个约束：`enum Tree[T] derive(Eq)` 生成 `impl[T : Eq] Eq for Tree[T]`。
+- 只支持只有类型参数的类型：带索引的类型、构造子带返回类型（GADT）的 enum、带显式参数的
+  struct 都不支持。其他 trait（如 `Hash`）不能 derive。
+- 某个字段的类型没有所需实例时，错误报告在 `derive` 所在的行。
+
+完整示例见 [examples/derive.mbtpp](https://github.com/GreckF/mbtpp/blob/main/examples/derive.mbtpp)。

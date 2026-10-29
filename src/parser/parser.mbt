@@ -1179,8 +1179,36 @@ fn Parser::con_decls(self : Parser) -> Array[ConDecl] raise ParseError {
 ///|
 fn Decl::without_pub(self : Decl) -> Decl {
   match self {
-    DPub(d) => d
+    DPub(d) | DDerive(_, d) => d.without_pub()
     d => d
+  }
+}
+
+///|
+/// `derive(A, B)` after a type declaration.
+fn Parser::derives(self : Parser) -> Array[(Pos, String)] raise ParseError {
+  let out : Array[(Pos, String)] = []
+  if self.is_same_line("derive") {
+    ignore(self.advance())
+    self.expect("(")
+    while !self.at(")") && self.peek().tok != TEOF {
+      let p = self.pos()
+      out.push((p, self.ident()))
+      if !self.accept(",") {
+        break
+      }
+    }
+    self.expect(")")
+  }
+  out
+}
+
+///|
+fn with_derives(d : Decl, ds : Array[(Pos, String)]) -> Decl {
+  if ds.length() == 0 {
+    d
+  } else {
+    DDerive(ds, d)
   }
 }
 
@@ -1267,16 +1295,19 @@ fn Parser::decl_body(self : Parser) -> Decl raise ParseError {
     let params = if self.at("(") { Some(self.params(false)) } else { None }
     let sig = if self.accept(":") { Some(self.expr()) } else { None }
     let cons = self.con_decls()
-    self.skip_derive()
-    return DEnum({
-      pos,
-      name,
-      impl_params: impl_bs,
-      params,
-      sig,
-      cons,
-      is_error: false,
-    })
+    let ds = self.derives()
+    return with_derives(
+      DEnum({
+        pos,
+        name,
+        impl_params: impl_bs,
+        params,
+        sig,
+        cons,
+        is_error: false,
+      }),
+      ds,
+    )
   }
   if self.accept("suberror") {
     let name = self.ident()
@@ -1327,8 +1358,11 @@ fn Parser::decl_body(self : Parser) -> Decl raise ParseError {
       }
     }
     self.expect("}")
-    self.skip_derive()
-    return DStruct({ pos, name, impl_params: impl_bs, params, fields, })
+    let ds = self.derives()
+    return with_derives(
+      DStruct({ pos, name, impl_params: impl_bs, params, fields, }),
+      ds,
+    )
   }
   if self.accept("trait") {
     let name = self.ident()

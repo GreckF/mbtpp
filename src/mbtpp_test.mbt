@@ -162,3 +162,23 @@ test "example mbt_types" {
     ),
   )
 }
+
+///|
+test "example derive" {
+  inspect(
+    run_example("derive.mbtpp"),
+    content=(
+      #|Rect(1, 2)
+      #|true
+      #|-1
+      #|Node(Leaf, 1, Node(Leaf, 2, Leaf))
+      #|{x: 1, y: 2} != {x: 1, y: 3}
+      #|{x: 1, y: 3}
+      #|Some(3)
+      #|{x: 0, y: 1}
+      #|-7
+      #|{x: 0, y: 0}
+      #|
+    ),
+  )
+}

@@ -73,6 +73,7 @@ test "codegen: native functions over scalars" {
       #|fn f_fib_t(n : Int) -> Int raise {
       #|fn f_fib(a0 : Value) -> Value raise {
       #|fn main {
+      #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
       #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
       #|fn f_show_to_string(inst : Value) -> Value raise {
     ),
@@ -140,6 +141,7 @@ test "codegen: an implicit field used at runtime is kept" {
       #|fn[T0] f_len_t(v : E_Vector[T0]) -> E_Nat raise {
       #|fn f_len(a2 : Value) -> Value raise {
       #|fn main {
+      #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
       #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
       #|fn f_show_to_string(inst : Value) -> Value raise {
       #|enum E_Nat {
@@ -174,6 +176,7 @@ test "codegen: dependent results stay uniform" {
     content=(
       #|fn f_sum_n(n : Value, acc : Value) -> Value raise {
       #|fn main {
+      #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
       #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
       #|fn f_show_to_string(inst : Value) -> Value raise {
     ),
@@ -244,15 +247,16 @@ test "codegen: #mbt functions must be native" {
   inspect(
     signatures(
       (
+        #|trait Sz { size(Self) -> Int }
+        #|impl Sz for Int with size(self) { self }
         #|#mbt
-        #|fn f(x : Int) -> Int {
-        #|  println(x)
-        #|  x
-        #|}
+        #|fn f(x : Int) -> Int { x.size() }
         #|fn main { println(f(1)) }
       ),
     ),
-    content="#mbt fn f cannot be compiled to MoonBit: its body is not in the native fragment: in `println(x)`, println has no native signature (a type without a MoonBit type, or a bound that is not #mbt)",
+    content=(
+      #|#mbt fn f cannot be compiled to MoonBit: its body is not in the native fragment: in `Sz::size(x)`, Sz::size is a method of the trait Sz, which is not #mbt
+    ),
   )
   inspect(
     signatures(
@@ -266,6 +270,7 @@ test "codegen: #mbt functions must be native" {
       #|fn f_twice_t(x : Int) -> Int raise {
       #|fn f_twice(a0 : Value) -> Value raise {
       #|fn main {
+      #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
       #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
       #|fn f_show_to_string(inst : Value) -> Value raise {
     ),

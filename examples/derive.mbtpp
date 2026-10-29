@@ -1,0 +1,63 @@
+// `derive(Show, Eq, Compare)` generates the instances. The Prelude traits
+// are MoonBit's own: for `#mbt` types the compiled program has real MoonBit
+// impls (`impl Show for Shape with to_string`, `impl Eq ... with equal`), so
+// MoonBit code can print, compare and sort these values.
+
+#mbt
+enum Shape {
+  Circle(Double)
+  Rect(Int, Int)
+  Dot
+} derive(Show, Eq, Compare)
+
+#mbt
+enum Tree[T] {
+  Leaf
+  Node(Tree[T], T, Tree[T])
+} derive(Show, Eq, Compare)
+
+#mbt
+struct Point {
+  x : Int
+  y : Int
+} derive(Show, Eq, Compare)
+
+// operator traits: `-` and unary `-` on any `T : Sub + Neg`
+impl Sub for Point with op_sub(a, b) { { x: a.x - b.x, y: a.y - b.y } }
+impl Neg for Point with op_neg(a) { { x: -a.x, y: -a.y } }
+impl Default for Point with default() { { x: 0, y: 0 } }
+
+#mbt
+fn[T : Compare] max_of(a : T, b : T) -> T {
+  if a.compare(b) >= 0 { a } else { b }
+}
+
+#mbt
+fn[T : Show + Eq] describe(a : T, b : T) -> String {
+  a.to_string() + (if a == b { " == " } else { " != " }) + b.to_string()
+}
+
+fn[T : Sub + Neg] flip_diff(a : T, b : T) -> T {
+  -(a - b)
+}
+
+fn[T : Default] zero() -> T {
+  Default::default()
+}
+
+fn main {
+  println(Rect(1, 2))
+  println(Rect(1, 2) == Rect(1, 2))
+  println(Circle(1.5).compare(Rect(0, 0)))
+  let t : Tree[Int] = Node(Leaf, 1, Node(Leaf, 2, Leaf))
+  println(max_of(t, Leaf))
+  let p : Point = { x: 1, y: 2 }
+  let q : Point = { x: 1, y: 3 }
+  println(describe(p, q))
+  println(max_of(p, q))
+  println(max_of(Some(3), None))
+  println(flip_diff(p, q))
+  println(flip_diff(10, 3))
+  let z : Point = zero()
+  println(z)
+}

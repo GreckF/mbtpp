@@ -1211,6 +1211,12 @@ fn Gen::typed_term(
         Some((c, a, b)) => {
           let (cc, tc) = self.typed(env, c)
           ignore(unify_t(tc, NBool))
+          // MoonBit does not allow `if if ...` or `if match ...`
+          let cc = if cc.has_prefix("if ") || cc.has_prefix("match ") {
+            "(" + cc + ")"
+          } else {
+            cc
+          }
           let env2 = tpush(env, TNone)
           let (ca, ta) = self.typed(env2, a)
           let (cb, tb) = self.typed(env2, b)
@@ -1422,8 +1428,10 @@ fn Gen::compute_typed(self : Gen) -> Unit {
   for tr in @tt.mbt_types.keys() {
     if is_mbt_trait(tr) {
       for i in @tt.instances_of(tr) {
-        if self.impl_info(i) is Some(_) {
-          self.mbt_impls.push(i)
+        match self.impl_info(i) {
+          Some((_, _, self_t, _)) if impl_allowed(tr, self_t) =>
+            self.mbt_impls.push(i)
+          _ => ()
         }
       }
     }

@@ -238,7 +238,7 @@ test "functions with mutation do not reduce in types" {
     content=(
       #|t.mbtpp:2:29: error: type mismatch
       #|  expected: one(()) === 1
-      #|  actual:   ?86 === ?86
+      #|  actual:   ?116 === ?116
     ),
   )
 }
@@ -348,7 +348,7 @@ test "indexing an empty vector" {
     content=(
       #|t.mbtpp:32:36: error: type mismatch
       #|  expected: Fin(0)
-      #|  actual:   Fin(S(?92(_)))
+      #|  actual:   Fin(S(?122(_)))
     ),
   )
 }
@@ -361,8 +361,8 @@ test "ill-typed object term" {
     ),
     content=(
       #|t.mbtpp:26:40: error: type mismatch
-      #|  expected: Term(?86(_), TArr(?87(_), ?88(_)))
-      #|  actual:   Term(?89(_), TInt)
+      #|  expected: Term(?116(_), TArr(?117(_), ?118(_)))
+      #|  actual:   Term(?119(_), TInt)
     ),
   )
 }
@@ -374,7 +374,7 @@ test "unbound object variable" {
     content=(
       #|t.mbtpp:26:36: error: type mismatch
       #|  expected: Term(Empty, TInt)
-      #|  actual:   Term(Ext(?88(_), ?89(_)), ?89(_))
+      #|  actual:   Term(Ext(?118(_), ?119(_)), ?119(_))
     ),
   )
 }
@@ -573,7 +573,9 @@ test "mbt: functions" {
   )
   inspect(
     check("#mbt\nfn[T : Show] f(x : T) -> String { x.to_string() }"),
-    content="t.mbtpp:1:1: error: #mbt fn f: the bound Show(T) is not a #mbt trait bound of a type parameter",
+    content=(
+      #|ok
+    ),
   )
   inspect(
     check("#mbt\nfn Nat::twice(self : Nat) -> Nat { self + self }"),
@@ -608,7 +610,7 @@ test "file order: a hint when a later file's function is needed" {
     content=(
       #|facts.mbtpp:1:36: error: type mismatch
       #|  expected: Shape::area(Sq(3)) === 9
-      #|  actual:   ?86 === ?86
+      #|  actual:   ?116 === ?116
       #|hint: Shape::area is defined in shapes.mbtpp, which is checked after facts.mbtpp, so its definition could not be used here; the error may come from that. Files are checked in dictionary order; to check shapes.mbtpp first, list it in the package's moon.pkg: options("mbtpp-order": [ "shapes.mbtpp", ... ])
     ),
   )
@@ -707,4 +709,33 @@ test "editor info: names and goals" {
       #|5: 
     ),
   )
+}
+
+///|
+test "derive: what is not supported" {
+  inspect(
+    check("enum V : Nat -> Type { N : V(0) } derive(Show)"),
+    content=(
+      #|t.mbtpp:1:42: error: derive is not supported for indexed types (V)
+    ),
+  )
+  inspect(
+    check("enum E { A } derive(Hash)"),
+    content=(
+      #|t.mbtpp:1:21: error: derive(Hash) is not supported (only Show, Eq, Compare)
+    ),
+  )
+  inspect(
+    check("struct F { f : (Int) -> Int } derive(Show)"),
+    content=(
+      #|t.mbtpp:1:61: error: no instance of Show((Int) -> Int)
+    ),
+  )
+  inspect(
+    check("enum G[T] { G(T) } derive(Compare)"),
+    content=(
+      #|t.mbtpp:1:1: error: missing instance Eq(G[T]) required by Compare
+    ),
+  )
+  inspect(check("enum H[T] { H(T) } derive(Eq, Compare)"), content="ok")
 }

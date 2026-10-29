@@ -32,6 +32,8 @@ pub let decl_kinds : Map[String, String]
 
 pub let decl_pos : Map[String, @parser.Pos]
 
+pub let derived_lines : Array[Int32]
+
 pub fn empty_cxt(@parser.Pos) -> Cxt
 
 pub fn env_push(Array[Val], Val) -> Array[Val]
@@ -74,11 +76,15 @@ pub fn lookup_global(String) -> GEntry?
 
 pub fn match_vals_opt(Array[Val], Array[Val], Array[Clause]) -> Val?
 
+pub let mbt_builtin_traits : Map[String, Map[String, String]]
+
 pub let mbt_fns : Map[String, String]
 
 pub fn mbt_hints((Array[String]) -> Array[String]) -> Array[MbtHint]
 
 pub fn mbt_info(String) -> MbtInfo?
+
+pub fn mbt_method_name(String, String) -> String
 
 pub let mbt_types : Map[String, MbtInfo]
 

@@ -59,7 +59,7 @@ fn record_name(
   global : String?,
   show : () -> String,
 ) -> Unit {
-  if in_package(p) {
+  if in_package(p) && !derived_lines.contains(p.line) {
     name_infos.push({ pos: p, name: x, global, show, })
   }
 }
@@ -101,5 +101,6 @@ fn clear_infos() -> Unit {
   name_infos.clear()
   proof_infos.clear()
   decl_pos.clear()
+  derived_lines.clear()
   decl_kinds.clear()
 }

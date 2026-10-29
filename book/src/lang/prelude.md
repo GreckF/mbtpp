@@ -12,7 +12,7 @@
 | `List[T]`（`Nil`、`Cons`） | 链表：`append`、`reverse`、`length`、`map`、`flat_map` |
 | `(a, b)`、`(a, b, c)` | 元组（`Tuple2`、`Tuple3`） |
 | `Failure`、`fail(msg)` | 通用错误 |
-| `Show`、`Eq`、`Compare`、`Add`、`Monad` | trait |
+| `Show`、`Eq`、`Compare`、`Add`、`Sub`、`Mul`、`Div`、`Mod`、`Neg`、`Default`、`Monad` | trait（见 [trait](traits.md)） |
 | `println`、`print`、`print_string` | 输出（`println` 和 `print` 需要 `Show`） |
 | `abort(msg)`、`panic()` | 终止程序 |
 | `not(b)` | 布尔取反 |

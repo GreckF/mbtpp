@@ -104,7 +104,11 @@ real `impl`s and bounds; imported `pub(all)` types and `pub(open)` traits
 are `#mbt` automatically, so MoonBit functions over them can be called.
 A `#mbt fn` is compiled to a public MoonBit function of the same name that
 MoonBit code can call (see
-[examples/mbt_types.mbtpp](examples/mbt_types.mbtpp)).
+[examples/mbt_types.mbtpp](examples/mbt_types.mbtpp)). The Prelude traits
+`Show`, `Eq`, `Compare`, `Add`, `Sub`, `Mul`, `Div`, `Mod`, `Neg` and
+`Default` are MoonBit's own traits, and `derive(Show, Eq, Compare)` generates
+their instances, which become MoonBit impls for `#mbt` types (see
+[examples/derive.mbtpp](examples/derive.mbtpp)).
 
 `moon test` runs the examples in `examples/` and the tests in `src/*_test.mbt`.
 

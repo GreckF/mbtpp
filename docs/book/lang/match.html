@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-47d5bf4f.js";
+            window.path_to_searchindex_js = "../searchindex-4e93d181.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-77b35725.js"></script>
@@ -235,6 +235,37 @@ fn main {
 <li><strong><code>p as x</code></strong>：<code>x</code> 是整个被匹配的值。<code>as</code> 结合得最松，<code>A | B as x</code> 中的 <code>x</code> 是 <code>A | B</code> 匹配到的值。</li>
 <li><strong>守卫</strong> <code>p if cond =&gt; …</code>：条件为假时继续尝试后面的分支，条件中可以使用模式绑定的变量。带守卫的
 分支不计入覆盖检查。</li>
+</ul>
+<h2 id="数组与区间模式"><a class="header" href="#数组与区间模式">数组与区间模式</a></h2>
+<pre><code class="language-moonbit">fn describe(xs : Array[Int]) -&gt; String {
+  match xs {
+    [] =&gt; "empty"
+    [x] =&gt; "one: \{x}"
+    [a, .. rest, z] if a == z =&gt; "same ends around \{rest.length()}"
+    [a, ..] =&gt; "starts with \{a}"
+  }
+}
+
+fn kind(c : Char) -&gt; String {
+  match c {
+    'a'..='z' =&gt; "lower"
+    '0'..='9' =&gt; "digit"
+    _ =&gt; "other"
+  }
+}
+
+fn main {
+  println(describe([3, 1, 2, 3]))
+  println(kind('q'))
+}
+</code></pre>
+<ul>
+<li><strong>数组模式</strong>：<code>[p, q]</code> 匹配恰好两个元素，<code>[p, .., z]</code> 至少两个；<code>..rest</code> 把中间的元素绑定为一个
+新数组。也可以用于 <code>String</code>（元素是 <code>Char</code>）。</li>
+<li><strong>区间模式</strong>：<code>lo..=hi</code>、<code>lo..&lt;hi</code>，边界是字面量，<code>_</code> 表示不限，例如 <code>_..&lt;60</code>。</li>
+<li>区间模式转成守卫，匹配仍是依赖匹配。含数组模式的 <code>match</code> 按顺序逐个分支测试：不做覆盖检查（没有
+分支适用时程序中止），也不细化类型。守卫中使用 <code>is</code> 的 <code>match</code> 也是这样，此时 <code>is</code> 绑定的变量在
+分支中可见。</li>
 </ul>
 <h2 id="is-与-guard"><a class="header" href="#is-与-guard"><code>is</code> 与 <code>guard</code></a></h2>
 <pre><code class="language-moonbit">fn get(o : Option[Int]) -&gt; Int {

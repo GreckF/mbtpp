@@ -124,7 +124,7 @@ fn captures_mut(t : Tm, xe : XEnv, depth : Int32, in_lam : Bool) -> Bool {
     Raises(a, e) => go(a, 0) || go(e, 0)
     Assign(_, v) | Return(v) | Raise(v) => go(v, 0)
     While(c, b, s) => go(c, 0) || go(b, 0) || go(s, 0)
-    Seq(a, b) => go(a, 0) || go(b, 0)
+    Seq(a, b) | Defer(a, b) => go(a, 0) || go(b, 0)
     ArrayLit(es) => es.iter().any(e => go(e, 0))
     _ => false
   }
@@ -184,6 +184,17 @@ fn exec(xe : XEnv, t : Tm) -> Val raise ExecStop {
       let x = exec(xe, v)
       xe.vals[xe.slot(ix)].val = x
       unit_val()
+    }
+    // the deferred expression runs however the body is left
+    Defer(d, b) => {
+      let r = exec(xe, b) catch {
+        e => {
+          ignore(exec(xe, d))
+          raise e
+        }
+      }
+      ignore(exec(xe, d))
+      r
     }
     Seq(a, b) => {
       let x = exec(xe, a)

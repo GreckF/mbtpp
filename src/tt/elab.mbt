@@ -1110,16 +1110,24 @@ pub fn check(cxt0 : Cxt, e : @parser.Expr, ty0 : Val) -> Tm raise ElabError {
     }
     (ERaise(_, x), _) => elab_raise(cxt, x)
     (EReturn(_, x), _) => elab_return(cxt, x)
-    (EBreak(_), _) | (EContinue(_), _) => {
+    (EBreak(_, Some(l), _), _) | (EContinue(_, Some(l), _), _) =>
+      cxt.fail("no enclosing loop has the label " + l + "~")
+    (EBreak(_, None, Some(_)), _) =>
+      cxt.fail("`break` with a value can only leave a `for`, `while` or `loop`")
+    (EContinue(_, None, [_, ..]), _) =>
+      cxt.fail("`continue` with values can only be used in a `loop`")
+    (EBreak(_, _, _), _) | (EContinue(_, _, _), _) => {
       if !cxt.in_loop {
         cxt.fail("break/continue outside of a loop")
       }
-      if e is EBreak(_) {
+      if e is EBreak(_, _, _) {
         Break
       } else {
         Continue
       }
     }
+    (ELoop(p, label, args, arms), _) =>
+      check(cxt, rewrite_loop_expr(p, label, args, arms), ty)
     (ETry(_, body, arms, _), _) => elab_try(cxt, body, arms, Some(ty)).0
     (EMonad(_, b), _) => check(cxt, desugar_monad(b), ty)
     (EProof(_, tacs), _) => run_tactics(cxt, tacs, ty)
@@ -1371,8 +1379,8 @@ pub fn infer(cxt0 : Cxt, e : @parser.Expr) -> (Tm, Val) raise ElabError {
     }
     ERaise(_, _)
     | EReturn(_, _)
-    | EBreak(_)
-    | EContinue(_)
+    | EBreak(_, _, _)
+    | EContinue(_, _, _)
     | EProof(_, _)
     | EMonad(_, _) => {
       let a = cxt.eval(cxt.fresh_meta())
@@ -1384,6 +1392,8 @@ pub fn infer(cxt0 : Cxt, e : @parser.Expr) -> (Tm, Val) raise ElabError {
     ERange(_, _, _, _) => cxt.fail("a range can only be used in a for loop")
     // handled by `sugar`
     EIs(_, _, _) => cxt.fail("unexpected pattern test")
+    ELoop(p, label, args, arms) =>
+      infer(cxt, rewrite_loop_expr(p, label, args, arms))
     EEff(_, t, eff) => (Raises(check_type(cxt, t), check_type(cxt, eff)), VU)
   }
 }

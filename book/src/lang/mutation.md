@@ -44,6 +44,43 @@ fn main {
   遍历数组；`for k in a..<b`、`for k in a..=b` 遍历区间。
 - **`break`**、**`continue`** 作用于最内层循环；**`return`** 从当前函数返回，在 lambda 中只从
   lambda 返回。
+- **`for i, x in xs`** 同时给出下标和元素。
+- **循环是表达式**：`break e` 以值 `e` 结束循环，循环正常结束时的值是 `nobreak { … }` 块：
+
+```moonbit
+fn find(xs : Array[Int], v : Int) -> Int {
+  for i, x in xs {
+    if x == v {
+      break i
+    }
+  } nobreak {
+    -1
+  }
+}
+
+fn main {
+  println(find([5, 7, 9], 9))
+}
+```
+
+- **标签**：`outer~: for …` 给循环起名，内层循环中的 `break outer~`、`continue outer~` 作用于它。
+- **`loop`**：`loop a, b { 模式 => … }` 用分支匹配循环的值；分支的值结束循环，`continue x, y`
+  用新的值继续：
+
+```moonbit
+fn sum(n : Int) -> Int {
+  loop n, 0 {
+    0, acc => acc
+    k, acc => continue k - 1, acc + k
+  }
+}
+
+fn main {
+  println(sum(10))
+}
+```
+
+- **`defer e`**：离开所在的块时执行 `e`，无论是正常结束、`return`、`break`、`continue` 还是出错。
 - **数组**是可变的：`xs[i] = v`、`xs.push(x)`。
 
 ## 与类型检查的关系

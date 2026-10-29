@@ -97,8 +97,9 @@ pub(all) enum Expr {
   EBind(Pos, Expr)
   EProof(Pos, Array[Tactic])
   EReturn(Pos, Expr?)
-  EBreak(Pos)
-  EContinue(Pos)
+  EBreak(Pos, String?, Expr?)
+  EContinue(Pos, String?, Array[Expr])
+  ELoop(Pos, String?, Array[Expr], Array[Arm])
   ERange(Pos, Expr, Expr, Bool)
   ETagged(Pos, String, Expr, Bool)
   EIs(Pos, Expr, Pat)
@@ -191,6 +192,8 @@ pub(all) enum Pat {
   PTuple(Pos, Array[Pat])
   POr(Pos, Pat, Pat)
   PAs(Pos, Pat, String)
+  PArray(Pos, Array[Pat], String??, Array[Pat])
+  PRange(Pos, Lit?, Lit?, Bool)
 } derive(Show)
 pub fn Pat::pos(Self) -> Pos
 
@@ -208,9 +211,11 @@ pub(all) enum Stmt {
   SAssign(Pos, Expr, String, Expr)
   SWhile(Pos, Expr, Expr)
   SFor(Pos, Array[(String, Expr)], Expr?, Array[(String, Expr)], Expr)
-  SForIn(Pos, String, Expr, Expr)
+  SForIn(Pos, Array[String], Expr, Expr)
+  SLoopX(Pos, String?, Stmt, Expr?)
   SExpr(Pos, Expr)
   SGuard(Pos, Expr, Expr?)
+  SDefer(Pos, Expr)
 } derive(Show)
 
 pub(all) enum StrPart {

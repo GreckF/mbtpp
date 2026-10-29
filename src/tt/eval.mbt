@@ -42,7 +42,8 @@ pub fn eval(env : Env, t : Tm) -> Val {
     | Return(_)
     | Raise(_)
     | Try(_, _)
-    | Seq(_, _) => VStuck(env, t, [])
+    | Seq(_, _)
+    | Defer(_, _) => VStuck(env, t, [])
     ArrayLit(es) => VArrLit(es.map(e => eval(env, e)))
   }
 }

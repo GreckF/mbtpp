@@ -4,7 +4,8 @@
 
 - No termination checking or strict positivity checking (by design): you can "prove" false propositions.
 - No resumable algebraic effects, and no automation tactics such as `simp`, `omega`, or `auto`.
-- Local functions cannot be recursive.
+- Recursive local functions cannot use the `let mut` variables around them.
+- A `match` with array patterns is not checked for coverage and does not refine types.
 - When functions with mutable state are run during type checking, calls that use arrays, imported functions or lambdas capturing `let mut` variables are not run (see [Mutable State and Loops](lang/mutation.md)).
 - Time limits are measured in wall-clock time, so a file may time out on a slower machine (see [Time limits](lang/type-level.md#time-limits)).
 - Structs have no mutable fields, and there are no struct patterns.

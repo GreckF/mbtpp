@@ -82,8 +82,12 @@ pub(all) enum Expr {
   EBind(Pos, Expr)
   EProof(Pos, Array[Tactic])
   EReturn(Pos, Expr?)
-  EBreak(Pos)
-  EContinue(Pos)
+  /// `break`, `break label~`, `break e`
+  EBreak(Pos, String?, Expr?)
+  /// `continue`, `continue label~`, `continue a, b` (in a `loop`)
+  EContinue(Pos, String?, Array[Expr])
+  /// `loop a, b { p, q => ... }` (with its label)
+  ELoop(Pos, String?, Array[Expr], Array[Arm])
   /// `a..<b` / `a..=b`
   ERange(Pos, Expr, Expr, Bool)
   /// A tagged call argument `label=e` (`label?=e` when the flag is set).
@@ -124,6 +128,11 @@ pub(all) enum Pat {
   POr(Pos, Pat, Pat)
   /// `p as x`
   PAs(Pos, Pat, String)
+  /// `[p, q, ..rest, r]`: the patterns before the `..`, the `..` (with the
+  /// name of the rest, if any) and the patterns after it.
+  PArray(Pos, Array[Pat], String??, Array[Pat])
+  /// `lo..=hi`, `lo..<hi` (`_` for an open bound); the flag: inclusive.
+  PRange(Pos, Lit?, Lit?, Bool)
 } derive(Show)
 
 ///|
@@ -137,10 +146,16 @@ pub(all) enum Stmt {
   SWhile(Pos, Expr, Expr)
   /// `for x = a, y = b; cond; x = e, y = e { body }`
   SFor(Pos, Array[(String, Expr)], Expr?, Array[(String, Expr)], Expr)
-  SForIn(Pos, String, Expr, Expr)
+  /// `for x in e { }` or `for i, x in e { }`
+  SForIn(Pos, Array[String], Expr, Expr)
+  /// A `while` or `for` loop with a label (`label~: while ...`) and/or a
+  /// `nobreak { e }` block.
+  SLoopX(Pos, String?, Stmt, Expr?)
   SExpr(Pos, Expr)
   /// `guard cond else { e }` (without `else`: a panic).
   SGuard(Pos, Expr, Expr?)
+  /// `defer e`
+  SDefer(Pos, Expr)
 } derive(Show)
 
 ///|
@@ -301,8 +316,9 @@ pub fn Expr::pos(self : Expr) -> Pos {
     | EBind(p, _)
     | EProof(p, _)
     | EReturn(p, _)
-    | EBreak(p)
-    | EContinue(p)
+    | EBreak(p, _, _)
+    | EContinue(p, _, _)
+    | ELoop(p, _, _, _)
     | ERange(p, _, _, _)
     | ETagged(p, _, _, _)
     | EIs(p, _, _)
@@ -319,6 +335,8 @@ pub fn Pat::pos(self : Pat) -> Pos {
     | PLit(p, _)
     | PTuple(p, _)
     | POr(p, _, _)
-    | PAs(p, _, _) => p
+    | PAs(p, _, _)
+    | PArray(p, _, _, _)
+    | PRange(p, _, _, _) => p
   }
 }

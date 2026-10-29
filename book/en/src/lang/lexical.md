@@ -8,7 +8,7 @@
 
 | Literal | Examples | Type |
 | --- | --- | --- |
-| Integer | `0`, `42`, `1_000`, `-1` | `Int`; expands to `S(…S(Z))` when the expected type is `Nat` |
+| Integer | `0`, `42`, `1_000`, `-1`, `0xFF`, `0o17`, `0b1010` | `Int`; expands to `S(…S(Z))` when the expected type is `Nat` |
 | Floating point | `1.5`, `2.0` | `Double` |
 | Character | `'a'`, `'\n'` | `Char` |
 | String | `"hello"` | `String` |
@@ -18,6 +18,19 @@
 | Tuple | `(1, "a")` | `(Int, String)` |
 
 Escapes: `\n \t \r \\ \" \' \0`.
+
+Multiline strings: consecutive `#|` lines form one string, with newlines between the lines; `#|`
+lines are kept as they are, and `$|` lines allow escapes and interpolation.
+
+```moonbit
+fn main {
+  let name = "MoonBit++"
+  let text =
+    #|first line, kept as is: \n
+    $|hello, \{name}!
+  println(text)
+}
+```
 
 String interpolation `"\{e}"` inserts the `Show` result of `e` into the string:
 

@@ -210,7 +210,7 @@ fn Erasure::walk(
       self.walk(env, b, true)
       self.walk(env, s, true)
     }
-    Seq(a, b) => {
+    Seq(a, b) | Defer(a, b) => {
       self.walk(env, a, true)
       self.walk(env, b, rel)
     }

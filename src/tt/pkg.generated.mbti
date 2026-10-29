@@ -351,6 +351,7 @@ pub(all) enum Tm {
   Try(Tm, Array[Clause])
   ArrayLit(Array[Tm])
   Seq(Tm, Tm)
+  Defer(Tm, Tm)
 } derive(Show)
 
 pub(all) enum Val {

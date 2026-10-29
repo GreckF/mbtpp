@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-47d5bf4f.js";
+            window.path_to_searchindex_js = "../searchindex-4e93d181.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-77b35725.js"></script>
@@ -194,7 +194,7 @@
 <tr><th>字面量</th><th>例子</th><th>类型</th></tr>
 </thead>
 <tbody>
-<tr><td>整数</td><td><code>0</code>、<code>42</code>、<code>1_000</code>、<code>-1</code></td><td><code>Int</code>；期望类型是 <code>Nat</code> 时展开为 <code>S(…S(Z))</code></td></tr>
+<tr><td>整数</td><td><code>0</code>、<code>42</code>、<code>1_000</code>、<code>-1</code>、<code>0xFF</code>、<code>0o17</code>、<code>0b1010</code></td><td><code>Int</code>；期望类型是 <code>Nat</code> 时展开为 <code>S(…S(Z))</code></td></tr>
 <tr><td>浮点</td><td><code>1.5</code>、<code>2.0</code></td><td><code>Double</code></td></tr>
 <tr><td>字符</td><td><code>'a'</code>、<code>'\n'</code></td><td><code>Char</code></td></tr>
 <tr><td>字符串</td><td><code>"hello"</code></td><td><code>String</code></td></tr>
@@ -206,6 +206,15 @@
 </table>
 </div>
 <p>转义：<code>\n \t \r \\ \" \' \0</code>。</p>
+<p>多行字符串：连续的 <code>#|</code> 行组成一个字符串，行之间是换行；<code>#|</code> 行原样保留，<code>$|</code> 行支持转义和插值。</p>
+<pre><code class="language-moonbit">fn main {
+  let name = "MoonBit++"
+  let text =
+    #|first line, kept as is: \n
+    $|hello, \{name}!
+  println(text)
+}
+</code></pre>
 <p>字符串插值 <code>"\{e}"</code> 把 <code>e</code> 的 <code>Show</code> 结果插入字符串：</p>
 <pre><code class="language-moonbit">fn main {
   let n = 3

@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-47d5bf4f.js";
+            window.path_to_searchindex_js = "../searchindex-4e93d181.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-77b35725.js"></script>
@@ -209,7 +209,9 @@ fn main {
 <li><strong>管道</strong>：<code>e |&gt; f</code> 即 <code>f(e)</code>，<code>e |&gt; f(a)</code> 即 <code>f(e, a)</code>。</li>
 <li><strong>类型注解</strong>：<code>(e : T)</code>。</li>
 <li><strong>洞</strong>：<code>_</code> 由合一推断，可以出现在表达式和类型中，例如 <code>Cons(_, xs)</code>、<code>f[_, Int](x)</code>。</li>
-<li><strong>局部函数</strong>：块内可以写 <code>fn name(x : T) -&gt; R { … }</code>，但不能递归。</li>
+<li><strong>局部函数</strong>：块内可以写 <code>fn name(x : T) -&gt; R { … }</code>，可以递归；递归的局部函数不能使用外层的
+<code>let mut</code> 变量。</li>
+<li><strong>级联调用</strong>：<code>xs..push(1)..push(2)</code> 依次调用 <code>xs</code> 的方法，值是 <code>xs</code>。</li>
 <li><strong>数组</strong>：<code>xs[i]</code> 取元素，<code>xs[i] = v</code> 赋值。</li>
 </ul>
 <p>三种等号：<code>=</code> 定义，<code>==</code> 布尔相等（结果是 <code>Bool</code>），<code>===</code> 命题相等（结果是 <code>Prop</code>，见

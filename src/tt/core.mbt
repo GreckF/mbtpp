@@ -68,6 +68,9 @@ pub(all) enum Tm {
   Try(Tm, Array[Clause])
   ArrayLit(Array[Tm])
   Seq(Tm, Tm)
+  /// `defer e; body`: `e` runs when `body` is left (normally, by `return`,
+  /// `break`, `continue` or an error).
+  Defer(Tm, Tm)
 } derive(Show)
 
 ///|
@@ -280,6 +283,7 @@ pub fn reset_state() -> Unit {
   mbt_fns.clear()
   metas.clear()
   reset_time_limits()
+  lifted.clear()
 }
 
 ///|

@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-e124d479.js";
+            window.path_to_searchindex_js = "../searchindex-c13f5aac.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-ec08c6a2.js"></script>
@@ -225,6 +225,44 @@ fn main {
 iterates over an array; <code>for k in a..&lt;b</code> and <code>for k in a..=b</code> iterate over a range.</li>
 <li><strong><code>break</code></strong> and <strong><code>continue</code></strong> apply to the innermost loop; <strong><code>return</code></strong> returns from the current
 function, and inside a lambda it returns only from the lambda.</li>
+<li><strong><code>for i, x in xs</code></strong> gives the index and the element.</li>
+<li><strong>Loops are expressions</strong>: <code>break e</code> ends the loop with the value <code>e</code>; when the loop ends
+normally, its value is the <code>nobreak { … }</code> block:</li>
+</ul>
+<pre><code class="language-moonbit">fn find(xs : Array[Int], v : Int) -&gt; Int {
+  for i, x in xs {
+    if x == v {
+      break i
+    }
+  } nobreak {
+    -1
+  }
+}
+
+fn main {
+  println(find([5, 7, 9], 9))
+}
+</code></pre>
+<ul>
+<li><strong>Labels</strong>: <code>outer~: for …</code> names a loop; <code>break outer~</code> and <code>continue outer~</code> in an inner loop
+apply to it.</li>
+<li><strong><code>loop</code></strong>: <code>loop a, b { pattern =&gt; … }</code> matches the values of the loop with arms; the value of
+an arm ends the loop, and <code>continue x, y</code> goes on with new values:</li>
+</ul>
+<pre><code class="language-moonbit">fn sum(n : Int) -&gt; Int {
+  loop n, 0 {
+    0, acc =&gt; acc
+    k, acc =&gt; continue k - 1, acc + k
+  }
+}
+
+fn main {
+  println(sum(10))
+}
+</code></pre>
+<ul>
+<li><strong><code>defer e</code></strong>: runs <code>e</code> when the enclosing block is left, normally or by <code>return</code>, <code>break</code>,
+<code>continue</code> or an error.</li>
 <li><strong>Arrays</strong> are mutable: <code>xs[i] = v</code>, <code>xs.push(x)</code>.</li>
 </ul>
 <h2 id="interaction-with-type-checking"><a class="header" href="#interaction-with-type-checking">Interaction with type checking</a></h2>

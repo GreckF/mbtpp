@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-47d5bf4f.js";
+            window.path_to_searchindex_js = "searchindex-4e93d181.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-77b35725.js"></script>
@@ -252,7 +252,7 @@ fn main {
 <tr><th>字面量</th><th>例子</th><th>类型</th></tr>
 </thead>
 <tbody>
-<tr><td>整数</td><td><code>0</code>、<code>42</code>、<code>1_000</code>、<code>-1</code></td><td><code>Int</code>；期望类型是 <code>Nat</code> 时展开为 <code>S(…S(Z))</code></td></tr>
+<tr><td>整数</td><td><code>0</code>、<code>42</code>、<code>1_000</code>、<code>-1</code>、<code>0xFF</code>、<code>0o17</code>、<code>0b1010</code></td><td><code>Int</code>；期望类型是 <code>Nat</code> 时展开为 <code>S(…S(Z))</code></td></tr>
 <tr><td>浮点</td><td><code>1.5</code>、<code>2.0</code></td><td><code>Double</code></td></tr>
 <tr><td>字符</td><td><code>'a'</code>、<code>'\n'</code></td><td><code>Char</code></td></tr>
 <tr><td>字符串</td><td><code>"hello"</code></td><td><code>String</code></td></tr>
@@ -264,6 +264,15 @@ fn main {
 </table>
 </div>
 <p>转义：<code>\n \t \r \\ \" \' \0</code>。</p>
+<p>多行字符串：连续的 <code>#|</code> 行组成一个字符串，行之间是换行；<code>#|</code> 行原样保留，<code>$|</code> 行支持转义和插值。</p>
+<pre><code class="language-moonbit">fn main {
+  let name = "MoonBit++"
+  let text =
+    #|first line, kept as is: \n
+    $|hello, \{name}!
+  println(text)
+}
+</code></pre>
 <p>字符串插值 <code>"\{e}"</code> 把 <code>e</code> 的 <code>Show</code> 结果插入字符串：</p>
 <pre><code class="language-moonbit">fn main {
   let n = 3
@@ -306,7 +315,9 @@ fn main {
 <li><strong>管道</strong>：<code>e |&gt; f</code> 即 <code>f(e)</code>，<code>e |&gt; f(a)</code> 即 <code>f(e, a)</code>。</li>
 <li><strong>类型注解</strong>：<code>(e : T)</code>。</li>
 <li><strong>洞</strong>：<code>_</code> 由合一推断，可以出现在表达式和类型中，例如 <code>Cons(_, xs)</code>、<code>f[_, Int](x)</code>。</li>
-<li><strong>局部函数</strong>：块内可以写 <code>fn name(x : T) -&gt; R { … }</code>，但不能递归。</li>
+<li><strong>局部函数</strong>：块内可以写 <code>fn name(x : T) -&gt; R { … }</code>，可以递归；递归的局部函数不能使用外层的
+<code>let mut</code> 变量。</li>
+<li><strong>级联调用</strong>：<code>xs..push(1)..push(2)</code> 依次调用 <code>xs</code> 的方法，值是 <code>xs</code>。</li>
 <li><strong>数组</strong>：<code>xs[i]</code> 取元素，<code>xs[i] = v</code> 赋值。</li>
 </ul>
 <p>三种等号：<code>=</code> 定义，<code>==</code> 布尔相等（结果是 <code>Bool</code>），<code>===</code> 命题相等（结果是 <code>Prop</code>，见
@@ -713,6 +724,37 @@ fn main {
 <li><strong><code>p as x</code></strong>：<code>x</code> 是整个被匹配的值。<code>as</code> 结合得最松，<code>A | B as x</code> 中的 <code>x</code> 是 <code>A | B</code> 匹配到的值。</li>
 <li><strong>守卫</strong> <code>p if cond =&gt; …</code>：条件为假时继续尝试后面的分支，条件中可以使用模式绑定的变量。带守卫的
 分支不计入覆盖检查。</li>
+</ul>
+<h2 id="数组与区间模式"><a class="header" href="#数组与区间模式">数组与区间模式</a></h2>
+<pre><code class="language-moonbit">fn describe(xs : Array[Int]) -&gt; String {
+  match xs {
+    [] =&gt; "empty"
+    [x] =&gt; "one: \{x}"
+    [a, .. rest, z] if a == z =&gt; "same ends around \{rest.length()}"
+    [a, ..] =&gt; "starts with \{a}"
+  }
+}
+
+fn kind(c : Char) -&gt; String {
+  match c {
+    'a'..='z' =&gt; "lower"
+    '0'..='9' =&gt; "digit"
+    _ =&gt; "other"
+  }
+}
+
+fn main {
+  println(describe([3, 1, 2, 3]))
+  println(kind('q'))
+}
+</code></pre>
+<ul>
+<li><strong>数组模式</strong>：<code>[p, q]</code> 匹配恰好两个元素，<code>[p, .., z]</code> 至少两个；<code>..rest</code> 把中间的元素绑定为一个
+新数组。也可以用于 <code>String</code>（元素是 <code>Char</code>）。</li>
+<li><strong>区间模式</strong>：<code>lo..=hi</code>、<code>lo..&lt;hi</code>，边界是字面量，<code>_</code> 表示不限，例如 <code>_..&lt;60</code>。</li>
+<li>区间模式转成守卫，匹配仍是依赖匹配。含数组模式的 <code>match</code> 按顺序逐个分支测试：不做覆盖检查（没有
+分支适用时程序中止），也不细化类型。守卫中使用 <code>is</code> 的 <code>match</code> 也是这样，此时 <code>is</code> 绑定的变量在
+分支中可见。</li>
 </ul>
 <h2 id="is-与-guard"><a class="header" href="#is-与-guard"><code>is</code> 与 <code>guard</code></a></h2>
 <pre><code class="language-moonbit">fn get(o : Option[Int]) -&gt; Int {
@@ -1309,6 +1351,41 @@ fn main {
 遍历数组；<code>for k in a..&lt;b</code>、<code>for k in a..=b</code> 遍历区间。</li>
 <li><strong><code>break</code></strong>、<strong><code>continue</code></strong> 作用于最内层循环；<strong><code>return</code></strong> 从当前函数返回，在 lambda 中只从
 lambda 返回。</li>
+<li><strong><code>for i, x in xs</code></strong> 同时给出下标和元素。</li>
+<li><strong>循环是表达式</strong>：<code>break e</code> 以值 <code>e</code> 结束循环，循环正常结束时的值是 <code>nobreak { … }</code> 块：</li>
+</ul>
+<pre><code class="language-moonbit">fn find(xs : Array[Int], v : Int) -&gt; Int {
+  for i, x in xs {
+    if x == v {
+      break i
+    }
+  } nobreak {
+    -1
+  }
+}
+
+fn main {
+  println(find([5, 7, 9], 9))
+}
+</code></pre>
+<ul>
+<li><strong>标签</strong>：<code>outer~: for …</code> 给循环起名，内层循环中的 <code>break outer~</code>、<code>continue outer~</code> 作用于它。</li>
+<li><strong><code>loop</code></strong>：<code>loop a, b { 模式 =&gt; … }</code> 用分支匹配循环的值；分支的值结束循环，<code>continue x, y</code>
+用新的值继续：</li>
+</ul>
+<pre><code class="language-moonbit">fn sum(n : Int) -&gt; Int {
+  loop n, 0 {
+    0, acc =&gt; acc
+    k, acc =&gt; continue k - 1, acc + k
+  }
+}
+
+fn main {
+  println(sum(10))
+}
+</code></pre>
+<ul>
+<li><strong><code>defer e</code></strong>：离开所在的块时执行 <code>e</code>，无论是正常结束、<code>return</code>、<code>break</code>、<code>continue</code> 还是出错。</li>
 <li><strong>数组</strong>是可变的：<code>xs[i] = v</code>、<code>xs.push(x)</code>。</li>
 </ul>
 <h2 id="与类型检查的关系"><a class="header" href="#与类型检查的关系">与类型检查的关系</a></h2>
@@ -2160,7 +2237,8 @@ or a bound that is not #mbt)
 <ul>
 <li>没有终止检查和严格正性检查（按设计）：可以“证明”假命题。</li>
 <li>没有可恢复的代数效应，没有 <code>simp</code>、<code>omega</code>、<code>auto</code> 等自动化策略。</li>
-<li>局部函数不能递归。</li>
+<li>递归的局部函数不能使用外层的 <code>let mut</code> 变量。</li>
+<li>含数组模式的 <code>match</code> 不做覆盖检查，也不细化类型。</li>
 <li>类型检查时执行非纯函数时，用到数组、导入函数或捕获 <code>let mut</code> 的 lambda 的调用不执行（见<a href="#可变状态与循环">可变状态与循环</a>）。</li>
 <li>检查时限按实际时间计算，同一个文件在较慢的机器上可能超时（见<a href="#检查时限">检查时限</a>）。</li>
 <li>结构体没有可变字段，没有结构体模式。</li>

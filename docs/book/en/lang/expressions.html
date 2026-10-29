@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-e124d479.js";
+            window.path_to_searchindex_js = "../searchindex-c13f5aac.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-ec08c6a2.js"></script>
@@ -209,7 +209,9 @@ fn main {
 <li><strong>Pipes</strong>: <code>e |&gt; f</code> means <code>f(e)</code>, and <code>e |&gt; f(a)</code> means <code>f(e, a)</code>.</li>
 <li><strong>Type annotations</strong>: <code>(e : T)</code>.</li>
 <li><strong>Holes</strong>: <code>_</code> is inferred by unification and can appear in both expressions and types, e.g. <code>Cons(_, xs)</code>, <code>f[_, Int](x)</code>.</li>
-<li><strong>Local functions</strong>: you can write <code>fn name(x : T) -&gt; R { … }</code> inside a block, but it cannot be recursive.</li>
+<li><strong>Local functions</strong>: a block can contain <code>fn name(x : T) -&gt; R { … }</code>; it can be recursive. A
+recursive local function cannot use the <code>let mut</code> variables around it.</li>
+<li><strong>Cascades</strong>: <code>xs..push(1)..push(2)</code> calls the methods of <code>xs</code> in turn; its value is <code>xs</code>.</li>
 <li><strong>Arrays</strong>: <code>xs[i]</code> reads an element and <code>xs[i] = v</code> assigns one.</li>
 </ul>
 <p>There are three kinds of equals sign: <code>=</code> defines, <code>==</code> is boolean equality (result <code>Bool</code>), and <code>===</code> is propositional equality (result <code>Prop</code>; see

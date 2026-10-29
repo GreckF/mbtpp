@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-e124d479.js";
+            window.path_to_searchindex_js = "../searchindex-c13f5aac.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-ec08c6a2.js"></script>
@@ -194,7 +194,7 @@
 <tr><th>Literal</th><th>Examples</th><th>Type</th></tr>
 </thead>
 <tbody>
-<tr><td>Integer</td><td><code>0</code>, <code>42</code>, <code>1_000</code>, <code>-1</code></td><td><code>Int</code>; expands to <code>S(…S(Z))</code> when the expected type is <code>Nat</code></td></tr>
+<tr><td>Integer</td><td><code>0</code>, <code>42</code>, <code>1_000</code>, <code>-1</code>, <code>0xFF</code>, <code>0o17</code>, <code>0b1010</code></td><td><code>Int</code>; expands to <code>S(…S(Z))</code> when the expected type is <code>Nat</code></td></tr>
 <tr><td>Floating point</td><td><code>1.5</code>, <code>2.0</code></td><td><code>Double</code></td></tr>
 <tr><td>Character</td><td><code>'a'</code>, <code>'\n'</code></td><td><code>Char</code></td></tr>
 <tr><td>String</td><td><code>"hello"</code></td><td><code>String</code></td></tr>
@@ -206,6 +206,16 @@
 </table>
 </div>
 <p>Escapes: <code>\n \t \r \\ \" \' \0</code>.</p>
+<p>Multiline strings: consecutive <code>#|</code> lines form one string, with newlines between the lines; <code>#|</code>
+lines are kept as they are, and <code>$|</code> lines allow escapes and interpolation.</p>
+<pre><code class="language-moonbit">fn main {
+  let name = "MoonBit++"
+  let text =
+    #|first line, kept as is: \n
+    $|hello, \{name}!
+  println(text)
+}
+</code></pre>
 <p>String interpolation <code>"\{e}"</code> inserts the <code>Show</code> result of <code>e</code> into the string:</p>
 <pre><code class="language-moonbit">fn main {
   let n = 3

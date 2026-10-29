@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-47d5bf4f.js";
+            window.path_to_searchindex_js = "../searchindex-4e93d181.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-77b35725.js"></script>
@@ -225,6 +225,41 @@ fn main {
 遍历数组；<code>for k in a..&lt;b</code>、<code>for k in a..=b</code> 遍历区间。</li>
 <li><strong><code>break</code></strong>、<strong><code>continue</code></strong> 作用于最内层循环；<strong><code>return</code></strong> 从当前函数返回，在 lambda 中只从
 lambda 返回。</li>
+<li><strong><code>for i, x in xs</code></strong> 同时给出下标和元素。</li>
+<li><strong>循环是表达式</strong>：<code>break e</code> 以值 <code>e</code> 结束循环，循环正常结束时的值是 <code>nobreak { … }</code> 块：</li>
+</ul>
+<pre><code class="language-moonbit">fn find(xs : Array[Int], v : Int) -&gt; Int {
+  for i, x in xs {
+    if x == v {
+      break i
+    }
+  } nobreak {
+    -1
+  }
+}
+
+fn main {
+  println(find([5, 7, 9], 9))
+}
+</code></pre>
+<ul>
+<li><strong>标签</strong>：<code>outer~: for …</code> 给循环起名，内层循环中的 <code>break outer~</code>、<code>continue outer~</code> 作用于它。</li>
+<li><strong><code>loop</code></strong>：<code>loop a, b { 模式 =&gt; … }</code> 用分支匹配循环的值；分支的值结束循环，<code>continue x, y</code>
+用新的值继续：</li>
+</ul>
+<pre><code class="language-moonbit">fn sum(n : Int) -&gt; Int {
+  loop n, 0 {
+    0, acc =&gt; acc
+    k, acc =&gt; continue k - 1, acc + k
+  }
+}
+
+fn main {
+  println(sum(10))
+}
+</code></pre>
+<ul>
+<li><strong><code>defer e</code></strong>：离开所在的块时执行 <code>e</code>，无论是正常结束、<code>return</code>、<code>break</code>、<code>continue</code> 还是出错。</li>
 <li><strong>数组</strong>是可变的：<code>xs[i] = v</code>、<code>xs.push(x)</code>。</li>
 </ul>
 <h2 id="与类型检查的关系"><a class="header" href="#与类型检查的关系">与类型检查的关系</a></h2>

@@ -247,3 +247,28 @@ test "async functions run in the interpreter" {
     ),
   )
 }
+
+///|
+test "example syntax" {
+  inspect(
+    run_example("syntax.mbtpp"),
+    content=(
+      #|55
+      #|2 -1
+      #|2 * 6
+      #|55
+      #|cleanup 3
+      #|6
+      #|cleanup 0
+      #|-1
+      #|same ends around 2
+      #|starts with 4
+      #|lower upper digit
+      #|2
+      #|280
+      #|two lines,
+      #|the second with 6
+      #|
+    ),
+  )
+}

@@ -86,6 +86,7 @@ pub let prelude_src : String =
   #|fn String::length(self : String) -> Int = "%str_length"
   #|fn String::op_get(self : String, i : Int) -> Char = "%str_get"
   #|fn String::substring(self : String, start : Int, end : Int) -> String = "%str_substring"
+  #|fn String::slice(self : String, start : Int, end : Int) -> String { self.substring(start, end) }
   #|fn String::to_string(self : String) -> String { self }
   #|
   #|fn Bool::op_equal(self : Bool, other : Bool) -> Bool = "%bool_eq"
@@ -106,6 +107,15 @@ pub let prelude_src : String =
   #|fn[T] Array::op_get(self : Array[T], i : Int) -> T = "%array_get"
   #|fn[T] Array::op_set(self : Array[T], i : Int, x : T) -> Unit = "%array_set"
   #|fn[T] Array::push(self : Array[T], x : T) -> Unit = "%array_push"
+  #|
+  #|// the elements from `start` to `end` (excluded), e.g. for `[x, ..rest]`
+  #|fn[T] Array::slice(self : Array[T], start : Int, end : Int) -> Array[T] {
+  #|  let out : Array[T] = Array::new()
+  #|  for i = start; i < end; i = i + 1 {
+  #|    out.push(self[i])
+  #|  }
+  #|  out
+  #|}
   #|
   #|fn print_string(s : String) -> Unit = "%print"
   #|fn[T] panic() -> T = "%panic"

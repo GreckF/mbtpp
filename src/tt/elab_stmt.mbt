@@ -99,7 +99,18 @@ fn check_block(
         ret,
         body,
       )
-      check_block(cxt, [SLet(p, PVar(p, d.name), None, lam), ..rest], goal)
+      if !mentions(body, d.name) {
+        return check_block(
+          cxt,
+          [SLet(p, PVar(p, d.name), None, lam), ..rest],
+          goal,
+        )
+      }
+      // a recursive local function (see localfn.mbt)
+      let (call, fty, _) = elab_local_rec(cxt, p, d.name, lam)
+      let c2 = cxt.define_local(d.name, fty, cxt.eval(call))
+      let (r, rty) = check_block(c2, rest, goal)
+      (Let(d.name, cxt.quote(fty), call, r), rty)
     }
     SAssign(p, lhs, op, rhs) => {
       let c = cxt.at(p)
@@ -124,8 +135,21 @@ fn check_block(
     }
     // `while x is Some(y) { .. }`: the test is the first statement
     SWhile(p, cond, body) if has_is(cond) => {
-      let body2 = cond_expr(cond, body, EBreak(p))
+      let body2 = cond_expr(cond, body, EBreak(p, None, None))
       check_block(cxt, [SWhile(p, ELit(p, LBool(true)), body2), ..rest], goal)
+    }
+    // loops with labels, `break` values or `nobreak` (see loops.mbt)
+    SLoopX(p, label, lp, nb) =>
+      check_block(cxt, [SExpr(p, rewrite_loop(p, label, lp, nb)), ..rest], goal)
+    SWhile(p, _, body) | SFor(p, _, _, _, body) | SForIn(p, _, _, body) if has_break_value(
+        body, 0,
+      ) =>
+      check_block(cxt, [SExpr(p, rewrite_loop(p, None, s, None)), ..rest], goal)
+    // `defer e; rest`
+    SDefer(p, e) => {
+      let td = check(cxt.at(p), e, unit_ty())
+      let (r, rty) = check_block(cxt, rest, goal)
+      (Defer(td, r), rty)
     }
     // `guard c else { e }; rest` is `if c { rest } else { e }`
     SGuard(p, cond, el) => {
@@ -175,7 +199,8 @@ fn check_block(
       let (r, rty) = check_block(cxt, rest, goal)
       (Seq(loop_tm, r), rty)
     }
-    SForIn(p, x, e, body) => {
+    SForIn(p, xs, e, body) => {
+      let x = xs[xs.length() - 1]
       let i = fresh_name_gen("__i")
       let ev : @parser.Expr = EVar(p, i)
       let one : @parser.Expr = ELit(p, LInt(1))
@@ -194,6 +219,9 @@ fn check_block(
             ev,
             b,
           )
+          if xs.length() > 1 {
+            cxt.at(p).fail("a range has one loop variable")
+          }
           let body2 : @parser.Expr = EBlock(p, [
             SLet(p, PVar(p, x), None, ev),
             SExpr(p, body),
@@ -209,10 +237,17 @@ fn check_block(
             ev,
             EMethod(p, av, "length", None, []),
           )
-          let body2 : @parser.Expr = EBlock(p, [
-            SLet(p, PVar(p, x), None, EApp(p, av, Some([ev]), None)),
-            SExpr(p, body),
-          ])
+          // `for i, x in xs`: the index and the element
+          let body2 : @parser.Expr = EBlock(
+            p,
+            [
+              ..xs[0:xs.length() - 1]
+              .to_array()
+              .map(i0 => @parser.SLet(p, PVar(p, i0), None, ev)),
+              SLet(p, PVar(p, x), None, EApp(p, av, Some([ev]), None)),
+              SExpr(p, body),
+            ],
+          )
           [
             SLet(p, PVar(p, arr), None, e),
             SFor(p, [(i, ELit(p, LInt(0)))], Some(cond), step, body2),
@@ -351,8 +386,11 @@ fn desugar_stmts(stmts : Array[@parser.Stmt]) -> @parser.Expr {
         | SLetMut(p, _, _, _)
         | SFn(p, _)
         | SAssign(p, _, _, _) => p
-        SWhile(p, _, _) | SFor(p, _, _, _, _) | SForIn(p, _, _, _) => p
-        SExpr(p, _) | SLetBind(p, _, _) | SGuard(p, _, _) => p
+        SWhile(p, _, _)
+        | SFor(p, _, _, _, _)
+        | SForIn(p, _, _, _)
+        | SLoopX(p, _, _, _) => p
+        SExpr(p, _) | SLetBind(p, _, _) | SGuard(p, _, _) | SDefer(p, _) => p
       }
       EBlock(p, [other, SExpr(p, desugar_stmts(rest))])
     }

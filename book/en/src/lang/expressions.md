@@ -29,7 +29,9 @@ fn main {
 - **Pipes**: `e |> f` means `f(e)`, and `e |> f(a)` means `f(e, a)`.
 - **Type annotations**: `(e : T)`.
 - **Holes**: `_` is inferred by unification and can appear in both expressions and types, e.g. `Cons(_, xs)`, `f[_, Int](x)`.
-- **Local functions**: you can write `fn name(x : T) -> R { … }` inside a block, but it cannot be recursive.
+- **Local functions**: a block can contain `fn name(x : T) -> R { … }`; it can be recursive. A
+  recursive local function cannot use the `let mut` variables around it.
+- **Cascades**: `xs..push(1)..push(2)` calls the methods of `xs` in turn; its value is `xs`.
 - **Arrays**: `xs[i]` reads an element and `xs[i] = v` assigns one.
 
 There are three kinds of equals sign: `=` defines, `==` is boolean equality (result `Bool`), and `===` is propositional equality (result `Prop`; see

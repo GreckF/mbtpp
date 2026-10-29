@@ -24,7 +24,8 @@ fn contains_imperative(t : Tm) -> Bool {
     | Raise(_)
     | Try(_, _)
     | ArrayLit(_)
-    | Seq(_, _) => true
+    | Seq(_, _)
+    | Defer(_, _) => true
     Lam(_, _, _, b) => contains_imperative(b)
     App(f, a, _) => contains_imperative(f) || contains_imperative(a)
     Pi(_, _, _, a, b) => contains_imperative(a) || contains_imperative(b)
@@ -81,6 +82,7 @@ fn zonk(lvl : Int32, t : Tm) -> Tm {
     Raise(v) => Raise(go(v))
     ArrayLit(es) => ArrayLit(es.map(go))
     Seq(a, b) => Seq(go(a), go(b))
+    Defer(a, b) => Defer(go(a), go(b))
     _ => t
   }
 }
@@ -101,7 +103,7 @@ fn has_metas(t : Tm) -> Bool {
     Assign(_, v) | Return(v) | Raise(v) => has_metas(v)
     While(c, b, s) => has_metas(c) || has_metas(b) || has_metas(s)
     ArrayLit(es) => es.iter().any(has_metas)
-    Seq(a, b) => has_metas(a) || has_metas(b)
+    Seq(a, b) | Defer(a, b) => has_metas(a) || has_metas(b)
     _ => false
   }
 }
@@ -134,6 +136,7 @@ fn finish(
       cxt.fail("cannot infer all implicit arguments or types in " + what)
     }
   }
+  register_lifted(cxt, what)
   out
 }
 

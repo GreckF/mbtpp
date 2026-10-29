@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-e124d479.js";
+            window.path_to_searchindex_js = "searchindex-c13f5aac.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-ec08c6a2.js"></script>
@@ -186,7 +186,8 @@
 <ul>
 <li>No termination checking or strict positivity checking (by design): you can “prove” false propositions.</li>
 <li>No resumable algebraic effects, and no automation tactics such as <code>simp</code>, <code>omega</code>, or <code>auto</code>.</li>
-<li>Local functions cannot be recursive.</li>
+<li>Recursive local functions cannot use the <code>let mut</code> variables around them.</li>
+<li>A <code>match</code> with array patterns is not checked for coverage and does not refine types.</li>
 <li>When functions with mutable state are run during type checking, calls that use arrays, imported functions or lambdas capturing <code>let mut</code> variables are not run (see <a href="lang/mutation.html">Mutable State and Loops</a>).</li>
 <li>Time limits are measured in wall-clock time, so a file may time out on a slower machine (see <a href="lang/type-level.html#time-limits">Time limits</a>).</li>
 <li>Structs have no mutable fields, and there are no struct patterns.</li>

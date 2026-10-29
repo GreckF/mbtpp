@@ -44,6 +44,46 @@ fn main {
   iterates over an array; `for k in a..<b` and `for k in a..=b` iterate over a range.
 - **`break`** and **`continue`** apply to the innermost loop; **`return`** returns from the current
   function, and inside a lambda it returns only from the lambda.
+- **`for i, x in xs`** gives the index and the element.
+- **Loops are expressions**: `break e` ends the loop with the value `e`; when the loop ends
+  normally, its value is the `nobreak { … }` block:
+
+```moonbit
+fn find(xs : Array[Int], v : Int) -> Int {
+  for i, x in xs {
+    if x == v {
+      break i
+    }
+  } nobreak {
+    -1
+  }
+}
+
+fn main {
+  println(find([5, 7, 9], 9))
+}
+```
+
+- **Labels**: `outer~: for …` names a loop; `break outer~` and `continue outer~` in an inner loop
+  apply to it.
+- **`loop`**: `loop a, b { pattern => … }` matches the values of the loop with arms; the value of
+  an arm ends the loop, and `continue x, y` goes on with new values:
+
+```moonbit
+fn sum(n : Int) -> Int {
+  loop n, 0 {
+    0, acc => acc
+    k, acc => continue k - 1, acc + k
+  }
+}
+
+fn main {
+  println(sum(10))
+}
+```
+
+- **`defer e`**: runs `e` when the enclosing block is left, normally or by `return`, `break`,
+  `continue` or an error.
 - **Arrays** are mutable: `xs[i] = v`, `xs.push(x)`.
 
 ## Interaction with type checking

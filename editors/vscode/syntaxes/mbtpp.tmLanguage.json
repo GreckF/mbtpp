@@ -135,7 +135,7 @@
       "patterns": [
         {
           "name": "keyword.control.mbtpp",
-          "match": "\\b(if|else|match|while|for|in|return|break|continue|raise|try|catch|noraise|loop|as|is|guard)\\b"
+          "match": "\\b(if|else|match|while|for|in|return|break|continue|raise|try|catch|noraise|loop|as|is|guard|defer|nobreak)\\b"
         },
         {
           "name": "keyword.declaration.mbtpp",

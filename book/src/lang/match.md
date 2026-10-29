@@ -58,6 +58,39 @@ fn main {
 - **守卫** `p if cond => …`：条件为假时继续尝试后面的分支，条件中可以使用模式绑定的变量。带守卫的
   分支不计入覆盖检查。
 
+## 数组与区间模式
+
+```moonbit
+fn describe(xs : Array[Int]) -> String {
+  match xs {
+    [] => "empty"
+    [x] => "one: \{x}"
+    [a, .. rest, z] if a == z => "same ends around \{rest.length()}"
+    [a, ..] => "starts with \{a}"
+  }
+}
+
+fn kind(c : Char) -> String {
+  match c {
+    'a'..='z' => "lower"
+    '0'..='9' => "digit"
+    _ => "other"
+  }
+}
+
+fn main {
+  println(describe([3, 1, 2, 3]))
+  println(kind('q'))
+}
+```
+
+- **数组模式**：`[p, q]` 匹配恰好两个元素，`[p, .., z]` 至少两个；`..rest` 把中间的元素绑定为一个
+  新数组。也可以用于 `String`（元素是 `Char`）。
+- **区间模式**：`lo..=hi`、`lo..<hi`，边界是字面量，`_` 表示不限，例如 `_..<60`。
+- 区间模式转成守卫，匹配仍是依赖匹配。含数组模式的 `match` 按顺序逐个分支测试：不做覆盖检查（没有
+  分支适用时程序中止），也不细化类型。守卫中使用 `is` 的 `match` 也是这样，此时 `is` 绑定的变量在
+  分支中可见。
+
 ## `is` 与 `guard`
 
 ```moonbit

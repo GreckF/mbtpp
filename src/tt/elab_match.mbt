@@ -54,6 +54,10 @@ fn check_pat(
     PAs(_, inner, x) =>
       check_pat(cxt, inner, ty, index_unify, scrut, refine_scrut, as_name=x)
     POr(q, _, _) => cxt.at(q).fail("an or-pattern cannot be used here")
+    PArray(q, _, _, _) | PRange(q, _, _, _) =>
+      cxt
+      .at(q)
+      .fail("array and range patterns can only be used in `match` and `is`")
     PLit(q, LInt(n)) if head_name(ty) == Some("Nat") =>
       if n < 0 {
         cxt.fail("negative natural number")
@@ -253,6 +257,7 @@ fn splits(p : @parser.Pat) -> Bool {
   match p {
     PCon(_, _, _, _) | PTuple(_, _) | PLit(_, _) => true
     PAs(_, q, _) => splits(q)
+    PArray(_, _, _, _) | PRange(_, _, _, _) => true
     POr(_, a, b) => splits(a) || splits(b)
     PVar(_, _) | PWild(_) => false
   }
@@ -297,6 +302,20 @@ fn elab_match(
   goal : Val?,
 ) -> (Tm, Val) raise ElabError {
   let arms = expand_arms(cxt, arms)
+  // array and range patterns, `is` in guards (see sugar.mbt)
+  let arms = match special_match(cxt.pos, scr, arms) {
+    None => arms
+    Some(Ok(arms2)) => arms2
+    Some(Err(chain)) =>
+      if ret is Some(_) {
+        cxt.fail("array patterns cannot be used with a `return` clause")
+      } else {
+        return match goal {
+          Some(g) => (check(cxt, chain, g), g)
+          None => infer(cxt, chain)
+        }
+      }
+  }
   // `match (a, b) { (p, q) => ... }` matches on several scrutinees
   let scrs = match scr {
     ETuple(_, es) if ret is None &&

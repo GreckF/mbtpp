@@ -1,0 +1,94 @@
+// MoonBit syntax: loops, local recursion, `defer`, cascades, array and
+// range patterns, number literals and multiline strings.
+
+// `loop`: the arms take the loop's values; `continue` gives new ones
+fn sum(n : Int) -> Int {
+  loop n, 0 {
+    0, acc => acc
+    k, acc => continue k - 1, acc + k
+  }
+}
+
+// a loop is an expression: `break v`, or the `nobreak` block
+fn find(xs : Array[Int], v : Int) -> Int {
+  for i, x in xs {
+    if x == v {
+      break i
+    }
+  } nobreak {
+    -1
+  }
+}
+
+// labels: `break outer~` leaves the outer loop
+fn first_pair(n : Int, product : Int) -> String {
+  let mut res = "none"
+  outer~: for i = 1; i < n; i = i + 1 {
+    for j = 1; j < n; j = j + 1 {
+      if i * j == product {
+        res = "\{i} * \{j}"
+        break outer~
+      }
+    }
+  }
+  res
+}
+
+// a local function can call itself
+fn triangle(n : Int) -> Int {
+  fn go(k : Int) -> Int {
+    if k == 0 {
+      0
+    } else {
+      k + go(k - 1)
+    }
+  }
+
+  go(n)
+}
+
+// `defer` runs when the block is left, however it is left
+fn work(n : Int) -> Int {
+  defer println("cleanup \{n}")
+  if n == 0 {
+    return -1
+  }
+  n * 2
+}
+
+fn describe(xs : Array[Int]) -> String {
+  match xs {
+    [] => "empty"
+    [x] => "one: \{x}"
+    [a, .. rest, z] if a == z => "same ends around \{rest.length()}"
+    [a, ..] => "starts with \{a}"
+  }
+}
+
+fn kind(c : Char) -> String {
+  match c {
+    'a'..='z' => "lower"
+    'A'..='Z' => "upper"
+    '0'..='9' => "digit"
+    _ => "other"
+  }
+}
+
+fn main {
+  println(sum(10))
+  println("\{find([5, 7, 9], 9)} \{find([5, 7, 9], 4)}")
+  println(first_pair(10, 12))
+  println(triangle(10))
+  println(work(3))
+  println(work(0))
+  println(describe([3, 1, 2, 3]))
+  println(describe([4, 1]))
+  println(kind('q') + " " + kind('Q') + " " + kind('5'))
+  let xs : Array[Int] = []
+  println(xs..push(1)..push(2).length())
+  println(0b1010 + 0o17 + 0xFF)
+  let text =
+    #|two lines,
+    $|the second with \{sum(3)}
+  println(text)
+}

@@ -10,7 +10,11 @@ fn pat_alts(
   p : @parser.Pat,
 ) -> Array[(@parser.Pat, Array[(String, String)])] raise ElabError {
   match p {
-    PVar(_, _) | PWild(_) | PLit(_, _) => [(p, [])]
+    PVar(_, _)
+    | PWild(_)
+    | PLit(_, _)
+    | PRange(_, _, _, _)
+    | PArray(_, _, _, _) => [(p, [])]
     PCon(q, c, impl_ps, expl_ps) => {
       let ni = impl_ps.map(ps => ps.length()).unwrap_or(0)
       let subs = impl_ps.unwrap_or([]) + expl_ps
@@ -83,7 +87,18 @@ fn alt_vars(a : (@parser.Pat, Array[(String, String)])) -> Array[String] {
 fn pat_vars(p : @parser.Pat, out : Array[String]) -> Unit {
   match p {
     PVar(_, x) => out.push(x)
-    PWild(_) | PLit(_, _) => ()
+    PWild(_) | PLit(_, _) | PRange(_, _, _, _) => ()
+    PArray(_, before, rest, after) => {
+      for q in before {
+        pat_vars(q, out)
+      }
+      if rest is Some(Some(x)) {
+        out.push(x)
+      }
+      for q in after {
+        pat_vars(q, out)
+      }
+    }
     PCon(_, _, i, e) => {
       for q in i.unwrap_or([]) {
         pat_vars(q, out)
@@ -169,8 +184,13 @@ fn cond_expr(
   t : @parser.Expr,
   f : @parser.Expr,
 ) -> @parser.Expr {
+  let cs0 : Array[@parser.Expr] = []
+  conjuncts(c, cs0)
+  // array and range patterns become tests
   let cs : Array[@parser.Expr] = []
-  conjuncts(c, cs)
+  for x in cs0 {
+    expand_is(x, cs)
+  }
   // the boolean conditions from `i` to the next pattern test
   let bools = (i : Int32) => {
     let mut k = i
@@ -249,4 +269,238 @@ fn sugar(e : @parser.Expr) -> @parser.Expr? {
     ETry(p, body, arms, Some(ok)) => Some(try_noraise(p, body, arms, ok))
     _ => None
   }
+}
+
+///|
+/// Does a pattern contain an array or a range pattern?
+fn has_special(p : @parser.Pat) -> Bool {
+  match p {
+    PArray(_, _, _, _) | PRange(_, _, _, _) => true
+    PCon(_, _, i, e) =>
+      i.unwrap_or([]).iter().any(has_special) || e.iter().any(has_special)
+    PTuple(_, ps) => ps.iter().any(has_special)
+    POr(_, a, b) => has_special(a) || has_special(b)
+    PAs(_, q, _) => has_special(q)
+    _ => false
+  }
+}
+
+///|
+/// Does a pattern contain an array pattern?
+fn has_array(p : @parser.Pat) -> Bool {
+  match p {
+    PArray(_, _, _, _) => true
+    PCon(_, _, i, e) =>
+      i.unwrap_or([]).iter().any(has_array) || e.iter().any(has_array)
+    PTuple(_, ps) => ps.iter().any(has_array)
+    POr(_, a, b) => has_array(a) || has_array(b)
+    PAs(_, q, _) => has_array(q)
+    _ => false
+  }
+}
+
+///|
+/// Replace the array and range patterns in `p` by fresh variables, recorded
+/// in `out` with the patterns they must match.
+fn lift_special(
+  p : @parser.Pat,
+  out : Array[(String, @parser.Pat)],
+) -> @parser.Pat {
+  let go = (q : @parser.Pat) => lift_special(q, out)
+  match p {
+    PArray(q, _, _, _) | PRange(q, _, _, _) => {
+      let x = fresh_name_gen("__pat")
+      out.push((x, p))
+      PVar(q, x)
+    }
+    PAs(q, PArray(_, _, _, _) as inner, x)
+    | PAs(q, PRange(_, _, _, _) as inner, x) => {
+      out.push((x, inner))
+      PVar(q, x)
+    }
+    PCon(q, c, i, e) => PCon(q, c, i.map(xs => xs.map(go)), e.map(go))
+    PTuple(q, ps) => PTuple(q, ps.map(go))
+    PAs(q, inner, x) => PAs(q, go(inner), x)
+    _ => p
+  }
+}
+
+///|
+fn and_all(p : Pos, cs : Array[@parser.Expr]) -> @parser.Expr {
+  match cs {
+    [] => ELit(p, LBool(true))
+    [c, ..] => {
+      let mut e = c
+      for k = 1; k < cs.length(); k = k + 1 {
+        e = EBin(p, "&&", e, cs[k])
+      }
+      e
+    }
+  }
+}
+
+///|
+/// The tests that the variable `x` matches the array or range pattern `p`
+/// (the elements of an array are tested with `is`; `..rest` is bound with
+/// `slice`).
+fn special_tests(x : String, p : @parser.Pat) -> Array[@parser.Expr] {
+  match p {
+    PRange(q, lo, hi, incl) => {
+      let out : Array[@parser.Expr] = []
+      if lo is Some(l) {
+        out.push(EBin(q, ">=", EVar(q, x), ELit(q, l)))
+      }
+      if hi is Some(h) {
+        out.push(EBin(q, if incl { "<=" } else { "<" }, EVar(q, x), ELit(q, h)))
+      }
+      out
+    }
+    PArray(q, before, rest, after) => {
+      let len : @parser.Expr = EMethod(q, EVar(q, x), "length", None, [])
+      let n = before.length() + after.length()
+      let lit = (k : Int32) => @parser.ELit(q, LInt(k))
+      let out : Array[@parser.Expr] = [
+        EBin(q, if rest is None { "==" } else { ">=" }, len, lit(n)),
+      ]
+      let at = (i : @parser.Expr) => {
+        @parser.EApp(q, EVar(q, x), Some([i]), None)
+      }
+      for k = 0; k < before.length(); k = k + 1 {
+        if !(before[k] is PWild(_)) {
+          out.push(EIs(q, at(lit(k)), before[k]))
+        }
+      }
+      for k = 0; k < after.length(); k = k + 1 {
+        if !(after[k] is PWild(_)) {
+          let i : @parser.Expr = EBin(q, "-", len, lit(after.length() - k))
+          out.push(EIs(q, at(i), after[k]))
+        }
+      }
+      if rest is Some(Some(r)) {
+        let slice : @parser.Expr = EMethod(q, EVar(q, x), "slice", None, [
+          lit(before.length()),
+          EBin(q, "-", len, lit(after.length())),
+        ])
+        out.push(EIs(q, slice, PVar(q, r)))
+      }
+      out
+    }
+    _ => []
+  }
+}
+
+///|
+/// A conjunct of a condition, with its array and range patterns turned into
+/// tests.
+fn expand_is(c : @parser.Expr, out : Array[@parser.Expr]) -> Unit {
+  match c {
+    EIs(q, e, p) if has_special(p) => {
+      let lifted : Array[(String, @parser.Pat)] = []
+      let p2 = lift_special(p, lifted)
+      out.push(EIs(q, e, p2))
+      for l in lifted {
+        for t in special_tests(l.0, l.1) {
+          expand_is(t, out)
+        }
+      }
+    }
+    _ => out.push(c)
+  }
+}
+
+///|
+/// Arms with array or range patterns, or `is` in their guards. Ranges only:
+/// they become guards. Otherwise the whole match is a chain of tests, in
+/// order (`None`: no such arm).
+fn special_match(
+  p : Pos,
+  scr : @parser.Expr,
+  arms : Array[@parser.Arm],
+) -> Result[Array[@parser.Arm], @parser.Expr]? {
+  let guard_is = (a : @parser.Arm) => a.cond.map(has_is).unwrap_or(false)
+  if !arms.iter().any(a => has_special(a.pat) || guard_is(a)) {
+    return None
+  }
+  if !arms.iter().any(a => has_array(a.pat) || guard_is(a)) {
+    return Some(
+      Ok(
+        arms.map(a => {
+          let lifted : Array[(String, @parser.Pat)] = []
+          let pat = lift_special(a.pat, lifted)
+          let tests : Array[@parser.Expr] = []
+          for l in lifted {
+            for t in special_tests(l.0, l.1) {
+              tests.push(t)
+            }
+          }
+          match a.cond {
+            Some(g) => tests.push(g)
+            None => ()
+          }
+          let cond = if tests.length() == 0 {
+            None
+          } else {
+            Some(and_all(a.pos, tests))
+          }
+          { ..a, pat, cond, }
+        }),
+      ),
+    )
+  }
+  // the chain: the first arm whose pattern and guard hold gives the value
+  let s = fresh_name_gen("__scrut")
+  let r = fresh_name_gen("__result")
+  let stmts : Array[@parser.Stmt] = [
+    SLet(p, PVar(p, s), None, scr),
+    SLetMut(p, r, None, EVar(p, "Option::None")),
+  ]
+  for a in arms {
+    guard a.rhs is Some(rhs) else { continue }
+    let q = a.pos
+    let check_arm = and_all(
+      q,
+      [
+        EIs(q, EVar(q, r), PCon(q, "Option::None", None, [])),
+        EIs(q, EVar(q, s), a.pat),
+        ..a.cond.map(g => [g]).unwrap_or([]),
+      ],
+    )
+    let set : @parser.Expr = EBlock(q, [
+      SAssign(
+        q,
+        EVar(q, r),
+        "=",
+        EApp(q, EVar(q, "Option::Some"), None, Some([rhs])),
+      ),
+    ])
+    stmts.push(SExpr(q, cond_expr(check_arm, set, ELit(q, LUnit))))
+  }
+  let v = fresh_name_gen("__v")
+  stmts.push(
+    SExpr(
+      p,
+      EMatch(p, EVar(p, r), None, [
+        {
+          pos: p,
+          pat: PCon(p, "Option::Some", None, [PVar(p, v)]),
+          cond: None,
+          rhs: Some(EVar(p, v)),
+        },
+        {
+          pos: p,
+          pat: PCon(p, "Option::None", None, []),
+          cond: None,
+          rhs: Some(
+            EApp(
+              p,
+              EVar(p, "abort"),
+              None,
+              Some([ELit(p, LStr("no case of the match applies"))]),
+            ),
+          ),
+        },
+      ]),
+    ),
+  )
+  Some(Err(EBlock(p, stmts)))
 }

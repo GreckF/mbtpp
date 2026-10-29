@@ -560,6 +560,22 @@ fn Parser::postfix(self : Parser, e0 : Expr) -> Expr raise ParseError {
           }
         }
       }
+    } else if self.at("..") && self.peek_at(1).tok is TIdent(_) {
+      // `x..f(a)..g()`: method calls on `x`, whose value is `x`
+      let tmp = "__cascade_" + pos.line.to_string() + "_" + pos.col.to_string()
+      let stmts : Array[Stmt] = [SLet(pos, PVar(pos, tmp), None, e)]
+      while self.at("..") && self.peek_at(1).tok is TIdent(_) {
+        ignore(self.advance())
+        let npos = self.pos()
+        let name = self.ident()
+        self.expect("(")
+        let args = self.args(")")
+        stmts.push(
+          SExpr(npos, EMethod(npos, EVar(npos, tmp), name, None, args)),
+        )
+      }
+      stmts.push(SExpr(pos, EVar(pos, tmp)))
+      e = EBlock(pos, stmts)
     } else {
       break
     }
@@ -837,11 +853,37 @@ fn Parser::primary(self : Parser) -> Expr raise ParseError {
     }
     TSym("break") => {
       ignore(self.advance())
-      EBreak(pos)
+      let label = self.label_ref()
+      if self.at_stmt_end() || self.at(",") || self.at(")") {
+        EBreak(pos, label, None)
+      } else {
+        EBreak(pos, label, Some(self.expr()))
+      }
     }
     TSym("continue") => {
       ignore(self.advance())
-      EContinue(pos)
+      let label = self.label_ref()
+      let args : Array[Expr] = []
+      if !(self.at_stmt_end() || self.at(")")) {
+        args.push(self.expr())
+        while self.accept(",") {
+          args.push(self.expr())
+        }
+      }
+      EContinue(pos, label, args)
+    }
+    // loops are expressions too (`let x = for ... { break v } nobreak { d }`)
+    TSym("while" | "for") => EBlock(pos, [self.loop_stmt(pos, None)])
+    TSym("loop") => self.loop_expr(pos, None)
+    TIdent(_) if self.at_k(1, "~") && self.at_k(2, ":") => {
+      let label = self.ident()
+      ignore(self.advance())
+      ignore(self.advance())
+      if self.at("loop") {
+        self.loop_expr(pos, Some(label))
+      } else {
+        EBlock(pos, [self.loop_stmt(pos, Some(label))])
+      }
     }
     TSym("monad") => {
       ignore(self.advance())
@@ -919,7 +961,7 @@ fn Parser::arms(self : Parser) -> Array[Arm] raise ParseError {
     }
     let pos = self.pos()
     let pat = self.pattern()
-    let cond = if self.accept("if") { Some(self.expr()) } else { None }
+    let cond = if self.accept("if") { Some(self.guard_expr()) } else { None }
     let rhs = if self.accept("=>") {
       Some(
         if self.at("{") && !self.is_struct_literal() {
@@ -1005,9 +1047,65 @@ fn Parser::pattern(self : Parser) -> Pat raise ParseError {
 
 ///|
 fn Parser::pattern_atom(self : Parser) -> Pat raise ParseError {
+  let pos = self.pos()
+  let p = self.pattern_atom1()
+  // `lo..=hi`, `lo..<hi`
+  if self.at("..=") || self.at("..<") {
+    let incl = self.at("..=")
+    ignore(self.advance())
+    let bound = (q : Pat) => {
+      match q {
+        PLit(_, l) => Some(Some(l))
+        PWild(_) => Some(None)
+        _ => None
+      }
+    }
+    let lo = match bound(p) {
+      Some(l) => l
+      None => self.fail("a range pattern is between literals")
+    }
+    let hi = match bound(self.pattern_atom1()) {
+      Some(l) => l
+      None => self.fail("a range pattern is between literals")
+    }
+    return PRange(pos, lo, hi, incl)
+  }
+  p
+}
+
+///|
+fn Parser::pattern_atom1(self : Parser) -> Pat raise ParseError {
   let t = self.peek()
   let pos = t.pos
   match t.tok {
+    // `[p, q, ..rest, r]`
+    TSym("[") => {
+      ignore(self.advance())
+      let before : Array[Pat] = []
+      let after : Array[Pat] = []
+      let mut rest : String?? = None
+      while !self.at("]") {
+        if self.accept("..") {
+          if rest is Some(_) {
+            self.fail("an array pattern has at most one `..`")
+          }
+          rest = if self.is_ident() {
+            Some(Some(self.ident()))
+          } else {
+            Some(None)
+          }
+        } else if rest is Some(_) {
+          after.push(self.pattern())
+        } else {
+          before.push(self.pattern())
+        }
+        if !self.accept(",") {
+          break
+        }
+      }
+      self.expect("]")
+      PArray(pos, before, rest, after)
+    }
     TSym("_") => {
       ignore(self.advance())
       PWild(pos)
@@ -1123,44 +1221,25 @@ fn Parser::stmt(self : Parser) -> Stmt raise ParseError {
     ignore(self.advance())
     return SFn(pos, self.fn_rest(pos, false, is_async=true))
   }
+  if self.accept("defer") {
+    return SDefer(pos, self.expr())
+  }
   if self.accept("guard") {
     let c = self.expr()
     let e = if self.accept("else") { Some(self.block()) } else { None }
     return SGuard(pos, c, e)
   }
-  if self.accept("while") {
-    let c = self.expr()
-    return SWhile(pos, c, self.block())
+  if self.at("while") || self.at("for") {
+    return self.loop_stmt(pos, None)
   }
-  if self.accept("for") {
-    if self.is_ident() && self.at_k(1, "in") {
-      let x = self.ident()
-      self.expect("in")
-      let e = self.expr()
-      return SForIn(pos, x, e, self.block())
+  if self.is_ident() && self.at_k(1, "~") && self.at_k(2, ":") {
+    let label = self.ident()
+    ignore(self.advance())
+    ignore(self.advance())
+    if self.at("loop") {
+      return SExpr(pos, self.loop_expr(pos, Some(label)))
     }
-    let inits : Array[(String, Expr)] = []
-    while !self.at(";") {
-      let x = self.ident()
-      self.expect("=")
-      inits.push((x, self.expr()))
-      if !self.accept(",") {
-        break
-      }
-    }
-    self.expect(";")
-    let cond = if self.at(";") { None } else { Some(self.expr()) }
-    self.expect(";")
-    let updates : Array[(String, Expr)] = []
-    while !self.at("{") {
-      let x = self.ident()
-      self.expect("=")
-      updates.push((x, self.expr()))
-      if !self.accept(",") {
-        break
-      }
-    }
-    return SFor(pos, inits, cond, updates, self.block())
+    return self.loop_stmt(pos, Some(label))
   }
   let e = self.expr()
   for op in ["=", "+=", "-=", "*=", "/="] {
@@ -1170,6 +1249,121 @@ fn Parser::stmt(self : Parser) -> Stmt raise ParseError {
     }
   }
   SExpr(pos, e)
+}
+
+///|
+/// `label~` after `break` or `continue`.
+fn Parser::label_ref(self : Parser) -> String? raise ParseError {
+  if self.is_ident() && self.at_k(1, "~") && !self.peek().nl {
+    let l = self.ident()
+    ignore(self.advance())
+    Some(l)
+  } else {
+    None
+  }
+}
+
+///|
+/// `loop a, b { p, q => ... }`
+fn Parser::loop_expr(
+  self : Parser,
+  pos : Pos,
+  label : String?,
+) -> Expr raise ParseError {
+  self.expect("loop")
+  let args = [self.expr()]
+  while self.accept(",") {
+    args.push(self.expr())
+  }
+  self.expect("{")
+  let arms : Array[Arm] = []
+  while !self.at("}") {
+    if self.accept(";") {
+      continue
+    }
+    let apos = self.pos()
+    let ps = [self.pattern()]
+    while self.accept(",") {
+      ps.push(self.pattern())
+    }
+    let pat = if ps.length() == 1 { ps[0] } else { PTuple(apos, ps) }
+    let cond = if self.accept("if") { Some(self.guard_expr()) } else { None }
+    self.expect("=>")
+    let rhs = if self.at("{") && !self.is_struct_literal() {
+      self.block()
+    } else {
+      self.expr()
+    }
+    arms.push({ pos: apos, pat, cond, rhs: Some(rhs), })
+    if !self.at("}") {
+      self.end_stmt()
+    }
+  }
+  self.expect("}")
+  ELoop(pos, label, args, arms)
+}
+
+///|
+/// A `while` or `for` loop, with its label and `nobreak` block.
+fn Parser::loop_stmt(
+  self : Parser,
+  pos : Pos,
+  label : String?,
+) -> Stmt raise ParseError {
+  let s = self.plain_loop(pos)
+  // `nobreak { e }` (older MoonBit: `else { e }`)
+  let no_break = if self.at("else") ||
+    (self.peek().tok == TIdent("nobreak") && self.at_k(1, "{")) {
+    ignore(self.advance())
+    Some(self.block())
+  } else {
+    None
+  }
+  match (label, no_break) {
+    (None, None) => s
+    _ => SLoopX(pos, label, s, no_break)
+  }
+}
+
+///|
+fn Parser::plain_loop(self : Parser, pos : Pos) -> Stmt raise ParseError {
+  if self.accept("while") {
+    let c = self.expr()
+    return SWhile(pos, c, self.block())
+  }
+  self.expect("for")
+  // `for x in e`, `for i, x in e`
+  if self.is_ident() && (self.at_k(1, "in") || self.at_k(1, ",")) {
+    let xs = [self.ident()]
+    if self.accept(",") {
+      xs.push(self.ident())
+    }
+    self.expect("in")
+    let e = self.expr()
+    return SForIn(pos, xs, e, self.block())
+  }
+  let inits : Array[(String, Expr)] = []
+  while !self.at(";") {
+    let x = self.ident()
+    self.expect("=")
+    inits.push((x, self.expr()))
+    if !self.accept(",") {
+      break
+    }
+  }
+  self.expect(";")
+  let cond = if self.at(";") { None } else { Some(self.expr()) }
+  self.expect(";")
+  let updates : Array[(String, Expr)] = []
+  while !self.at("{") {
+    let x = self.ident()
+    self.expect("=")
+    updates.push((x, self.expr()))
+    if !self.accept(",") {
+      break
+    }
+  }
+  SFor(pos, inits, cond, updates, self.block())
 }
 
 // ---------------------------------------------------------------------------
@@ -1595,4 +1789,35 @@ fn Parser::pkg_name(self : Parser) -> String raise ParseError {
     }
     _ => self.ident()
   }
+}
+
+///|
+/// The guard of a match arm, up to the arm's `=>` (so that `x if a == b =>`
+/// is not read as the lambda `b => ...`).
+fn Parser::guard_expr(self : Parser) -> Expr raise ParseError {
+  let mut k = self.i
+  let mut depth = 0
+  while k < self.toks.length() {
+    match self.toks[k].tok {
+      TSym("(" | "[" | "{") => depth = depth + 1
+      TSym(")" | "]" | "}") => depth = depth - 1
+      TSym("=>") if depth == 0 => break
+      TEOF => break
+      _ => ()
+    }
+    k = k + 1
+  }
+  let sub : Parser = {
+    toks: [
+      ..self.toks[self.i:k].to_array(),
+      { tok: TEOF, pos: self.toks[k].pos, nl: true, },
+    ],
+    i: 0,
+  }
+  let e = sub.expr()
+  if sub.peek().tok != TEOF {
+    sub.fail("unexpected token in a guard")
+  }
+  self.i = k
+  e
 }

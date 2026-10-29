@@ -197,7 +197,7 @@ fn has_return(t : @tt.Tm) -> Bool {
     Try(b, cls) => has_return(b) || cls.iter().any(cl => has_return(cl.body))
     Assign(_, v) | Raise(v) => has_return(v)
     While(c, b, s) => has_return(c) || has_return(b) || has_return(s)
-    Seq(a, b) => has_return(a) || has_return(b)
+    Seq(a, b) | Defer(a, b) => has_return(a) || has_return(b)
     ArrayLit(es) => es.iter().any(has_return)
     _ => false
   }
@@ -873,6 +873,13 @@ fn Gen::tm(self : Gen, env : Array[Local], t : @tt.Tm) -> String {
     ArrayLit(es) => "VArr([" + es.map(x => self.tm(env, x)).join(", ") + "])"
     Seq(a, b) =>
       "{\nignore(" + self.tm(env, a) + ")\n" + self.tm(env, b) + "\n}"
+    // MoonBit's `defer` (it may not raise: errors of `a` are dropped)
+    Defer(a, b) =>
+      "{\ndefer (try { ignore(" +
+      self.tm(env, a) +
+      ") } catch { _ => () })\n" +
+      self.tm(env, b) +
+      "\n}"
   }
 }
 

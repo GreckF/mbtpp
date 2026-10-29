@@ -35,7 +35,7 @@ let keywords : Array[String] = [
   "fn", "let", "mut", "if", "else", "match", "enum", "struct", "trait", "impl", "for",
   "in", "with", "while", "return", "break", "continue", "raise", "try", "catch",
   "true", "false", "Type", "Prop", "forall", "lemma", "proof", "monad", "as", "suberror",
-  "derive", "pub", "priv", "noraise", "loop", "is", "guard", "async",
+  "derive", "pub", "priv", "noraise", "loop", "is", "guard", "async", "defer",
 ]
 
 ///|
@@ -106,6 +106,128 @@ pub fn tokenize(
       continue
     }
     let pos = { line, col, }
+    // `0x1F`, `0o17`, `0b1010`
+    if c == '0' &&
+      (
+        peek(1) == 'x' ||
+        peek(1) == 'X' ||
+        peek(1) == 'o' ||
+        peek(1) == 'O' ||
+        peek(1) == 'b' ||
+        peek(1) == 'B'
+      ) {
+      let base = match peek(1) {
+        'x' | 'X' => 16
+        'o' | 'O' => 8
+        _ => 2
+      }
+      adv()
+      adv()
+      let mut v = 0
+      let mut digits = 0
+      while i < n {
+        let d = cs[i]
+        let dv = if d >= '0' && d <= '9' {
+          d.to_int() - '0'.to_int()
+        } else if d >= 'a' && d <= 'f' {
+          d.to_int() - 'a'.to_int() + 10
+        } else if d >= 'A' && d <= 'F' {
+          d.to_int() - 'A'.to_int() + 10
+        } else if d == '_' {
+          adv()
+          continue
+        } else {
+          break
+        }
+        if dv >= base {
+          break
+        }
+        v = v * base + dv
+        digits = digits + 1
+        adv()
+      }
+      if digits == 0 {
+        raise ParseError(pos, "expected digits after the base prefix")
+      }
+      toks.push({ tok: TInt(v), pos, nl, })
+      nl = false
+      continue
+    }
+    // `#|raw` and `$|interpolated` lines: consecutive lines form one string
+    if (c == '#' || c == '$') && peek(1) == '|' {
+      let parts : Array[StrPart] = []
+      let buf = StringBuilder::new()
+      let mut first = true
+      while i < n && (cs[i] == '#' || cs[i] == '$') && peek(1) == '|' {
+        let interp = cs[i] == '$'
+        adv()
+        adv()
+        if !first {
+          buf.write_char('\n')
+        }
+        first = false
+        while i < n && cs[i] != '\n' && cs[i] != '\r' {
+          let d = cs[i]
+          if interp && d == '\\' && peek(1) == '{' {
+            adv()
+            adv()
+            if buf.to_string() != "" {
+              parts.push(SPStr(buf.to_string()))
+            }
+            buf.reset()
+            let eline = line
+            let ecol = col
+            let ebuf = StringBuilder::new()
+            let mut depth = 0
+            while i < n && cs[i] != '\n' && !(cs[i] == '}' && depth == 0) {
+              if cs[i] == '{' {
+                depth = depth + 1
+              } else if cs[i] == '}' {
+                depth = depth - 1
+              }
+              ebuf.write_char(cs[i])
+              adv()
+            }
+            if i >= n || cs[i] != '}' {
+              raise ParseError(pos, "unterminated interpolation")
+            }
+            adv()
+            parts.push(SPExpr(ebuf.to_string(), eline, ecol))
+            continue
+          }
+          if interp && d == '\\' {
+            adv()
+            let e = cs[i]
+            adv()
+            buf.write_char(escape_char(pos, e))
+            continue
+          }
+          buf.write_char(d)
+          adv()
+        }
+        // the next line, if it continues the string
+        let mut j = i
+        while j < n && (cs[j] == '\r' || cs[j] == '\n') {
+          j = j + 1
+        }
+        while j < n && (cs[j] == ' ' || cs[j] == '\t') {
+          j = j + 1
+        }
+        if j + 1 < n && (cs[j] == '#' || cs[j] == '$') && cs[j + 1] == '|' {
+          while i < j {
+            adv()
+          }
+        } else {
+          break
+        }
+      }
+      if buf.to_string() != "" || parts.length() == 0 {
+        parts.push(SPStr(buf.to_string()))
+      }
+      toks.push({ tok: TStr(parts), pos, nl, })
+      nl = false
+      continue
+    }
     if c >= '0' && c <= '9' {
       let mut v = 0
       while i < n && ((cs[i] >= '0' && cs[i] <= '9') || cs[i] == '_') {

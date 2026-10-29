@@ -59,6 +59,42 @@ fn main {
 - **Guards** `p if cond => …`: when the condition is false, the following arms are tried. The
   condition can use the variables bound by the pattern. Guarded arms do not count for coverage.
 
+## Array and range patterns
+
+```moonbit
+fn describe(xs : Array[Int]) -> String {
+  match xs {
+    [] => "empty"
+    [x] => "one: \{x}"
+    [a, .. rest, z] if a == z => "same ends around \{rest.length()}"
+    [a, ..] => "starts with \{a}"
+  }
+}
+
+fn kind(c : Char) -> String {
+  match c {
+    'a'..='z' => "lower"
+    '0'..='9' => "digit"
+    _ => "other"
+  }
+}
+
+fn main {
+  println(describe([3, 1, 2, 3]))
+  println(kind('q'))
+}
+```
+
+- **Array patterns**: `[p, q]` matches exactly two elements, `[p, .., z]` at least two; `..rest`
+  binds the elements in between, as a new array. They also match a `String` (its elements are
+  `Char`s).
+- **Range patterns**: `lo..=hi` and `lo..<hi` between literals; `_` leaves a bound open, as in
+  `_..<60`.
+- Range patterns become guards, so the match stays dependent. A `match` with array patterns tests
+  its arms one after another: it is not checked for coverage (when no arm applies, the program
+  aborts) and does not refine types. So is a `match` with `is` in a guard; the variables bound by
+  that `is` are visible in the arm.
+
 ## `is` and `guard`
 
 ```moonbit

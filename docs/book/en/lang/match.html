@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-e124d479.js";
+            window.path_to_searchindex_js = "../searchindex-c13f5aac.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-ec08c6a2.js"></script>
@@ -236,6 +236,40 @@ variables. The checker expands them into separate arms, each matched dependently
 value matched by <code>A | B</code>.</li>
 <li><strong>Guards</strong> <code>p if cond =&gt; …</code>: when the condition is false, the following arms are tried. The
 condition can use the variables bound by the pattern. Guarded arms do not count for coverage.</li>
+</ul>
+<h2 id="array-and-range-patterns"><a class="header" href="#array-and-range-patterns">Array and range patterns</a></h2>
+<pre><code class="language-moonbit">fn describe(xs : Array[Int]) -&gt; String {
+  match xs {
+    [] =&gt; "empty"
+    [x] =&gt; "one: \{x}"
+    [a, .. rest, z] if a == z =&gt; "same ends around \{rest.length()}"
+    [a, ..] =&gt; "starts with \{a}"
+  }
+}
+
+fn kind(c : Char) -&gt; String {
+  match c {
+    'a'..='z' =&gt; "lower"
+    '0'..='9' =&gt; "digit"
+    _ =&gt; "other"
+  }
+}
+
+fn main {
+  println(describe([3, 1, 2, 3]))
+  println(kind('q'))
+}
+</code></pre>
+<ul>
+<li><strong>Array patterns</strong>: <code>[p, q]</code> matches exactly two elements, <code>[p, .., z]</code> at least two; <code>..rest</code>
+binds the elements in between, as a new array. They also match a <code>String</code> (its elements are
+<code>Char</code>s).</li>
+<li><strong>Range patterns</strong>: <code>lo..=hi</code> and <code>lo..&lt;hi</code> between literals; <code>_</code> leaves a bound open, as in
+<code>_..&lt;60</code>.</li>
+<li>Range patterns become guards, so the match stays dependent. A <code>match</code> with array patterns tests
+its arms one after another: it is not checked for coverage (when no arm applies, the program
+aborts) and does not refine types. So is a <code>match</code> with <code>is</code> in a guard; the variables bound by
+that <code>is</code> are visible in the arm.</li>
 </ul>
 <h2 id="is-and-guard"><a class="header" href="#is-and-guard"><code>is</code> and <code>guard</code></a></h2>
 <pre><code class="language-moonbit">fn get(o : Option[Int]) -&gt; Int {

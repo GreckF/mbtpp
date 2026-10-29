@@ -1442,7 +1442,7 @@ fn Gen::typed_term(
               Some(g) => {
                 let (cg, tg) = self.typed(env2, g)
                 ignore(unify_t(tg, NBool))
-                " if " + cg
+                " if (" + cg + ")"
               }
               None => ""
             }
@@ -1496,6 +1496,18 @@ fn Gen::typed_term(
       let (cb, tb) = self.typed(env, b)
       ("{\n" + stmt(ca, ta) + "\n" + cb + "\n}", tb)
     }
+    Defer(a, b) => {
+      let (ca, ta) = self.typed(env, a)
+      let (cb, tb) = self.typed(env, b)
+      (
+        "{\ndefer (try { " +
+        stmt(ca, ta) +
+        " } catch { _ => () })\n" +
+        cb +
+        "\n}",
+        tb,
+      )
+    }
     _ => raise NotTyped
   }
 }
@@ -1509,7 +1521,7 @@ fn has_continue(t : @tt.Tm) -> Bool {
     Let(_, _, v, b) | LetMut(_, _, v, b) => has_continue(v) || has_continue(b)
     Match(ss, cls) =>
       ss.iter().any(has_continue) || cls.iter().any(cl => has_continue(cl.body))
-    Seq(a, b) => has_continue(a) || has_continue(b)
+    Seq(a, b) | Defer(a, b) => has_continue(a) || has_continue(b)
     Assign(_, v) | Return(v) => has_continue(v)
     _ => false
   }

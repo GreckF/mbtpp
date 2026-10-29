@@ -249,6 +249,17 @@ fn Machine::eval(self : Machine, env : REnv, t : @tt.Tm) -> RVal raise Ctl {
       ignore(self.eval(env, a))
       self.eval(env, b)
     }
+    // the deferred expression runs however the body is left
+    Defer(d, b) => {
+      let r = self.eval(env, b) catch {
+        e => {
+          ignore(self.eval(env, d))
+          raise e
+        }
+      }
+      ignore(self.eval(env, d))
+      r
+    }
   }
 }
 

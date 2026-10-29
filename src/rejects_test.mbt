@@ -660,3 +660,49 @@ test "#mbt hints: pub declarations that translate" {
   inspect(@tt.mbt_info("Shape") is None, content="true")
   inspect(@tt.mbt_fns.contains("norm1"), content="false")
 }
+
+///|
+test "editor info: names and goals" {
+  let src =
+    #|struct Point { x : Int; y : Int }
+    #|fn norm1(p : Point) -> Int { p.x + p.y }
+    #|lemma zero_add : forall n : Nat, (0 : Nat) + n === n = proof {
+    #|  intros n
+    #|  rfl
+    #|}
+  @tt.check_program("a.mbtpp", src)
+  let names = @tt.name_infos
+    .filter(n => @tt.split_pos(n.pos).1 == 2)
+    .map(n => (n.show)() + (if n.global is Some(_) { " (global)" } else { "" }))
+  inspect(
+    names.join("\n"),
+    content=(
+      #|Point : Type (global)
+      #|Int : Type (global)
+      #|p : Point
+      #|p : Point
+    ),
+  )
+  inspect(
+    @tt.decl_pos.get("Point").map(p => @tt.split_pos(p)),
+    content="Some((0, 1))",
+  )
+  let pr = @tt.proof_infos[0]
+  let show = (gs : Array[@tt.GoalInfo]) => {
+    gs.map(g => g.hyps.join(", ") + " |- " + g.goal).join("; ")
+  }
+  inspect(show(pr.start), content=" |- (n : Nat) -> (0 + n) === n")
+  inspect(
+    pr.tactics
+    .map(t => {
+      @tt.split_pos(t.0).1.to_string() +
+      ": " +
+      t.1.map(show).unwrap_or("failed")
+    })
+    .join("\n"),
+    content=(
+      #|4: n : Nat |- (0 + n) === n
+      #|5: 
+    ),
+  )
+}

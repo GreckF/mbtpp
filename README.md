@@ -16,6 +16,13 @@ edit, running with the interpreter, and the MoonBit code the compiler
 generates. The page lives in [docs/](docs); rebuild it with
 `node scripts/build-web.mjs`.
 
+## VS Code
+
+[editors/vscode](editors/vscode) is a VS Code extension (a `.vsix` is
+attached to each release): highlighting, errors while typing, hover types, go
+to definition, `#mbt` quick fixes, an info view with the goals of tactic
+proofs, and run/check/build commands. It uses `moonpp ide`.
+
 ## moonpp
 
 `moonpp` is the build tool, modelled on `moon`. It needs Node.js, and a

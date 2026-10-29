@@ -1,7 +1,8 @@
 # Build moonpp and publish a GitHub release when a version tag is pushed:
 #   git tag v0.1.0 && git push origin v0.1.0
 # The tag must match the version of package.json. The release carries the
-# npm package (moonpp-<version>.tgz), installable with `npm install -g <url>`.
+# npm package (moonpp-<version>.tgz), installable with `npm install -g <url>`,
+# and the VS Code extension (mbtpp-vscode.vsix).
 name: release
 
 on:
@@ -53,10 +54,17 @@ jobs:
           moonpp check examples/basic.mbtpp
           moonpp run examples/vector.mbtpp
 
+      - name: Package the VS Code extension
+        working-directory: editors/vscode
+        run: |
+          npx --yes @vscode/vsce package --no-dependencies -o "../../mbtpp-vscode.vsix"
+
       - name: Publish
         uses: softprops/action-gh-release@v2
         with:
-          files: moonpp-${{ env.VERSION }}.tgz
+          files: |
+            moonpp-${{ env.VERSION }}.tgz
+            mbtpp-vscode.vsix
           generate_release_notes: true
           body: |
             MoonBit++ ${{ env.VERSION }}
@@ -70,3 +78,5 @@ jobs:
             npm install -g https://github.com/GreckF/mbtpp/releases/download/v${{ env.VERSION }}/moonpp-${{ env.VERSION }}.tgz
             moonpp version
             ```
+
+            VS Code extension: download `mbtpp-vscode.vsix` and run "Extensions: Install from VSIX..." (or `code --install-extension mbtpp-vscode.vsix`). It uses the `moonpp` command for checking.

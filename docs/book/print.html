@@ -37,10 +37,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-5289ac50.js";
+            window.path_to_searchindex_js = "searchindex-6c4141fa.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-9775a42a.js"></script>
+        <script src="toc-393214f6.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -1243,6 +1243,7 @@ come from that. … list it in the package's moon.pkg: options("mbtpp-order": [ 
 <tr><td><code>moonpp new &lt;名字&gt;</code></td><td>创建项目</td></tr>
 <tr><td><code>moonpp check [路径]</code></td><td>类型检查整个项目、一个包目录或一个文件；并提示可以标 <code>#mbt</code> 的 <code>pub</code> 声明</td></tr>
 <tr><td><code>moonpp fix [路径]</code></td><td>给这些 <code>pub</code> 声明加上 <code>#mbt</code></td></tr>
+<tr><td><code>moonpp ide &lt;文件&gt; [--overlay &lt;json&gt;]</code></td><td>为编辑器检查文件所在的包，输出 JSON（见<a href="#编辑器">编辑器</a>）</td></tr>
 <tr><td><code>moonpp run [路径]</code></td><td>用解释器运行 main 包（或指定的包、文件）</td></tr>
 <tr><td><code>moonpp run --compiled [路径]</code></td><td>编译到 MoonBit 并用 <code>moon run</code> 运行</td></tr>
 <tr><td><code>moonpp build [路径] [-o 目录]</code></td><td>编译成 MoonBit 项目并 <code>moon build</code></td></tr>
@@ -1343,6 +1344,65 @@ moon run main
 </ul>
 <p>生成的代码是什么样的，见<a href="#编译到-moonbit">编译到 MoonBit</a>。</p>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="编辑器"><a class="header" href="#编辑器">编辑器</a></h1>
+<p>仓库的 <code>editors/vscode</code> 是 VS Code 插件，每个 Release 都附有打包好的 <code>mbtpp-vscode.vsix</code>：</p>
+<pre><code class="language-bash">code --install-extension mbtpp-vscode.vsix
+</code></pre>
+<p>也可以在 VS Code 中运行 “Extensions: Install from VSIX…”。插件调用 <code>moonpp</code> 命令完成检查，
+所以要先<a href="#安装">安装 moonpp</a>；如果它不在 <code>PATH</code> 上，把设置 <code>mbtpp.moonppPath</code> 设为例如
+<code>node C:/path/to/mbtpp/bin/moonpp.js</code>。</p>
+<h2 id="功能"><a class="header" href="#功能">功能</a></h2>
+<ul>
+<li><strong>语法高亮</strong>：包括 <code>proof { ... }</code> 中的策略。</li>
+<li><strong>诊断</strong>：编辑时（默认停顿 300 毫秒后）检查文件所在的包，未保存的内容也算在内。检查器遇到
+第一个错误就停止，所以一次显示一个错误。可以标 <code>#mbt</code> 的 <code>pub</code> 声明显示为提示，快速修复
+（灯泡）“Add #mbt” 会插入标注，“Add #mbt everywhere possible” 运行 <code>moonpp fix</code>。</li>
+<li><strong>悬停</strong>：变量、函数、构造子、类型的类型。</li>
+<li><strong>跳转到定义</strong>：包中的全局定义。</li>
+<li><strong>Info view</strong>（编辑器标题栏的按钮，或 Ctrl+Shift+Enter）：光标在 <code>proof { ... }</code> 中时，显示
+光标处策略执行后的目标（假设和 <code>⊢ 目标</code>）；在第一个策略之前显示初始目标；策略失败时显示
+执行它之前的目标和错误。光标在其他地方时显示光标处名字的类型。</li>
+<li><strong>命令</strong>：MoonBit++: Run（标题栏的 ▶）、Run Compiled、Check、Build MoonBit Project、
+Add #mbt Where Possible，在终端中运行对应的 <code>moonpp</code> 命令。</li>
+</ul>
+<p>例如，光标在下面第二个策略上时：</p>
+<pre><code class="language-text">lemma plus_comm : forall n m : Nat, n + m === m + n = proof {
+  intros n m
+  destruct n
+  ...
+</code></pre>
+<p>Info view 显示 <code>destruct n</code> 之后的两个目标：</p>
+<pre><code class="language-text">Goal 1 of 2
+n : Nat
+m : Nat
+⊢ (0 + m) === (m + 0)
+
+Goal 2 of 2
+n : Nat
+m : Nat
+n_0 : Nat
+⊢ (S(n_0) + m) === (m + S(n_0))
+</code></pre>
+<h2 id="工作方式"><a class="header" href="#工作方式">工作方式</a></h2>
+<p>插件运行 <code>moonpp ide &lt;文件&gt; --overlay &lt;json&gt;</code>：检查文件所在的包（目录中有 <code>moon.pkg</code> 时是
+整个目录，否则只是这个文件），<code>--overlay</code> 给出未保存文件的内容。输出是一个 JSON：错误和
+提示（<code>diagnostics</code>）、用到的名字及其类型和定义位置（<code>names</code>）、每个策略块在开始和每个策略
+之后的目标（<code>proofs</code>）。其他编辑器也可以用这个命令实现同样的功能。</p>
+<h2 id="设置"><a class="header" href="#设置">设置</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>设置</th><th>默认值</th><th>作用</th></tr>
+</thead>
+<tbody>
+<tr><td><code>mbtpp.moonppPath</code></td><td><code>moonpp</code></td><td>moonpp 命令</td></tr>
+<tr><td><code>mbtpp.checkOnType</code></td><td><code>true</code></td><td>编辑时检查（否则只在打开和保存时）</td></tr>
+<tr><td><code>mbtpp.checkDelay</code></td><td><code>300</code></td><td>编辑后等待多少毫秒再检查</td></tr>
+<tr><td><code>mbtpp.mbtHints</code></td><td><code>true</code></td><td>显示 <code>#mbt</code> 提示</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="导入-moonbit-包"><a class="header" href="#导入-moonbit-包">导入 MoonBit 包</a></h1>
 <p>在包的 <code>moon.pkg</code> 中导入后，用 <code>@包.名字</code> 引用：</p>
 <pre><code class="language-text">import {
@@ -1364,7 +1424,7 @@ fn main {
 }
 </code></pre>
 <p>（完整的例子见仓库中的 <code>examples/import</code>。）</p>
-<h2 id="工作方式"><a class="header" href="#工作方式">工作方式</a></h2>
+<h2 id="工作方式-1"><a class="header" href="#工作方式-1">工作方式</a></h2>
 <p><code>moonpp</code> 读取包的 <code>.mbti</code> 接口文件，把其中的项翻译成 MoonBit++ 声明：</p>
 <ul>
 <li>函数成为外部常量：类型检查时只有类型，不会展开。</li>

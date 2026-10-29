@@ -28,6 +28,8 @@ pub fn[T] concat(Array[T], Array[T]) -> Array[T]
 
 pub fn data_info(String) -> DataInfo?
 
+pub let decl_pos : Map[String, @parser.Pos]
+
 pub fn empty_cxt(@parser.Pos) -> Cxt
 
 pub fn env_push(Array[Val], Val) -> Array[Val]
@@ -62,6 +64,8 @@ pub fn is_proof(Array[Val?], Val) -> Bool
 
 pub fn is_prop_type(Array[Val?], Val) -> Bool
 
+pub let last_error : Array[(@parser.Pos, String)]
+
 pub fn lit_type(@parser.Lit) -> Val
 
 pub fn lookup_global(String) -> GEntry?
@@ -80,11 +84,15 @@ pub fn meta_sol(Int32) -> Val?
 
 pub let metas : Array[MetaEntry]
 
+pub let name_infos : Array[NameInfo]
+
 pub fn new_meta() -> Int32
 
 pub fn nf(Array[Val], Tm) -> Tm
 
 pub fn normalize(Tm) -> String
+
+pub fn package_line(Int32, Int32) -> Int32
 
 pub fn param_labels(String) -> Array[(String, Bool)?]?
 
@@ -95,6 +103,8 @@ pub fn pats_slots(Array[CPat]) -> Int32
 pub let prelude_src : String
 
 pub fn prim_pure(String, Array[@parser.Lit]) -> @parser.Lit?
+
+pub let proof_infos : Array[ProofInfo]
 
 pub let pub_decls : Array[(@parser.Pos, String, Bool)]
 
@@ -115,6 +125,8 @@ pub fn show_tm(Array[String], Tm) -> String
 pub fn snapshot_metas() -> Array[Val?]
 
 pub let source_files : Array[String]
+
+pub fn split_pos(@parser.Pos) -> (Int32, Int32)
 
 pub fn trait_method_names(String) -> Array[String]
 
@@ -228,6 +240,11 @@ pub(all) enum GKind {
   GPrim(String, Int32)
 }
 
+pub(all) struct GoalInfo {
+  hyps : Array[String]
+  goal : String
+}
+
 pub(all) enum Icit {
   Expl
   Impl
@@ -255,6 +272,19 @@ pub(all) struct MbtInfo {
 
 pub(all) struct MetaEntry {
   mut sol : Val?
+}
+
+pub(all) struct NameInfo {
+  pos : @parser.Pos
+  name : String
+  global : String?
+  show : () -> String
+}
+
+pub(all) struct ProofInfo {
+  pos : @parser.Pos
+  start : Array[GoalInfo]
+  tactics : Array[(@parser.Pos, Array[GoalInfo]?)]
 }
 
 pub(all) enum Refined {

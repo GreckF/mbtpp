@@ -1,16 +1,22 @@
 {
   "name": "mbtpp",
   "displayName": "MoonBit++",
-  "description": "Syntax highlighting for MoonBit++ (.mbtpp)",
-  "version": "0.1.0",
+  "description": "MoonBit++ (.mbtpp): highlighting, type checking, hover, go to definition, an info view for proofs, and moonpp commands",
+  "version": "0.2.0",
   "publisher": "greckf",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GreckF/mbtpp"
+  },
   "engines": {
-    "vscode": "^1.60.0"
+    "vscode": "^1.75.0"
   },
   "categories": [
     "Programming Languages"
   ],
+  "main": "./extension.js",
+  "activationEvents": [],
   "contributes": {
     "languages": [
       {
@@ -31,6 +37,109 @@
         "scopeName": "source.mbtpp",
         "path": "./syntaxes/mbtpp.tmLanguage.json"
       }
-    ]
+    ],
+    "commands": [
+      {
+        "command": "mbtpp.run",
+        "title": "Run",
+        "category": "MoonBit++",
+        "icon": "$(play)"
+      },
+      {
+        "command": "mbtpp.runCompiled",
+        "title": "Run Compiled (moon run)",
+        "category": "MoonBit++"
+      },
+      {
+        "command": "mbtpp.check",
+        "title": "Check",
+        "category": "MoonBit++"
+      },
+      {
+        "command": "mbtpp.build",
+        "title": "Build MoonBit Project",
+        "category": "MoonBit++"
+      },
+      {
+        "command": "mbtpp.fix",
+        "title": "Add #mbt Where Possible (moonpp fix)",
+        "category": "MoonBit++"
+      },
+      {
+        "command": "mbtpp.infoView",
+        "title": "Show Info View",
+        "category": "MoonBit++",
+        "icon": "$(list-tree)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "mbtpp.run",
+          "when": "editorLangId == mbtpp",
+          "group": "navigation"
+        },
+        {
+          "command": "mbtpp.infoView",
+          "when": "editorLangId == mbtpp",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "mbtpp.run",
+          "when": "editorLangId == mbtpp"
+        },
+        {
+          "command": "mbtpp.runCompiled",
+          "when": "editorLangId == mbtpp"
+        },
+        {
+          "command": "mbtpp.check",
+          "when": "editorLangId == mbtpp"
+        },
+        {
+          "command": "mbtpp.build",
+          "when": "editorLangId == mbtpp"
+        },
+        {
+          "command": "mbtpp.fix",
+          "when": "editorLangId == mbtpp"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "mbtpp.infoView",
+        "key": "ctrl+shift+enter",
+        "mac": "cmd+shift+enter",
+        "when": "editorLangId == mbtpp"
+      }
+    ],
+    "configuration": {
+      "title": "MoonBit++",
+      "properties": {
+        "mbtpp.moonppPath": {
+          "type": "string",
+          "default": "moonpp",
+          "description": "The moonpp command (e.g. a path to bin/moonpp.js run with node: \"node C:/path/to/mbtpp/bin/moonpp.js\")."
+        },
+        "mbtpp.checkOnType": {
+          "type": "boolean",
+          "default": true,
+          "description": "Check while typing (otherwise only on open and save)."
+        },
+        "mbtpp.checkDelay": {
+          "type": "number",
+          "default": 300,
+          "description": "Milliseconds to wait after an edit before checking."
+        },
+        "mbtpp.mbtHints": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the hints about pub declarations that could be #mbt."
+        }
+      }
+    }
   }
 }

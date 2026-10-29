@@ -8,6 +8,7 @@ let help_msg : String =
   #|  moonpp check [path]        type check the project (or a package directory or file);
   #|                             also lists the `pub` declarations that could be #mbt
   #|  moonpp fix [path]          add #mbt to the `pub` declarations that could have it
+  #|  moonpp ide <file> [--overlay <json>]  check for an editor: errors, types and goals as JSON
   #|  moonpp run [path]          run the main package (or a package directory or file)
   #|  moonpp build [path]        compile to a MoonBit project and `moon build` it: by default
   #|                             mbtpp_out/<pkg> in the project (or _mbtpp_build/<file> for a
@@ -639,6 +640,8 @@ fn run_cli(args : Array[String]) -> Bool raise Failure {
     }
     ["check"] => cmd_check(opts, None)
     ["check", p] => cmd_check(opts, Some(p))
+    ["ide", f] => cmd_ide(opts, f, None)
+    ["ide", f, "--overlay", o] => cmd_ide(opts, f, Some(o))
     ["fix"] => cmd_fix(opts, None)
     ["fix", p] => cmd_fix(opts, Some(p))
     ["build"] => cmd_build(opts, None)

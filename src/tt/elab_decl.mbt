@@ -820,6 +820,11 @@ pub fn check_decls(
   let mbt_fn_decls : Array[(Pos, String)] = []
   let mbt_impls : Array[(Pos, String, String)] = []
   let decls : Array[@parser.Decl] = []
+  if !lenient {
+    for d in decls0 {
+      record_decl_pos(d.inner())
+    }
+  }
   for d in decls0 {
     match d {
       DPub(inner) => {
@@ -1004,4 +1009,34 @@ pub fn check_decls(
   }
   check_mbt_impls(mbt_impls, lenient)
   check_mbt_fns(mbt_fn_decls)
+}
+
+///|
+/// Where the globals of a declaration are declared (for go to definition).
+fn record_decl_pos(d : @parser.Decl) -> Unit {
+  let set = (n : String, p : Pos) => if in_package(p) { decl_pos.set(n, p) }
+  match d {
+    DFn(fd) => set(fd.name, fd.pos)
+    DDef(p, n, _, _, _) | DOpaque(p, n, _) => set(n, p)
+    DEnum(ed) => {
+      set(ed.name, ed.pos)
+      for c in ed.cons {
+        set(ed.name + "::" + c.name, c.pos)
+      }
+    }
+    DStruct(sd) => {
+      set(sd.name, sd.pos)
+      set(sd.name + "::mk", sd.pos)
+      for f in sd.fields {
+        set(sd.name + "::" + f.1, f.0)
+      }
+    }
+    DTrait(td) => {
+      set(td.name, td.pos)
+      for m in td.methods {
+        set(td.name + "::" + m.name, m.pos)
+      }
+    }
+    DImpl(_) | DMbt(_, _, _, _) | DPub(_) => ()
+  }
 }

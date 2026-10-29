@@ -93,6 +93,14 @@ fn run_tactics(
 ) -> Tm raise ElabError {
   let top = new_goal(cxt, ty)
   let goals = [top]
+  let info : ProofInfo = {
+    pos: cxt.pos,
+    start: [goal_info(cxt, ty)],
+    tactics: [],
+  }
+  if in_package(cxt.pos) {
+    proof_infos.push(info)
+  }
   for tac in tacs {
     let pos = match tac {
       TIntros(p, _)
@@ -103,6 +111,8 @@ fn run_tactics(
       | TApply(p, _)
       | TAssume(p, _, _) => p
     }
+    // the goals after the tactic, set when it succeeds
+    info.tactics.push((pos, None))
     if goals.length() == 0 {
       cxt.at(pos).fail("no goals left")
     }
@@ -278,6 +288,10 @@ fn run_tactics(
     for k = new_goals.length() - 1; k >= 0; k = k - 1 {
       goals.insert(0, new_goals[k])
     }
+    info.tactics[info.tactics.length() - 1] = (
+      pos,
+      Some(goals.map(g => goal_info(g.cxt, g.ty))),
+    )
   }
   if goals.length() > 0 {
     let g = goals[0]

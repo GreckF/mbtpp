@@ -697,7 +697,7 @@ fn infer_head(
 ) -> (Tm, Val, Int32) raise ElabError {
   match f {
     EVar(p, x) if !x.contains("::") && cxt.lookup(x) is Some(l) => {
-      ignore(p)
+      record_name(p, x, None, () => x + " : " + local_type(cxt, l))
       (Var(cxt.lvl - 1 - l), cxt.types[l], 0)
     }
     EVar(p, x) => {
@@ -711,6 +711,9 @@ fn infer_head(
         None => None
       }
       let n = resolve_name(c, x, prefer_type, h)
+      record_name(p, x, Some(n), () => {
+        n + " : " + show_global_type(n).unwrap_or("?")
+      })
       check_constructible(c, n)
       let g = global_entry(c, n)
       (Global(n), g.vty, nparams_of(n))

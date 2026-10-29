@@ -35,6 +35,7 @@
 - [命令](moonpp/commands.md)
 - [依赖](moonpp/deps.md)
 - [构建产物](moonpp/build.md)
+- [编辑器](moonpp/editor.md)
 
 # 与 MoonBit 交互
 

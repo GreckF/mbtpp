@@ -137,6 +137,7 @@ pub fn check_package(
   imports~ : Array[Import] = [],
 ) -> Unit raise CheckError {
   setup()
+  last_error.clear()
   if prelude {
     check_src("<prelude>", prelude_src)
   }
@@ -147,8 +148,10 @@ pub fn check_package(
     let (file, src) = files[k]
     source_files.push(file)
     let ds = @parser.parse_program(src, line0=(k + 1) * file_stride + 1) catch {
-      @parser.ParseError(p, msg) =>
+      @parser.ParseError(p, msg) => {
+        last_error.push((p, "parse error: " + msg))
         raise CheckError(package_pos(files, p) + ": parse error: " + msg)
+      }
     }
     record_file(ds, file)
     for d in ds {
@@ -156,12 +159,19 @@ pub fn check_package(
     }
   }
   check_decls(decls) catch {
-    ElabError(p, msg) =>
+    ElabError(p, msg) => {
+      last_error.push((p, msg + order_hint(files, p)))
       raise CheckError(
         package_pos(files, p) + ": error: " + msg + order_hint(files, p),
       )
+    }
   }
 }
+
+///|
+/// The position and message of the error of the last `check_package` (for
+/// editors).
+pub let last_error : Array[(Pos, String)] = []
 
 ///|
 /// When an error in file k may come from a function of a later file whose

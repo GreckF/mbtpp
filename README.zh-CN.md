@@ -41,7 +41,7 @@ curl -fsSLo /tmp/mbtpp-vscode.vsix https://github.com/GreckF/mbtpp/releases/late
 [Releases](https://github.com/GreckF/mbtpp/releases)）：
 
 ```sh
-npm install -g https://github.com/GreckF/mbtpp/releases/download/v0.1.1/moonpp-0.1.1.tgz
+npm install -g https://github.com/GreckF/mbtpp/releases/download/v0.2.0/moonpp-0.2.0.tgz
 ```
 
 或者在仓库中先构建一次：

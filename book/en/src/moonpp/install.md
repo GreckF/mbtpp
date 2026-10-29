@@ -11,7 +11,7 @@ Every version on the [Releases](https://github.com/GreckF/mbtpp/releases) page c
 package:
 
 ```bash
-npm install -g https://github.com/GreckF/mbtpp/releases/download/v0.1.1/moonpp-0.1.1.tgz
+npm install -g https://github.com/GreckF/mbtpp/releases/download/v0.2.0/moonpp-0.2.0.tgz
 moonpp version
 ```
 

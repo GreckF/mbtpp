@@ -46,6 +46,10 @@ priv struct Gen {
   impls_done : Array[String]
   traits_done : Array[String]
   trait_defs : StringBuilder
+  /// While explaining why a `#mbt` function is not native: the first term
+  /// that is not in the fragment.
+  mut diagnose : Bool
+  mut culprit : String?
 }
 
 ///|
@@ -837,14 +841,17 @@ fn Gen::global(self : Gen, name : String) -> Unit raise CodegenError {
   match g.kind {
     GFunc(Some(body), _, _) if self.typed_set.contains(name) =>
       match self.native_sig(name) {
-        Some(sig) if self.wrappable(sig) =>
+        Some(sig) if self.wrappable(sig) => {
           self.defs.write_string(self.typed_def(name))
+          self.export_fn(name, sig)
+        }
         _ => {
           // with trait bounds (or read-only types): the native version, and
           // the uniform one (which gets the instances as values)
           self.defs.write_string(
             "\n/// " + name + "\n" + self.typed_fn(name).unwrap(),
           )
+          self.export_fn(name, self.native_sig(name).unwrap())
           self.uniform_fn(name, id, body, func_arity(name).unwrap())
         }
       }
@@ -987,14 +994,25 @@ pub fn generate(imports : Array[(String, String)]) -> String raise CodegenError 
     impls_done: [],
     traits_done: [],
     trait_defs: StringBuilder::new(),
+    diagnose: false,
+    culprit: None,
   }
   for im in imports {
     g.aliases.set(im.0, im.1)
   }
   g.dry = true
   g.compute_typed()
+  g.check_mbt_fns()
   g.dry = false
   let main_value = g.global_value("main")
+  // `#mbt` functions are exported whether `main` uses them or not
+  for f, _ in @tt.mbt_fns {
+    ignore(g.gid(f))
+  }
+  // and so are the impls of `#mbt` traits, like the types
+  for i in g.mbt_impls.copy() {
+    g.need_impl(i)
+  }
   while g.todo.length() > 0 {
     let n = g.todo.pop().unwrap()
     g.global(n)

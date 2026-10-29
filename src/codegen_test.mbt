@@ -230,19 +230,41 @@ test "codegen: #mbt types and traits" {
       ),
     ),
     content=(
-      #|enum Tree[T0] {
-      #|  Leaf
-      #|  Node(Tree[T0], T0, Tree[T0])
-      #|}
-      #|struct P {
-      #|  x : Int
-      #|  y : Int
-      #|}
-      #|trait Size {
-      #|  size(Self) -> Int raise
-      #|}
       #|impl Size for P with size(a0) {
       #|impl[T0 : Size] Size for Tree[T0] with size(a0) {
+    ),
+  )
+}
+
+///|
+test "codegen: #mbt functions must be native" {
+  inspect(
+    signatures(
+      (
+        #|#mbt
+        #|fn f(x : Int) -> Int {
+        #|  println(x)
+        #|  x
+        #|}
+        #|fn main { println(f(1)) }
+      ),
+    ),
+    content="#mbt fn f cannot be compiled to MoonBit: its body is not in the native fragment: in `println(x)`, println has no native signature (a type without a MoonBit type, or a bound that is not #mbt)",
+  )
+  inspect(
+    signatures(
+      (
+        #|#mbt
+        #|fn twice(x : Int) -> Int { x + x }
+        #|fn main { println(1) }
+      ),
+    ),
+    content=(
+      #|fn f_twice_t(x : Int) -> Int raise {
+      #|fn f_twice(a0 : Value) -> Value raise {
+      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
+      #|fn f_show_to_string(inst : Value) -> Value raise {
+      #|fn main {
     ),
   )
 }

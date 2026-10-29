@@ -1183,8 +1183,14 @@ fn Parser::decl(self : Parser) -> Decl raise ParseError {
     }
     let d = self.decl()
     match d {
-      DEnum({ is_error: false, .. }) | DStruct(_) | DTrait(_) => ()
-      _ => raise ParseError(pos, "#mbt applies to enums, structs and traits")
+      DEnum({ is_error: false, .. })
+      | DStruct(_)
+      | DTrait(_)
+      | DFn({ is_lemma: false, .. }) => ()
+      _ =>
+        raise ParseError(
+          pos, "#mbt applies to enums, structs, traits and functions",
+        )
     }
     return DMbt(pos, name, false, d)
   }

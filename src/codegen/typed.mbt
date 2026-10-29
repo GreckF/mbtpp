@@ -463,6 +463,7 @@ fn Gen::need_enum(self : Gen, d : String) -> Unit {
     "\n/// MoonBit++ " +
     d +
     "\n" +
+    (if is_mbt_type(d) { "pub(all) " } else { "" }) +
     (if is_struct { "struct " } else { "enum " }) +
     en +
     " {\n",
@@ -851,7 +852,15 @@ fn Gen::typed_app(
           expl.push(args[i])
         }
       }
-      (subst_args(tpl, self.typed_args(env, expl, tys)), res)
+      // `1 + if c { a } else { b }` is not MoonBit
+      let cs = self
+        .typed_args(env, expl, tys)
+        .map(c => if c.has_prefix("if ") || c.has_prefix("match ") {
+          "(" + c + ")"
+        } else {
+          c
+        })
+      (subst_args(tpl, cs), res)
     }
     GFunc(_, _, _) =>
       match self.native_sig(n) {
@@ -1112,6 +1121,23 @@ fn stmt(code : String, t : NTy) -> String {
 ///|
 /// Translate a term of the typed fragment.
 fn Gen::typed(
+  self : Gen,
+  env : Array[TLocal],
+  t : @tt.Tm,
+) -> (String, NTy) raise NotTyped {
+  self.typed_term(env, t) catch {
+    NotTyped => {
+      // the innermost term that fails is the culprit
+      if self.diagnose && self.culprit is None {
+        self.culprit = Some(self.explain(env, t))
+      }
+      raise NotTyped
+    }
+  }
+}
+
+///|
+fn Gen::typed_term(
   self : Gen,
   env : Array[TLocal],
   t : @tt.Tm,

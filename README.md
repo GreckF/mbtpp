@@ -54,8 +54,10 @@ types computed at run time, ...) uses a uniform value representation.
 Types and traits marked `#mbt` translate trivially: `#mbt enum Tree[T]`
 becomes the MoonBit `enum Tree[T0]`, a `#mbt trait` a MoonBit trait with
 real `impl`s and bounds; imported `pub(all)` types and `pub(open)` traits
-are `#mbt` automatically, so MoonBit functions over them can be called
-(see [examples/mbt_types.mbtpp](examples/mbt_types.mbtpp)).
+are `#mbt` automatically, so MoonBit functions over them can be called.
+A `#mbt fn` is compiled to a public MoonBit function of the same name that
+MoonBit code can call (see
+[examples/mbt_types.mbtpp](examples/mbt_types.mbtpp)).
 
 `moon test` runs the examples in `examples/` and the tests in `src/*_test.mbt`.
 

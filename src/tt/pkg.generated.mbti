@@ -66,6 +66,8 @@ pub fn lookup_global(String) -> GEntry?
 
 pub fn match_vals_opt(Array[Val], Array[Val], Array[Clause]) -> Val?
 
+pub let mbt_fns : Map[String, String]
+
 pub fn mbt_info(String) -> MbtInfo?
 
 pub let mbt_types : Map[String, MbtInfo]

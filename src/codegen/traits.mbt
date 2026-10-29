@@ -177,7 +177,7 @@ fn Gen::need_trait(self : Gen, tr : String) -> Unit {
   buf.write_string(
     "\n/// MoonBit++ trait " +
     tr +
-    "\ntrait " +
+    "\npub(open) trait " +
     @tt.mbt_info(tr).unwrap().name +
     (if supers.length() == 0 { "" } else { " : " + supers.join(" + ") }) +
     " {\n",

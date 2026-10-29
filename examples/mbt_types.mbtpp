@@ -1,6 +1,8 @@
 // `#mbt` types and traits translate trivially to MoonBit: the compiled
 // program uses the MoonBit enum `Tree[T]`, the struct `Point`, the trait
-// `Size` with real `impl`s, and `fn[T0 : Size]` bounds.
+// `Size` with real `impl`s, and `fn[T0 : Size]` bounds. `#mbt` functions
+// become public MoonBit functions of the same name (`pub fn total`, the
+// method `pub fn Tree::depth`, ...), callable from MoonBit code.
 
 #mbt
 enum Tree[T] {
@@ -34,18 +36,20 @@ impl[T : Size] Size for Tree[T] with size(self) {
 }
 impl[T : Size] Size for Tree[T] with zero() { Leaf }
 
+#mbt
 fn[T : Size] total(xs : Tree[T]) -> Int {
   xs.size()
 }
 
-fn[T] insert(t : Tree[T], x : T, lt : (T, T) -> Bool) -> Tree[T] {
+#mbt
+fn[T] insert(t : Tree[T], x : T, lt~ : (T, T) -> Bool) -> Tree[T] {
   match t {
     Leaf => Node(Leaf, x, Leaf)
     Node(l, y, r) =>
       if lt(x, y) {
-        Node(insert(l, x, lt), y, r)
+        Node(insert(l, x, lt~), y, r)
       } else {
-        Node(l, y, insert(r, x, lt))
+        Node(l, y, insert(r, x, lt~))
       }
   }
 }
@@ -55,7 +59,20 @@ fn[T : Size] sum_zero() -> Int {
   z.size()
 }
 
+#mbt
+fn[T] Tree::depth(self : Tree[T]) -> Int {
+  match self {
+    Leaf => 0
+    Node(l, _, r) => {
+      let a = l.depth()
+      let b = r.depth()
+      1 + (if a > b { a } else { b })
+    }
+  }
+}
+
 // `Option` is the MoonBit `Option` (`#mbt("Option")` in the prelude)
+#mbt
 fn first_big(t : Tree[Int], n : Int) -> Int? {
   match t {
     Leaf => None
@@ -75,7 +92,7 @@ fn sizes(t : Tree[Int], ps : Tree[Point]) -> Int {
 fn main {
   let mut t : Tree[Int] = Leaf
   for i = 0; i < 6; i = i + 1 {
-    t = insert(t, (i * 7) % 10, (a, b) => a < b)
+    t = insert(t, (i * 7) % 10, lt=(a, b) => a < b)
   }
   println(total(t))
   let ps : Tree[Point] = Node(Leaf, { x: 1, y: 2 }, Node(Leaf, { x: 3, y: 4 }, Leaf))
@@ -84,4 +101,5 @@ fn main {
   println(sizes(t, ps))
   println(first_big(t, 4))
   println(first_big(t, 100))
+  println(t.depth())
 }

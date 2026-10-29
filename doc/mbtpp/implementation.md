@@ -51,8 +51,10 @@
 - `traits.mbt`: `#mbt` types and traits (checked in `src/tt/mbt.mbt`):
   `#mbt` datatypes are the MoonBit types of their names, `#mbt` traits
   MoonBit traits; bounds become MoonBit bounds, method calls `Tr::m(..)`,
-  and instances whose methods are typed become `impl`s (emitted when a
-  native call needs them).
+  and instances whose methods are typed become `impl`s.
+- `export.mbt`: `#mbt` functions become public MoonBit functions calling
+  their native translation; a body outside the fragment is a compile error
+  naming the first term that is not native.
 - `ffi.mbt`: calls of imported MoonBit functions from uniform code, with
   conversions derived from their signatures (scalars, type variables,
   `Array`, `Option`, `#mbt` datatypes, callbacks, opaque foreign types

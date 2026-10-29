@@ -263,6 +263,27 @@ fn[T : Size] total(t : Tree[T]) -> Int { t.size() }      // 编译为 fn[T0 : Si
   类型实现；只读（`pub`）的 trait 不能实现。
 - 只读类型（导入的 `pub` enum/struct）不能构造。
 
+函数也可以标 `#mbt`，它会被编译为同名的公开 MoonBit 函数，MoonBit 代码可以直接调用：
+
+```moonbit
+#mbt
+fn[T] insert(t : Tree[T], x : T, lt~ : (T, T) -> Bool) -> Tree[T] { ... }
+// pub fn[T0] insert(t : Tree[T0], x : T0, lt~ : (T0, T0) -> Bool raise) -> Tree[T0]
+
+#mbt
+fn[T] Tree::depth(self : Tree[T]) -> Int { ... }   // pub fn[T0] Tree::depth(...)
+```
+
+- 签名（类型检查时验证）：隐式参数只能是类型参数 `[T]`，约束只能是类型参数上的 `#mbt`
+  trait；显式参数和结果是 MoonBit 类型；支持 `x~`、`x?` 参数，不支持默认值；方法只能属于本
+  程序生成的 `#mbt` 类型；`main` 不能标 `#mbt`。`#mbt("name")` 指定 MoonBit 中的名字。
+- 函数体（编译时验证）：必须在原生片段中，否则编译报错，并指出第一个不能原生翻译的表达式
+  （例如调用了 `println`，它带非 `#mbt` 的 `Show` 约束）。
+- `raise`：没有声明 `raise` 的函数在 MoonBit 中也不 `raise`，内部的运行时失败变成 `abort`；
+  声明了 `raise E` 的函数在 MoonBit 中是 `raise`（错误是编译后的 MoonBit++ 错误值）。
+- 生成的 `#mbt` 类型是 `pub(all)`，trait 是 `pub(open)`；可翻译的 `#mbt` trait 实例全部生成
+  `impl`。
+
 `#mbt` 不改变类型检查和解释执行的语义，只影响编译（见第 11 节）。
 
 ## 11. MoonBit++ → MoonBit 编译器

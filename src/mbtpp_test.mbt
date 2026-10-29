@@ -152,6 +152,7 @@ test "example mbt_types" {
       #|2510
       #|Some(5)
       #|None
+      #|4
       #|
     ),
   )

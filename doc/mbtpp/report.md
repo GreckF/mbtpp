@@ -173,6 +173,7 @@ fn f19_parse_hex_t(s_183 : String) -> Int raise {
 - **外部调用**：参数、结果为 `#mbt` 类型（包括导入的 `pub(all)` 类型）的 MoonBit 函数可以从统一代码调用（逐构造子转换），从原生代码调用则不转换。带 `#mbt` trait 约束的 MoonBit 泛型函数可以从原生代码调用。
 - **只读类型**：导入的 `pub` 类型不能在包外构造，所以不能从 `Value` 转回：原生代码直接传递这些值；统一代码只能检查它们（匹配）。需要把统一代码中的只读值传给 MoonBit 的调用会在编译时报错，并说明原因。
 - **编译期报错**：签名不受支持的外部函数如果被调用，现在是编译错误（以前是生成一个运行时报错的存根）。
+- **`#mbt` 函数**：编译为同名的 `pub fn`（方法为 `pub fn T::m`，带标签参数保持 `x~`/`x?`），调用原生翻译 `f_t`；签名在类型检查时验证，函数体不在原生片段时编译报错，错误指出第一个不能原生翻译的表达式及原因（例如“in `println(x)`, println has no native signature”）。没有声明 `raise` 的函数生成不 `raise` 的签名，内部失败变为 `abort`。生成的 `#mbt` 类型为 `pub(all)`、trait 为 `pub(open)`，可翻译的实例全部生成 `impl`，所以 MoonBit 代码可以直接使用这些函数（已用一个白盒测试调用 `insert(.., lt=..)`、`total`、`t.depth()` 验证）。
 
 例子 `examples/mbt_types.mbtpp`，以及一个带 `pub(all) enum Shape`、`pub(all) struct Point`、`pub enum Handle`、`pub(open) trait HasArea` 的本地依赖包的项目，编译后与解释执行（或预期结果）一致；生成代码中可以看到 `enum Tree[T0]`、`trait Size`、`impl[T0 : Size] Size for Tree[T0]`、`@shapes.Shape::Circle(...)`、`impl @shapes.HasArea for Square`。
 

@@ -813,6 +813,7 @@ pub fn check_decls(
 ) -> Unit raise ElabError {
   // `#mbt` marks are recorded first, so that the declarations see each other
   let marked : Array[(Pos, String)] = []
+  let mbt_fn_decls : Array[(Pos, String)] = []
   let mbt_impls : Array[(Pos, String, String)] = []
   let decls : Array[@parser.Decl] = []
   for d in decls0 {
@@ -822,6 +823,12 @@ pub fn check_decls(
           DEnum(ed) => ed.name
           DStruct(sd) => sd.name
           DTrait(td) => td.name
+          DFn(fd) => {
+            mbt_fns.set(fd.name, mbt_name.unwrap_or(fd.name))
+            mbt_fn_decls.push((pos, fd.name))
+            decls.push(inner)
+            continue
+          }
           _ => continue
         }
         if lenient && (globals.contains(n) || st.thunks.contains(n)) {
@@ -976,4 +983,5 @@ pub fn check_decls(
     }
   }
   check_mbt_impls(mbt_impls, lenient)
+  check_mbt_fns(mbt_fn_decls)
 }

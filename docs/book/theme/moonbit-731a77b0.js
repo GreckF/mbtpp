@@ -7,7 +7,7 @@
   var keywords =
     "fn let mut if else match enum struct trait impl for in with while return " +
     "break continue raise try catch suberror derive pub priv noraise loop as is " +
-    "lemma proof monad forall guard test type typealias extern const async";
+    "lemma proof monad unfold forall guard test type typealias extern const async";
   hljs.registerLanguage("moonbit", function () {
     return {
       name: "MoonBit",

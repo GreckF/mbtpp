@@ -927,7 +927,8 @@ fn escapes(e : @parser.Expr, x : String) -> Bool {
       arms_escape(arms, x) ||
       ok.map(o => arms_escape(o, x)).unwrap_or(false)
     EBin(_, _, a, b) => escapes(a, x) || escapes(b, x)
-    EUn(_, _, a) | EAnn(_, a, _) | EField(_, a, _) => escapes(a, x)
+    EUn(_, _, a) | EAnn(_, a, _) | EField(_, a, _) | EUnfold(_, _, a) =>
+      escapes(a, x)
     EReturn(_, v) => v.map(a => escapes(a, x)).unwrap_or(false)
     ELit(_, _) | EHole(_) | EType(_) | EProp(_) => false
     // anything else: any use is an escape

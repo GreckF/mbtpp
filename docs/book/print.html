@@ -37,10 +37,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-244e4893.js";
+            window.path_to_searchindex_js = "searchindex-ac9eec09.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-935ffb6c.js"></script>
+        <script src="toc-2f5a2ad3.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -996,6 +996,7 @@ fn main {
 <li><a href="#命题相等">命题相等</a>：<code>===</code>、<code>Refl</code> 与 Prelude 中的等式引理。</li>
 <li><a href="#lemma">lemma</a>：声明定理。</li>
 <li><a href="#策略">策略</a>：用 <code>proof { … }</code> 一步步构造证明。</li>
+<li><a href="#受控展开">受控展开</a>：用 <code>#opaque</code> 让函数在检查时不展开，只在需要的地方展开。</li>
 </ul>
 <p>自定义的命题是宇宙为 <code>Prop</code> 的 enum：</p>
 <pre><code class="language-moonbit">enum And[A : Prop, B : Prop] : Prop {
@@ -1161,6 +1162,153 @@ lemma zero_ne_one : (0 : Nat) === 1 -&gt; Int = proof {
 <li>策略只是构造证明项的另一种方式，结果与手写的项相同。</li>
 <li>对不可能的等式（如 <code>0 === 1</code>）做 <code>destruct</code> 没有剩余目标。</li>
 <li>没有 <code>simp</code>、<code>omega</code>、<code>auto</code> 这类自动化策略。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="受控展开"><a class="header" href="#受控展开">受控展开</a></h1>
+<p>类型检查时，函数默认会被展开（计算），所以 <code>2 + 2 === 4</code> 可以直接用 <code>Refl</code> 证明。但证明依赖函数的
+具体定义也有代价：改动定义（比如让加法对第二个参数递归）会让依赖它的证明全部失效；展开或执行大的
+定义也会拖慢检查，甚至超过<a href="#检查时限">检查时限</a>。</p>
+<p><code>#opaque</code> 让一个函数在类型检查时不展开，只有在明确要求的地方才展开：</p>
+<pre><code class="language-moonbit">#opaque
+fn add(m : Nat, n : Nat) -&gt; Nat {
+  match m {
+    Z =&gt; n
+    S(k) =&gt; S(add(k, n))
+  }
+}
+
+// 只有这两条引理依赖 add 的定义
+#unfold(add)
+lemma add_z(n : Nat) -&gt; add(Z, n) === n { Refl }
+
+#unfold(add)
+lemma add_s(m : Nat, n : Nat) -&gt; add(S(m), n) === S(add(m, n)) { Refl }
+
+// 其余的证明只用上面的引理
+lemma add_n_z(n : Nat) -&gt; add(n, Z) === n {
+  match n {
+    Z =&gt; add_z(Z)
+    S(k) =&gt; Id::trans(add_s(k, Z), Id::cong(S, add_n_z(k)))
+  }
+}
+
+fn main {
+  println(add(3, 4).to_int())
+}
+</code></pre>
+<p><code>add</code> 仍然是普通的函数，运行和编译都不受影响；只是在类型检查时，<code>add(Z, n)</code> 不会被计算成 <code>n</code>，
+而像一个未知函数的调用一样保持原样。改动 <code>add</code> 的定义时，只需要重新证明 <code>add_z</code> 和 <code>add_s</code>。</p>
+<h2 id="展开的三种写法"><a class="header" href="#展开的三种写法">展开的三种写法</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>写法</th><th>范围</th></tr>
+</thead>
+<tbody>
+<tr><td><code>#unfold(f, g)</code> 写在声明前</td><td>这个声明的定义体</td></tr>
+<tr><td><code>unfold(f, g) { e }</code></td><td>表达式 <code>e</code>，可以出现在类型中</td></tr>
+<tr><td><code>proof { unfold f, g … }</code> 中的策略</td><td>证明的其余部分</td></tr>
+</tbody>
+</table>
+</div>
+<pre><code class="language-moonbit">#opaque
+fn add(m : Nat, n : Nat) -&gt; Nat {
+  match m {
+    Z =&gt; n
+    S(k) =&gt; S(add(k, n))
+  }
+}
+
+lemma two_plus_two() -&gt; add(2, 2) === 4 {
+  unfold(add) { Refl }
+}
+
+lemma two_plus_two_t : add(2, 2) === 4 = proof {
+  unfold add
+  rfl
+}
+</code></pre>
+<ul>
+<li>
+<p><code>#unfold</code> 只作用于定义体，不作用于声明的类型；类型中需要展开时，在类型里写 <code>unfold(f) { … }</code>。</p>
+</li>
+<li>
+<p>在一个声明中用到 <code>unfold</code> 块或 <code>unfold</code> 策略，相当于这个声明 <code>#unfold</code> 了这些函数（见下面的
+传递性）。</p>
+</li>
+<li>
+<p>一个不透明函数在自己的定义体中可以展开，例如递归调用。</p>
+</li>
+<li>
+<p>不能展开时出错，检查器会提示：</p>
+<pre><code class="language-text">t.mbtpp:8:35: error: type mismatch
+  expected: add(1, 1) === 2
+  ...
+hint: add is opaque here; if the definition is needed, add #unfold(add) to the declaration, or use unfold(add) { … }
+</code></pre>
+</li>
+</ul>
+<h2 id="传递性"><a class="header" href="#传递性">传递性</a></h2>
+<p>展开一个函数时，它所展开的函数也一起展开。下面的 <code>app</code> 的类型用到 <code>add</code>，定义体只有在 <code>add</code>
+可以计算时才合乎类型，所以它 <code>#unfold(add)</code>；展开 <code>app</code> 的证明因此也能计算 <code>add</code>：</p>
+<pre><code class="language-moonbit">#opaque
+fn add(m : Nat, n : Nat) -&gt; Nat {
+  match m {
+    Z =&gt; n
+    S(k) =&gt; S(add(k, n))
+  }
+}
+
+enum Vec[T] : Nat -&gt; Type {
+  VNil : Vec[T](0)
+  VCons[n : Nat](T, Vec[T](n)) : Vec[T](S(n))
+}
+
+#opaque
+#unfold(add)
+fn[T, m : Nat, n : Nat] app(u : Vec[T](m), v : Vec[T](n)) -&gt; Vec[T](add(m, n)) {
+  match u {
+    VNil =&gt; v
+    VCons(x, r) =&gt; VCons(x, app(r, v))
+  }
+}
+
+// app(VNil, v) 的类型是 Vec[T](add(0, n))，v 的类型是 Vec[T](n)：
+// 写等式需要在类型中展开 add；证明展开 app，也就展开了 add
+#unfold(app)
+lemma app_nil[T, n : Nat](v : Vec[T](n)) -&gt; app(VNil, v) === unfold(add) { v } {
+  Refl
+}
+</code></pre>
+<p>没有 <code>#opaque</code> 但写了 <code>#unfold(f)</code> 的函数，只在 <code>f</code> 可以展开的地方展开：它的定义依赖 <code>f</code> 的
+计算，在 <code>f</code> 不展开的地方展开它没有意义。</p>
+<h2 id="不执行"><a class="header" href="#不执行">不执行</a></h2>
+<p>使用可变状态的函数在类型检查时会被执行（见<a href="#与类型检查的关系">可变状态与循环</a>）。
+不透明的函数在展开范围之外也不执行，这可以用来避免检查时不必要的计算：</p>
+<pre><code class="language-moonbit">#opaque
+fn sum_to(n : Int) -&gt; Int {
+  let mut acc = 0
+  for i = 1; i &lt;= n; i = i + 1 {
+    acc = acc + i
+  }
+  acc
+}
+
+#unfold(sum_to)
+lemma sum_10() -&gt; sum_to(10) === 55 { Refl }
+</code></pre>
+<h2 id="opaquesealed"><a class="header" href="#opaquesealed"><code>#opaque(sealed)</code></a></h2>
+<p><code>#opaque(sealed)</code> 的函数在任何地方都不能展开（只有它自己的定义体可以），<code>#unfold</code>、<code>unfold</code> 中
+写它会报错。用它可以确保其他代码只通过公开的引理使用这个函数。</p>
+<h2 id="说明"><a class="header" href="#说明">说明</a></h2>
+<ul>
+<li><code>#opaque</code>、<code>#unfold</code> 可以写在 <code>fn</code> 和 <code>lemma</code> 上（包括方法），可以与 <code>#mbt</code>、<code>#timelimit</code>
+一起写。没有标注的函数（包括 Prelude 的函数和 trait 的实例）照常展开。</li>
+<li>不透明只影响类型检查：解释器、编译器和擦除都不受影响。</li>
+<li>参数中的错误照常传播：<code>f(raise e)</code> 是 <code>raise e</code>，与 <code>f</code> 是否展开无关（见
+<a href="#错误作为逻辑中的值">错误作为逻辑中的值</a>）。</li>
+<li>这一机制来自 Gratzer 等人的 <em>Controlling Unfolding in Type Theory</em>；与论文不同，MoonBit++ 的
+函数默认是透明的。设计说明见仓库中的 <code>doc/mbtpp/unfolding.md</code>。</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="trait"><a class="header" href="#trait">trait</a></h1>
@@ -2672,7 +2820,7 @@ or a bound that is not #mbt)
         <script src="book-609e4cb8.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="theme/moonbit-cc4ee67c.js"></script>
+        <script src="theme/moonbit-731a77b0.js"></script>
 
         <script>
         window.addEventListener('load', function() {

@@ -835,6 +835,14 @@ fn Parser::primary(self : Parser) -> Expr raise ParseError {
       }
       EPerform(pos, op, args)
     }
+    // `unfold(f, g) { e }` (`unfold` is not a keyword)
+    TIdent("unfold") if self.at_unfold_block() => {
+      ignore(self.advance())
+      self.expect("(")
+      let names = self.unfold_names()
+      self.expect(")")
+      EUnfold(pos, names, self.block())
+    }
     TIdent(x) => {
       ignore(self.advance())
       if self.at("=>") {
@@ -1577,6 +1585,7 @@ fn Parser::tactics(self : Parser) -> Array[Tactic] raise ParseError {
         TRewrite(pos, self.expr(), rev)
       }
       "apply" => TApply(pos, self.expr())
+      "unfold" => TUnfold(pos, self.unfold_names())
       "assume" | "have" => {
         let x = self.ident()
         self.expect(":")
@@ -1654,7 +1663,8 @@ fn Parser::con_decls(self : Parser) -> Array[ConDecl] raise ParseError {
 ///|
 fn Decl::without_pub(self : Decl) -> Decl {
   match self {
-    DPub(d) | DDerive(_, d) | DLimit(_, _, d) => d.without_pub()
+    DPub(d) | DDerive(_, d) | DLimit(_, _, d) | DUnfoldAttr(_, _, d) =>
+      d.without_pub()
     d => d
   }
 }
@@ -1707,9 +1717,36 @@ fn Parser::decl(self : Parser) -> Decl raise ParseError {
       self.expect(")")
       return DLimit(pos, limit, self.decl())
     }
+    // `#opaque`, `#opaque(sealed)`, `#unfold(f, g)`
+    if attr == "opaque" || attr == "unfold" {
+      let a : UnfoldAttr = if attr == "opaque" {
+        if self.is_same_line("(") {
+          ignore(self.advance())
+          if self.ident() != "sealed" {
+            raise ParseError(pos, "expected #opaque or #opaque(sealed)")
+          }
+          self.expect(")")
+          Sealed
+        } else {
+          Opaque
+        }
+      } else {
+        self.expect("(")
+        let names = self.unfold_names()
+        self.expect(")")
+        Unfolds(names)
+      }
+      let d = self.decl()
+      if !(d.inner() is DFn(_)) {
+        raise ParseError(pos, "#" + attr + " applies to functions and lemmas")
+      }
+      return DUnfoldAttr(pos, a, d)
+    }
     // `#mbt` or `#mbt("name")`
     if attr != "mbt" {
-      self.fail("unknown attribute (only #mbt and #timelimit are supported)")
+      self.fail(
+        "unknown attribute (only #mbt, #timelimit, #opaque and #unfold are supported)",
+      )
     }
     let name = if self.is_same_line("(") {
       ignore(self.advance())
@@ -2209,4 +2246,40 @@ fn Parser::effect_rest(self : Parser, pos : Pos) -> EffectDecl raise ParseError 
   }
   self.expect("}")
   { pos, name, params, ops, }
+}
+
+///|
+/// The names of `#unfold(…)`, `unfold(…) { e }` and the `unfold` tactic:
+/// `f, g, T::m`.
+fn Parser::unfold_names(self : Parser) -> Array[(Pos, String)] raise ParseError {
+  let names : Array[(Pos, String)] = []
+  while true {
+    let p = self.pos()
+    let mut name = self.ident()
+    while self.accept("::") {
+      name = name + "::" + self.ident()
+    }
+    names.push((p, name))
+    if !self.accept(",") {
+      break
+    }
+  }
+  names
+}
+
+///|
+/// At `unfold(f, g) {`?
+fn Parser::at_unfold_block(self : Parser) -> Bool {
+  if !self.at_k(1, "(") {
+    return false
+  }
+  let mut k = 2
+  while true {
+    match self.peek_at(k).tok {
+      TIdent(_) | TSym("::") | TSym(",") => k = k + 1
+      TSym(")") => return self.at_k(k + 1, "{") && !self.peek_at(k + 1).nl
+      _ => return false
+    }
+  }
+  false
 }

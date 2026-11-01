@@ -233,7 +233,8 @@ pub fn decl_bound_names(d : Decl) -> Array[String] {
     | DMbt(_, _, _, _)
     | DPub(_)
     | DDerive(_, _)
-    | DLimit(_, _, _) => []
+    | DLimit(_, _, _)
+    | DUnfoldAttr(_, _, _) => []
   }
   for b in bs {
     match b.ty {
@@ -400,6 +401,7 @@ pub fn parse_mbti(
       | DPub(_)
       | DDerive(_, _)
       | DLimit(_, _, _)
+      | DUnfoldAttr(_, _, _)
       | DEffect(_) => ()
       DFn(fd) => {
         let (name, self_ty) = match fd.name.find("::") {

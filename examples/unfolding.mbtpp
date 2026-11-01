@@ -1,0 +1,71 @@
+// Controlled unfolding: `add` is opaque, so the proofs about it do not
+// depend on how it is defined, except the two lemmas that unfold it.
+
+#opaque
+fn add(m : Nat, n : Nat) -> Nat {
+  match m {
+    Z => n
+    S(k) => S(add(k, n))
+  }
+}
+
+// the only lemmas that see the definition of add
+#unfold(add)
+lemma add_z(n : Nat) -> add(Z, n) === n { Refl }
+
+#unfold(add)
+lemma add_s(m : Nat, n : Nat) -> add(S(m), n) === S(add(m, n)) { Refl }
+
+// the rest uses them: changing add (to recurse on n, say) only breaks the
+// two lemmas above
+lemma add_n_z(n : Nat) -> add(n, Z) === n {
+  match n {
+    Z => add_z(Z)
+    S(k) => Id::trans(add_s(k, Z), Id::cong(S, add_n_z(k)))
+  }
+}
+
+lemma add_n_s(m : Nat, n : Nat) -> add(m, S(n)) === S(add(m, n)) {
+  match m {
+    Z => Id::trans(add_z(S(n)), Id::cong(S, Id::sym(add_z(n))))
+    S(k) =>
+      Id::trans(
+        add_s(k, S(n)),
+        Id::trans(Id::cong(S, add_n_s(k, n)), Id::cong(S, Id::sym(add_s(k, n)))),
+      )
+  }
+}
+
+lemma add_comm(m : Nat, n : Nat) -> add(m, n) === add(n, m) {
+  match m {
+    Z => Id::trans(add_z(n), Id::sym(add_n_z(n)))
+    S(k) =>
+      Id::trans(
+        add_s(k, n),
+        Id::trans(Id::cong(S, add_comm(k, n)), Id::sym(add_n_s(n, k))),
+      )
+  }
+}
+
+// a small computation, unfolded where it is needed
+lemma two_plus_two() -> add(2, 2) === 4 {
+  unfold(add) { Refl }
+}
+
+// an opaque function with mutable state is not run during checking
+#opaque
+fn sum_to(n : Int) -> Int {
+  let mut acc = 0
+  for i = 1; i <= n; i = i + 1 {
+    acc = acc + i
+  }
+  acc
+}
+
+#unfold(sum_to)
+lemma sum_10() -> sum_to(10) === 55 { Refl }
+
+fn main {
+  println(add(3, 4).to_int())
+  println(sum_to(100))
+}

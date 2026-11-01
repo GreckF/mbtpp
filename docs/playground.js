@@ -109,7 +109,7 @@ function defineMode(name, extra) {
     meta: { lineComment: "//" },
   });
 }
-defineMode("mbtpp", ["lemma", "proof", "monad", "forall", "Type", "Prop"]);
+defineMode("mbtpp", ["lemma", "proof", "monad", "unfold", "forall", "Type", "Prop"]);
 defineMode("moonbit", ["guard", "defer", "test", "type", "typealias", "extern", "const", "async"]);
 
 // ---- workers ---------------------------------------------------------------

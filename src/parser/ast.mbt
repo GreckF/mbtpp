@@ -93,6 +93,9 @@ pub(all) enum Expr {
   /// `<- e` inside a monad block.
   EBind(Pos, Expr)
   EProof(Pos, Array[Tactic])
+  /// `unfold(f, g) { e }`: `f` and `g` may be unfolded while checking `e`
+  /// (see doc/mbtpp/unfolding.md).
+  EUnfold(Pos, Array[(Pos, String)], Expr)
   EReturn(Pos, Expr?)
   /// `break`, `break label~`, `break e`
   EBreak(Pos, String?, Expr?)
@@ -185,6 +188,8 @@ pub(all) enum Tactic {
   TRewrite(Pos, Expr, Bool)
   TApply(Pos, Expr)
   TAssume(Pos, String, Expr)
+  /// `unfold f, g`: `f` and `g` may be unfolded in the rest of the proof.
+  TUnfold(Pos, Array[(Pos, String)])
 } derive(Show)
 
 ///|
@@ -314,13 +319,30 @@ pub(all) enum Decl {
   /// `#timelimit(n)` (seconds) or `#timelimit(none)` (`None`): the time the
   /// checker may spend on the declaration.
   DLimit(Pos, Int32?, Decl)
+  /// `#opaque`, `#opaque(sealed)` or `#unfold(f, g)` on a function (see
+  /// doc/mbtpp/unfolding.md).
+  DUnfoldAttr(Pos, UnfoldAttr, Decl)
+} derive(Show)
+
+///|
+pub(all) enum UnfoldAttr {
+  /// `#opaque`: not unfolded during type checking, except where unfolded
+  Opaque
+  /// `#opaque(sealed)`: never unfolded outside its own definition
+  Sealed
+  /// `#unfold(f, g)`: `f` and `g` may be unfolded in the definition
+  Unfolds(Array[(Pos, String)])
 } derive(Show)
 
 ///|
 /// The declaration under its attributes.
 pub fn Decl::inner(self : Decl) -> Decl {
   match self {
-    DMbt(_, _, _, d) | DPub(d) | DDerive(_, d) | DLimit(_, _, d) => d.inner()
+    DMbt(_, _, _, d)
+    | DPub(d)
+    | DDerive(_, d)
+    | DLimit(_, _, d)
+    | DUnfoldAttr(_, _, d) => d.inner()
     d => d
   }
 }
@@ -353,6 +375,7 @@ pub fn Expr::pos(self : Expr) -> Pos {
     | ERaise(p, _)
     | EPerform(p, _, _)
     | EMonad(p, _)
+    | EUnfold(p, _, _)
     | EBind(p, _)
     | EProof(p, _)
     | EReturn(p, _)

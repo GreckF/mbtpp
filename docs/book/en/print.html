@@ -37,10 +37,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-033c89de.js";
+            window.path_to_searchindex_js = "searchindex-0d688617.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-94125c94.js"></script>
+        <script src="toc-754cddce.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -1020,6 +1020,7 @@ expressions while checking proofs, so many equalities follow directly by computa
 <li><a href="#propositional-equality">Propositional Equality</a>: <code>===</code>, <code>Refl</code>, and the equality lemmas in the Prelude.</li>
 <li><a href="#lemma">lemma</a>: declaring theorems.</li>
 <li><a href="#tactics">Tactics</a>: building proofs step by step with <code>proof { … }</code>.</li>
+<li><a href="#controlled-unfolding">Controlled Unfolding</a>: <code>#opaque</code> functions that unfold during checking only where asked.</li>
 </ul>
 <p>User-defined propositions are enums whose universe is <code>Prop</code>:</p>
 <pre><code class="language-moonbit">enum And[A : Prop, B : Prop] : Prop {
@@ -1190,6 +1191,163 @@ lemma zero_ne_one : (0 : Nat) === 1 -&gt; Int = proof {
 <li>Tactics are just another way to build proof terms; the result is the same as a hand-written term.</li>
 <li><code>destruct</code> on an impossible equality (such as <code>0 === 1</code>) leaves no goals.</li>
 <li>There are no automation tactics such as <code>simp</code>, <code>omega</code>, or <code>auto</code>.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="controlled-unfolding"><a class="header" href="#controlled-unfolding">Controlled Unfolding</a></h1>
+<p>During type checking, functions are unfolded (computed) by default, which is why <code>2 + 2 === 4</code> can be
+proved by <code>Refl</code>. But proofs that depend on the definition of a function have a cost: changing the
+definition (making addition recurse on its second argument, say) breaks every proof that depends on
+it, and unfolding or running large definitions slows checking down, possibly beyond the
+<a href="#time-limits">time limit</a>.</p>
+<p><code>#opaque</code> makes a function not unfold during type checking, except where unfolding is asked for:</p>
+<pre><code class="language-moonbit">#opaque
+fn add(m : Nat, n : Nat) -&gt; Nat {
+  match m {
+    Z =&gt; n
+    S(k) =&gt; S(add(k, n))
+  }
+}
+
+// only these two lemmas depend on the definition of add
+#unfold(add)
+lemma add_z(n : Nat) -&gt; add(Z, n) === n { Refl }
+
+#unfold(add)
+lemma add_s(m : Nat, n : Nat) -&gt; add(S(m), n) === S(add(m, n)) { Refl }
+
+// the other proofs only use the lemmas above
+lemma add_n_z(n : Nat) -&gt; add(n, Z) === n {
+  match n {
+    Z =&gt; add_z(Z)
+    S(k) =&gt; Id::trans(add_s(k, Z), Id::cong(S, add_n_z(k)))
+  }
+}
+
+fn main {
+  println(add(3, 4).to_int())
+}
+</code></pre>
+<p><code>add</code> is still an ordinary function, and running and compiling it is not affected; only, during type
+checking, <code>add(Z, n)</code> is not computed to <code>n</code>, and stays as it is, like a call of an unknown function.
+When the definition of <code>add</code> changes, only <code>add_z</code> and <code>add_s</code> need new proofs.</p>
+<h2 id="three-ways-to-unfold"><a class="header" href="#three-ways-to-unfold">Three ways to unfold</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Notation</th><th>Scope</th></tr>
+</thead>
+<tbody>
+<tr><td><code>#unfold(f, g)</code> before a declaration</td><td>the definition of the declaration</td></tr>
+<tr><td><code>unfold(f, g) { e }</code></td><td>the expression <code>e</code>, which may be in a type</td></tr>
+<tr><td>the tactic <code>unfold f, g</code> in <code>proof { … }</code></td><td>the rest of the proof</td></tr>
+</tbody>
+</table>
+</div>
+<pre><code class="language-moonbit">#opaque
+fn add(m : Nat, n : Nat) -&gt; Nat {
+  match m {
+    Z =&gt; n
+    S(k) =&gt; S(add(k, n))
+  }
+}
+
+lemma two_plus_two() -&gt; add(2, 2) === 4 {
+  unfold(add) { Refl }
+}
+
+lemma two_plus_two_t : add(2, 2) === 4 = proof {
+  unfold add
+  rfl
+}
+</code></pre>
+<ul>
+<li>
+<p><code>#unfold</code> applies to the definition, not to the type of the declaration; to unfold in the type,
+write <code>unfold(f) { … }</code> in the type.</p>
+</li>
+<li>
+<p>An <code>unfold</code> block or tactic in a declaration makes the declaration unfold these functions, as
+<code>#unfold</code> does (see transitivity below).</p>
+</li>
+<li>
+<p>An opaque function can be unfolded in its own definition, in recursive calls for instance.</p>
+</li>
+<li>
+<p>When something cannot be unfolded, the error has a hint:</p>
+<pre><code class="language-text">t.mbtpp:8:35: error: type mismatch
+  expected: add(1, 1) === 2
+  ...
+hint: add is opaque here; if the definition is needed, add #unfold(add) to the declaration, or use unfold(add) { … }
+</code></pre>
+</li>
+</ul>
+<h2 id="transitivity"><a class="header" href="#transitivity">Transitivity</a></h2>
+<p>Unfolding a function also unfolds the functions it unfolds. The type of <code>app</code> below uses <code>add</code>, and
+its definition is well typed only if <code>add</code> computes, so it has <code>#unfold(add)</code>; a proof that unfolds
+<code>app</code> can therefore compute <code>add</code> too:</p>
+<pre><code class="language-moonbit">#opaque
+fn add(m : Nat, n : Nat) -&gt; Nat {
+  match m {
+    Z =&gt; n
+    S(k) =&gt; S(add(k, n))
+  }
+}
+
+enum Vec[T] : Nat -&gt; Type {
+  VNil : Vec[T](0)
+  VCons[n : Nat](T, Vec[T](n)) : Vec[T](S(n))
+}
+
+#opaque
+#unfold(add)
+fn[T, m : Nat, n : Nat] app(u : Vec[T](m), v : Vec[T](n)) -&gt; Vec[T](add(m, n)) {
+  match u {
+    VNil =&gt; v
+    VCons(x, r) =&gt; VCons(x, app(r, v))
+  }
+}
+
+// app(VNil, v) has the type Vec[T](add(0, n)), and v the type Vec[T](n):
+// stating the equation unfolds add in the type; the proof unfolds app, and
+// thus add
+#unfold(app)
+lemma app_nil[T, n : Nat](v : Vec[T](n)) -&gt; app(VNil, v) === unfold(add) { v } {
+  Refl
+}
+</code></pre>
+<p>A function without <code>#opaque</code> but with <code>#unfold(f)</code> is unfolded only where <code>f</code> can be: its definition
+relies on <code>f</code> computing, and unfolding it where <code>f</code> does not would be of no use.</p>
+<h2 id="not-run"><a class="header" href="#not-run">Not run</a></h2>
+<p>Functions with mutable state are run during type checking (see
+<a href="#interaction-with-type-checking">Mutable State and Loops</a>). Opaque functions are not run
+outside the scope of an unfolding either, which avoids needless computation during checking:</p>
+<pre><code class="language-moonbit">#opaque
+fn sum_to(n : Int) -&gt; Int {
+  let mut acc = 0
+  for i = 1; i &lt;= n; i = i + 1 {
+    acc = acc + i
+  }
+  acc
+}
+
+#unfold(sum_to)
+lemma sum_10() -&gt; sum_to(10) === 55 { Refl }
+</code></pre>
+<h2 id="opaquesealed"><a class="header" href="#opaquesealed"><code>#opaque(sealed)</code></a></h2>
+<p>A function marked <code>#opaque(sealed)</code> can never be unfolded (except in its own definition): naming it
+in <code>#unfold</code> or <code>unfold</code> is an error. This ensures that other code uses the function only through
+the lemmas stated about it.</p>
+<h2 id="notes"><a class="header" href="#notes">Notes</a></h2>
+<ul>
+<li><code>#opaque</code> and <code>#unfold</code> can be written on <code>fn</code> and <code>lemma</code> (methods included), together with
+<code>#mbt</code> and <code>#timelimit</code>. Functions without them (including the functions of the Prelude and the
+instances of traits) unfold as usual.</li>
+<li>Opacity only affects type checking: the interpreter, the compiler and erasure are not affected.</li>
+<li>Errors in arguments propagate as usual: <code>f(raise e)</code> is <code>raise e</code>, whether <code>f</code> unfolds or not (see
+<a href="#errors-as-values-of-the-logic">Errors as values of the logic</a>).</li>
+<li>The mechanism comes from <em>Controlling Unfolding in Type Theory</em> by Gratzer et al.; unlike in the
+paper, MoonBit++ functions are transparent by default. The design notes are in
+<code>doc/mbtpp/unfolding.md</code> in the repository.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="traits"><a class="header" href="#traits">Traits</a></h1>
@@ -2788,7 +2946,7 @@ comparisons and conversions.</li>
         <script src="book-609e4cb8.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="theme/moonbit-cc4ee67c.js"></script>
+        <script src="theme/moonbit-731a77b0.js"></script>
 
         <script>
         window.addEventListener('load', function() {

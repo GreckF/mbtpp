@@ -430,7 +430,8 @@ fn run_head(t : Tm) -> (String, Tm, Int32)? {
           arity &&
           arity > 0 &&
           (imp || fn_raises(n, arity)) &&
-          !is_async_global(n) => Some((n, body, arity))
+          !is_async_global(n) &&
+          can_unfold(n) => Some((n, body, arity))
         _ => None
       }
     _ => None
@@ -525,7 +526,8 @@ fn global_call(t : Tm) -> (String, Tm, Int32)? {
         Some({ kind: GFunc(Some(body), _, arity), .. }) if args.length() >=
           arity &&
           arity > 0 &&
-          !is_async_global(n) => Some((n, body, arity))
+          !is_async_global(n) &&
+          can_unfold(n) => Some((n, body, arity))
         _ => None
       }
     _ => None

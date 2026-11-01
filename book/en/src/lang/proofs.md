@@ -6,6 +6,7 @@ expressions while checking proofs, so many equalities follow directly by computa
 - [Propositional Equality](equality.md): `===`, `Refl`, and the equality lemmas in the Prelude.
 - [lemma](lemma.md): declaring theorems.
 - [Tactics](tactics.md): building proofs step by step with `proof { … }`.
+- [Controlled Unfolding](unfolding.md): `#opaque` functions that unfold during checking only where asked.
 
 User-defined propositions are enums whose universe is `Prop`:
 

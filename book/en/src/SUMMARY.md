@@ -22,6 +22,7 @@
   - [Propositional Equality](lang/equality.md)
   - [lemma](lang/lemma.md)
   - [Tactics](lang/tactics.md)
+  - [Controlled Unfolding](lang/unfolding.md)
 - [Traits](lang/traits.md)
   - [Higher-Kinded Traits and Monads](lang/monad.md)
   - [Trait Objects](lang/trait-objects.md)

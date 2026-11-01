@@ -119,6 +119,7 @@ fn LoopRw::expr(self : LoopRw, e : @parser.Expr, d : Int32) -> @parser.Expr {
     ETryQ(p, x) => ETryQ(p, go(x))
     ERaise(p, x) => ERaise(p, go(x))
     EPerform(p, op, args) => EPerform(p, op, args.map(go))
+    EUnfold(p, names, x) => EUnfold(p, names, go(x))
     EReturn(p, x) => EReturn(p, x.map(go))
     EIs(p, x, pat) => EIs(p, go(x), pat)
     EInterp(p, parts) =>

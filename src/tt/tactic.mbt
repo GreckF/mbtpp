@@ -88,6 +88,16 @@ fn run_tactics(
   tacs : Array[@parser.Tactic],
   ty : Val,
 ) -> Tm raise ElabError {
+  // `unfold` extends the unfolding for the rest of the proof
+  with_frame_copy(() => run_tactics_in(cxt, tacs, ty))
+}
+
+///|
+fn run_tactics_in(
+  cxt : Cxt,
+  tacs : Array[@parser.Tactic],
+  ty : Val,
+) -> Tm raise ElabError {
   let top = new_goal(cxt, ty)
   let goals = [top]
   let info : ProofInfo = {
@@ -106,7 +116,8 @@ fn run_tactics(
       | TDestruct(p, _)
       | TRewrite(p, _, _)
       | TApply(p, _)
-      | TAssume(p, _, _) => p
+      | TAssume(p, _, _)
+      | TUnfold(p, _) => p
     }
     // the goals after the tactic, set when it succeeds
     info.tactics.push((pos, None))
@@ -273,6 +284,17 @@ fn run_tactics(
             { pats: [CPCon("Id::Refl", [])], cond: None, body: h2.meta, },
           ]),
         )
+      }
+      TUnfold(_, names) => {
+        let owner = match unfold_frames.last() {
+          Some(f) => f.owner
+          None => ""
+        }
+        for x in names {
+          check_unfoldable(g.cxt.at(x.0), owner, x.1)
+        }
+        extend_unfolding(names.map(x => x.1))
+        new_goals.push(g)
       }
       TAssume(_, x, pe) => {
         let pt = check_type(g.cxt, pe)

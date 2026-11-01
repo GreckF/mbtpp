@@ -1194,6 +1194,8 @@ pub fn check(cxt0 : Cxt, e : @parser.Expr, ty0 : Val) -> Tm raise ElabError {
     (ETry(_, body, arms, _), _) => elab_try(cxt, body, arms, Some(ty)).0
     (EMonad(_, b), _) => check(cxt, desugar_monad(b), ty)
     (EProof(_, tacs), _) => run_tactics(cxt, tacs, ty)
+    (EUnfold(_, names, b), _) =>
+      with_extra_unfolding(cxt, names, () => (check(cxt, b, ty), ty)).0
     _ => {
       let (t, aty) = infer(cxt, e)
       let (t, aty) = insert_until(cxt, t, aty, ty)
@@ -1527,6 +1529,8 @@ pub fn infer(cxt0 : Cxt, e : @parser.Expr) -> (Tm, Val) raise ElabError {
       let a = cxt.eval(cxt.fresh_meta())
       (check(cxt, e, a), a)
     }
+    EUnfold(_, names, b) =>
+      with_extra_unfolding(cxt, names, () => infer(cxt, b))
     EBind(_, _) => cxt.fail("`<-` can only be used inside a monad block")
     ETagged(_, x, _, _) =>
       cxt.fail("labelled argument " + x + "= can only appear in a call")

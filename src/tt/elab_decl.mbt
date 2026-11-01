@@ -8,6 +8,7 @@ fn register(name : String, ty : Tm, kind : GKind) -> Unit {
 fn set_body(name : String, body : Tm, arity : Int32) -> Unit {
   match globals.get(name) {
     Some(g) => {
+      note_unfold_helper(name)
       // the marks of effects are lowered (ctl.mbt)
       let body = lower_body(name, body)
       g.kind = GFunc(Some(body), contains_imperative(body), arity)
@@ -848,7 +849,7 @@ fn elab_impl_body(
 
 ///|
 fn add_thunk(name : String, th : () -> Unit raise ElabError) -> Unit {
-  st.thunks.set(name, () => with_time_limit(name, th))
+  st.thunks.set(name, () => with_time_limit(name, () => with_no_unfolding(th)))
 }
 
 ///|
@@ -880,7 +881,9 @@ pub fn check_decls(
   let mbt_fn_decls : Array[(Pos, String)] = []
   let mbt_impls : Array[(Pos, String, String)] = []
   let decls : Array[@parser.Decl] = []
-  let decls0 = expand_effects(expand_derives(decls0.map(strip_limits)))
+  let decls0 = expand_effects(
+    expand_derives(decls0.map(d => strip_unfold_attrs(strip_limits(d)))),
+  )
   if !lenient {
     for d in decls0 {
       record_decl_pos(d.inner())
@@ -958,6 +961,7 @@ pub fn check_decls(
         | DPub(_)
         | DDerive(_, _)
         | DLimit(_, _, _)
+        | DUnfoldAttr(_, _, _)
         | DEffect(_) => continue
       }
       if taken(name) && !(d is DImpl(_) && impl_groups.contains(name)) {
@@ -971,6 +975,7 @@ pub fn check_decls(
       | DPub(_)
       | DDerive(_, _)
       | DLimit(_, _, _)
+      | DUnfoldAttr(_, _, _)
       | DEffect(_) => ()
       DOpaque(_, name, k) => {
         add_thunk(name, () => {
@@ -986,14 +991,18 @@ pub fn check_decls(
         add_thunk(fd.name, () => elab_fn_sig(fd))
         steps.push(() => {
           ensure(nowhere, fd.name)
-          with_time_limit(fd.name, () => elab_fn_body(fd))
+          with_time_limit(fd.name, () => {
+            with_unfolding(fd.name, () => elab_fn_body(fd))
+          })
         })
       }
       DDef(pos, name, impls, ty, body) => {
         add_thunk(name, () => elab_def_sig(pos, name, impls, ty, body))
         steps.push(() => {
           ensure(nowhere, name)
-          with_time_limit(name, () => elab_def_body(pos, name, body))
+          with_time_limit(name, () => {
+            with_unfolding(name, () => elab_def_body(pos, name, body))
+          })
         })
       }
       DEnum(ed) => {
@@ -1052,7 +1061,9 @@ pub fn check_decls(
             steps.push(() => {
               ensure(nowhere, key)
               with_time_limit(key, () => {
-                elab_impl_body(key, impl_groups.get(key).unwrap())
+                with_unfolding(key, () => {
+                  elab_impl_body(key, impl_groups.get(key).unwrap())
+                })
               })
             })
           }
@@ -1062,6 +1073,7 @@ pub fn check_decls(
   }
   for name in types {
     unfolded_too_early.clear()
+    blocked_opaque.clear()
     if lenient {
       ensure(nowhere, name) catch {
         _ => skipped.push(name)
@@ -1073,6 +1085,7 @@ pub fn check_decls(
   check_mbt_decls(marked, lenient)
   for k = 0; k < steps.length(); k = k + 1 {
     unfolded_too_early.clear()
+    blocked_opaque.clear()
     if lenient {
       let npending = st.pending.length()
       steps[k]() catch {
@@ -1130,7 +1143,11 @@ fn record_decl_pos(d : @parser.Decl) -> Unit {
         set(o.name, o.pos, "operation")
       }
     }
-    DImpl(_) | DMbt(_, _, _, _) | DPub(_) | DDerive(_, _) | DLimit(_, _, _) =>
-      ()
+    DImpl(_)
+    | DMbt(_, _, _, _)
+    | DPub(_)
+    | DDerive(_, _)
+    | DLimit(_, _, _)
+    | DUnfoldAttr(_, _, _) => ()
   }
 }

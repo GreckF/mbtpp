@@ -42,7 +42,7 @@
         { "include": "#comments" },
         {
           "name": "keyword.control.tactic.mbtpp",
-          "match": "\\b(intros|intro|exact|rfl|destruct|cases|rewrite|rw|apply|assume|have)\\b"
+          "match": "\\b(intros|intro|exact|rfl|destruct|cases|rewrite|rw|apply|assume|have|unfold)\\b"
         },
         { "include": "#braces" },
         { "include": "$self" }
@@ -139,7 +139,7 @@
         },
         {
           "name": "keyword.declaration.mbtpp",
-          "match": "\\b(fn|async|let|mut|enum|struct|trait|impl|lemma|suberror|derive|pub|priv|with|monad|proof|forall)\\b"
+          "match": "\\b(fn|async|let|mut|enum|struct|trait|impl|lemma|suberror|derive|pub|priv|with|monad|proof|unfold|forall)\\b"
         },
         {
           "name": "constant.language.boolean.mbtpp",

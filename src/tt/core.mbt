@@ -286,6 +286,7 @@ pub fn reset_state() -> Unit {
   mbt_fns.clear()
   metas.clear()
   reset_time_limits()
+  reset_unfolding()
   lifted.clear()
   reset_structs()
 }

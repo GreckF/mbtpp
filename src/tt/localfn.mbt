@@ -68,6 +68,7 @@ fn mention_walk(e : @parser.Expr, x : String, found : Ref[Bool]) -> Unit {
     | ETryQ(_, a)
     | ERaise(_, a)
     | EMonad(_, a)
+    | EUnfold(_, _, a)
     | EBind(_, a) => walk(a)
     ERange(_, a, b, _) => {
       walk(a)

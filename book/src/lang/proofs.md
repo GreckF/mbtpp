@@ -6,6 +6,7 @@
 - [命题相等](equality.md)：`===`、`Refl` 与 Prelude 中的等式引理。
 - [lemma](lemma.md)：声明定理。
 - [策略](tactics.md)：用 `proof { … }` 一步步构造证明。
+- [受控展开](unfolding.md)：用 `#opaque` 让函数在检查时不展开，只在需要的地方展开。
 
 自定义的命题是宇宙为 `Prop` 的 enum：
 

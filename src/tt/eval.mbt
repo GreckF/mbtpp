@@ -262,6 +262,9 @@ pub fn unfold(n : String, sp : Spine) -> Val? {
     Some(r) => return r
     None => ()
   }
+  if !can_unfold(n) {
+    return None
+  }
   match globals.get(n) {
     Some({ kind: GFunc(Some(body), false, arity), .. }) if sp.length() >= arity => {
       last_unfolded.val = Some(n)
@@ -309,6 +312,9 @@ pub fn unfold_any(n : String, sp : Spine) -> Val? {
   match strict_call(n, sp) {
     Some(r) => return r
     None => ()
+  }
+  if !can_unfold(n) {
+    return None
   }
   match globals.get(n) {
     Some({ kind: GFunc(Some(body), false, _), .. }) =>

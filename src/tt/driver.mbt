@@ -56,7 +56,8 @@ fn decl_global_names(d : @parser.Decl) -> Array[String] {
     DMbt(_, _, _, inner)
     | DPub(inner)
     | DDerive(_, inner)
-    | DLimit(_, _, inner) => decl_global_names(inner)
+    | DLimit(_, _, inner)
+    | DUnfoldAttr(_, _, inner) => decl_global_names(inner)
     DFn(fd) => [fd.name]
     DDef(_, n, _, _, _) | DOpaque(_, n, _) => [n]
     DEnum(ed) => [ed.name, ..ed.cons.map(c => ed.name + "::" + c.name)]
@@ -192,10 +193,9 @@ pub fn check_package(
   }
   check_decls(decls) catch {
     ElabError(p, msg) => {
-      last_error.push((p, msg + order_hint(files, p)))
-      raise CheckError(
-        package_pos(files, p) + ": error: " + msg + order_hint(files, p),
-      )
+      let hints = order_hint(files, p) + opaque_hint()
+      last_error.push((p, msg + hints))
+      raise CheckError(package_pos(files, p) + ": error: " + msg + hints)
     }
   }
 }

@@ -36,10 +36,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-244e4893.js";
+            window.path_to_searchindex_js = "../searchindex-ac9eec09.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-935ffb6c.js"></script>
+        <script src="../toc-2f5a2ad3.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -188,6 +188,7 @@
 <li><a href="equality.html">命题相等</a>：<code>===</code>、<code>Refl</code> 与 Prelude 中的等式引理。</li>
 <li><a href="lemma.html">lemma</a>：声明定理。</li>
 <li><a href="tactics.html">策略</a>：用 <code>proof { … }</code> 一步步构造证明。</li>
+<li><a href="unfolding.html">受控展开</a>：用 <code>#opaque</code> 让函数在检查时不展开，只在需要的地方展开。</li>
 </ul>
 <p>自定义的命题是宇宙为 <code>Prop</code> 的 enum：</p>
 <pre><code class="language-moonbit">enum And[A : Prop, B : Prop] : Prop {
@@ -259,7 +260,7 @@ lemma and_comm[A : Prop, B : Prop](p : And[A, B]) -&gt; And[B, A] {
         <script src="../book-609e4cb8.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../theme/moonbit-cc4ee67c.js"></script>
+        <script src="../theme/moonbit-731a77b0.js"></script>
 
 
 

@@ -22,6 +22,7 @@
   - [命题相等](lang/equality.md)
   - [lemma](lang/lemma.md)
   - [策略](lang/tactics.md)
+  - [受控展开](lang/unfolding.md)
 - [trait](lang/traits.md)
   - [高阶 trait 与 monad](lang/monad.md)
   - [trait 对象](lang/trait-objects.md)

@@ -8,7 +8,8 @@ English | [中文](README.zh-CN.md)
 A small dependently typed language with MoonBit syntax, written in MoonBit. On
 top of MoonBit's `fn`, `enum`, `struct`, `trait`, `match`, `let mut`, loops,
 errors and `async`, it has dependent types, indexed types, dependent pattern
-matching, propositions and proofs (with a few tactics), and algebraic effects.
+matching, propositions and proofs (with a few tactics and controlled
+unfolding), and algebraic effects.
 It comes with
 
 - a **dependent type checker**;

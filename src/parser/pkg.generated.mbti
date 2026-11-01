@@ -59,6 +59,7 @@ pub(all) enum Decl {
   DPub(Decl)
   DDerive(Array[(Pos, String)], Decl)
   DLimit(Pos, Int32?, Decl)
+  DUnfoldAttr(Pos, UnfoldAttr, Decl)
 } derive(Show)
 pub fn Decl::inner(Self) -> Self
 
@@ -115,6 +116,7 @@ pub(all) enum Expr {
   EMonad(Pos, Expr)
   EBind(Pos, Expr)
   EProof(Pos, Array[Tactic])
+  EUnfold(Pos, Array[(Pos, String)], Expr)
   EReturn(Pos, Expr?)
   EBreak(Pos, String?, Expr?)
   EContinue(Pos, String?, Array[Expr])
@@ -265,6 +267,7 @@ pub(all) enum Tactic {
   TRewrite(Pos, Expr, Bool)
   TApply(Pos, Expr)
   TAssume(Pos, String, Expr)
+  TUnfold(Pos, Array[(Pos, String)])
 } derive(Show)
 
 pub(all) enum Tok {
@@ -299,6 +302,12 @@ pub(all) struct TraitMethod {
   params : Array[Binder]
   ret : Expr
   raises : Expr?
+} derive(Show)
+
+pub(all) enum UnfoldAttr {
+  Opaque
+  Sealed
+  Unfolds(Array[(Pos, String)])
 } derive(Show)
 
 // Type aliases

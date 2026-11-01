@@ -312,3 +312,15 @@ test "example numbers" {
     ),
   )
 }
+
+///|
+test "example unfolding" {
+  inspect(
+    run_example("unfolding.mbtpp"),
+    content=(
+      #|7
+      #|5050
+      #|
+    ),
+  )
+}

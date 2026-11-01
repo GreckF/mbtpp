@@ -356,6 +356,9 @@ fn compile(opts : Options, path : String?) -> (String, String) raise Failure {
   let code = @codegen.generate_files(imports.map(i => (i.path, i.alias))) catch {
     @codegen.CodegenError(msg) => die("cannot compile: " + msg)
   }
+  for w in @codegen.warnings {
+    println("warning: " + w)
+  }
   let single = match path {
     Some(p) => p.has_suffix(".mbtpp")
     None => false

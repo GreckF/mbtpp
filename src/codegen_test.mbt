@@ -586,3 +586,89 @@ test "codegen: arrays are MoonBit arrays in native code" {
     ),
   )
 }
+
+///|
+/// The warnings of the code generator, and the `pub fn` lines.
+fn warnings_and_exports(src : String) -> String {
+  @tt.check_program("t.mbtpp", src) catch {
+    @tt.CheckError(msg) => return msg
+  }
+  let code = @codegen.generate([]) catch {
+    @codegen.CodegenError(msg) => return msg
+  }
+  let out = @codegen.warnings.map(w => "warning: " + w)
+  for line in code.split("\n") {
+    if line.has_prefix("pub fn") {
+      out.push(line.to_string())
+    }
+  }
+  out.join("\n")
+}
+
+///|
+test "codegen: an implicit value used at run time is a parameter, with a warning for #mbt" {
+  inspect(
+    warnings_and_exports(
+      (
+        #|// `n` is used at run time: an ordinary parameter of the MoonBit function
+        #|#mbt
+        #|fn[n : Int] repeat_n(x : Int) -> Array[Int] {
+        #|  Array::make(n, x)
+        #|}
+        #|
+        #|// `n` is not used at run time: erased, no warning
+        #|#mbt
+        #|fn[n : Nat] konst(x : Int) -> Int { x }
+        #|
+        #|// not #mbt: no MoonBit signature to warn about
+        #|fn[n : Nat] count_to(x : Int) -> Int { n.to_int() + x }
+        #|
+        #|fn main {
+        #|  println(repeat_n[3](7))
+        #|  println(konst[(4 : Nat)](5))
+        #|  println(count_to[(2 : Nat)](1))
+        #|}
+      ),
+    ),
+    content=(
+      #|warning: #mbt fn repeat_n: the implicit parameter(s) n are used at run time, so the MoonBit function repeat_n takes them as ordinary parameters: repeat_n(n : Int, x : Int)
+      #|pub fn konst(x : Int) -> Int {
+      #|pub fn repeat_n(n : Int, x : Int) -> Array[Int] {
+    ),
+  )
+}
+
+///|
+test "codegen: a datatype that takes the name of a #mbt trait is not #mbt" {
+  inspect(
+    signatures(
+      (
+        #|enum Sub {
+        #|  Minus(Int, Int)
+        #|}
+        #|
+        #|fn[n : Nat] apply(s : Sub) -> Int {
+        #|  match s {
+        #|    Minus(a, b) => a - b + n.to_int()
+        #|  }
+        #|}
+        #|
+        #|fn main {
+        #|  println(apply[(1 : Nat)](Minus(5, 2)))
+        #|}
+      ),
+    ),
+    content=(
+      #|enum E_Sub {
+      #|fn f_apply_t(n : E_Nat, s : E_Sub) -> Int raise {
+      #|fn f_apply(a0 : Value, a1 : Value) -> Value raise {
+      #|fn main {
+      #|enum E_Nat {
+      #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
+      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
+      #|fn f_show_to_string(inst : Value) -> Value raise {
+      #|fn f_nat_to_int_t(self : E_Nat) -> Int raise {
+      #|fn f_nat_to_int(a0 : Value) -> Value raise {
+    ),
+  )
+}

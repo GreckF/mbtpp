@@ -12,6 +12,8 @@ pub fn runtime_code() -> String
 
 pub fn runtime_file_name() -> String
 
+pub let warnings : Array[String]
+
 // Errors
 pub suberror CodegenError {
   CodegenError(String)

@@ -84,6 +84,8 @@ fn mbt_ty_ok(ctx : Array[Bool], t : Tm) -> Bool {
         h = f
       }
       match h {
+        // MoonBit's arrays (native code uses them)
+        Global("Array") if args.length() == 1 => mbt_ty_ok(ctx, args[0])
         Global(d) if is_foreign_type(d) =>
           args.iter().all(a => mbt_ty_ok(ctx, a))
         Global(d) if mbt_types.contains(d) && !is_mbt_trait(d) =>
@@ -482,10 +484,10 @@ fn mbt_fn_problem(f : String) -> String? {
     guard t is Pi(x, icit, _, a, b) else { break }
     match (icit, a) {
       (Impl, U) => ctx.push(true)
-      (Impl, _) =>
-        return Some(
-          "the implicit parameter " + x + " is not a type (only [T] is allowed)",
-        )
+      // a value: erased, or an ordinary parameter of the MoonBit function
+      // (then of a MoonBit type: checked by the code generator, which knows
+      // what is erased)
+      (Impl, _) => ctx.push(false)
       (Inst, App(Global(tr), Var(ix), _)) if is_mbt_trait(tr) &&
         ix < ctx.length() &&
         ctx[ctx.length() - 1 - ix] => ctx.push(false)

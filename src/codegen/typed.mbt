@@ -720,9 +720,11 @@ fn Gen::native_sig(self : Gen, name : String) -> TSig? {
             tparams.push(None)
             ctx.push(TyOther)
           }
-        } else if icit != Expl {
+        } else if icit == Inst {
           return None
         } else {
+          // an explicit parameter, or an implicit value used at run time
+          // (not erased): an ordinary parameter
           match self.native_ty_in(ctx, a) {
             Some(nt) => params.push(Some(nt))
             None => return None

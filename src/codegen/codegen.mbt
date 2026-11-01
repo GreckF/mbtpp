@@ -1228,6 +1228,7 @@ pub fn generate_files(
   if !@tt.globals.contains("main") {
     raise CodegenError("no main function")
   }
+  warnings.clear()
   let g = Gen::new(imports)
   g.dry = true
   g.compute_typed()

@@ -235,11 +235,11 @@ test "import: pub(all) types and pub(open) traits are #mbt" {
   let marks = ["@h.Handle", "@h.Color", "@h.Big", "@h.Named", "@h.Sealed"].map(n => {
     (n, @tt.mbt_info(n).map(i => (i.name, i.read_only)))
   })
-  // `Big` has an `Array` field, which is not a MoonBit++ #mbt type
+  // `Big` has an `Array` field: arrays are MoonBit arrays in native code
   inspect(
     marks,
     content=(
-      #|[(@h.Handle, Some((@h.Handle, true))), (@h.Color, Some((@h.Color, false))), (@h.Big, None), (@h.Named, Some((@h.Named, false))), (@h.Sealed, Some((@h.Sealed, true)))]
+      #|[(@h.Handle, Some((@h.Handle, true))), (@h.Color, Some((@h.Color, false))), (@h.Big, Some((@h.Big, false))), (@h.Named, Some((@h.Named, false))), (@h.Sealed, Some((@h.Sealed, true)))]
     ),
   )
 }

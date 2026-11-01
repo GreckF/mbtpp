@@ -46,6 +46,29 @@ fn Gen::check_mbt_fns(self : Gen) -> Unit raise CodegenError {
         " is taken by the runtime of compiled programs (use #mbt(\"name\"))",
       )
     }
+    // an implicit value used at run time is a parameter of the MoonBit
+    // function: of a MoonBit type
+    match self.native_sig(f) {
+      Some(sig) => {
+        let mut t = @tt.globals.get(f).unwrap().ty
+        for i = 0; i < sig.params.length(); i = i + 1 {
+          guard t is Pi(x, icit, _, _, rest) else { break }
+          match sig.params[i] {
+            Some(nt) if icit == Impl && !mbt_only(nt) =>
+              raise CodegenError(
+                "#mbt fn " +
+                f +
+                ": the implicit parameter " +
+                x +
+                " is used at run time, so it is a parameter of the MoonBit function, but its type has no MoonBit type",
+              )
+            _ => ()
+          }
+          t = rest
+        }
+      }
+      None => ()
+    }
     if self.typed_set.contains(f) {
       continue
     }
@@ -182,17 +205,42 @@ fn Gen::export_fn(self : Gen, name : String, sig : TSig) -> Unit {
       _ => srcs.push("_")
     }
   }
+  // which parameters are explicit (labels are those of explicit ones)
+  let icits : Array[@tt.Icit] = []
+  let mut t = g.ty
+  for _ in 0..<n {
+    match t {
+      Pi(_, i, _, _, rest) => {
+        icits.push(i)
+        t = rest
+      }
+      _ => icits.push(Expl)
+    }
+  }
   let decls : Array[String] = []
   let args : Array[String] = []
   let used : Array[String] = []
   let mut expl = 0
-  let expl_total = sig.params.filter(p => p is Some(_)).length()
+  let expl_total = sig.params
+    .mapi((i, p) => p is Some(_) && icits[i] == Expl)
+    .filter(b => b)
+    .length()
+  let implicit_values : Array[String] = []
   for i = 0; i < n; i = i + 1 {
     guard sig.params[i] is Some(nt) else { continue }
-    let label = if expl < labels.length() { labels[expl] } else { None }
-    expl = expl + 1
+    let is_expl = icits[i] == Expl
+    let label = if is_expl && expl < labels.length() {
+      labels[expl]
+    } else {
+      None
+    }
+    if is_expl {
+      expl = expl + 1
+    } else {
+      implicit_values.push(srcs[i])
+    }
     // `fn f()` takes a `Unit` in MoonBit++
-    if nt == NUnit && expl_total == 1 && label is None {
+    if nt == NUnit && is_expl && expl_total == 1 && label is None {
       args.push("()")
       continue
     }
@@ -223,6 +271,22 @@ fn Gen::export_fn(self : Gen, name : String, sig : TSig) -> Unit {
           }
         None => x + " : " + self.mbt_ty(nt)
       },
+    )
+  }
+  // the MoonBit function has parameters that MoonBit++ callers do not write
+  if implicit_values.length() > 0 {
+    warnings.push(
+      "#mbt fn " +
+      name +
+      ": the implicit parameter(s) " +
+      implicit_values.join(", ") +
+      " are used at run time, so the MoonBit function " +
+      mname +
+      " takes them as ordinary parameters: " +
+      mname +
+      "(" +
+      decls.join(", ") +
+      ")",
     )
   }
   let raises = result_raises(g.ty, n)
@@ -338,3 +402,8 @@ fn Gen::async_main(self : Gen) -> String raise CodegenError {
     }
   }
 }
+
+///|
+/// Warnings of the last generation (e.g. a `#mbt` function whose MoonBit
+/// signature has parameters that are implicit in MoonBit++).
+pub let warnings : Array[String] = []

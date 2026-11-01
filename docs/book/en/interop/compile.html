@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-32fcfbae.js";
+            window.path_to_searchindex_js = "../searchindex-52a21be8.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-94125c94.js"></script>
@@ -245,7 +245,8 @@ registers in <code>fn init</code>. The two kinds of code convert values at their
 <h2 id="erasure"><a class="header" href="#erasure">Erasure</a></h2>
 <ul>
 <li>Type parameters are always erased.</li>
-<li>Other implicit parameters and implicit constructor fields are erased when they are used only in types.</li>
+<li>Other implicit parameters and implicit constructor fields are erased when they are used only in types;
+an implicit parameter used at run time is an ordinary parameter of the native function.</li>
 <li>Proofs are always erased: parameters and fields whose type is a proposition (implicit or not),
 <code>let</code>s of proofs and calls of lemmas produce no code, and lemmas themselves are not generated; a
 match on a proof runs its first arm (a match on a proof of an empty proposition becomes an

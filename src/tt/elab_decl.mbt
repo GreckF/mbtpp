@@ -884,6 +884,13 @@ pub fn check_decls(
   if !lenient {
     for d in decls0 {
       record_decl_pos(d.inner())
+      // a declaration without `#mbt` that takes the name of a `#mbt` one
+      // (an `enum Sub` replacing the Prelude's trait) is not `#mbt`
+      if !(d is DMbt(_, _, _, _)) {
+        for n in decl_global_names(d) {
+          mbt_types.remove(n)
+        }
+      }
     }
   }
   for d in decls0 {

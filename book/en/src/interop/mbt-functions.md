@@ -54,8 +54,11 @@ pub fn[T0] Tree::depth(self : Tree[T0]) -> Int32
 
 ## Signature (checked during type checking)
 
-- Implicit parameters can only be type parameters `[T]`; bounds can only be `#mbt` traits on type parameters, and a bounded type parameter must appear in
-  the parameters or the result.
+- Implicit parameters can be type parameters `[T]`, or values. A value used only in types is
+  erased; a value used at run time is an ordinary parameter of the MoonBit function (of a MoonBit
+  type), with a warning when compiling, since MoonBit callers write it: `fn[n : Int] repeat_n(x : Int)`
+  is exported as `repeat_n(n : Int, x : Int)`. Bounds can only be `#mbt` traits on type parameters, and
+  a bounded type parameter must appear in the parameters or the result.
 - Parameters and results are MoonBit types; proof parameters (whose type is a proposition) are
   erased and do not appear in the MoonBit function.
 - `x~` and `x?` parameters are supported; default values are not.

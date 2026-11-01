@@ -644,7 +644,9 @@ test "mbt: functions" {
   )
   inspect(
     check("#mbt\nfn f(xs : Array[Int]) -> Int { 0 }"),
-    content="t.mbtpp:1:1: error: #mbt fn f: the parameter xs has type Array[Int], which does not translate to MoonBit (arrays are not supported yet)",
+    content=(
+      #|ok
+    ),
   )
 }
 

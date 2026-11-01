@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-5611e418.js";
+            window.path_to_searchindex_js = "../searchindex-a6e7a829.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-935ffb6c.js"></script>
@@ -229,8 +229,10 @@ pub fn[T0] Tree::depth(self : Tree[T0]) -&gt; Int32
 <p>（<code>moon fmt</code> 把 MoonBit 的 <code>Int</code> 写作 <code>Int32</code>。）</p>
 <h2 id="签名类型检查时验证"><a class="header" href="#签名类型检查时验证">签名（类型检查时验证）</a></h2>
 <ul>
-<li>隐式参数只能是类型参数 <code>[T]</code>；约束只能是类型参数上的 <code>#mbt</code> trait，被约束的类型参数要出现在
-参数或结果中。</li>
+<li>隐式参数可以是类型参数 <code>[T]</code>，也可以是值。值只在类型中用到时被擦除；在运行时用到时，它是
+MoonBit 函数的普通参数（类型要是 MoonBit 类型），编译时会给出警告，因为 MoonBit 中的调用者要写
+出它，例如 <code>fn[n : Int] repeat_n(x : Int)</code> 导出为 <code>repeat_n(n : Int, x : Int)</code>。约束只能是类型
+参数上的 <code>#mbt</code> trait，被约束的类型参数要出现在参数或结果中。</li>
 <li>参数和结果是 MoonBit 类型；证明参数（类型是命题的参数）被擦除，不出现在 MoonBit 函数中。</li>
 <li>支持 <code>x~</code>、<code>x?</code> 参数，不支持默认值。</li>
 <li>方法只能属于本程序生成的 <code>#mbt</code> 类型。</li>

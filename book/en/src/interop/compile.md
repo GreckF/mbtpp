@@ -84,7 +84,8 @@ Because `Value` can be extended from other files and other packages, this repres
 ## Erasure
 
 - Type parameters are always erased.
-- Other implicit parameters and implicit constructor fields are erased when they are used only in types.
+- Other implicit parameters and implicit constructor fields are erased when they are used only in types;
+  an implicit parameter used at run time is an ordinary parameter of the native function.
 - Proofs are always erased: parameters and fields whose type is a proposition (implicit or not),
   `let`s of proofs and calls of lemmas produce no code, and lemmas themselves are not generated; a
   match on a proof runs its first arm (a match on a proof of an empty proposition becomes an

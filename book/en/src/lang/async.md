@@ -30,6 +30,37 @@ async fn main {
   concurrency. Imported MoonBit async functions, like other imported functions, can only be called
   once compiled.
 
+## async in the type system
+
+In the type system, `async` is syntactic sugar for an [algebraic effect](effects.md):
+`async fn f(…) -> T` is the function `fn f(…) -> T!Async`, whose result type has the effect `Async`,
+and `async (A) -> B` is `(A) -> B!Async`. Like `async`, `!Async` may raise any error by default,
+and `raise E` and `noraise` restrict the errors as usual.
+
+```moonbit
+async fn inc(x : Int) -> Int {
+  x + 1
+}
+
+// the same as async fn twice(f : async (Int) -> Int, x : Int) -> Int
+fn twice(f : (Int) -> Int!Async, x : Int) -> Int!Async {
+  f(f(x))
+}
+
+async fn main {
+  println(twice(x => inc(x), 1))
+  println(Cons(1, Cons(2, Nil)).map(x => inc(x)))   // map is async because its callback is
+}
+```
+
+- The two notations can be mixed; the types are the same.
+- "async functions are called only in async functions" is the general rule of effects: a function
+  calling a function with an effect has that effect in its own effect row.
+- Effect polymorphic functions (such as `List::map` of the Prelude) therefore take async callbacks
+  too, and the call is then async.
+- Only the types are unified: running and compiling still use MoonBit's native async (see
+  "Compilation" below).
+
 ## Using moonbitlang/async
 
 Add the dependency with `moonpp add moonbitlang/async` and import it in the package's `moon.pkg`

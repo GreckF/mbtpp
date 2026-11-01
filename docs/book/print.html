@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-724f11aa.js";
+            window.path_to_searchindex_js = "searchindex-244e4893.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-935ffb6c.js"></script>
@@ -1673,6 +1673,31 @@ async fn main {
 <li><strong><code>async fn main</code></strong>：程序入口可以是 async 的。</li>
 <li><strong>解释器</strong>：<code>moonpp run</code> 按顺序同步执行 async 函数，没有并发。导入的 MoonBit async 函数和其他
 导入函数一样，只能在编译后调用。</li>
+</ul>
+<h2 id="类型系统中的-async"><a class="header" href="#类型系统中的-async">类型系统中的 async</a></h2>
+<p>在类型系统中，<code>async</code> 是<a href="#代数效应">代数效应</a>的语法糖：<code>async fn f(…) -&gt; T</code> 就是返回类型带效应
+<code>Async</code> 的函数 <code>fn f(…) -&gt; T!Async</code>，<code>async (A) -&gt; B</code> 就是 <code>(A) -&gt; B!Async</code>。和 <code>async</code> 一样，
+<code>!Async</code> 默认可以抛出任何错误，<code>raise E</code>、<code>noraise</code> 照常限定错误。</p>
+<pre><code class="language-moonbit">async fn inc(x : Int) -&gt; Int {
+  x + 1
+}
+
+// 与 async fn twice(f : async (Int) -&gt; Int, x : Int) -&gt; Int 相同
+fn twice(f : (Int) -&gt; Int!Async, x : Int) -&gt; Int!Async {
+  f(f(x))
+}
+
+async fn main {
+  println(twice(x =&gt; inc(x), 1))
+  println(Cons(1, Cons(2, Nil)).map(x =&gt; inc(x)))   // map 跟随回调成为 async
+}
+</code></pre>
+<ul>
+<li>两种写法可以混用，类型完全相同。</li>
+<li>“async 函数只能在 async 函数中调用”就是效应的一般规则：调用有效应的函数，所在函数的效应行也要
+包含它。</li>
+<li>效应多态的函数（如 Prelude 的 <code>List::map</code>）因此也能接受 async 回调，此时调用是 async 的。</li>
+<li>只有类型层面是统一的：运行和编译仍使用 MoonBit 原生的 async（见下面的“编译”）。</li>
 </ul>
 <h2 id="使用-moonbitlangasync"><a class="header" href="#使用-moonbitlangasync">使用 moonbitlang/async</a></h2>
 <p>用 <code>moonpp add moonbitlang/async</code> 添加依赖，并在包的 <code>moon.pkg</code> 中导入后，就可以使用它的任务组、

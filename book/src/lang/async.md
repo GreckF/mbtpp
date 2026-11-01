@@ -29,6 +29,34 @@ async fn main {
 - **解释器**：`moonpp run` 按顺序同步执行 async 函数，没有并发。导入的 MoonBit async 函数和其他
   导入函数一样，只能在编译后调用。
 
+## 类型系统中的 async
+
+在类型系统中，`async` 是[代数效应](effects.md)的语法糖：`async fn f(…) -> T` 就是返回类型带效应
+`Async` 的函数 `fn f(…) -> T!Async`，`async (A) -> B` 就是 `(A) -> B!Async`。和 `async` 一样，
+`!Async` 默认可以抛出任何错误，`raise E`、`noraise` 照常限定错误。
+
+```moonbit
+async fn inc(x : Int) -> Int {
+  x + 1
+}
+
+// 与 async fn twice(f : async (Int) -> Int, x : Int) -> Int 相同
+fn twice(f : (Int) -> Int!Async, x : Int) -> Int!Async {
+  f(f(x))
+}
+
+async fn main {
+  println(twice(x => inc(x), 1))
+  println(Cons(1, Cons(2, Nil)).map(x => inc(x)))   // map 跟随回调成为 async
+}
+```
+
+- 两种写法可以混用，类型完全相同。
+- “async 函数只能在 async 函数中调用”就是效应的一般规则：调用有效应的函数，所在函数的效应行也要
+  包含它。
+- 效应多态的函数（如 Prelude 的 `List::map`）因此也能接受 async 回调，此时调用是 async 的。
+- 只有类型层面是统一的：运行和编译仍使用 MoonBit 原生的 async（见下面的“编译”）。
+
 ## 使用 moonbitlang/async
 
 用 `moonpp add moonbitlang/async` 添加依赖，并在包的 `moon.pkg` 中导入后，就可以使用它的任务组、

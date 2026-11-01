@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-02c7fc71.js";
+            window.path_to_searchindex_js = "../searchindex-033c89de.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-94125c94.js"></script>
@@ -200,7 +200,7 @@ async fn main {
 <ul>
 <li><strong>Syntax</strong>: top-level and local functions are written <code>async fn name(…)</code>, anonymous functions
 <code>async fn(…) { … }</code>, and function types <code>async (A) -&gt; B</code>.</li>
-<li><strong>Errors</strong>: as in MoonBit, an async function may raise any error by default (like <code>raise  Error</code>). <code>raise E</code> restricts the error type, and <code>noraise</code> says it does not raise.</li>
+<li><strong>Errors</strong>: as in MoonBit, an async function may raise any error by default (like <code>raise Error</code>). <code>raise E</code> restricts the error type, and <code>noraise</code> says it does not raise.</li>
 <li><strong>Calls</strong>: an async function can only be called from an async function. A lambda (including
 <code>x =&gt; …</code>) checked against an async function type is async, like the second argument of <code>twice</code>
 above. A synchronous function can pass an async function around as a value, but cannot call it.</li>
@@ -208,6 +208,34 @@ above. A synchronous function can pass an async function around as a value, but 
 <li><strong>Interpreter</strong>: <code>moonpp run</code> runs async functions synchronously, one after another, without
 concurrency. Imported MoonBit async functions, like other imported functions, can only be called
 once compiled.</li>
+</ul>
+<h2 id="async-in-the-type-system"><a class="header" href="#async-in-the-type-system">async in the type system</a></h2>
+<p>In the type system, <code>async</code> is syntactic sugar for an <a href="effects.html">algebraic effect</a>:
+<code>async fn f(…) -&gt; T</code> is the function <code>fn f(…) -&gt; T!Async</code>, whose result type has the effect <code>Async</code>,
+and <code>async (A) -&gt; B</code> is <code>(A) -&gt; B!Async</code>. Like <code>async</code>, <code>!Async</code> may raise any error by default,
+and <code>raise E</code> and <code>noraise</code> restrict the errors as usual.</p>
+<pre><code class="language-moonbit">async fn inc(x : Int) -&gt; Int {
+  x + 1
+}
+
+// the same as async fn twice(f : async (Int) -&gt; Int, x : Int) -&gt; Int
+fn twice(f : (Int) -&gt; Int!Async, x : Int) -&gt; Int!Async {
+  f(f(x))
+}
+
+async fn main {
+  println(twice(x =&gt; inc(x), 1))
+  println(Cons(1, Cons(2, Nil)).map(x =&gt; inc(x)))   // map is async because its callback is
+}
+</code></pre>
+<ul>
+<li>The two notations can be mixed; the types are the same.</li>
+<li>“async functions are called only in async functions” is the general rule of effects: a function
+calling a function with an effect has that effect in its own effect row.</li>
+<li>Effect polymorphic functions (such as <code>List::map</code> of the Prelude) therefore take async callbacks
+too, and the call is then async.</li>
+<li>Only the types are unified: running and compiling still use MoonBit’s native async (see
+“Compilation” below).</li>
 </ul>
 <h2 id="using-moonbitlangasync"><a class="header" href="#using-moonbitlangasync">Using moonbitlang/async</a></h2>
 <p>Add the dependency with <code>moonpp add moonbitlang/async</code> and import it in the package’s <code>moon.pkg</code>
@@ -249,7 +277,7 @@ otherwise compilation fails and names the first term that is not, with the same 
 <li>Async functions can also only be used by native code. If code in the uniform representation
 refers to an async function, for example a synchronous function outside the native fragment that
 returns an async lambda, compilation fails.</li>
-<li><code>async fn main</code> compiles to MoonBit’s <code>async fn main</code>, and <code>#mbt async fn</code> is exported as <code>pub  async fn</code>.</li>
+<li><code>async fn main</code> compiles to MoonBit’s <code>async fn main</code>, and <code>#mbt async fn</code> is exported as <code>pub async fn</code>.</li>
 <li><code>moonbitlang/async</code> supports the native, JS and wasm targets, but not wasm-gc.</li>
 </ul>
 

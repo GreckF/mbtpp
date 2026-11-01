@@ -218,14 +218,16 @@ fn elab_perform(
       args.length().to_string(),
     )
   }
-  if lookup_level(cxt, cap_name(info.eff)) is None {
-    cxt.fail(
-      "perform " +
-      op +
-      ": no enclosing `try` handles the effect " +
-      info.eff +
-      " and the function does not declare it",
-    )
+  match lookup_level(cxt, cap_name(info.eff)) {
+    Some(l) => require_effect(cxt, cxt.types[l])
+    None =>
+      cxt.fail(
+        "perform " +
+        op +
+        ": no enclosing `try` handles the effect " +
+        info.eff +
+        " and the function does not declare it",
+      )
   }
   infer(
     cxt,
@@ -333,6 +335,7 @@ fn elab_handle(
     cap_tys.push(ty)
     bc = bc.bind(cap_name(e), ty)
   }
+  bc = { ..bc, handled: [..cxt.handled, ..effs] }
   // the body, then the error arms
   let inner = if err_arms.length() > 0 {
     @parser.ETry(pos, body, err_arms, None)
@@ -368,7 +371,7 @@ fn elab_handle(
       }
       fields.push((op, f))
     }
-    caps.push(check(cxt, EStruct(pos, fields), cap_tys[k]))
+    caps.push(check({ ..cxt, arm_lams: true }, EStruct(pos, fields), cap_tys[k]))
   }
   let mut t = tb
   for k = effs.length() - 1; k >= 0; k = k - 1 {
@@ -457,4 +460,159 @@ fn op_closure(
     _ => ETuple(pos, xs)
   }
   ELam(pos, [], params, None, EMatch(pos, scrut, None, arms2))
+}
+
+// ---------------------------------------------------------------------------
+// Effect rows: checking what code may perform
+
+///|
+fn row_nil() -> Val {
+  VData("%RowNil", [])
+}
+
+///|
+fn row_cons(item : Val, rest : Val) -> Val {
+  VData("%Row", [(item, Impl), (rest, Impl)])
+}
+
+///|
+/// The items of a row, and its tail (`%RowNil`, or an effect variable).
+fn row_flat(row : Val) -> (Array[Val], Val) {
+  let items : Array[Val] = []
+  let mut r = force(row)
+  while r is VData("%Row", [(item, _), (rest, _)]) {
+    items.push(item)
+    r = force(rest)
+  }
+  (items, r)
+}
+
+///|
+/// The effect row of a codomain (`%RowNil` without effects).
+fn codomain_row(ty : Val) -> Val {
+  match force(ty) {
+    VRaises(_, e) =>
+      match force(e) {
+        VData("%Effs", [(row, _), _]) => row
+        _ => row_nil()
+      }
+    _ => row_nil()
+  }
+}
+
+///|
+/// The effect name of a row item (`None` for an effect variable).
+fn item_effect(item : Val) -> String? {
+  match force(item) {
+    VData(n, _) if is_effect(n) => Some(n)
+    _ => None
+  }
+}
+
+///|
+/// The code being checked performs `item` (an effect, or an effect
+/// variable): it must be handled by an enclosing `try` of the same function,
+/// or be in the row of the function. A row ending with a meta (a lambda
+/// whose type is being inferred) is extended.
+fn require_effect(cxt : Cxt, item : Val) -> Unit raise ElabError {
+  let item = force(item)
+  if item is VData("%RowNil", _) {
+    return
+  }
+  if item is VFlex(_, _) {
+    // an effect variable nothing constrains: no effect
+    cxt.unify(item, row_nil())
+    return
+  }
+  let name = item_effect(item)
+  match name {
+    Some(n) if cxt.handled.contains(n) => return
+    _ => ()
+  }
+  let (items, tail) = row_flat(cxt.eff_row)
+  for it in items {
+    if item_effect(it) == name && cxt.try_unify(it, item) {
+      return
+    }
+  }
+  if name is None && cxt.try_unify(tail, item) {
+    return
+  }
+  // the new tail lives where the old one does: same arguments
+  if tail is VFlex(_, sp) {
+    cxt.unify(tail, row_cons(item, VFlex(new_meta(), sp)))
+    return
+  }
+  cxt.fail(
+    "this performs " + cxt.show(item) +
+    ", which is not handled here and not in the effects of the function (add `!" +
+    cxt.show(item) + "` to its type)",
+  )
+}
+
+///|
+/// The code being checked calls a function with the effects `row`.
+fn require_row(cxt : Cxt, row : Val) -> Unit raise ElabError {
+  let (items, tail) = row_flat(row)
+  for it in items {
+    require_effect(cxt, it)
+  }
+  require_effect(cxt, tail)
+}
+
+///|
+/// Unify two effect rows, as sets: the items of the same effect are unified,
+/// and the rest goes to the other row's tail when it is a meta.
+fn unify_rows(ts : LTypes, r1 : Val, r2 : Val) -> Unit raise UnifyError {
+  let (items1, tail1) = row_flat(r1)
+  let (items2, tail2) = row_flat(r2)
+  let used = Array::make(items2.length(), false)
+  let left1 : Array[Val] = []
+  for a in items1 {
+    let mut found = false
+    for k = 0; k < items2.length(); k = k + 1 {
+      if !used[k] && item_effect(a) == item_effect(items2[k]) {
+        unify(ts, a, items2[k])
+        used[k] = true
+        found = true
+        break
+      }
+    }
+    if !found {
+      left1.push(a)
+    }
+  }
+  let left2 : Array[Val] = []
+  for k = 0; k < items2.length(); k = k + 1 {
+    if !used[k] {
+      left2.push(items2[k])
+    }
+  }
+  let build = (xs : Array[Val], tail : Val) => {
+    let mut r = tail
+    for i = xs.length() - 1; i >= 0; i = i - 1 {
+      r = row_cons(xs[i], r)
+    }
+    r
+  }
+  if left1.length() == 0 && left2.length() == 0 {
+    // tails are `%RowNil`, effect variables or metas
+    match (tail1, tail2) {
+      (VData("%RowNil", _), VData("%RowNil", _)) => ()
+      (VData("%RowNil", _), VRigid(_, _)) | (VRigid(_, _), VData("%RowNil", _)) =>
+        raise UnifyError("different effects")
+      _ => unify(ts, tail1, tail2)
+    }
+  } else if left1.length() == 0 && tail1 is VFlex(_, _) {
+    unify(ts, tail1, build(left2, tail2))
+  } else if left2.length() == 0 && tail2 is VFlex(_, _) {
+    unify(ts, tail2, build(left1, tail1))
+  } else {
+    raise UnifyError("different effects")
+  }
+}
+
+///|
+fn is_row(v : Val) -> Bool {
+  v is VData("%Row" | "%RowNil", _)
 }

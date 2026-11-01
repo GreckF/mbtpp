@@ -726,6 +726,14 @@ fn Gen::native_sig(self : Gen, name : String) -> TSig? {
   }
   match self.native_ty_in(ctx, result) {
     Some(r) => {
+      // MoonBit rejects unused type parameters (an effect variable is a
+      // type parameter only used in effect rows): use the uniform code
+      for k = 0; k < ntvars; k = k + 1 {
+        if !has_tvar(r, k) &&
+          !params.iter().any(p => p is Some(pt) && has_tvar(pt, k)) {
+          return None
+        }
+      }
       // MoonBit infers the type parameters from the arguments and result
       for bd in bounds {
         if !has_tvar(r, bd.0) &&

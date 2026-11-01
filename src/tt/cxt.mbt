@@ -23,6 +23,14 @@ pub(all) struct Cxt {
   /// In a type: calls that raise and `raise e` stand for their values (see
   /// raise.mbt), since a type is not run.
   in_type : Bool
+  /// The effects the code may perform (see effects.mbt): the row of the
+  /// enclosing function, and the effects handled by the enclosing `try`s of
+  /// the same function.
+  eff_row : Val
+  handled : Array[String]
+  /// The lambdas being checked are handler arms: they perform their effects
+  /// where the handler is, and keep its effects.
+  arm_lams : Bool
 }
 
 ///|
@@ -40,6 +48,9 @@ pub fn empty_cxt(pos : Pos) -> Cxt {
     ret_ty: None,
     in_loop: false,
     in_type: false,
+    eff_row: VData("%RowNil", []),
+    handled: [],
+    arm_lams: false,
   }
 }
 

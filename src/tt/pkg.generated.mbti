@@ -245,6 +245,9 @@ pub(all) struct Cxt {
   ret_ty : Val?
   in_loop : Bool
   in_type : Bool
+  eff_row : Val
+  handled : Array[String]
+  arm_lams : Bool
 }
 pub fn Cxt::at(Self, @parser.Pos) -> Self
 pub fn Cxt::bind(Self, String, Val) -> Self

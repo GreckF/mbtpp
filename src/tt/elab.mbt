@@ -674,6 +674,9 @@ fn app_core(
               "this call may raise an error; use it inside `try` or in a function declared with `raise`",
             )
           }
+          if !cxt.in_type {
+            require_row(cxt, codomain_row(ty))
+          }
           (t, r)
         }
         _ => (t, ty)
@@ -1280,12 +1283,26 @@ fn check_lam(
     None => ()
   }
   let (body_ty, can_raise, can_async) = body_effects(ty)
-  let bc = {
-    ..cxt,
-    can_raise,
-    can_async,
-    ret_ty: Some(body_ty),
-    in_loop: false,
+  // a handler arm performs its effects where the handler is (effects.mbt)
+  let bc = if cxt.arm_lams {
+    {
+      ..cxt,
+      can_raise,
+      can_async,
+      ret_ty: Some(body_ty),
+      in_loop: false,
+      arm_lams: false,
+    }
+  } else {
+    {
+      ..cxt,
+      can_raise,
+      can_async,
+      ret_ty: Some(body_ty),
+      in_loop: false,
+      eff_row: codomain_row(ty),
+      handled: [],
+    }
   }
   lams(wrap, check(bc, body, body_ty))
 }
@@ -1308,6 +1325,7 @@ fn infer_lam_type(
   impls : Array[@parser.Binder],
   ps : Array[@parser.Binder],
   ret : @parser.Expr?,
+  row? : Tm? = None,
 ) -> (Tm, Val) raise ElabError {
   reject_tagged(cxt, ps)
   let (c1, bs1) = elab_impl_binders(cxt, impls)
@@ -1316,8 +1334,56 @@ fn infer_lam_type(
     Some(r) => check_type(c2, r)
     None => c2.fresh_meta()
   }
+  let r = match row {
+    Some(m) if !(r is Raises(_, _)) =>
+      Raises(
+        r,
+        App(
+          App(Global("%Effs"), tm_shift(m, bs1.length() + bs2.length(), 0), Impl),
+          Global("%NoRaise"),
+          Impl,
+        ),
+      )
+    _ => r
+  }
   let t = pis(concat(bs1, bs2), r)
   (t, cxt.eval(t))
+}
+
+///|
+/// The type of an inferred lambda once its body is checked: without the
+/// effect row `row` when it is empty.
+fn infer_lam_type_again(
+  cxt : Cxt,
+  impls : Array[@parser.Binder],
+  ps : Array[@parser.Binder],
+  ty : Val,
+  row : Tm,
+) -> (Tm, Val) {
+  ignore(impls)
+  ignore(ps)
+  match force(cxt.eval(row)) {
+    VData("%Row", _) => (cxt.quote(ty), ty)
+    r => {
+      if r is VFlex(_, _) {
+        cxt.unify(r, VData("%RowNil", [])) catch {
+          _ => ()
+        }
+      }
+      // drop the empty row from the codomain
+      let t = drop_empty_row(cxt.quote(ty))
+      (t, cxt.eval(t))
+    }
+  }
+}
+
+///|
+fn drop_empty_row(t : Tm) -> Tm {
+  match t {
+    Pi(x, i, g, a, b) => Pi(x, i, g, a, drop_empty_row(b))
+    Raises(r, App(App(Global("%Effs"), _, _), Global("%NoRaise"), _)) => r
+    _ => t
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -1355,8 +1421,13 @@ pub fn infer(cxt0 : Cxt, e : @parser.Expr) -> (Tm, Val) raise ElabError {
     EApp(_, f, i, x) => elab_app(cxt, f, i, x, None)
     EPi(_, impls, expl, cod, raises) => infer_pi(cxt, impls, expl, cod, raises)
     ELam(_, impls, ps, ret, _) => {
-      let (_, ty) = infer_lam_type(cxt, impls, ps, ret)
-      (check(cxt, e, ty), ty)
+      // the effects of the body are found while checking it: a row meta,
+      // left out of the type if the body has none (see effects.mbt)
+      let row = cxt.fresh_meta()
+      let (_, ty) = infer_lam_type(cxt, impls, ps, ret, row=Some(row))
+      let t = check(cxt, e, ty)
+      let (_, ty2) = infer_lam_type_again(cxt, impls, ps, ty, row)
+      (t, ty2)
     }
     EBlock(_, stmts) => check_block(cxt, stmts, None)
     EIf(_, c, t, el) =>

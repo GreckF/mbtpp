@@ -244,6 +244,8 @@ fn show_prec(names : Array[String], t : Tm, prec : Int32) -> String {
         }
         match i {
           Expl => expls.push(ann)
+          // the capability of an effect is in the codomain's row
+          _ if x.has_prefix("%cap:") => ()
           _ => impls.push(ann)
         }
         ns = push1(ns, y)
@@ -264,6 +266,8 @@ fn show_prec(names : Array[String], t : Tm, prec : Int32) -> String {
           ("async ", show_prec(ns, r, 1))
         Raises(r, App(Global("%Async"), e, _)) =>
           ("async ", show_prec(ns, r, 1) + " raise " + show_prec(ns, e, 1))
+        Raises(_, App(App(Global("%Effs"), _, _), _, _)) =>
+          ("", show_prec(ns, cur, 1))
         _ => ("", show_prec(ns, cur, 0))
       }
       paren(prec > 0, pre + s + " -> " + cod)
@@ -312,6 +316,29 @@ fn show_prec(names : Array[String], t : Tm, prec : Int32) -> String {
         "(" + scr.map(x => show_prec(names, x, 0)).join(", ") + ")"
       }
       "match " + s + " { " + arms.join("; ") + " }"
+    }
+    // `T!E1 + e raise Err` (see effects.mbt)
+    Raises(a, App(App(Global("%Effs"), row, _), err, _)) => {
+      let items : Array[String] = []
+      let mut r = row
+      while r is App(App(Global("%Row"), item, _), rest, _) {
+        items.push(show_prec(names, item, 2))
+        r = rest
+      }
+      if !(r is Global("%RowNil")) {
+        items.push(show_prec(names, r, 2))
+      }
+      let effs = if items.length() == 0 {
+        ""
+      } else {
+        "!" + items.join(" + ")
+      }
+      let errs = if err is Global("%NoRaise") {
+        ""
+      } else {
+        " raise " + show_prec(names, err, 1)
+      }
+      show_prec(names, a, 2) + effs + errs
     }
     Raises(a, e) => show_prec(names, a, 1) + " raise " + show_prec(names, e, 1)
     ArrayLit(es) => "[" + es.map(x => show_prec(names, x, 0)).join(", ") + "]"

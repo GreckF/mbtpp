@@ -255,8 +255,10 @@ fn unify_struct(ts : LTypes, t0 : Val, u0 : Val) -> Unit raise UnifyError {
     }
     (VU, VU) | (VProp, VProp) => ()
     (VLit(a), VLit(b)) => if a != b { raise UnifyError("literal mismatch") }
+    // errors are not compared, effects are (see effects.mbt)
     (VRaises(a1, e1), VRaises(a2, e2)) => {
       unify(ts, a1, a2)
+      unify_rows(ts, codomain_row(t), codomain_row(u))
       ignore(e1)
       ignore(e2)
     }
@@ -266,6 +268,12 @@ fn unify_struct(ts : LTypes, t0 : Val, u0 : Val) -> Unit raise UnifyError {
         _ => solve(lvl, m, sp1, u)
       }
     (VFlex(m, sp), other) | (other, VFlex(m, sp)) => solve_fo(ts, m, sp, other)
+    // a function without effects against one whose effects may be none
+    (VRaises(a, e), other) | (other, VRaises(a, e)) if effect_of(e) is (false, None) => {
+      unify(ts, a, other)
+      unify_rows(ts, codomain_row(VRaises(a, e)), VData("%RowNil", []))
+    }
+    (a, b) if is_row(a) || is_row(b) => unify_rows(ts, a, b)
     (VData(a, sp1), VData(b, sp2)) | (VCon(a, sp1), VCon(b, sp2)) if a == b =>
       unify_sp(ts, sp1, sp2)
     (VPrim(a, sp1), VPrim(b, sp2)) if a == b => unify_sp(ts, sp1, sp2)

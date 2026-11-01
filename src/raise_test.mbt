@@ -130,7 +130,8 @@ test "a lambda does not catch the error of its argument" {
     content=(
       #|t.mbtpp:10:52: error: type mismatch
       #|  expected: (raise Empty) === 0
-      #|  actual:   ?313(_) === ?313(_)
+      #|  actual:   ?314(_) === ?314(_)
+
     ),
   )
 }

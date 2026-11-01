@@ -269,7 +269,14 @@ fn elab_fn_body(fd : @parser.FnDecl) -> Unit raise ElabError {
   let cxt0 = empty_cxt(fd.pos)
   let (cxt, bs, rty) = telescope_cxt(cxt0, g.ty, n)
   let (body_ty, can_raise, can_async) = body_effects(rty)
-  let bc = { ..cxt, can_raise, can_async, ret_ty: Some(body_ty), }
+  let bc = {
+    ..cxt,
+    can_raise,
+    can_async,
+    ret_ty: Some(body_ty),
+    eff_row: codomain_row(rty),
+    handled: [],
+  }
   let t = check(bc, body, body_ty)
   let res = finish(cxt, fd.name, [wrap_lams(bs, t), g.ty])
   globals.set(fd.name, {

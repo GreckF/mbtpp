@@ -76,7 +76,11 @@ pub fn may_raise(v : Val) -> Bool {
   match force_meta(v) {
     VPrim("%raise", _) => true
     VGlobal(n, sp) =>
-      (sp.length() >= global_arity(n) && global_raises(n)) || sp_may_raise(sp)
+      (
+        sp.length() >= global_arity(n) &&
+        (global_raises(n) || call_raises(n, sp))
+      ) ||
+      sp_may_raise(sp)
     VRigid(_, sp) | VFlex(_, sp) | VPrim(_, sp) => sp_may_raise(sp)
     VMatch(_, vs, cls, sp) =>
       vs.iter().any(may_raise) ||
@@ -101,6 +105,12 @@ fn tm_may_raise(t : Tm) -> Bool {
     App(_, _, _) => {
       let (h, args) = flatten_app(t)
       (h is Global(n) && args.length() >= global_arity(n) && global_raises(n)) ||
+      // an effect polymorphic function given a lambda that raises
+      (
+        h is Global(n) &&
+        global_row_has_var(n) &&
+        args.iter().any(a => a.0 is Lam(_, _, _, b) && lam_body_raises(b))
+      ) ||
       tm_may_raise(h) ||
       args.iter().any(a => a.1 != Impl && tm_may_raise(a.0))
     }
@@ -203,4 +213,38 @@ fn no_clause_applies(vs : Array[Val], cls : Array[Clause]) -> Bool {
     }
     failed
   })
+}
+
+///|
+/// Does a call of the effect polymorphic function `n` raise, once its
+/// effect variable is instantiated by the spine `sp` (an argument that
+/// raises makes the call raise)?
+fn call_raises(n : String, sp : Spine) -> Bool {
+  if !global_row_has_var(n) {
+    return false
+  }
+  let arity = global_arity(n)
+  let mut t = match globals.get(n) {
+    Some(g) => g.vty
+    None => return false
+  }
+  for k = 0; k < arity; k = k + 1 {
+    match force(t) {
+      VPi(_, _, _, _, cl) => t = inst(cl, sp[k].0)
+      _ => return false
+    }
+  }
+  match force(t) {
+    VRaises(_, e) => effect_of(e).1 is Some(_)
+    _ => false
+  }
+}
+
+///|
+/// Does the body of a lambda (under its parameters) raise?
+fn lam_body_raises(b : Tm) -> Bool {
+  match b {
+    Lam(_, _, _, b2) => lam_body_raises(b2)
+    _ => tm_may_raise(b)
+  }
 }

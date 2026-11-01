@@ -645,3 +645,183 @@ test "a function that returns a proof has no effects" {
     ),
   )
 }
+
+///|
+test "errors are effects: through effect polymorphism, and `!Raise[E]`" {
+  inspect(
+    run_source(
+      "t.mbtpp",
+      (
+        #|suberror TooBig {
+        #|  TooBig(Int)
+        #|}
+        #|
+        #|effect Log {
+        #|  Log(String) -> Unit
+        #|}
+        #|
+        #|// `!Raise[TooBig]` is `raise TooBig`
+        #|fn check_small(x : Int) -> Int!Raise[TooBig] {
+        #|  if x > 2 { raise TooBig(x) } else { x }
+        #|}
+        #|
+        #|// errors and effects together
+        #|fn checked(x : Int) -> Int!Log raise TooBig {
+        #|  perform Log("checking \{x}")
+        #|  check_small(x)
+        #|}
+        #|
+        #|fn[T, e] each(xs : List[T], f : (T) -> Unit!e) -> Unit!e {
+        #|  match xs {
+        #|    Nil => ()
+        #|    Cons(x, rest) => { f(x); each(rest, f) }
+        #|  }
+        #|}
+        #|
+        #|// the effect variable stands for the errors of the lambda
+        #|fn all_small(xs : List[Int]) -> Unit raise TooBig {
+        #|  each(xs, x => { ignore_int(check_small(x)) })
+        #|}
+        #|
+        #|fn ignore_int(_x : Int) -> Unit { () }
+        #|
+        #|fn main {
+        #|  // List::map is effect polymorphic: a raising lambda makes it raise
+        #|  let r = try { Cons(1, Cons(5, Nil)).map(x => check_small(x)) } catch { TooBig(n) => { println("too big: \{n}"); Nil } }
+        #|  println(r)
+        #|  println(try { Cons(1, Cons(2, Nil)).map(x => check_small(x)) } catch { TooBig(_) => Nil })
+        #|  try { all_small(Cons(1, Cons(7, Nil))) } catch { TooBig(n) => println("caught \{n}") }
+        #|  let v = try {
+        #|    try { checked(9) } catch { Log(m) => { println(m); resume() } }
+        #|  } catch {
+        #|    TooBig(n) => -n
+        #|  }
+        #|  println(v)
+        #|}
+      ),
+    ),
+    content=(
+      #|too big: 5
+      #|Nil
+      #|Cons(1, Cons(2, Nil))
+      #|caught 7
+      #|checking 9
+      #|-9
+      #|
+    ),
+  )
+}
+
+///|
+test "async is an effect: async lambdas given to effect polymorphic functions" {
+  inspect(
+    run_source(
+      "t.mbtpp",
+      (
+        #|async fn inc(x : Int) -> Int noraise { x + 1 }
+        #|
+        #|fn[T] each(xs : List[T], f : (T) -> Unit) -> Unit {
+        #|  match xs {
+        #|    Nil => ()
+        #|    Cons(x, rest) => { f(x); each(rest, f) }
+        #|  }
+        #|}
+        #|
+        #|async fn main {
+        #|  let mut total = 0
+        #|  each(Cons(1, Cons(2, Nil)), x => { total = total + inc(x) })
+        #|  println(total)
+        #|  println(Cons(10, Cons(20, Nil)).map(x => inc(x)))
+        #|}
+      ),
+    ),
+    content=(
+      #|5
+      #|Cons(11, Cons(21, Nil))
+      #|
+    ),
+  )
+}
+
+///|
+test "a polymorphic call raises when its lambda does, during type checking too" {
+  inspect(
+    check(
+      (
+        #|suberror Big
+        #|fn chk(x : Int) -> Int raise Big { if x > 2 { raise Big } else { x } }
+        #|fn len(xs : List[Int]) -> Int { match xs { Nil => 0; Cons(_, r) => 1 + len(r) } }
+        #|lemma map_raises() -> len(Cons(1, Cons(5, Nil)).map(x => chk(x))) === raise Big { Refl }
+        #|lemma map_ok() -> len(Cons(1, Cons(2, Nil)).map(x => chk(x))) === 2 { Refl }
+      ),
+    ),
+    content=(
+      #|ok
+    ),
+  )
+}
+
+///|
+test "a polymorphic call that may raise is not unfolded" {
+  inspect(
+    check(
+      (
+        #|suberror Big
+        #|fn chk(x : Int) -> Int raise Big { if x > 2 { raise Big } else { x } }
+        #|fn len(xs : List[Int]) -> Int { match xs { Nil => 0; Cons(_, r) => 1 + len(r) } }
+        #|lemma not_unfolded(xs : List[Int]) -> len(xs.map(x => chk(x))) === len(xs) { Refl }
+      ),
+    ),
+    content=(
+      #|t.mbtpp:4:78: error: type mismatch
+      #|  expected: len(List::map(xs, (x) => chk(x))) === len(xs)
+      #|  actual:   ?324(xs) === ?324(xs)
+    ),
+  )
+}
+
+///|
+test "a lambda that raises makes the call raise" {
+  inspect(
+    check(
+      (
+        #|suberror E
+        #|fn bad(xs : List[Int]) -> List[Int] { xs.map(x => if x > 0 { raise E } else { x }) }
+      ),
+    ),
+    content=(
+      #|t.mbtpp:2:42: error: this call may raise an error; use it inside `try` or in a function declared with `raise`
+    ),
+  )
+}
+
+///|
+test "effect polymorphic functions get async versions in native code" {
+  inspect(
+    signatures(
+      (
+        #|async fn inc(x : Int) -> Int noraise { x + 1 }
+        #|fn[T, U] mymap(xs : List[T], f : (T) -> U) -> List[U] {
+        #|  match xs { Nil => Nil; Cons(x, r) => Cons(f(x), mymap(r, f)) }
+        #|}
+        #|fn len(xs : List[Int]) -> Int { match xs { Nil => 0; Cons(x, r) => x + len(r) } }
+        #|async fn main {
+        #|  println(len(mymap(Cons(10, Cons(20, Nil)), x => inc(x))))
+        #|}
+      ),
+    ),
+    content=(
+      #|fn f_len_t(xs : E_List[Int]) -> Int raise {
+      #|fn f_len(a0 : Value) -> Value raise {
+      #|async fn f_inc_t(x : Int) -> Int raise {
+      #|fn[T0, T1] f_mymap_t(xs : E_List[T0], f : (T0) -> T1 raise) -> E_List[T1] raise {
+      #|fn f_mymap(a3 : Value, a4 : Value) -> Value raise {
+      #|async fn[T0, T1] f_mymap_ta(xs : E_List[T0], f : async (T0) -> T1 raise) -> E_List[T1] raise {
+      #|async fn main {
+      #|enum E_List[T0] {
+      #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
+      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
+      #|fn f_show_to_string(inst : Value) -> Value raise {
+    ),
+  )
+}

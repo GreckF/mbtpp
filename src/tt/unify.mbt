@@ -257,9 +257,6 @@ fn unify_struct(ts : LTypes, t0 : Val, u0 : Val) -> Unit raise UnifyError {
     (VLit(a), VLit(b)) => if a != b { raise UnifyError("literal mismatch") }
     // errors are not compared, effects are (see effects.mbt)
     (VRaises(a1, e1), VRaises(a2, e2)) => {
-      if effect_of(e1).0 != effect_of(e2).0 {
-        raise UnifyError("async mismatch")
-      }
       unify(ts, a1, a2)
       unify_rows(ts, codomain_row(t), codomain_row(u))
       ignore(e1)

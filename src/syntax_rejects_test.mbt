@@ -421,7 +421,7 @@ test "a match on an array that no arm covers aborts" {
 }
 
 ///|
-test "an async function cannot be passed where a function is expected" {
+test "an async function passed to a function makes the call async" {
   inspect(
     check(
       (
@@ -431,9 +431,7 @@ test "an async function cannot be passed where a function is expected" {
       ),
     ),
     content=(
-      #|t.mbtpp:3:23: error: type mismatch
-      #|  expected: (Int) -> Int
-      #|  actual:   async (x : Int) -> Int noraise
+      #|t.mbtpp:3:22: error: this calls an async function, which can only be done in an async function
     ),
   )
 }

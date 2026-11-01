@@ -87,6 +87,34 @@ fn[T, e] each(xs : List[T], f : (T) -> Unit!e) -> Unit!e {
   因此是效应多态的。参数会逃逸时（比如 `compose`），省略表示纯，需要效应时要写 `!e`。
 - `!pure` 显式地要求纯，并关闭自动推导。
 
+## 错误与 async 也是效应
+
+`raise E` 和 `async` 是效应行的写法：`-> T raise E` 就是 `-> T!Raise[E]`，`async fn` 的返回类型
+有效应 `Async`。效应变量因此也覆盖它们，Prelude 的 `List::map` 等函数会跟随回调抛出错误或成为
+async：
+
+```moonbit
+suberror TooBig {
+  TooBig(Int)
+}
+
+fn check_small(x : Int) -> Int!Raise[TooBig] {
+  if x > 2 { raise TooBig(x) } else { x }
+}
+
+fn main {
+  let r = try {
+    Cons(1, Cons(5, Nil)).map(x => check_small(x))
+  } catch {
+    TooBig(n) => { println("too big: \{n}"); Nil }
+  }
+  println(r)
+}
+```
+
+翻译保持专用：错误仍编译为 MoonBit 的错误，async 仍编译为 MoonBit 原生的 async。一个效应多态的
+函数被传入 async 回调时，会生成它的原生 async 版本。
+
 ## 检查时的计算
 
 被完整处理的计算是纯的，类型检查时会计算，处理器修改 `let mut` 也可以：

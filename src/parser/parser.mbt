@@ -317,16 +317,34 @@ fn Parser::raises_opt(self : Parser) -> Expr? raise ParseError {
 /// `noraise`).
 fn Parser::effect_opt(self : Parser, is_async : Bool) -> Expr? raise ParseError {
   let pos = self.pos()
-  let row = self.row_opt()
+  let row0 = self.row_opt()
   let no_raise = self.is_same_line("noraise")
   if no_raise {
     ignore(self.advance())
   }
-  let r = if no_raise { None } else { self.raises_opt() }
+  let mut r = if no_raise { None } else { self.raises_opt() }
+  let mut is_async = is_async
+  // `!Raise[E]` is `raise E`, `!Async` is `async`
+  let row = match row0 {
+    Some(rw) => {
+      let (rest, err, a) = split_builtin_effects(rw)
+      if err is Some(_) {
+        r = err
+      }
+      is_async = is_async || a
+      // `!pure` stays an (empty) annotation: no inferred effect variable
+      if rest is EVar(_, "%RowNil") && (err is Some(_) || a) {
+        None
+      } else {
+        Some(rest)
+      }
+    }
+    None => None
+  }
   match row {
     Some(row) => {
       if is_async {
-        raise ParseError(pos, "an async function cannot have effects")
+        raise ParseError(pos, "an async function cannot have other effects yet")
       }
       return Some(
         EApp(
@@ -387,6 +405,31 @@ fn Parser::row_opt(self : Parser) -> Expr? raise ParseError {
     row = EApp(pos, EVar(pos, "%Row"), Some([items[i], row]), None)
   }
   Some(row)
+}
+
+///|
+/// `Raise[E]` (`Raise`: `Raise[Error]`) and `Async` in a row: the errors and
+/// the async effect, kept apart from the row (see `effect_opt`). Returns the
+/// other items, the error type and whether `Async` is there.
+fn split_builtin_effects(row : Expr) -> (Expr, Expr?, Bool) raise ParseError {
+  let items : Array[Expr] = []
+  let mut err : Expr? = None
+  let mut is_async = false
+  let mut r = row
+  while r is EApp(_, EVar(_, "%Row"), Some([item, rest]), _) {
+    match item {
+      EApp(_, EVar(_, "Raise"), Some([e]), _) => err = Some(e)
+      EVar(p, "Raise") => err = Some(EVar(p, "Error"))
+      EVar(_, "Async") => is_async = true
+      _ => items.push(item)
+    }
+    r = rest
+  }
+  let mut out = r
+  for i = items.length() - 1; i >= 0; i = i - 1 {
+    out = EApp(r.pos(), EVar(r.pos(), "%Row"), Some([items[i], out]), None)
+  }
+  (out, err, is_async)
 }
 
 ///|

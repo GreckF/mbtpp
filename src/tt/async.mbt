@@ -10,12 +10,24 @@
 /// of the errors it may raise (`None`: it does not raise).
 pub fn effect_of(e : Val) -> (Bool, Val?) {
   match force(e) {
-    // effects with errors (see effects.mbt)
-    VData("%Effs", [_, (err, _)]) =>
+    // effects with errors (see effects.mbt); an effect variable may stand
+    // for errors (`%Exn[E]`) and async (`%AsyncE`)
+    VData("%Effs", [(row, _), (err, _)]) => {
+      let (items, _) = row_flat(row)
+      let is_async = items.iter().any(it => force(it) is VData("%AsyncE", _))
       match force(err) {
-        VData("%NoRaise", _) => (false, None)
-        _ => (false, Some(err))
+        VData("%NoRaise", _) => {
+          let mut exn : Val? = None
+          for it in items {
+            if force(it) is VData("%Exn", [(x, _)]) && exn is None {
+              exn = Some(x)
+            }
+          }
+          (is_async, exn)
+        }
+        _ => (is_async, Some(err))
       }
+    }
     VData("%Async", [(err, _)]) =>
       match force(err) {
         VData("%NoRaise", _) => (true, None)
@@ -29,8 +41,23 @@ pub fn effect_of(e : Val) -> (Bool, Val?) {
 /// `effect_of` on a core term.
 pub fn tm_effect(e : Tm) -> (Bool, Tm?) {
   match e {
-    App(App(Global("%Effs"), _, _), Global("%NoRaise"), _) => (false, None)
-    App(App(Global("%Effs"), _, _), err, _) => (false, Some(err))
+    App(App(Global("%Effs"), row, _), err, _) => {
+      let mut is_async = false
+      let mut exn : Tm? = None
+      let mut r = row
+      while r is App(App(Global("%Row"), item, _), rest, _) {
+        match item {
+          Global("%AsyncE") => is_async = true
+          App(Global("%Exn"), x, _) => if exn is None { exn = Some(x) }
+          _ => ()
+        }
+        r = rest
+      }
+      match err {
+        Global("%NoRaise") => (is_async, exn)
+        _ => (is_async, Some(err))
+      }
+    }
     App(Global("%Async"), Global("%NoRaise"), _) => (true, None)
     App(Global("%Async"), err, _) => (true, Some(err))
     _ => (false, Some(e))

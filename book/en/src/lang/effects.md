@@ -93,6 +93,34 @@ fn[T, e] each(xs : List[T], f : (T) -> Unit!e) -> Unit!e {
   for effects.
 - `!pure` asks for a pure function explicitly, and turns off the inference.
 
+## Errors and async are effects too
+
+`raise E` and `async` are ways of writing effect rows: `-> T raise E` is `-> T!Raise[E]`, and the
+result type of an `async fn` has the effect `Async`. Effect variables therefore cover them too, and
+functions of the Prelude such as `List::map` raise, or are async, when their callback is:
+
+```moonbit
+suberror TooBig {
+  TooBig(Int)
+}
+
+fn check_small(x : Int) -> Int!Raise[TooBig] {
+  if x > 2 { raise TooBig(x) } else { x }
+}
+
+fn main {
+  let r = try {
+    Cons(1, Cons(5, Nil)).map(x => check_small(x))
+  } catch {
+    TooBig(n) => { println("too big: \{n}"); Nil }
+  }
+  println(r)
+}
+```
+
+They keep their own translation: errors still compile to MoonBit errors, and async to native MoonBit
+async. An effect polymorphic function given an async callback gets a native async version.
+
 ## Computing during type checking
 
 A fully handled computation is pure, and the checker computes it, even when the handler updates a

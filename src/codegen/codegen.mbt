@@ -40,6 +40,12 @@ priv struct Gen {
   enums_done : Array[String]
   /// Functions with a native translation.
   typed_set : Array[String]
+  /// Translating the async version of an effect polymorphic function: the
+  /// function types whose effects end with a variable are async.
+  mut async_vars : Bool
+  /// The async versions (`f_ta`) made so far, and those being made.
+  async_fns : Map[String, String]
+  async_busy : Array[String]
   /// The native result type of the function being translated.
   mut cur_result : NTy?
   /// While deciding the typed functions nothing is emitted.
@@ -1147,6 +1153,9 @@ fn Gen::new(imports : Array[(String, String)]) -> Gen {
     enums_ok: {},
     enums_done: [],
     typed_set: [],
+    async_vars: false,
+    async_fns: {},
+    async_busy: [],
     cur_result: None,
     dry: false,
     scheduled: {},
@@ -1235,6 +1244,10 @@ pub fn generate_files(
   while g.todo.length() > 0 {
     let n = g.todo.pop().unwrap()
     g.global(n)
+  }
+  // the async versions of effect polymorphic functions (typed.mbt)
+  for n, code in g.async_fns {
+    g.write_to(g.file_of(n), "\n/// " + n + " (async)\n" + code)
   }
   g.write_to(g.file_of("main"), main_code)
   match g.async_misuse {

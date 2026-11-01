@@ -105,6 +105,9 @@ fn check_src(file : String, src : String) -> Unit raise CheckError {
       // `ctl` operations (see ctl.mbt)
       @parser.DOpaque({ line: 0, col: 0, }, "%Any", 0),
       @parser.DOpaque({ line: 0, col: 0, }, "%Resume", 0),
+      // errors and async as items of effect rows (effects.mbt)
+      @parser.DOpaque({ line: 0, col: 0, }, "%Exn", 1),
+      @parser.DOpaque({ line: 0, col: 0, }, "%AsyncE", 0),
       comp_decl(),
       ..decls,
     ]

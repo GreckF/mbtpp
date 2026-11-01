@@ -36,6 +36,11 @@ fn reset_effects() -> Unit {
   effect_decls.clear()
   // the calls of `resume` in the arms of `ctl` operations (ctl.mbt)
   effect_decls.set("%Resume", [])
+  // errors and async, in rows (they keep their own translation)
+  effect_decls.set("%Exn", [])
+  effect_decls.set("%AsyncE", [])
+  open_rows.clear()
+  exec_depth.val = 0
   reset_ctl()
 }
 
@@ -592,11 +597,30 @@ fn codomain_row(ty : Val) -> Val {
   match force(ty) {
     VRaises(_, e) =>
       match force(e) {
-        VData("%Effs", [(row, _), _]) => row
-        _ => row_nil()
+        VData("%Effs", [(row, _), (err, _)]) =>
+          match force(err) {
+            VData("%NoRaise", _) => row
+            _ => row_cons(exn_item(err), row)
+          }
+        VData("%Async", [(err, _)]) =>
+          row_cons(
+            VData("%AsyncE", []),
+            match force(err) {
+              VData("%NoRaise", _) => row_nil()
+              _ => row_cons(exn_item(err), row_nil())
+            },
+          )
+        // `raise E`
+        _ => row_cons(exn_item(e), row_nil())
       }
     _ => row_nil()
   }
+}
+
+///|
+/// The errors `E` as a row item: `raise E` is `!Raise[E]`.
+fn exn_item(err : Val) -> Val {
+  VData("%Exn", [(err, Impl)])
 }
 
 ///|
@@ -631,6 +655,8 @@ fn require_effect(cxt : Cxt, item : Val) -> Unit raise ElabError {
   let name = item_effect(item)
   match name {
     Some(n) if cxt.handled.contains(n) => return
+    Some("%Exn") if cxt.can_raise => return
+    Some("%AsyncE") if cxt.can_async => return
     _ => ()
   }
   let (items, tail) = row_flat(cxt.eff_row)
@@ -644,8 +670,21 @@ fn require_effect(cxt : Cxt, item : Val) -> Unit raise ElabError {
   }
   // the new tail lives where the old one does: same arguments
   if tail is VFlex(_, sp) {
-    cxt.unify(tail, row_cons(item, VFlex(new_meta(), sp)))
+    let m = new_meta()
+    open_rows.push((m, sp.length()))
+    cxt.unify(tail, row_cons(item, VFlex(m, sp)))
     return
+  }
+  match name {
+    Some("%Exn") =>
+      cxt.fail(
+        "this call may raise an error; use it inside `try` or in a function declared with `raise`",
+      )
+    Some("%AsyncE") =>
+      cxt.fail(
+        "this calls an async function, which can only be done in an async function",
+      )
+    _ => ()
   }
   cxt.fail(
     "this performs " +
@@ -654,6 +693,39 @@ fn require_effect(cxt : Cxt, item : Val) -> Unit raise ElabError {
     cxt.show(item) +
     "` to its type)",
   )
+}
+
+///|
+/// Tails of rows extended by `require_effect`: when nothing else is found,
+/// they end the row (`finish`). The meta and its number of arguments.
+let open_rows : Array[(Int32, Int32)] = []
+
+///|
+/// End the rows that are still open.
+fn close_open_rows() -> Unit {
+  for r in open_rows {
+    let (m, n) = r
+    if metas[m].sol is None {
+      let mut t = Global("%RowNil")
+      for _ in 0..<n {
+        t = Lam("_", Expl, true, t)
+      }
+      metas[m].sol = Some(eval([], t))
+    }
+  }
+  open_rows.clear()
+}
+
+///|
+/// `require_row` where anything may be called (in a type): only the rows of
+/// lambdas are extended.
+fn require_row_lenient(cxt : Cxt, row : Val) -> Unit {
+  let (items, tail) = row_flat(row)
+  for it in [..items, tail] {
+    require_effect(cxt, it) catch {
+      _ => ()
+    }
+  }
 }
 
 ///|
@@ -678,7 +750,14 @@ fn unify_rows(ts : LTypes, r1 : Val, r2 : Val) -> Unit raise UnifyError {
     let mut found = false
     for k = 0; k < items2.length(); k = k + 1 {
       if !used[k] && item_effect(a) == item_effect(items2[k]) {
-        unify(ts, a, items2[k])
+        // the types of errors are not compared (as for `raise`)
+        if item_effect(a) == Some("%Exn") {
+          unify(ts, a, items2[k]) catch {
+            _ => ()
+          }
+        } else {
+          unify(ts, a, items2[k])
+        }
         used[k] = true
         found = true
         break

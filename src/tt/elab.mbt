@@ -670,18 +670,13 @@ fn app_core(
       }
       match force(ty) {
         VRaises(r, e) => {
-          let (is_async, err) = effect_of(e)
-          if is_async && !cxt.can_async {
-            cxt.fail(
-              "this calls an async function, which can only be done in an async function",
-            )
-          }
-          if err is Some(_) && !cxt.can_raise && !cxt.in_type {
-            cxt.fail(
-              "this call may raise an error; use it inside `try` or in a function declared with `raise`",
-            )
-          }
-          if !cxt.in_type {
+          ignore(e)
+          // errors and async are effects of the row (effects.mbt); in a type
+          // a call is not run
+          if cxt.in_type {
+            // only to find the effects of lambdas (anything may be called)
+            require_row_lenient(cxt, codomain_row(ty))
+          } else {
             require_row(cxt, codomain_row(ty))
           }
           (mark_call(cxt, t, codomain_row(ty)), r)
@@ -1546,14 +1541,20 @@ pub fn infer(cxt0 : Cxt, e : @parser.Expr) -> (Tm, Val) raise ElabError {
 
 ///|
 fn elab_raise(cxt : Cxt, x : @parser.Expr) -> Tm raise ElabError {
-  if !cxt.can_raise && !cxt.in_type {
-    cxt.fail("`raise` outside of a function declared with `raise`")
-  }
   let (t, ty) = infer_ins(cxt, x)
   match force(ty) {
     VData(d, _) if d == "Error" || (data_info(d) is Some(di) && di.is_error) =>
       ()
     _ => cxt.fail("only errors can be raised, not " + cxt.show(ty))
+  }
+  // a lambda whose type is inferred gets the errors in its row
+  if !cxt.can_raise {
+    let (_, tail) = row_flat(cxt.eff_row)
+    if tail is VFlex(_, _) {
+      require_effect(cxt, exn_item(ty))
+    } else if !cxt.in_type {
+      cxt.fail("`raise` outside of a function declared with `raise`")
+    }
   }
   // in a type: the error as a value (a `try` of the type catches it)
   if cxt.in_type {

@@ -250,7 +250,8 @@ fn Gen::native_ty_in(self : Gen, ctx : Array[TyCtx], t : @tt.Tm) -> NTy? {
         cur = b
       }
       let (r, is_async) = match cur {
-        Raises(r, e) => (r, @tt.tm_effect(e).0)
+        Raises(r, e) =>
+          (r, @tt.tm_effect(e).0 || (self.async_vars && row_has_var(e)))
         _ => (cur, false)
       }
       match self.native_ty_in(ctx2, r) {
@@ -1124,6 +1125,39 @@ fn Gen::typed_app(
         })
       (subst_args(tpl, cs), res)
     }
+    GFunc(_, _, _) if self.async_instance(n, g.ty, args) => {
+      if !self.ensure_async(n) {
+        raise NotTyped
+      }
+      let saved = self.async_vars
+      self.async_vars = true
+      let sig = self.native_sig(n)
+      self.async_vars = saved
+      let sig = match sig {
+        Some(s) if args.length() == s.params.length() => s
+        _ => raise NotTyped
+      }
+      let inst : Array[NTy] = Array::make(sig.ntvars, NAny)
+      for i = 0; i < args.length(); i = i + 1 {
+        match sig.tparams[i] {
+          Some(k) => inst[k] = self.type_arg(env, args[i])
+          None => ()
+        }
+      }
+      let ps : Array[@tt.Tm] = []
+      let tys : Array[NTy] = []
+      for i = 0; i < args.length(); i = i + 1 {
+        match sig.params[i] {
+          Some(nt) => {
+            ps.push(args[i])
+            tys.push(subst_nty(nt, inst))
+          }
+          None => ()
+        }
+      }
+      let cs = self.typed_args(env, ps, tys)
+      (self.gid(n) + "_ta(" + cs.join(", ") + ")", subst_nty(sig.result, inst))
+    }
     GFunc(_, _, _) =>
       match self.native_sig(n) {
         Some(sig) if args.length() == sig.params.length() => {
@@ -1688,7 +1722,11 @@ fn has_continue(t : @tt.Tm) -> Bool {
 
 ///|
 /// The native translation of a function, if it is in the typed fragment.
-fn Gen::typed_fn(self : Gen, name : String) -> String? {
+fn Gen::typed_fn(
+  self : Gen,
+  name : String,
+  async_version~ : Bool = false,
+) -> String? {
   let sig = match self.native_sig(name) {
     Some(s) => s
     None => return None
@@ -1733,11 +1771,15 @@ fn Gen::typed_fn(self : Gen, name : String) -> String? {
             "[" + self.tvars_with_bounds(sig.ntvars, sig.bounds) + "]"
           }
           Some(
-            (if @tt.is_async_global(name) { "async fn" } else { "fn" }) +
+            (if @tt.is_async_global(name) || async_version {
+              "async fn"
+            } else {
+              "fn"
+            }) +
             gen +
             " " +
             id +
-            "_t(" +
+            (if async_version { "_ta(" } else { "_t(" }) +
             params.join(", ") +
             ") -> " +
             self.mbt_ty(sig.result) +
@@ -1860,5 +1902,85 @@ fn Gen::mbt_params(self : Gen, ps : Array[NTy]) -> String {
     ""
   } else {
     ps.map(p => self.mbt_ty(p)).join(", ")
+  }
+}
+
+///|
+/// Do the effects `e` of a codomain end with an effect variable?
+fn row_has_var(e : @tt.Tm) -> Bool {
+  match e {
+    App(App(Global("%Effs"), row, _), _, _) => {
+      let mut r = row
+      while r is App(App(Global("%Row"), _, _), rest, _) {
+        r = rest
+      }
+      flatten_app(r).0 is Var(_)
+    }
+    _ => false
+  }
+}
+
+///|
+/// Does `t` mention the global `g`?
+fn tm_mentions(t : @tt.Tm, g : String) -> Bool {
+  match t {
+    Global(n) => n == g
+    App(f, a, _) => tm_mentions(f, g) || tm_mentions(a, g)
+    _ => false
+  }
+}
+
+///|
+/// Is this call of `n` (type `ty`) one where its effect variable is async
+/// (given an async callback, or in an async version passing its own)?
+fn Gen::async_instance(
+  self : Gen,
+  n : String,
+  ty : @tt.Tm,
+  args : Array[@tt.Tm],
+) -> Bool {
+  let mut t = ty
+  for i = 0; i < args.length(); i = i + 1 {
+    match t {
+      Pi(_, Impl, _, U, b) => {
+        if @tt.only_in_rows(b) {
+          if tm_mentions(args[i], "%AsyncE") {
+            return true
+          }
+          if self.async_vars && flatten_app(args[i]).0 is Var(_) {
+            return true
+          }
+        }
+        t = b
+      }
+      Pi(_, _, _, _, b) => t = b
+      _ => return false
+    }
+  }
+  ignore(n)
+  false
+}
+
+///|
+/// Make the async version `f_ta` of the effect polymorphic function `n`:
+/// its function parameters with effect variables are async functions.
+fn Gen::ensure_async(self : Gen, n : String) -> Bool {
+  if self.async_fns.contains(n) || self.async_busy.contains(n) {
+    return true
+  }
+  self.async_busy.push(n)
+  let saved = self.async_vars
+  self.async_vars = true
+  let code = self.typed_fn(n, async_version=true)
+  self.async_vars = saved
+  self.async_busy.retain(x => x != n)
+  match code {
+    Some(c) => {
+      if !self.dry {
+        self.async_fns.set(n, c)
+      }
+      true
+    }
+    None => false
   }
 }

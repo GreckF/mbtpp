@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-e8ef89c5.js";
+            window.path_to_searchindex_js = "searchindex-1d328ce0.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-94125c94.js"></script>
@@ -1848,6 +1848,29 @@ polymorphic. When the parameter escapes (as in <code>compose</code>), leaving it
 for effects.</li>
 <li><code>!pure</code> asks for a pure function explicitly, and turns off the inference.</li>
 </ul>
+<h2 id="errors-and-async-are-effects-too"><a class="header" href="#errors-and-async-are-effects-too">Errors and async are effects too</a></h2>
+<p><code>raise E</code> and <code>async</code> are ways of writing effect rows: <code>-&gt; T raise E</code> is <code>-&gt; T!Raise[E]</code>, and the
+result type of an <code>async fn</code> has the effect <code>Async</code>. Effect variables therefore cover them too, and
+functions of the Prelude such as <code>List::map</code> raise, or are async, when their callback is:</p>
+<pre><code class="language-moonbit">suberror TooBig {
+  TooBig(Int)
+}
+
+fn check_small(x : Int) -&gt; Int!Raise[TooBig] {
+  if x &gt; 2 { raise TooBig(x) } else { x }
+}
+
+fn main {
+  let r = try {
+    Cons(1, Cons(5, Nil)).map(x =&gt; check_small(x))
+  } catch {
+    TooBig(n) =&gt; { println("too big: \{n}"); Nil }
+  }
+  println(r)
+}
+</code></pre>
+<p>They keep their own translation: errors still compile to MoonBit errors, and async to native MoonBit
+async. An effect polymorphic function given an async callback gets a native async version.</p>
 <h2 id="computing-during-type-checking"><a class="header" href="#computing-during-type-checking">Computing during type checking</a></h2>
 <p>A fully handled computation is pure, and the checker computes it, even when the handler updates a
 <code>let mut</code>:</p>

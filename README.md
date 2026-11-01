@@ -11,8 +11,7 @@ errors and `async`, it has dependent types, indexed types, dependent pattern
 matching, propositions and proofs (with a few tactics), and algebraic effects.
 It comes with
 
-- a **type checker** that computes during checking (it even runs functions with
-  mutable state, and treats raised errors as values of the logic);
+- a **dependent type checker**;
 - a tree-walking **interpreter**;
 - a **compiler** to MoonBit, which generates native MoonBit code for the parts
   MoonBit's types can express;

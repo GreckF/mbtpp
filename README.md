@@ -5,8 +5,18 @@ English | [中文](README.zh-CN.md)
 > **Disclaimer: this is a pure vibe-coding project for fun; please don't take it seriously.**
 > The code has not been carefully reviewed.
 
-A small dependently typed language with MoonBit syntax: a type checker and a
-tree-walking interpreter, written in MoonBit.
+A small dependently typed language with MoonBit syntax, written in MoonBit. On
+top of MoonBit's `fn`, `enum`, `struct`, `trait`, `match`, `let mut`, loops,
+errors and `async`, it has dependent types, indexed types, dependent pattern
+matching, propositions and proofs (with a few tactics), and algebraic effects.
+It comes with
+
+- a **type checker** that computes during checking (it even runs functions with
+  mutable state, and treats raised errors as values of the logic);
+- a tree-walking **interpreter**;
+- a **compiler** to MoonBit, which generates native MoonBit code for the parts
+  MoonBit's types can express;
+- **`moonpp`**, a build tool modelled on `moon`.
 
 The language roughly follows
 [写给一般月兔用户的MoonBit++入门](https://zhuanlan.zhihu.com/p/2067605478985749711)
@@ -80,9 +90,9 @@ moonpp run --compiled          # compile to MoonBit and run it with `moon run`
 
 A project is a MoonBit module (`moon.mod`); a package is a directory of
 `.mbtpp` files. The MoonBit packages a package uses are listed in the
-`import` block of its `moon.pkg` and referred to as `@pkg.name`; they are
-only type checked by the interpreter (running a call to them stops with an
-error), and really called by the compiled program (see
+`import` block of its `moon.pkg` and referred to as `@pkg.name`. Calls to them
+are type checked, but only the compiled program runs them: the interpreter
+stops with an error when it reaches one (see
 [examples/import](examples/import)). Projects with the old `moon.mod.json` /
 `moon.pkg.json` are still read; `moon fmt` migrates them.
 
@@ -94,8 +104,8 @@ error), and really called by the compiled program (see
 without moonpp.
 
 The compiler translates MoonBit++ to MoonBit: functions over types MoonBit
-can express (numbers, strings, datatypes with type parameters, functions)
-become ordinary MoonBit code, e.g. `Vector[T](n)` becomes
+can express (numbers, strings, arrays, datatypes with type parameters,
+functions) become ordinary MoonBit code, e.g. `Vector[T](n)` becomes
 `enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }`; the rest (dependent
 types computed at run time, ...) uses a uniform value representation.
 Types and traits marked `#mbt` translate trivially: `#mbt enum Tree[T]`
@@ -111,7 +121,9 @@ their instances, which become MoonBit impls for `#mbt` types;
 `derive(ToJson, FromJson, Debug)` uses MoonBit's own derive (see
 [examples/derive.mbtpp](examples/derive.mbtpp)). Trait objects `&Tr` work as
 in MoonBit and can be passed to MoonBit functions (see
-[examples/trait_objects.mbtpp](examples/trait_objects.mbtpp)).
+[examples/trait_objects.mbtpp](examples/trait_objects.mbtpp)). Errors compile
+to MoonBit errors and `async` functions to MoonBit's native `async`; effect
+operations that always resume in tail position become plain function calls.
 
 `moon test` runs the examples in `examples/` and the tests in `src/*_test.mbt`.
 
@@ -121,5 +133,6 @@ The manual (language, moonpp, MoonBit interop) is online in English at
 and [book/src](book/src) (an [mdBook](https://github.com/rust-lang/mdBook):
 `node scripts/build-book.mjs` writes `docs/book` and `docs/book/en`,
 `node scripts/check-book.mjs` checks the examples). The design
-notes are in [doc/mbtpp/proposal.md](doc/mbtpp/proposal.md), the
-implementation in [doc/mbtpp/implementation.md](doc/mbtpp/implementation.md).
+notes are in [doc/mbtpp/proposal.md](doc/mbtpp/proposal.md) (algebraic effects:
+[doc/mbtpp/effects.md](doc/mbtpp/effects.md), in Chinese), the implementation in
+[doc/mbtpp/implementation.md](doc/mbtpp/implementation.md).

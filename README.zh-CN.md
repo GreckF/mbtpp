@@ -5,7 +5,14 @@
 > **声明：这是一个纯 vibe coding 的娱乐项目，请不要认真看待。**
 > 代码未经严格审查。
 
-一门使用 MoonBit 语法的小型依赖类型语言：包括类型检查器和树遍历解释器，用 MoonBit 编写。
+一门使用 MoonBit 语法的小型依赖类型语言，用 MoonBit 编写。在 MoonBit 的 `fn`、`enum`、
+`struct`、`trait`、`match`、`let mut`、循环、错误和 `async` 之上，加入了依赖类型、索引类型、
+依赖模式匹配、命题与证明（以及简单的策略）和代数效应。包括：
+
+- **类型检查器**：检查时会计算（使用可变状态的函数也会被执行，抛出的错误是逻辑中的值）；
+- 树遍历的**解释器**；
+- **编译器**：翻译到 MoonBit，MoonBit 类型能表达的部分生成原生 MoonBit 代码；
+- **`moonpp`**：仿照 `moon` 的构建工具。
 
 语言标准大致来自：
 [写给一般月兔用户的MoonBit++入门](https://zhuanlan.zhihu.com/p/2067605478985749711)（知乎，作者：用户名可以重复吗）
@@ -73,8 +80,8 @@ moonpp run --compiled          # 编译到 MoonBit 并用 `moon run` 运行
 ```
 
 项目是一个 MoonBit 模块（`moon.mod`）；包是一个包含 `.mbtpp` 文件的目录。包用到的 MoonBit
-包列在其 `moon.pkg` 的 `import` 块中，以 `@pkg.name` 引用；解释器只对它们做类型检查（运行到
-对它们的调用会报错停止），编译后的程序才会真正调用它们（见
+包列在其 `moon.pkg` 的 `import` 块中，以 `@pkg.name` 引用。对它们的调用会做类型检查，但只有
+编译后的程序能运行它们：解释器运行到这样的调用时报错停止（见
 [examples/import](examples/import)）。仍然可以读取旧的 `moon.mod.json` / `moon.pkg.json`
 项目，`moon fmt` 会迁移它们。
 
@@ -83,8 +90,8 @@ moonpp run --compiled          # 编译到 MoonBit 并用 `moon run` 运行
 `.mbtpp` 文件对应一个 `.mbt` 文件（另有 `mbtpp_prelude.mbt`、`mbtpp_imports.mbt` 和
 `mbtpp_runtime.mbt`），所以在那里不用 moonpp 也能 `moon run <pkg>`。
 
-编译器把 MoonBit++ 翻译成 MoonBit：处理 MoonBit 能表达的类型（数字、字符串、带类型参数的
-数据类型、函数）的函数会变成普通的 MoonBit 代码，例如 `Vector[T](n)` 变成
+编译器把 MoonBit++ 翻译成 MoonBit：处理 MoonBit 能表达的类型（数字、字符串、数组、带类型
+参数的数据类型、函数）的函数会变成普通的 MoonBit 代码，例如 `Vector[T](n)` 变成
 `enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }`；其余部分（运行时计算的依赖类型等）使用
 统一的值表示。标了 `#mbt` 的类型和 trait 直接对应：`#mbt enum Tree[T]` 变成 MoonBit 的
 `enum Tree[T0]`，`#mbt trait` 变成带真正 `impl` 和约束的 MoonBit trait；导入的 `pub(all)`
@@ -95,7 +102,8 @@ moonpp run --compiled          # 编译到 MoonBit 并用 `moon run` 运行
 生成它们的实例；对 `#mbt` 类型，这些实例编译成 MoonBit impl；`derive(ToJson, FromJson, Debug)`
 使用 MoonBit 自己的 derive（见 [examples/derive.mbtpp](examples/derive.mbtpp)）。trait 对象 `&Tr`
 与 MoonBit 中的相同，并且可以传给 MoonBit 函数（见
-[examples/trait_objects.mbtpp](examples/trait_objects.mbtpp)）。
+[examples/trait_objects.mbtpp](examples/trait_objects.mbtpp)）。错误编译成 MoonBit 的错误，
+`async` 函数编译成 MoonBit 原生的 `async`；总是在末尾恢复的效应操作编译成普通的函数调用。
 
 `moon test` 运行 `examples/` 中的示例和 `src/*_test.mbt` 中的测试。
 
@@ -104,5 +112,6 @@ moonpp run --compiled          # 编译到 MoonBit 并用 `moon run` 运行
 [book/en/src](book/en/src)（[mdBook](https://github.com/rust-lang/mdBook)：
 `node scripts/build-book.mjs` 生成 `docs/book` 和 `docs/book/en`，
 `node scripts/check-book.mjs` 检查其中的示例）。设计说明见
-[doc/mbtpp/proposal.md](doc/mbtpp/proposal.md)，实现说明见
+[doc/mbtpp/proposal.md](doc/mbtpp/proposal.md)（代数效应见
+[doc/mbtpp/effects.md](doc/mbtpp/effects.md)），实现说明见
 [doc/mbtpp/implementation.md](doc/mbtpp/implementation.md)。

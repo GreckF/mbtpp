@@ -31,6 +31,8 @@ fn contains_imperative(t : Tm) -> Bool {
     | ArrayLit(_)
     | Seq(_, _)
     | Defer(_, _) => true
+    // a fresh marker of a handler of `ctl` operations (run, see exec.mbt)
+    App(Global("%effect_marker"), _, _) => true
     Lam(_, _, _, b) => contains_imperative(b)
     App(f, a, _) => contains_imperative(f) || contains_imperative(a)
     Pi(_, _, _, a, b) => contains_imperative(a) || contains_imperative(b)

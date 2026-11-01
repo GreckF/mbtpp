@@ -81,9 +81,10 @@ fn has_effect(v : Val, print_ok : Bool) -> Bool {
       env.iter().any(x => has_effect(x, false)) ||
       vs.iter().any(x => has_effect(x, false)) ||
       sp_eff(sp)
-    // a function with mutable state is only run when called
+    // a function that only a run can run (with mutable state) is only run
+    // when called
     VLam(_, _, _, cl) =>
-      contains_imperative(cl.body) ||
+      needs_run(cl.body) ||
       cl.env.iter().any(x => has_effect(x, false))
     VPi(_, _, _, a, cl) =>
       has_effect(a, false) || cl.env.iter().any(x => has_effect(x, false))
@@ -122,7 +123,13 @@ fn captures_mut(t : Tm, xe : XEnv, depth : Int32, in_lam : Bool) -> Bool {
         cl.cond.map(c => go(c, k)).unwrap_or(false) || go(cl.body, k)
       })
     Raises(a, e) => go(a, 0) || go(e, 0)
-    Assign(_, v) | Return(v) | Raise(v) => go(v, 0)
+    // assigning a variable of the run also shares it
+    Assign(ix, v) =>
+      (in_lam &&
+      ix >= depth &&
+      xe.muts.get(xe.slot(ix - depth)).unwrap_or(false)) ||
+      go(v, 0)
+    Return(v) | Raise(v) => go(v, 0)
     While(c, b, s) => go(c, 0) || go(b, 0) || go(s, 0)
     Seq(a, b) | Defer(a, b) => go(a, 0) || go(b, 0)
     ArrayLit(es) => es.iter().any(e => go(e, 0))
@@ -140,6 +147,7 @@ fn exec_call(n : String, body : Tm, arity : Int32, sp : Spine) -> Val? {
   last_unfolded.val = Some(n)
   if exec_depth.val == 0 {
     xclosures.clear()
+    exec_markers.val = 0
   }
   let mut xe : XEnv = { vals: [], muts: [], }
   let mut b = body
@@ -315,51 +323,12 @@ fn exec(xe : XEnv, t : Tm) -> Val raise ExecStop {
       }
       xapply_spine(r, vals[arity:].to_array())
     }
-    App(f, a, i) => {
-      let fv = exec(xe, f)
-      let av = exec(xe, a)
-      match force(fv) {
-        // a closure sharing the state of the run
-        VStuck(_, _, []) as c if xclo_index(c) is Some(k) => {
-          let (ce, lam) = xclosures[k]
-          match lam {
-            Lam(_, _, _, body) =>
-              exec(ce.push(av, false), body) catch {
-                Ret(v) => v
-                Brk | Cont => raise XStuck
-                e => raise e
-              }
-            _ => raise XStuck
-          }
-        }
-        // a lambda that gets or holds such a closure: run its body
-        VLam(_, _, _, cl) if xclosures.length() > 0 &&
-          (has_xclo(av) || cl.env.iter().any(has_xclo)) => {
-          let ce : XEnv = {
-            vals: cl.env.map(v => Ref::new(v)),
-            muts: cl.env.map(_ => false),
-          }
-          exec(ce.push(av, false), cl.body) catch {
-            Ret(v) => v
-            Brk | Cont => raise XStuck
-            e => raise e
-          }
-        }
-        // a lambda with mutable state: run its body
-        VLam(_, _, _, cl) if contains_imperative(cl.body) => {
-          let ce : XEnv = {
-            vals: cl.env.map(v => Ref::new(v)),
-            muts: cl.env.map(_ => false),
-          }
-          exec(ce.push(av, false), cl.body) catch {
-            Ret(v) => v
-            Brk | Cont => raise XStuck
-            e => raise e
-          }
-        }
-        _ => app_val(fv, av, i)
-      }
+    // the marker of a handler of `ctl` operations: fresh in the run
+    App(Global("%effect_marker"), _, _) => {
+      exec_markers.val = exec_markers.val + 1
+      VLit(LInt(exec_markers.val))
     }
+    App(f, a, i) => xapply(exec(xe, f), exec(xe, a), i)
     // a lambda that uses a `let mut` variable shares it: a closure of the
     // run, which cannot leave it (a handler updating a variable)
     Lam(_, _, _, _) =>
@@ -429,7 +398,7 @@ fn run_head(t : Tm) -> (String, Tm, Int32)? {
         Some({ kind: GFunc(Some(body), imp, arity), .. }) if args.length() >=
           arity &&
           arity > 0 &&
-          (imp || fn_raises(n, arity)) &&
+          (imp || fn_raises(n, arity) || n.has_prefix("%eff_")) &&
           !is_async_global(n) &&
           can_unfold(n) => Some((n, body, arity))
         _ => None
@@ -480,6 +449,10 @@ let xclosures : Array[(XEnv, Tm)] = []
 ///|
 /// The nesting of runs (the closures are dropped when a run starts at 0).
 let exec_depth : Ref[Int32] = Ref::new(0)
+
+///|
+/// The markers given to the handlers of `ctl` operations in the current run.
+let exec_markers : Ref[Int32] = Ref::new(0)
 
 ///|
 fn xclo_val(k : Int32) -> Val {
@@ -539,21 +512,61 @@ fn global_call(t : Tm) -> (String, Tm, Int32)? {
 fn xapply_spine(f : Val, sp : Spine) -> Val raise ExecStop {
   let mut v = f
   for a in sp {
-    v = match force(v) {
-      VStuck(_, _, []) as c if xclo_index(c) is Some(k) => {
-        let (ce, lam) = xclosures[k]
-        match lam {
-          Lam(_, _, _, body) =>
-            exec(ce.push(a.0, false), body) catch {
-              Ret(r) => r
-              Brk | Cont => raise XStuck
-              e => raise e
-            }
-          _ => raise XStuck
-        }
-      }
-      _ => app_val(v, a.0, a.1)
-    }
+    v = xapply(v, a.0, a.1)
   }
   v
+}
+
+///|
+/// Apply a value to an argument in a run: closures of the run, and lambdas
+/// that get or hold them or have mutable state, are run.
+fn xapply(fv : Val, av : Val, i : Icit) -> Val raise ExecStop {
+  let run_body = (ce : XEnv, body : Tm) => {
+    exec(ce.push(av, false), body) catch {
+      Ret(v) => v
+      Brk | Cont => raise XStuck
+      e => raise e
+    }
+  }
+  let lam_env = (cl : Closure) => {
+    let ce : XEnv = {
+      vals: cl.env.map(v => Ref::new(v)),
+      muts: cl.env.map(_ => false),
+    }
+    ce
+  }
+  match force(fv) {
+    // a closure sharing the state of the run
+    VStuck(_, _, []) as c if xclo_index(c) is Some(k) => {
+      let (ce, lam) = xclosures[k]
+      match lam {
+        Lam(_, _, _, body) => run_body(ce, body)
+        _ => raise XStuck
+      }
+    }
+    // a lambda that gets or holds such a closure: run its body
+    VLam(_, _, _, cl) if xclosures.length() > 0 &&
+      (has_xclo(av) || cl.env.iter().any(has_xclo)) =>
+      run_body(lam_env(cl), cl.body)
+    // a lambda with mutable state: run its body
+    VLam(_, _, _, cl) if contains_imperative(cl.body) =>
+      run_body(lam_env(cl), cl.body)
+    _ => app_val(fv, av, i)
+  }
+}
+
+///|
+/// Does `t` have constructs that evaluation cannot handle, only a run (like
+/// `contains_imperative`, but `a; b` and `try` are evaluated)?
+fn needs_run(t : Tm) -> Bool {
+  match t {
+    Seq(a, b) => needs_run(a) || needs_run(b)
+    Try(b, cls) => needs_run(b) || cls.iter().any(cl => needs_run(cl.body))
+    Lam(_, _, _, b) => needs_run(b)
+    App(f, a, _) => needs_run(f) || needs_run(a)
+    Let(_, a, v, b) => needs_run(a) || needs_run(v) || needs_run(b)
+    Match(ss, cls) =>
+      ss.iter().any(needs_run) || cls.iter().any(cl => needs_run(cl.body))
+    _ => contains_imperative(t)
+  }
 }

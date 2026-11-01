@@ -59,6 +59,8 @@ fn expand_effects(
 fn expand_effect(d : @parser.Decl) -> @parser.Decl raise ElabError {
   match d {
     DPub(inner) => DPub(expand_effect(inner))
+    DMbt(p, n, ro, inner) => DMbt(p, n, ro, expand_effect(inner))
+    DLimit(p, n, inner) => DLimit(p, n, expand_effect(inner))
     DEffect(ed) => {
       let ops : Array[String] = []
       for op in ed.ops {
@@ -335,7 +337,7 @@ fn elab_handle(
     cap_tys.push(ty)
     bc = bc.bind(cap_name(e), ty)
   }
-  bc = { ..bc, handled: [..cxt.handled, ..effs] }
+  bc = { ..bc, handled: [..cxt.handled, ..effs], }
   // the body, then the error arms
   let inner = if err_arms.length() > 0 {
     @parser.ETry(pos, body, err_arms, None)
@@ -371,7 +373,9 @@ fn elab_handle(
       }
       fields.push((op, f))
     }
-    caps.push(check({ ..cxt, arm_lams: true }, EStruct(pos, fields), cap_tys[k]))
+    caps.push(
+      check({ ..cxt, arm_lams: true, }, EStruct(pos, fields), cap_tys[k]),
+    )
   }
   let mut t = tb
   for k = effs.length() - 1; k >= 0; k = k - 1 {
@@ -544,9 +548,11 @@ fn require_effect(cxt : Cxt, item : Val) -> Unit raise ElabError {
     return
   }
   cxt.fail(
-    "this performs " + cxt.show(item) +
+    "this performs " +
+    cxt.show(item) +
     ", which is not handled here and not in the effects of the function (add `!" +
-    cxt.show(item) + "` to its type)",
+    cxt.show(item) +
+    "` to its type)",
   )
 }
 
@@ -599,7 +605,8 @@ fn unify_rows(ts : LTypes, r1 : Val, r2 : Val) -> Unit raise UnifyError {
     // tails are `%RowNil`, effect variables or metas
     match (tail1, tail2) {
       (VData("%RowNil", _), VData("%RowNil", _)) => ()
-      (VData("%RowNil", _), VRigid(_, _)) | (VRigid(_, _), VData("%RowNil", _)) =>
+      (VData("%RowNil", _), VRigid(_, _))
+      | (VRigid(_, _), VData("%RowNil", _)) =>
         raise UnifyError("different effects")
       _ => unify(ts, tail1, tail2)
     }
@@ -615,4 +622,202 @@ fn unify_rows(ts : LTypes, r1 : Val, r2 : Val) -> Unit raise UnifyError {
 ///|
 fn is_row(v : Val) -> Bool {
   v is VData("%Row" | "%RowNil", _)
+}
+
+// ---------------------------------------------------------------------------
+// Effect polymorphism without annotation
+
+///|
+/// A function parameter `f : (A) -> B` without effects that does not escape
+/// the call (the body only calls it, or passes it, or a lambda that only does
+/// so, directly as an argument) may have any effects: the function gets an
+/// effect variable `e`, added to the parameter's type and to its own. The
+/// signature with `e` is the function's type.
+fn auto_effects(fd : @parser.FnDecl) -> @parser.FnDecl {
+  if fd.is_lemma {
+    return fd
+  }
+  let body = match fd.body {
+    BodyExpr(b) => b
+    BodyExtern(_) => return fd
+  }
+  let params = match fd.params {
+    Some(ps) => ps
+    None => return fd
+  }
+  // not for async functions, and only when the function has no effect
+  // variable of its own
+  match fd.raises {
+    Some(EApp(_, EVar(_, "%Async"), _, _)) => return fd
+    Some(EApp(_, EVar(_, "%Effs"), Some([row, _]), _)) =>
+      if !(row_exprs(row).1 is EVar(_, "%RowNil")) {
+        return fd
+      }
+    _ => ()
+  }
+  let transparent = params.map(p => {
+    match p.ty {
+      Some(EPi(_, _, _, _, raises)) =>
+        !(raises is Some(EApp(_, EVar(_, "%Effs" | "%Async"), _, _))) &&
+        !escapes(body, p.name)
+      _ => false
+    }
+  })
+  if !transparent.iter().any(b => b) {
+    return fd
+  }
+  let mut e = "e"
+  let mut k = 1
+  while fd.impl_params.iter().any(b => b.name == e) ||
+        params.iter().any(b => b.name == e) {
+    e = "e" + k.to_string()
+    k = k + 1
+  }
+  let pos = fd.pos
+  let with_e = (raises : @parser.Expr?) => {
+    let err : @parser.Expr = match raises {
+      Some(EApp(_, EVar(_, "%Effs"), Some([_, err]), _)) => err
+      Some(err) => err
+      None => EVar(pos, "%NoRaise")
+    }
+    let row : @parser.Expr = match raises {
+      Some(EApp(_, EVar(_, "%Effs"), Some([row, _]), _)) => {
+        let (items, _) = row_exprs(row)
+        let mut r : @parser.Expr = EVar(pos, e)
+        for i = items.length() - 1; i >= 0; i = i - 1 {
+          r = EApp(pos, EVar(pos, "%Row"), Some([items[i], r]), None)
+        }
+        r
+      }
+      _ => EVar(pos, e)
+    }
+    Some(@parser.EApp(pos, EVar(pos, "%Effs"), Some([row, err]), None))
+  }
+  let params2 = params.mapi((i, p) => {
+    if transparent[i] {
+      match p.ty {
+        Some(EPi(pp, impls, expl, cod, raises)) =>
+          { ..p, ty: Some(EPi(pp, impls, expl, cod, with_e(raises))), }
+        _ => p
+      }
+    } else {
+      p
+    }
+  })
+  {
+    ..fd,
+    impl_params: [
+      ..fd.impl_params,
+      { pos, name: e, ty: None, kind: Positional, },
+    ],
+    params: Some(params2),
+    raises: with_e(fd.raises),
+  }
+}
+
+///|
+/// Does the parameter `x` (a function) escape in `e`: is it used other than
+/// called, or passed directly as an argument (alone, or in a lambda that is
+/// itself such an argument)?
+fn escapes(e : @parser.Expr, x : String) -> Bool {
+  let arg_escapes = (a : @parser.Expr) => {
+    match a {
+      EVar(_, y) if y == x => false
+      ELam(_, _, ps, _, b) => !ps.iter().any(p => p.name == x) && escapes(b, x)
+      _ => escapes(a, x)
+    }
+  }
+  match e {
+    EVar(_, y) => y == x
+    EApp(_, EVar(_, y), _, args) if y == x =>
+      args.unwrap_or([]).iter().any(arg_escapes)
+    EApp(_, f, impls, args) =>
+      escapes(f, x) ||
+      impls.unwrap_or([]).iter().any(a => escapes(a, x)) ||
+      args.unwrap_or([]).iter().any(arg_escapes)
+    EMethod(_, recv, _, _, args) =>
+      escapes(recv, x) || args.iter().any(arg_escapes)
+    EBlock(_, stmts) => stmts.iter().any(s => stmt_escapes(s, x))
+    EIf(_, c, t, f) =>
+      escapes(c, x) ||
+      escapes(t, x) ||
+      f.map(g => escapes(g, x)).unwrap_or(false)
+    EMatch(_, s, _, arms) => escapes(s, x) || arms_escape(arms, x)
+    ETry(_, b, arms, ok) =>
+      escapes(b, x) ||
+      arms_escape(arms, x) ||
+      ok.map(o => arms_escape(o, x)).unwrap_or(false)
+    EBin(_, _, a, b) => escapes(a, x) || escapes(b, x)
+    EUn(_, _, a) | EAnn(_, a, _) | EField(_, a, _) => escapes(a, x)
+    EReturn(_, v) => v.map(a => escapes(a, x)).unwrap_or(false)
+    ELit(_, _) | EHole(_) | EType(_) | EProp(_) => false
+    // anything else: any use is an escape
+    _ => mentions(e, x)
+  }
+}
+
+///|
+fn arms_escape(arms : Array[@parser.Arm], x : String) -> Bool {
+  arms
+  .iter()
+  .any(a => {
+    a.cond.map(c => escapes(c, x)).unwrap_or(false) ||
+    a.rhs.map(r => escapes(r, x)).unwrap_or(false)
+  })
+}
+
+///|
+fn stmt_escapes(s : @parser.Stmt, x : String) -> Bool {
+  match s {
+    SExpr(_, e) | SDefer(_, e) => escapes(e, x)
+    SLet(_, _, _, v) | SLetMut(_, _, _, v) => escapes(v, x)
+    SWhile(_, c, b) => escapes(c, x) || escapes(b, x)
+    SForIn(_, _, it, b) => escapes(it, x) || escapes(b, x)
+    SFor(_, inits, c, steps, b) =>
+      inits.iter().any(i => escapes(i.1, x)) ||
+      c.map(g => escapes(g, x)).unwrap_or(false) ||
+      steps.iter().any(i => escapes(i.1, x)) ||
+      escapes(b, x)
+    SLoopX(_, _, inner, nb) =>
+      stmt_escapes(inner, x) || nb.map(g => escapes(g, x)).unwrap_or(false)
+    SGuard(_, c, el) =>
+      escapes(c, x) || el.map(g => escapes(g, x)).unwrap_or(false)
+    SAssign(_, _, _, v) => escapes(v, x)
+    _ => mention_walk_stmt(s, x)
+  }
+}
+
+///|
+fn mention_walk_stmt(s : @parser.Stmt, x : String) -> Bool {
+  let found = Ref::new(false)
+  mention_walk_s(s, x, found)
+  found.val
+}
+
+///|
+/// Is the variable bound by `Pi(x, _, _, _, b)` only used in effect rows of
+/// `b` (an effect variable)? It is erased by the native code.
+pub fn only_in_rows(b : Tm) -> Bool {
+  !used_outside_rows(b, 0)
+}
+
+///|
+fn used_outside_rows(t : Tm, ix : Int32) -> Bool {
+  match t {
+    Var(j) => j == ix
+    Raises(a, App(App(Global("%Effs"), _, _), err, _)) =>
+      used_outside_rows(a, ix) || used_outside_rows(err, ix)
+    App(f, a, _) => used_outside_rows(f, ix) || used_outside_rows(a, ix)
+    Pi(_, _, _, a, b) =>
+      used_outside_rows(a, ix) || used_outside_rows(b, ix + 1)
+    Lam(_, _, _, b) => used_outside_rows(b, ix + 1)
+    Let(_, a, v, b) =>
+      used_outside_rows(a, ix) ||
+      used_outside_rows(v, ix) ||
+      used_outside_rows(b, ix + 1)
+    Raises(a, e) => used_outside_rows(a, ix) || used_outside_rows(e, ix)
+    // anything else: a use, to be safe
+    Global(_) | U | PropU | Lit(_) => false
+    _ => true
+  }
 }

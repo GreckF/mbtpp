@@ -66,7 +66,13 @@ fn mention_walk(e : @parser.Expr, x : String, found : Ref[Bool]) -> Unit {
     | EField(_, a, _)
     | EUn(_, _, a)
     | ETryQ(_, a)
-    | ERaise(_, a) => walk(a)
+    | ERaise(_, a)
+    | EMonad(_, a)
+    | EBind(_, a) => walk(a)
+    ERange(_, a, b, _) => {
+      walk(a)
+      walk(b)
+    }
     EPerform(_, _, args) => args.each(walk)
     EMethod(_, a, _, _, args) => {
       walk(a)

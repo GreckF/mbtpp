@@ -471,10 +471,17 @@ fn raising_cod(
   match raises {
     Some(r) => {
       if is_prop {
+        let what = if r is EApp(_, EVar(_, "%Effs"), _, _) {
+          "have effects"
+        } else {
+          "raise errors"
+        }
         cxt
         .at(r.pos())
         .fail(
-          "a function that returns a proof cannot raise errors (proofs are erased at run time)",
+          "a function that returns a proof cannot " +
+          what +
+          " (proofs are erased at run time)",
         )
       }
       Raises(ct, check_type(cxt, r))
@@ -1325,7 +1332,7 @@ fn infer_lam_type(
   impls : Array[@parser.Binder],
   ps : Array[@parser.Binder],
   ret : @parser.Expr?,
-  row? : Tm? = None,
+  row~ : Tm? = None,
 ) -> (Tm, Val) raise ElabError {
   reject_tagged(cxt, ps)
   let (c1, bs1) = elab_impl_binders(cxt, impls)
@@ -1339,7 +1346,11 @@ fn infer_lam_type(
       Raises(
         r,
         App(
-          App(Global("%Effs"), tm_shift(m, bs1.length() + bs2.length(), 0), Impl),
+          App(
+            Global("%Effs"),
+            tm_shift(m, bs1.length() + bs2.length(), 0),
+            Impl,
+          ),
           Global("%NoRaise"),
           Impl,
         ),

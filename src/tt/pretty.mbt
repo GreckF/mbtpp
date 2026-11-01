@@ -325,14 +325,12 @@ fn show_prec(names : Array[String], t : Tm, prec : Int32) -> String {
         items.push(show_prec(names, item, 2))
         r = rest
       }
-      if !(r is Global("%RowNil")) {
-        items.push(show_prec(names, r, 2))
+      // an effect variable; an unknown row (a meta) is not shown
+      match flatten_app(r).0 {
+        Global("%RowNil") | Meta(_) | InsertedMeta(_, _) => ()
+        _ => items.push(show_prec(names, r, 2))
       }
-      let effs = if items.length() == 0 {
-        ""
-      } else {
-        "!" + items.join(" + ")
-      }
+      let effs = if items.length() == 0 { "" } else { "!" + items.join(" + ") }
       let errs = if err is Global("%NoRaise") {
         ""
       } else {

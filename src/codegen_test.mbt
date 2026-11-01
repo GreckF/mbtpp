@@ -117,7 +117,7 @@ test "codegen: indexed datatypes become generic enums; indices are erased" {
     content=(
       #|enum E_Vector[T0] {
       #|fn[T0, T1] f_vector_map_t(self : E_Vector[T0], f : (T0) -> T1 raise) -> E_Vector[T1] raise {
-      #|fn f_vector_map(a3 : Value, a4 : Value) -> Value raise {
+      #|fn f_vector_map(a4 : Value, a5 : Value) -> Value raise {
       #|fn[T0] f_vector_append_t(self : E_Vector[T0], ys : E_Vector[T0]) -> E_Vector[T0] raise {
       #|fn f_vector_append(a3 : Value, a4 : Value) -> Value raise {
       #|fn main {

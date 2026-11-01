@@ -178,7 +178,26 @@ fn wrap_lams(bs : Array[(String, Icit, Bool)], body : Tm) -> Tm {
 // Functions
 
 ///|
-fn elab_fn_sig(fd : @parser.FnDecl) -> Unit raise ElabError {
+fn elab_fn_sig(fd0 : @parser.FnDecl) -> Unit raise ElabError {
+  // effect polymorphism without annotation (see effects.mbt)
+  let fd = auto_effects(fd0)
+  elab_fn_sig_of(
+    fd,
+    if fd.impl_params.length() != fd0.impl_params.length() {
+      Some(fd0)
+    } else {
+      None
+    },
+  )
+}
+
+///|
+/// The signature of `fd`; `plain` is the declaration without inferred effect
+/// polymorphism, used if the function returns a proof (it has no effects).
+fn elab_fn_sig_of(
+  fd : @parser.FnDecl,
+  plain : @parser.FnDecl?,
+) -> Unit raise ElabError {
   let cxt = empty_cxt(fd.pos)
   let (c1, bs1) = elab_impl_binders(cxt, fd.impl_params)
   // the capabilities of the declared effects (see effects.mbt)
@@ -196,6 +215,10 @@ fn elab_fn_sig(fd : @parser.FnDecl) -> Unit raise ElabError {
       } else {
         (c2.fresh_meta(), false)
       }
+  }
+  match plain {
+    Some(p) if ret_prop => return elab_fn_sig_of(p, None)
+    _ => ()
   }
   let ret = raising_cod(c2, ret, ret_prop, fd.raises)
   let bs = concat(bs1, bs2)

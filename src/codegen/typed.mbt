@@ -697,7 +697,8 @@ fn Gen::native_sig(self : Gen, name : String) -> TSig? {
       Pi(_, icit, _, a, b) => {
         if self.er.fun_erased(name, i) {
           params.push(None)
-          if a is U {
+          // an effect variable is not a type parameter (tt/effects.mbt)
+          if a is U && !@tt.only_in_rows(b) {
             tparams.push(Some(ntvars))
             ctx.push(TyIs(NVar(ntvars)))
             ntvars = ntvars + 1
@@ -1211,9 +1212,14 @@ fn Gen::typed_ffi(
   }
   for i = 0; i < args.length(); i = i + 1 {
     match t {
-      Pi(_, Impl, _, U, b) => {
+      Pi(_, Impl, _, U, b) if !@tt.only_in_rows(b) => {
         ctx.push(TyIs(NVar(inst.length())))
         inst.push(self.type_arg(env, args[i]))
+        t = b
+      }
+      // an effect variable (tt/effects.mbt)
+      Pi(_, Impl, _, U, b) => {
+        ctx.push(TyOther)
         t = b
       }
       Pi(_, Inst, _, a, b) => {

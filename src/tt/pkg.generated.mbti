@@ -127,6 +127,8 @@ pub fn nf(Array[Val], Tm) -> Tm
 
 pub fn normalize(Tm) -> String
 
+pub fn only_in_rows(Tm) -> Bool
+
 pub fn param_labels(String) -> Array[(String, Bool)?]?
 
 pub fn pat_slots(CPat) -> Int32

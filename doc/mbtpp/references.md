@@ -1,0 +1,40 @@
+# 参考文献
+
+MoonBit++ 的设计与实现所参考的文献。每条注明用在哪里；采用新的文献时在这里补上。
+
+## 语言
+
+1. 用户名可以重复吗. 写给一般月兔用户的MoonBit++入门. 知乎.
+   <https://zhuanlan.zhihu.com/p/2067605478985749711>
+   — 语言的语法与特性大致来自这篇文章（[proposal.md](proposal.md)）。
+2. MoonBit 文档. <https://docs.moonbitlang.com>
+   — 语法、`raise`/`try`、`async`、trait、`.mbti` 接口；编译目标（[interop](../../book/src/interop/compile.md)）。
+
+## 类型检查
+
+3. András Kovács. elaboration-zoo. <https://github.com/AndrasKovacs/elaboration-zoo>
+   — 基于求值的检查（NbE，项用 de Bruijn 索引、值用层级）、模式合一、插入的元变量
+   （`src/tt`，[implementation.md](implementation.md)）。
+4. Rocq 参考手册：`match … as … in … return …`. <https://rocq-prover.org/doc/>
+   — Rocq 风格的 return 子句（[return-clause](../../book/src/lang/return-clause.md)）。
+
+## 代数效应
+
+5. Gordon Plotkin, Matija Pretnar. Handlers of Algebraic Effects. ESOP 2009.
+   — 效应与处理器（[effects.md](effects.md)）。
+6. Daan Leijen. Type Directed Compilation of Row-Typed Algebraic Effects. POPL 2017.
+   — 效应行、效应多态，Koka 的设计（[effects.md](effects.md)）。
+7. Ningning Xie, Daan Leijen. Generalized Evidence Passing for Effect Handlers: Efficient
+   Compilation of Effect Handlers to C. ICFP 2021.
+   — 尾恢复操作按能力（evidence）传递翻译、`ctl` 操作的单子翻译（`src/tt/effects.mbt`、
+   `src/tt/ctl.mbt`）。
+
+## 受控展开
+
+8. Daniel Gratzer, Jonathan Sterling, Carlo Angiuli, Thierry Coquand, Lars Birkedal. Controlling
+   Unfolding in Type Theory. arXiv:2210.05420. <https://arxiv.org/abs/2210.05420>
+   — `#opaque`、`#unfold`、`unfold(f) { e }`（[unfolding.md](unfolding.md)、
+   [受控展开](../../book/src/lang/unfolding.md)）。
+9. Agda 用户手册：Opaque definitions（Agda 2.6.4 起）.
+   <https://agda.readthedocs.io/en/latest/language/opaque-definitions.html>
+   — 不用扩展类型、在展开处检查的实现方式；默认透明（[unfolding.md](unfolding.md)）。

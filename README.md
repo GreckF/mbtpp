@@ -135,4 +135,5 @@ and [book/src](book/src) (an [mdBook](https://github.com/rust-lang/mdBook):
 `node scripts/check-book.mjs` checks the examples). The design
 notes are in [doc/mbtpp/proposal.md](doc/mbtpp/proposal.md) (algebraic effects:
 [doc/mbtpp/effects.md](doc/mbtpp/effects.md), in Chinese), the implementation in
-[doc/mbtpp/implementation.md](doc/mbtpp/implementation.md).
+[doc/mbtpp/implementation.md](doc/mbtpp/implementation.md), and the references in
+[doc/mbtpp/references.md](doc/mbtpp/references.md).

@@ -114,4 +114,5 @@ moonpp run --compiled          # 编译到 MoonBit 并用 `moon run` 运行
 `node scripts/check-book.mjs` 检查其中的示例）。设计说明见
 [doc/mbtpp/proposal.md](doc/mbtpp/proposal.md)（代数效应见
 [doc/mbtpp/effects.md](doc/mbtpp/effects.md)），实现说明见
-[doc/mbtpp/implementation.md](doc/mbtpp/implementation.md)。
+[doc/mbtpp/implementation.md](doc/mbtpp/implementation.md)，参考文献见
+[doc/mbtpp/references.md](doc/mbtpp/references.md)。

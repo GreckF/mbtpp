@@ -317,11 +317,28 @@ fn Parser::raises_opt(self : Parser) -> Expr? raise ParseError {
 /// `noraise`).
 fn Parser::effect_opt(self : Parser, is_async : Bool) -> Expr? raise ParseError {
   let pos = self.pos()
+  let row = self.row_opt()
   let no_raise = self.is_same_line("noraise")
   if no_raise {
     ignore(self.advance())
   }
   let r = if no_raise { None } else { self.raises_opt() }
+  match row {
+    Some(row) => {
+      if is_async {
+        raise ParseError(pos, "an async function cannot have effects")
+      }
+      return Some(
+        EApp(
+          pos,
+          EVar(pos, "%Effs"),
+          Some([row, r.unwrap_or(EVar(pos, "%NoRaise"))]),
+          None,
+        ),
+      )
+    }
+    None => ()
+  }
   if !is_async {
     return r
   }
@@ -331,6 +348,45 @@ fn Parser::effect_opt(self : Parser, is_async : Bool) -> Expr? raise ParseError 
     r.unwrap_or(EVar(pos, "Error"))
   }
   Some(EApp(pos, EVar(pos, "%Async"), Some([err]), None))
+}
+
+///|
+/// The effects after a result type: `!E1 + E2 + e`, as the row
+/// `%Row[E1, %Row[E2, e]]` (`%RowNil` at the end when there is no effect
+/// variable). A lowercase name is an effect variable, except `pure`, the
+/// effect without operations, which is left out.
+fn Parser::row_opt(self : Parser) -> Expr? raise ParseError {
+  if !self.is_same_line("!") {
+    return None
+  }
+  let pos = self.pos()
+  ignore(self.advance())
+  let items : Array[Expr] = []
+  let mut tail : Expr? = None
+  while true {
+    let ipos = self.pos()
+    let item = self.unary()
+    match item {
+      EVar(_, "pure") => ()
+      EVar(_, x) if x.length() > 0 && x[0] >= 'a' && x[0] <= 'z' => {
+        if tail is Some(_) {
+          raise ParseError(
+            ipos, "an effect row has at most one effect variable",
+          )
+        }
+        tail = Some(item)
+      }
+      _ => items.push(item)
+    }
+    if !self.accept("+") {
+      break
+    }
+  }
+  let mut row = tail.unwrap_or(EVar(pos, "%RowNil"))
+  for i = items.length() - 1; i >= 0; i = i - 1 {
+    row = EApp(pos, EVar(pos, "%Row"), Some([items[i], row]), None)
+  }
+  Some(row)
 }
 
 ///|
@@ -724,6 +780,18 @@ fn Parser::primary(self : Parser) -> Expr raise ParseError {
         }
       }
     }
+    // `perform Op(args)` (`perform` is not a keyword)
+    TIdent("perform") if self.peek_at(1).tok is TIdent(_) => {
+      ignore(self.advance())
+      let op = self.qual_ident()
+      let args = if self.is_same_line("(") {
+        ignore(self.advance())
+        self.args(")")
+      } else {
+        []
+      }
+      EPerform(pos, op, args)
+    }
     TIdent(x) => {
       ignore(self.advance())
       if self.at("=>") {
@@ -821,7 +889,7 @@ fn Parser::primary(self : Parser) -> Expr raise ParseError {
         }
         self.expect("->")
         let cod = self.arrow()
-        let raises = self.raises_opt()
+        let raises = self.effect_opt(false)
         return EPi(pos, impl_bs, expl, cod, raises)
       }
       for e in es {
@@ -1639,6 +1707,11 @@ fn Parser::decl_body(self : Parser) -> Decl raise ParseError {
   if self.accept("fn") {
     return DFn(self.fn_rest(pos, false))
   }
+  // `effect Name[T] { … }` (`effect` is not a keyword)
+  if self.peek().tok == TIdent("effect") && self.peek_at(1).tok is TIdent(_) {
+    ignore(self.advance())
+    return DEffect(self.effect_rest(pos))
+  }
   if self.at("async") && self.at_k(1, "fn") {
     ignore(self.advance())
     ignore(self.advance())
@@ -1869,7 +1942,7 @@ fn Parser::decl_body(self : Parser) -> Decl raise ParseError {
       let ps = self.params(false)
       self.expect("->")
       let ret = self.pipe()
-      let raises = self.raises_opt()
+      let raises = self.effect_opt(false)
       if self.accept("=") {
         self.expect("_")
       }
@@ -2063,4 +2136,34 @@ fn Parser::expr_or_assign(self : Parser) -> Expr raise ParseError {
     }
   }
   e
+}
+
+///|
+/// `effect Name[params] { Op(params) -> ret; ctl Op(params) -> ret }`, after
+/// `effect`.
+fn Parser::effect_rest(self : Parser, pos : Pos) -> EffectDecl raise ParseError {
+  let name = self.ident()
+  let params = self.impl_binders()
+  self.expect("{")
+  let ops : Array[EffOpDecl] = []
+  while !self.at("}") {
+    if self.accept(";") {
+      continue
+    }
+    let opos = self.pos()
+    let ctl = self.peek().tok == TIdent("ctl") &&
+      self.peek_at(1).tok is TIdent(_)
+    if ctl {
+      ignore(self.advance())
+    }
+    let op = self.ident()
+    let ps = if self.at("(") { self.params(false) } else { [] }
+    let ret = if self.accept("->") { self.pipe() } else { EVar(opos, "Unit") }
+    ops.push({ pos: opos, name: op, params: ps, ret, ctl, })
+    if !self.at("}") {
+      self.end_stmt()
+    }
+  }
+  self.expect("}")
+  { pos, name, params, ops, }
 }

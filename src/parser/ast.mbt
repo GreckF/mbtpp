@@ -87,6 +87,8 @@ pub(all) enum Expr {
   ETry(Pos, Expr, Array[Arm], Array[Arm]?)
   ETryQ(Pos, Expr)
   ERaise(Pos, Expr)
+  /// `perform Op(args)`: an operation of an effect (see doc/mbtpp/effects.md)
+  EPerform(Pos, String, Array[Expr])
   EMonad(Pos, Expr)
   /// `<- e` inside a monad block.
   EBind(Pos, Expr)
@@ -204,6 +206,26 @@ pub(all) struct FnDecl {
 } derive(Show)
 
 ///|
+/// An operation of an effect: `Op(params) -> ret`, or `ctl Op(params) -> ret`
+/// when its handlers may resume any number of times.
+pub(all) struct EffOpDecl {
+  pos : Pos
+  name : String
+  params : Array[Binder]
+  ret : Expr
+  ctl : Bool
+} derive(Show)
+
+///|
+/// `effect Name[params] { ops }`
+pub(all) struct EffectDecl {
+  pos : Pos
+  name : String
+  params : Array[Binder]
+  ops : Array[EffOpDecl]
+} derive(Show)
+
+///|
 pub(all) struct ConDecl {
   pos : Pos
   name : String
@@ -271,6 +293,7 @@ pub(all) enum Decl {
   DStruct(StructDecl)
   DTrait(TraitDecl)
   DImpl(ImplDecl)
+  DEffect(EffectDecl)
   /// An opaque type with the given number of (implicit) parameters, e.g. a
   /// type imported from MoonBit whose definition is not visible.
   DOpaque(Pos, String, Int32)
@@ -328,6 +351,7 @@ pub fn Expr::pos(self : Expr) -> Pos {
     | ETry(p, _, _, _)
     | ETryQ(p, _)
     | ERaise(p, _)
+    | EPerform(p, _, _)
     | EMonad(p, _)
     | EBind(p, _)
     | EProof(p, _)

@@ -53,6 +53,7 @@ pub(all) enum Decl {
   DStruct(StructDecl)
   DTrait(TraitDecl)
   DImpl(ImplDecl)
+  DEffect(EffectDecl)
   DOpaque(Pos, String, Int32)
   DMbt(Pos, String?, Bool, Decl)
   DPub(Decl)
@@ -60,6 +61,21 @@ pub(all) enum Decl {
   DLimit(Pos, Int32?, Decl)
 } derive(Show)
 pub fn Decl::inner(Self) -> Self
+
+pub(all) struct EffOpDecl {
+  pos : Pos
+  name : String
+  params : Array[Binder]
+  ret : Expr
+  ctl : Bool
+} derive(Show)
+
+pub(all) struct EffectDecl {
+  pos : Pos
+  name : String
+  params : Array[Binder]
+  ops : Array[EffOpDecl]
+} derive(Show)
 
 pub(all) struct EnumDecl {
   pos : Pos
@@ -95,6 +111,7 @@ pub(all) enum Expr {
   ETry(Pos, Expr, Array[Arm], Array[Arm]?)
   ETryQ(Pos, Expr)
   ERaise(Pos, Expr)
+  EPerform(Pos, String, Array[Expr])
   EMonad(Pos, Expr)
   EBind(Pos, Expr)
   EProof(Pos, Array[Tactic])

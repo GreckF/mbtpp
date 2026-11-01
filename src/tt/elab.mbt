@@ -87,6 +87,7 @@ fn reset_elab() -> Unit {
   st.pending.clear()
   st.type_defaults.clear()
   st.fresh = 0
+  reset_effects()
 }
 
 ///|
@@ -1434,6 +1435,7 @@ pub fn infer(cxt0 : Cxt, e : @parser.Expr) -> (Tm, Val) raise ElabError {
       ])
       (Try(ok, [{ pats: [CPVar("e")], cond: None, body: errv, }]), res_ty)
     }
+    EPerform(p, op, args) => elab_perform(cxt, p, op, args)
     ERaise(_, _)
     | EReturn(_, _)
     | EBreak(_, _, _)

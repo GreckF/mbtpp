@@ -181,6 +181,9 @@ fn wrap_lams(bs : Array[(String, Icit, Bool)], body : Tm) -> Tm {
 fn elab_fn_sig(fd : @parser.FnDecl) -> Unit raise ElabError {
   let cxt = empty_cxt(fd.pos)
   let (c1, bs1) = elab_impl_binders(cxt, fd.impl_params)
+  // the capabilities of the declared effects (see effects.mbt)
+  let (c1, caps) = cap_binders(c1, fd.raises)
+  let bs1 = concat(bs1, caps)
   let (c2, bs2) = match fd.params {
     Some(ps) => elab_expl_binders(c1, ps)
     None => (c1, [])
@@ -835,7 +838,7 @@ pub fn check_decls(
   let mbt_fn_decls : Array[(Pos, String)] = []
   let mbt_impls : Array[(Pos, String, String)] = []
   let decls : Array[@parser.Decl] = []
-  let decls0 = expand_derives(decls0.map(strip_limits))
+  let decls0 = expand_effects(expand_derives(decls0.map(strip_limits)))
   if !lenient {
     for d in decls0 {
       record_decl_pos(d.inner())
@@ -902,7 +905,11 @@ pub fn check_decls(
         DStruct(sd) => sd.name
         DTrait(td) => td.name
         DImpl(id) => "impl$" + id.trait_name + "$" + impl_head(id.for_ty)
-        DMbt(_, _, _, _) | DPub(_) | DDerive(_, _) | DLimit(_, _, _) => continue
+        DMbt(_, _, _, _)
+        | DPub(_)
+        | DDerive(_, _)
+        | DLimit(_, _, _)
+        | DEffect(_) => continue
       }
       if taken(name) && !(d is DImpl(_) && impl_groups.contains(name)) {
         skipped.push(name)
@@ -910,7 +917,12 @@ pub fn check_decls(
       }
     }
     match d {
-      DMbt(_, _, _, _) | DPub(_) | DDerive(_, _) | DLimit(_, _, _) => ()
+      // effects are structs by now (expand_effects)
+      DMbt(_, _, _, _)
+      | DPub(_)
+      | DDerive(_, _)
+      | DLimit(_, _, _)
+      | DEffect(_) => ()
       DOpaque(_, name, k) => {
         add_thunk(name, () => {
           let mut ty = U
@@ -1061,6 +1073,12 @@ fn record_decl_pos(d : @parser.Decl) -> Unit {
       set(td.name, td.pos, "trait")
       for m in td.methods {
         set(td.name + "::" + m.name, m.pos, "method")
+      }
+    }
+    DEffect(ed) => {
+      set(ed.name, ed.pos, "effect")
+      for o in ed.ops {
+        set(o.name, o.pos, "operation")
       }
     }
     DImpl(_) | DMbt(_, _, _, _) | DPub(_) | DDerive(_, _) | DLimit(_, _, _) =>

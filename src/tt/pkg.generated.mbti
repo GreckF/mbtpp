@@ -73,6 +73,8 @@ pub fn instances_of(String) -> Array[String]
 
 pub fn is_async_global(String) -> Bool
 
+pub fn is_effect(String) -> Bool
+
 pub fn is_foreign_type(String) -> Bool
 
 pub fn is_opaque_trait(String) -> Bool

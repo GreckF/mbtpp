@@ -70,6 +70,8 @@ fn decl_global_names(d : @parser.Decl) -> Array[String] {
         ..td.supers.map(s => td.name + "::super$" + s),
       ]
     DImpl(id) => ["impl$" + id.trait_name + "$" + impl_head(id.for_ty)]
+    DEffect(ed) =>
+      [ed.name, ed.name + "::mk", ..ed.ops.map(o => ed.name + "::" + o.name)]
   }
 }
 
@@ -96,6 +98,10 @@ fn check_src(file : String, src : String) -> Unit raise CheckError {
       @parser.DOpaque({ line: 0, col: 0, }, "Json", 0),
       @parser.DOpaque({ line: 0, col: 0, }, "%Async", 1),
       @parser.DOpaque({ line: 0, col: 0, }, "%NoRaise", 0),
+      // effect rows (see effects.mbt)
+      @parser.DOpaque({ line: 0, col: 0, }, "%Effs", 2),
+      @parser.DOpaque({ line: 0, col: 0, }, "%Row", 2),
+      @parser.DOpaque({ line: 0, col: 0, }, "%RowNil", 0),
       ..decls,
     ]
   } else {

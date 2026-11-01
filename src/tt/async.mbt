@@ -10,6 +10,12 @@
 /// of the errors it may raise (`None`: it does not raise).
 pub fn effect_of(e : Val) -> (Bool, Val?) {
   match force(e) {
+    // effects with errors (see effects.mbt)
+    VData("%Effs", [_, (err, _)]) =>
+      match force(err) {
+        VData("%NoRaise", _) => (false, None)
+        _ => (false, Some(err))
+      }
     VData("%Async", [(err, _)]) =>
       match force(err) {
         VData("%NoRaise", _) => (true, None)
@@ -23,6 +29,8 @@ pub fn effect_of(e : Val) -> (Bool, Val?) {
 /// `effect_of` on a core term.
 pub fn tm_effect(e : Tm) -> (Bool, Tm?) {
   match e {
+    App(App(Global("%Effs"), _, _), Global("%NoRaise"), _) => (false, None)
+    App(App(Global("%Effs"), _, _), err, _) => (false, Some(err))
     App(Global("%Async"), Global("%NoRaise"), _) => (true, None)
     App(Global("%Async"), err, _) => (true, Some(err))
     _ => (false, Some(e))

@@ -67,6 +67,7 @@ fn mention_walk(e : @parser.Expr, x : String, found : Ref[Bool]) -> Unit {
     | EUn(_, _, a)
     | ETryQ(_, a)
     | ERaise(_, a) => walk(a)
+    EPerform(_, _, args) => args.each(walk)
     EMethod(_, a, _, _, args) => {
       walk(a)
       args.each(walk)

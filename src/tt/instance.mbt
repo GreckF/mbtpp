@@ -133,6 +133,11 @@ fn solve_instance(p : PendingInst, final_ : Bool) -> Bool raise ElabError {
     _ => return true
   }
   let goal = force(cxt.subst(p.ty))
+  // the capability of an effect (see effects.mbt)
+  match goal {
+    VData(n, _) if is_effect(n) => return solve_cap(p, n, goal)
+    _ => ()
+  }
   let blocked = match goal {
     VData(_, sp) => sp.length() > 0 && force(sp[0].0) is VFlex(_, _)
     _ => true

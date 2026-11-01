@@ -836,6 +836,10 @@ fn elab_try(
   arms : Array[@parser.Arm],
   goal : Val?,
 ) -> (Tm, Val) raise ElabError {
+  // handlers of effects (see effects.mbt)
+  if arms.iter().any(a => arm_op(a) is Some(_)) {
+    return elab_handle(cxt, cxt.pos, body, arms, goal)
+  }
   let bc = { ..cxt, can_raise: true, }
   let (tb, ty) = match goal {
     Some(g) => (check(bc, body, g), g)

@@ -159,6 +159,8 @@ pub fn restore_metas(Array[Val?]) -> Unit
 
 pub fn setup() -> Unit
 
+pub fn shift_tm(Tm, Int32, Int32) -> Tm
+
 pub fn show_global_type(String) -> String?
 
 pub fn show_tm(Array[String], Tm) -> String

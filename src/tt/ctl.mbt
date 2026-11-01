@@ -340,7 +340,7 @@ fn ensure_ctl_runtime() -> Unit {
 
 ///|
 /// Shift the free variables (index >= c) of `t` by `d`; all constructs.
-fn shift_tm(t : Tm, d : Int32, c : Int32) -> Tm {
+pub fn shift_tm(t : Tm, d : Int32, c : Int32) -> Tm {
   if d == 0 {
     return t
   }

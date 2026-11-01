@@ -1034,6 +1034,19 @@ fn Gen::typed_check(
       }
       "(" + xs.join(", ") + ") => {\n" + cb + "\n}"
     }
+    // a top-level function as a value: `fn(x, y) { f(x, y) }` (an async
+    // function has no uniform version to fall back to)
+    (_, NFun(ps, _) | NAsyncFun(ps, _)) if is_global_fn(t) => {
+      let k = ps.length()
+      let mut b = @tt.shift_tm(t, k, 0)
+      for i = 0; i < k; i = i + 1 {
+        b = App(b, Var(k - 1 - i), Expl)
+      }
+      for i = k - 1; i >= 0; i = i - 1 {
+        b = Lam("x" + i.to_string(), Expl, i == 0, b)
+      }
+      self.typed_check(env, b, ty)
+    }
     (ArrayLit(es), NForeign("Array", [a])) =>
       "([" +
       es.map(x => self.typed_check(env, x, a)).join(", ") +
@@ -1498,8 +1511,9 @@ fn Gen::typed_term(
       (flatten_app(v).0 is Global(g) && @tt.is_proof_global(g)) =>
       self.typed(tpush(env, TNone), b)
     Let(x, ty, v, b) => {
-      // a lambda gets its parameter types from the type of the `let`
-      let (cv, tv) = if v is Lam(_, Expl, _, _) {
+      // a lambda (or a top-level function as a value) gets its parameter
+      // types from the type of the `let`
+      let (cv, tv) = if v is Lam(_, Expl, _, _) || is_global_fn(v) {
         let nt = self.type_arg(env, ty)
         (self.typed_check(env, v, nt), nt)
       } else {
@@ -2056,5 +2070,22 @@ fn Gen::typed_array(
       (arr() + ".push(" + x + ")", NUnit)
     }
     _ => raise NotTyped
+  }
+}
+
+///|
+/// A top-level function, possibly given its implicit arguments only.
+fn is_global_fn(t : @tt.Tm) -> Bool {
+  let mut h = t
+  while h is App(f, _, Impl) {
+    h = f
+  }
+  match h {
+    Global(n) =>
+      match @tt.globals.get(n) {
+        Some({ kind: GFunc(_, _, _), .. }) => method_of(n) is None
+        _ => false
+      }
+    _ => false
   }
 }

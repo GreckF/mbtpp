@@ -433,6 +433,27 @@ test "codegen: async functions are native" {
       #|async fn g cannot be compiled to MoonBit: its type has no native MoonBit translation (like a type computed from a parameter, or a type parameter with a bound that occurs in no parameter and not in the result type)
     ),
   )
+  // a top-level async function as a value
+  inspect(
+    signatures(
+      (
+        #|async fn inc(x : Int) -> Int { x + 1 }
+        #|async fn twice(f : async (Int) -> Int, x : Int) -> Int { f(f(x)) }
+        #|async fn main {
+        #|  let g : async (Int) -> Int = inc
+        #|  println(twice(g, 1) + twice(inc, 2))
+        #|}
+      ),
+    ),
+    content=(
+      #|async fn f_twice_t(f : async (Int) -> Int raise, x : Int) -> Int raise {
+      #|async fn f_inc_t(x : Int) -> Int raise {
+      #|async fn main {
+      #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
+      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
+      #|fn f_show_to_string(inst : Value) -> Value raise {
+    ),
+  )
 }
 
 ///|

@@ -268,7 +268,7 @@ fn arm_op(arm : @parser.Arm) -> (String, Array[@parser.Pat])? {
 fn tail_resume(e : @parser.Expr) -> @parser.Expr raise ElabError {
   let no_resume = (p : Pos) => {
     raise ElabError(
-      p, "the handler of this operation must end with `resume(…)` (declare the operation with `ctl` to resume elsewhere, or not at all)",
+      p, "the handler of this operation must end with `resume(...)` (declare the operation with `ctl` to resume elsewhere, or not at all)",
     )
   }
   match e {

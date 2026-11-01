@@ -138,6 +138,9 @@ fn exec_call(n : String, body : Tm, arity : Int32, sp : Spine) -> Val? {
     return None
   }
   last_unfolded.val = Some(n)
+  if exec_depth.val == 0 {
+    xclosures.clear()
+  }
   let mut xe : XEnv = { vals: [], muts: [], }
   let mut b = body
   for k = 0; k < arity; k = k + 1 {
@@ -149,12 +152,20 @@ fn exec_call(n : String, body : Tm, arity : Int32, sp : Spine) -> Val? {
       _ => return None
     }
   }
+  exec_depth.val = exec_depth.val + 1
   let res = exec(xe, b) catch {
     Ret(v) => v
     // an error that escapes: the call is that error
-    Thrown(err) => return Some(raise_val(err))
-    _ => return None
+    Thrown(err) => {
+      exec_depth.val = exec_depth.val - 1
+      return Some(raise_val(err))
+    }
+    _ => {
+      exec_depth.val = exec_depth.val - 1
+      return None
+    }
   }
+  exec_depth.val = exec_depth.val - 1
   if has_effect(res, false) {
     return None
   }
@@ -172,14 +183,15 @@ fn exec(xe : XEnv, t : Tm) -> Val raise ExecStop {
   if time_up() {
     raise XStuck
   }
-  if !contains_imperative(t) && !calls_run(t) {
+  if !contains_imperative(t) &&
+    !calls_run(t) &&
+    !captures_mut(t, xe, 0, false) &&
+    !(xclosures.length() > 0 && xe.vals.iter().any(r => has_xclo(r.val))) {
     // a pure term: evaluate it with the current values of the variables
-    if captures_mut(t, xe, 0, false) {
-      raise XStuck
-    }
     return eval(xe.snapshot(), t)
   }
   match t {
+    Var(ix) => xe.vals[xe.slot(ix)].val
     LetMut(_, _, v, b) => exec(xe.push(exec(xe, v), true), b)
     Let(_, _, v, b) => exec(xe.push(exec(xe, v), false), b)
     Assign(ix, v) => {
@@ -275,12 +287,64 @@ fn exec(xe : XEnv, t : Tm) -> Val raise ExecStop {
         Brk | Cont => raise XStuck
         e => raise e
       }
-      app_spine(r, vals[arity:].to_array())
+      xapply_spine(r, vals[arity:].to_array())
+    }
+    App(_, _, _) if xclosures.length() > 0 &&
+      global_call(t) is Some((n, body, arity)) => {
+      let (_, args) = flatten_app(t)
+      let vals = args.map(a => (exec(xe, a.0), a.1))
+      if !vals.iter().any(v => has_xclo(v.0)) {
+        return app_spine(global_val(n), vals)
+      }
+      last_unfolded.val = Some(n)
+      let mut ce : XEnv = { vals: [], muts: [], }
+      let mut b = body
+      for k = 0; k < arity; k = k + 1 {
+        match b {
+          Lam(_, _, _, rest) => {
+            ce = ce.push(vals[k].0, false)
+            b = rest
+          }
+          _ => raise XStuck
+        }
+      }
+      let r = exec(ce, b) catch {
+        Ret(v) => v
+        Brk | Cont => raise XStuck
+        e => raise e
+      }
+      xapply_spine(r, vals[arity:].to_array())
     }
     App(f, a, i) => {
       let fv = exec(xe, f)
       let av = exec(xe, a)
       match force(fv) {
+        // a closure sharing the state of the run
+        VStuck(_, _, []) as c if xclo_index(c) is Some(k) => {
+          let (ce, lam) = xclosures[k]
+          match lam {
+            Lam(_, _, _, body) =>
+              exec(ce.push(av, false), body) catch {
+                Ret(v) => v
+                Brk | Cont => raise XStuck
+                e => raise e
+              }
+            _ => raise XStuck
+          }
+        }
+        // a lambda that gets or holds such a closure: run its body
+        VLam(_, _, _, cl) if xclosures.length() > 0 &&
+          (has_xclo(av) || cl.env.iter().any(has_xclo)) => {
+          let ce : XEnv = {
+            vals: cl.env.map(v => Ref::new(v)),
+            muts: cl.env.map(_ => false),
+          }
+          exec(ce.push(av, false), cl.body) catch {
+            Ret(v) => v
+            Brk | Cont => raise XStuck
+            e => raise e
+          }
+        }
         // a lambda with mutable state: run its body
         VLam(_, _, _, cl) if contains_imperative(cl.body) => {
           let ce : XEnv = {
@@ -296,14 +360,19 @@ fn exec(xe : XEnv, t : Tm) -> Val raise ExecStop {
         _ => app_val(fv, av, i)
       }
     }
+    // a lambda that uses a `let mut` variable shares it: a closure of the
+    // run, which cannot leave it (a handler updating a variable)
     Lam(_, _, _, _) =>
       if captures_mut(t, xe, 0, false) {
-        raise XStuck
+        xclosures.push((xe, t))
+        xclo_val(xclosures.length() - 1)
       } else {
         eval(xe.snapshot(), t)
       }
     // arrays are mutable: not run
     ArrayLit(_) => raise XStuck
+    Global(_) | Lit(_) | U | PropU | Pi(_, _, _, _, _) | Raises(_, _) =>
+      eval(xe.snapshot(), t)
     _ => raise XStuck
   }
 }
@@ -399,4 +468,90 @@ fn calls_run(t : Tm) -> Bool {
       .any(cl => cl.cond.map(calls_run).unwrap_or(false) || calls_run(cl.body))
     _ => false
   }
+}
+
+///|
+/// Closures of the current run that share its `let mut` variables: their
+/// environment and lambda. They are values `%xclo(k)`, which keep the run
+/// from finishing if they are in its result.
+let xclosures : Array[(XEnv, Tm)] = []
+
+///|
+/// The nesting of runs (the closures are dropped when a run starts at 0).
+let exec_depth : Ref[Int32] = Ref::new(0)
+
+///|
+fn xclo_val(k : Int32) -> Val {
+  VStuck([], App(Global("%xclo"), Lit(LInt(k)), Expl), [])
+}
+
+///|
+fn xclo_index(v : Val) -> Int32? {
+  match v {
+    VStuck(_, App(Global("%xclo"), Lit(LInt(k)), _), []) => Some(k)
+    _ => None
+  }
+}
+
+///|
+/// Does a value hold a closure of the run?
+fn has_xclo(v : Val) -> Bool {
+  let sp_has = (sp : Spine) => sp.iter().any(a => has_xclo(a.0))
+  match v {
+    VStuck(_, App(Global("%xclo"), _, _), _) => true
+    VStuck(env, _, sp) => env.iter().any(has_xclo) || sp_has(sp)
+    VCon(_, sp)
+    | VData(_, sp)
+    | VRigid(_, sp)
+    | VFlex(_, sp)
+    | VGlobal(_, sp)
+    | VPrim(_, sp) => sp_has(sp)
+    VLam(_, _, _, cl) => cl.env.iter().any(has_xclo)
+    VMatch(env, vs, _, sp) =>
+      env.iter().any(has_xclo) || vs.iter().any(has_xclo) || sp_has(sp)
+    VArrLit(vs) => vs.iter().any(has_xclo)
+    _ => false
+  }
+}
+
+///|
+/// A saturated call of a global function with a body: its name, body and
+/// arity.
+fn global_call(t : Tm) -> (String, Tm, Int32)? {
+  let (h, args) = flatten_app(t)
+  match h {
+    Global(n) =>
+      match globals.get(n) {
+        Some({ kind: GFunc(Some(body), _, arity), .. }) if args.length() >=
+          arity &&
+          arity > 0 &&
+          !is_async_global(n) => Some((n, body, arity))
+        _ => None
+      }
+    _ => None
+  }
+}
+
+///|
+/// Apply a value to arguments, running the closures of the run.
+fn xapply_spine(f : Val, sp : Spine) -> Val raise ExecStop {
+  let mut v = f
+  for a in sp {
+    v = match force(v) {
+      VStuck(_, _, []) as c if xclo_index(c) is Some(k) => {
+        let (ce, lam) = xclosures[k]
+        match lam {
+          Lam(_, _, _, body) =>
+            exec(ce.push(a.0, false), body) catch {
+              Ret(r) => r
+              Brk | Cont => raise XStuck
+              e => raise e
+            }
+          _ => raise XStuck
+        }
+      }
+      _ => app_val(v, a.0, a.1)
+    }
+  }
+  v
 }

@@ -77,3 +77,60 @@ fn main {
 - `noraise { pattern => … }` handles the result when no error was raised. Errors raised in the
   `catch` and `noraise` arms are not caught by the same `try`.
 - `catch` arms can use or-patterns, `as` and guards.
+
+## Errors as values of the logic
+
+During type checking, a call that raises an error computes to the value `raise e`. It can be written in
+types, compared and caught by `try`, so you can prove when a function raises and when it does not:
+
+```moonbit
+suberror Empty
+
+fn head(xs : List[Int]) -> Int raise Empty {
+  match xs {
+    Nil => raise Empty
+    Cons(x, _) => x
+  }
+}
+
+fn const0(x : Int) -> Int { 0 }
+
+lemma head_nil() -> head(Nil) === raise Empty { Refl }
+
+lemma head_ok(x : Int, xs : List[Int]) ->
+  (try { head(Cons(x, xs)); true } catch { _ => false }) === true { Refl }
+
+// as at run time, the error of the argument comes first
+lemma strict() -> const0(head(Nil)) === raise Empty { Refl }
+
+enum Void {}
+
+// an error is not a value: this equation cannot hold
+lemma not_zero(p : head(Nil) === 0) -> Void { match p {} }
+
+fn main {
+  println(try { const0(head(Nil)) } catch { Empty => -1 })
+}
+```
+
+The rules follow call-by-value evaluation at run time:
+
+- A `match` on `raise e`, passing it as an explicit argument to a function or a constructor, and
+  `let x = raise e` are all `raise e`. A function body does not run before the call, so `(x) => raise e`
+  is a value. Implicit arguments are erased at run time and do not propagate errors.
+- A function is only unfolded when its arguments are known not to raise. In `const0(head(xs))`, `xs`
+  is a variable, so whether `head(xs)` raises is unknown: the call is not unfolded, and
+  `const0(head(xs)) === 0` cannot be proved by `Refl`. Variables always stand for values, so
+  `const0(x) === 0` can.
+- `raise e` differs from every constructor and literal; `raise e1` equals `raise e2` exactly when `e1`
+  equals `e2`.
+- Raising calls and `raise e` can only be written in types. A proof (a pure term) still cannot call a
+  raising function, so the pure part cannot build an error, and errors do not make the logic
+  inconsistent.
+- The implicit arguments of a lemma stand for values, and unification does not solve them with terms
+  that may raise. Those of constructors, of types, and of `Id::sym`, `Id::trans`, `Id::cong` and
+  `Id::subst` can be such terms, since these do not rely on their arguments being values.
+- A function that returns a proof (a type in `Prop`) cannot declare `raise`: proofs are erased at run
+  time, and the error would be lost with them.
+- The argument of `raise` is the whole expression: `raise Empty === x` is `raise (Empty === x)`; write
+  `(raise Empty) === x`.

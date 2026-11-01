@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-014b6018.js";
+            window.path_to_searchindex_js = "../searchindex-3f09386d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-ec08c6a2.js"></script>
@@ -255,6 +255,59 @@ fn main {
 <li><code>noraise { pattern =&gt; … }</code> handles the result when no error was raised. Errors raised in the
 <code>catch</code> and <code>noraise</code> arms are not caught by the same <code>try</code>.</li>
 <li><code>catch</code> arms can use or-patterns, <code>as</code> and guards.</li>
+</ul>
+<h2 id="errors-as-values-of-the-logic"><a class="header" href="#errors-as-values-of-the-logic">Errors as values of the logic</a></h2>
+<p>During type checking, a call that raises an error computes to the value <code>raise e</code>. It can be written in
+types, compared and caught by <code>try</code>, so you can prove when a function raises and when it does not:</p>
+<pre><code class="language-moonbit">suberror Empty
+
+fn head(xs : List[Int]) -&gt; Int raise Empty {
+  match xs {
+    Nil =&gt; raise Empty
+    Cons(x, _) =&gt; x
+  }
+}
+
+fn const0(x : Int) -&gt; Int { 0 }
+
+lemma head_nil() -&gt; head(Nil) === raise Empty { Refl }
+
+lemma head_ok(x : Int, xs : List[Int]) -&gt;
+  (try { head(Cons(x, xs)); true } catch { _ =&gt; false }) === true { Refl }
+
+// as at run time, the error of the argument comes first
+lemma strict() -&gt; const0(head(Nil)) === raise Empty { Refl }
+
+enum Void {}
+
+// an error is not a value: this equation cannot hold
+lemma not_zero(p : head(Nil) === 0) -&gt; Void { match p {} }
+
+fn main {
+  println(try { const0(head(Nil)) } catch { Empty =&gt; -1 })
+}
+</code></pre>
+<p>The rules follow call-by-value evaluation at run time:</p>
+<ul>
+<li>A <code>match</code> on <code>raise e</code>, passing it as an explicit argument to a function or a constructor, and
+<code>let x = raise e</code> are all <code>raise e</code>. A function body does not run before the call, so <code>(x) =&gt; raise e</code>
+is a value. Implicit arguments are erased at run time and do not propagate errors.</li>
+<li>A function is only unfolded when its arguments are known not to raise. In <code>const0(head(xs))</code>, <code>xs</code>
+is a variable, so whether <code>head(xs)</code> raises is unknown: the call is not unfolded, and
+<code>const0(head(xs)) === 0</code> cannot be proved by <code>Refl</code>. Variables always stand for values, so
+<code>const0(x) === 0</code> can.</li>
+<li><code>raise e</code> differs from every constructor and literal; <code>raise e1</code> equals <code>raise e2</code> exactly when <code>e1</code>
+equals <code>e2</code>.</li>
+<li>Raising calls and <code>raise e</code> can only be written in types. A proof (a pure term) still cannot call a
+raising function, so the pure part cannot build an error, and errors do not make the logic
+inconsistent.</li>
+<li>The implicit arguments of a lemma stand for values, and unification does not solve them with terms
+that may raise. Those of constructors, of types, and of <code>Id::sym</code>, <code>Id::trans</code>, <code>Id::cong</code> and
+<code>Id::subst</code> can be such terms, since these do not rely on their arguments being values.</li>
+<li>A function that returns a proof (a type in <code>Prop</code>) cannot declare <code>raise</code>: proofs are erased at run
+time, and the error would be lost with them.</li>
+<li>The argument of <code>raise</code> is the whole expression: <code>raise Empty === x</code> is <code>raise (Empty === x)</code>; write
+<code>(raise Empty) === x</code>.</li>
 </ul>
 
                     </main>

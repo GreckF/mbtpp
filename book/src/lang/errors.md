@@ -75,3 +75,54 @@ fn main {
 - `noraise { 模式 => … }` 处理没有出错时的结果。`catch` 和 `noraise` 分支中抛出的错误不会被同一个
   `try` 捕获。
 - `catch` 的分支可以使用或模式、`as` 和守卫。
+
+## 错误作为逻辑中的值
+
+类型检查时，会抛出错误的调用计算为值 `raise e`。它可以写进类型，可以比较，也可以被 `try` 捕获，
+因此可以证明一个函数在什么情况下抛出、什么情况下不抛出：
+
+```moonbit
+suberror Empty
+
+fn head(xs : List[Int]) -> Int raise Empty {
+  match xs {
+    Nil => raise Empty
+    Cons(x, _) => x
+  }
+}
+
+fn const0(x : Int) -> Int { 0 }
+
+lemma head_nil() -> head(Nil) === raise Empty { Refl }
+
+lemma head_ok(x : Int, xs : List[Int]) ->
+  (try { head(Cons(x, xs)); true } catch { _ => false }) === true { Refl }
+
+// 和运行时一样，参数的错误先发生
+lemma strict() -> const0(head(Nil)) === raise Empty { Refl }
+
+enum Void {}
+
+// 错误不是值：这个等式不可能成立
+lemma not_zero(p : head(Nil) === 0) -> Void { match p {} }
+
+fn main {
+  println(try { const0(head(Nil)) } catch { Empty => -1 })
+}
+```
+
+规则与运行时的按值求值一致：
+
+- 对 `raise e` 做 `match`、把它作为显式参数传给函数或构造子、`let x = raise e`，结果都是 `raise e`。
+  函数体在调用之前不运行，所以 `(x) => raise e` 是一个值。隐式参数在运行时被擦除，不传播错误。
+- 函数只在参数已知不抛出时展开。`const0(head(xs))` 中 `xs` 是变量，无法确定 `head(xs)` 是否
+  抛出，所以这个调用不展开，`const0(head(xs)) === 0` 不能用 `Refl` 证明。变量总是代表值，
+  `const0(x) === 0` 可以。
+- `raise e` 与任何构造子和字面量都不同；`raise e1` 与 `raise e2` 相等当且仅当 `e1` 与 `e2` 相等。
+- 只有在类型中可以写会抛出的调用和 `raise e`。证明（纯的项）仍然不能调用会抛出的函数，所以纯的
+  部分造不出错误，证明不会因此不一致。
+- 引理的隐式参数代表值，不能由合一解成可能抛出的项。构造子、类型，以及 `Id::sym`、`Id::trans`、
+  `Id::cong`、`Id::subst` 的隐式参数可以，因为它们不依赖参数是值。
+- 返回证明（`Prop` 中的类型）的函数不能声明 `raise`：证明在运行时被擦除，错误会随之丢失。
+- `raise` 的参数是整个表达式：`raise Empty === x` 是 `raise (Empty === x)`，需要写成
+  `(raise Empty) === x`。

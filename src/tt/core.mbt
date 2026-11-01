@@ -242,6 +242,9 @@ pub fn con_info(name : String) -> ConInfo? {
 ///|
 pub(all) struct MetaEntry {
   mut sol : Val?
+  /// May be solved with a value that may raise (see raise.mbt): an implicit
+  /// argument of a constructor or of a datatype, which assume nothing of it.
+  mut lax : Bool
 }
 
 ///|
@@ -249,7 +252,7 @@ pub let metas : Array[MetaEntry] = []
 
 ///|
 pub fn new_meta() -> Int32 {
-  metas.push({ sol: None, })
+  metas.push({ sol: None, lax: false, })
   metas.length() - 1
 }
 

@@ -137,6 +137,11 @@ fn solve(
   rhs : Val,
   prune~ : Bool = false,
 ) -> Unit raise UnifyError {
+  // a lemma's implicit argument cannot be an error: its proof treats it as
+  // a value (see raise.mbt)
+  if !metas[m].lax && may_raise(rhs) {
+    raise UnifyError("an implicit argument may raise an error")
+  }
   let p = invert(lvl, m, sp, prune)
   let mut t = rename(p, rhs)
   for k = sp.length() - 1; k >= 0; k = k - 1 {

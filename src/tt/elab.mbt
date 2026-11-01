@@ -232,12 +232,38 @@ fn add_pending(cxt : Cxt, m : Tm, ty : Val) -> Unit raise ElabError {
 }
 
 ///|
+/// Lemmas of the Prelude that only match on their proof argument: they hold
+/// when the sides of the equation are errors.
+let lax_lemmas : Array[String] = [
+  "Id::sym", "Id::trans", "Id::cong", "Id::subst",
+]
+
+///|
+/// A meta for an implicit argument of `head`. A lemma assumes its implicit
+/// arguments are values; a constructor or a datatype does not (see
+/// raise.mbt).
+fn implicit_meta(cxt : Cxt, head : Tm) -> Tm {
+  let m = cxt.fresh_meta()
+  let lax = match flatten_app(head).0 {
+    Global(n) =>
+      con_info(n) is Some(_) ||
+      data_info(n) is Some(_) ||
+      lax_lemmas.contains(n)
+    _ => false
+  }
+  if lax && m is InsertedMeta(k, _) {
+    metas[k].lax = true
+  }
+  m
+}
+
+///|
 /// Apply `t : ty` to fresh metas for its leading implicit arguments.
 fn insert(cxt : Cxt, t : Tm, ty : Val) -> (Tm, Val) raise ElabError {
   let mut t = t
   let mut ty = ty
   while force(ty) is VPi(_, i, _, a, cl) && i != Expl {
-    let m = cxt.fresh_meta()
+    let m = implicit_meta(cxt, t)
     if i == Inst {
       add_pending(cxt, m, a)
     }
@@ -264,7 +290,7 @@ fn check_type(cxt : Cxt, e : @parser.Expr) -> Tm raise ElabError {
 ///|
 /// Elaborate a type, returning whether it is a proposition.
 fn check_type_sort(cxt : Cxt, e : @parser.Expr) -> (Tm, Bool) raise ElabError {
-  let cxt = cxt.at(e.pos())
+  let cxt = { ..cxt.at(e.pos()), in_type: true, }
   // names in type position prefer types over constructors
   let (t, a) = match e {
     EVar(_, _) => {
@@ -428,11 +454,32 @@ fn infer_pi(
     None => (c1, [])
   }
   let (ct, is_prop) = check_type_sort(c2, cod)
-  let ct = match raises {
-    Some(r) => Raises(ct, check_type(c2, r))
+  let ct = raising_cod(c2, ct, is_prop, raises)
+  (pis(concat(bs1, bs2), ct), if is_prop { VProp } else { VU })
+}
+
+///|
+/// The codomain `ct` of a function type, with its errors. A proof cannot
+/// raise: proofs are erased, and the error would be lost at run time.
+fn raising_cod(
+  cxt : Cxt,
+  ct : Tm,
+  is_prop : Bool,
+  raises : @parser.Expr?,
+) -> Tm raise ElabError {
+  match raises {
+    Some(r) => {
+      if is_prop {
+        cxt
+        .at(r.pos())
+        .fail(
+          "a function that returns a proof cannot raise errors (proofs are erased at run time)",
+        )
+      }
+      Raises(ct, check_type(cxt, r))
+    }
     None => ct
   }
-  (pis(concat(bs1, bs2), ct), if is_prop { VProp } else { VU })
 }
 
 // ---------------------------------------------------------------------------
@@ -514,12 +561,12 @@ fn app_core(
       m
     } else if skip > 0 {
       skip = skip - 1
-      cxt.fresh_meta()
+      implicit_meta(cxt, head)
     } else if k < impls.length() {
       k = k + 1
       check(cxt, impls[k - 1], a)
     } else {
-      cxt.fresh_meta()
+      implicit_meta(cxt, head)
     }
     impl_terms.push((arg, i))
     t = App(t, arg, i)
@@ -621,7 +668,7 @@ fn app_core(
               "this calls an async function, which can only be done in an async function",
             )
           }
-          if err is Some(_) && !cxt.can_raise {
+          if err is Some(_) && !cxt.can_raise && !cxt.in_type {
             cxt.fail(
               "this call may raise an error; use it inside `try` or in a function declared with `raise`",
             )
@@ -1410,7 +1457,7 @@ pub fn infer(cxt0 : Cxt, e : @parser.Expr) -> (Tm, Val) raise ElabError {
 
 ///|
 fn elab_raise(cxt : Cxt, x : @parser.Expr) -> Tm raise ElabError {
-  if !cxt.can_raise {
+  if !cxt.can_raise && !cxt.in_type {
     cxt.fail("`raise` outside of a function declared with `raise`")
   }
   let (t, ty) = infer_ins(cxt, x)
@@ -1419,7 +1466,12 @@ fn elab_raise(cxt : Cxt, x : @parser.Expr) -> Tm raise ElabError {
       ()
     _ => cxt.fail("only errors can be raised, not " + cxt.show(ty))
   }
-  Raise(t)
+  // in a type: the error as a value (a `try` of the type catches it)
+  if cxt.in_type {
+    App(Global("%raise"), t, Expl)
+  } else {
+    Raise(t)
+  }
 }
 
 ///|

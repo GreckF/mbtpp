@@ -151,6 +151,8 @@ fn exec_call(n : String, body : Tm, arity : Int32, sp : Spine) -> Val? {
   }
   let res = exec(xe, b) catch {
     Ret(v) => v
+    // an error that escapes: the call is that error
+    Thrown(err) => return Some(raise_val(err))
     _ => return None
   }
   if has_effect(res, false) {

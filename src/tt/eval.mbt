@@ -7,6 +7,7 @@ pub fn eval(env : Env, t : Tm) -> Val {
   }
   match t {
     Var(ix) => env[env.length() - 1 - ix]
+    Global("%raise") => VPrim("%raise", [])
     Global(n) => global_val(n)
     Meta(m) =>
       match metas[m].sol {
@@ -20,7 +21,7 @@ pub fn eval(env : Env, t : Tm) -> Val {
       }
       for i = 0; i < mask.length(); i = i + 1 {
         if mask[i] {
-          v = app_val(v, env[i], Expl)
+          v = subst_app(v, env[i], Expl)
         }
       }
       v
@@ -28,7 +29,14 @@ pub fn eval(env : Env, t : Tm) -> Val {
     Lam(x, i, g, b) => VLam(x, i, g, { env, body: b, })
     App(f, a, i) => app_val(eval(env, f), eval(env, a), i)
     Pi(x, i, g, a, b) => VPi(x, i, g, eval(env, a), { env, body: b, })
-    Let(_, _, v, b) => eval(env_push(env, eval(env, v)), b)
+    Let(_, _, v, b) => {
+      let x = eval(env, v)
+      match strict(x) {
+        Some(r) if is_raise(r) => r
+        Some(_) => eval(env_push(env, x), b)
+        None => VStuck(env, t, [])
+      }
+    }
     U => VU
     PropU => VProp
     Lit(l) => VLit(l)
@@ -41,9 +49,19 @@ pub fn eval(env : Env, t : Tm) -> Val {
     | Continue
     | Return(_)
     | Raise(_)
-    | Try(_, _)
-    | Seq(_, _)
     | Defer(_, _) => VStuck(env, t, [])
+    // `a; b` where `a` only matters by its errors
+    Seq(a, b) =>
+      match strict(eval(env, a)) {
+        Some(r) if is_raise(r) => r
+        Some(x) if !has_effect(x, true) => eval(env, b)
+        _ => VStuck(env, t, [])
+      }
+    Try(b, cls) =>
+      match try_val(env, eval(env, b), cls) {
+        Some(v) => v
+        None => VStuck(env, t, [])
+      }
     ArrayLit(es) => VArrLit(es.map(e => eval(env, e)))
   }
 }
@@ -77,17 +95,50 @@ fn sp_push(sp : Spine, v : Val, i : Icit) -> Spine {
 ///|
 pub fn app_val(f : Val, a : Val, i : Icit) -> Val {
   match f {
+    // call by value: an error in the argument is the result
+    VLam(_, _, _, cl) if i != Impl =>
+      match strict(a) {
+        Some(r) if is_raise(r) => r
+        Some(_) => inst(cl, a)
+        None => delayed_app(f, a, i)
+      }
     VLam(_, _, _, cl) => inst(cl, a)
+    VPrim("%raise", sp) if sp.length() > 0 => f
     VRigid(l, sp) => VRigid(l, sp_push(sp, a, i))
     VFlex(m, sp) => VFlex(m, sp_push(sp, a, i))
     VGlobal(n, sp) => VGlobal(n, sp_push(sp, a, i))
     VData(n, sp) => VData(n, sp_push(sp, a, i))
+    VCon(n, sp) if i != Impl =>
+      match strict(a) {
+        Some(r) if is_raise(r) => r
+        Some(_) => VCon(n, sp_push(sp, a, i))
+        None => delayed_app(f, a, i)
+      }
     VCon(n, sp) => VCon(n, sp_push(sp, a, i))
     VPrim(n, sp) => reduce_prim(n, sp_push(sp, a, i))
     VMatch(env, vs, cls, sp) => VMatch(env, vs, cls, sp_push(sp, a, i))
     VStuck(env, t, sp) => VStuck(env, t, sp_push(sp, a, i))
     _ => VStuck([], Lit(LUnit), [(f, Expl), (a, i)])
   }
+}
+
+///|
+/// Apply the solution of a meta: a substitution, not a call, so an error in
+/// the argument does not propagate (see raise.mbt).
+fn subst_app(f : Val, a : Val, i : Icit) -> Val {
+  match f {
+    VLam(_, _, _, cl) => inst(cl, a)
+    _ => app_val(f, a, i)
+  }
+}
+
+///|
+fn subst_spine(f : Val, sp : Spine) -> Val {
+  let mut v = f
+  for a in sp {
+    v = subst_app(v, a.0, a.1)
+  }
+  v
 }
 
 ///|
@@ -108,6 +159,7 @@ fn reduce_prim(n : String, sp : Spine) -> Val {
         if a.1 == Expl {
           match force(a.0) {
             VLit(l) => lits.push(l)
+            VPrim("%raise", [_, ..]) as r => return r
             _ => return VPrim(n, sp)
           }
         }
@@ -127,7 +179,7 @@ pub fn force(v : Val) -> Val {
   match v {
     VFlex(m, sp) =>
       match metas[m].sol {
-        Some(s) => force(app_spine(s, sp))
+        Some(s) => force(subst_spine(s, sp))
         None => v
       }
     VGlobal(n, sp) =>
@@ -162,7 +214,7 @@ pub fn force_meta(v : Val) -> Val {
   match v {
     VFlex(m, sp) =>
       match metas[m].sol {
-        Some(s) => force_meta(app_spine(s, sp))
+        Some(s) => force_meta(subst_spine(s, sp))
         None => v
       }
     VMatch(env, vs, cls, sp) =>
@@ -183,6 +235,7 @@ pub fn force_meta(v : Val) -> Val {
 /// Results that keep a function application folded.
 fn is_blocked(v : Val) -> Bool {
   match v {
+    VPrim("%raise", _) => false
     VMatch(_, _, _, _) | VPrim(_, _) | VStuck(_, _, _) => true
     _ => false
   }
@@ -205,6 +258,10 @@ fn note_no_body(n : String) -> Unit {
 /// Unfold a global function applied to at least as many arguments as it
 /// has leading lambdas.
 pub fn unfold(n : String, sp : Spine) -> Val? {
+  match strict_call(n, sp) {
+    Some(r) => return r
+    None => ()
+  }
   match globals.get(n) {
     Some({ kind: GFunc(Some(body), false, arity), .. }) if sp.length() >= arity => {
       last_unfolded.val = Some(n)
@@ -222,8 +279,37 @@ pub fn unfold(n : String, sp : Spine) -> Val? {
 }
 
 ///|
+/// Before unfolding the function `n`: `Some(Some(raise e))` if an argument
+/// is an error, `Some(None)` if an argument may still raise (the call stays
+/// folded), `None` to go on. Also performs the delayed applications `%app`.
+fn strict_call(n : String, sp : Spine) -> Val?? {
+  if n == "%app" {
+    return Some(
+      match strict_args(sp) {
+        ArgsUnknown => None
+        ArgsRaise(r) => Some(r)
+        ArgsOk => Some(app_spine(sp[0].0, sp[1:].to_array()))
+      },
+    )
+  }
+  match globals.get(n) {
+    Some({ kind: GFunc(Some(_), _, arity), .. }) if sp.length() >= arity =>
+      match strict_args(sp) {
+        ArgsUnknown => Some(None)
+        ArgsRaise(r) => Some(Some(r))
+        ArgsOk => None
+      }
+    _ => None
+  }
+}
+
+///|
 /// Unfold regardless of the number of arguments (used by conversion).
 pub fn unfold_any(n : String, sp : Spine) -> Val? {
+  match strict_call(n, sp) {
+    Some(r) => return r
+    None => ()
+  }
   match globals.get(n) {
     Some({ kind: GFunc(Some(body), false, _), .. }) =>
       Some(app_spine(eval([], body), sp))
@@ -288,6 +374,14 @@ fn match_pat(p : CPat, v : Val, out : Array[Val]) -> MatchRes {
 ///|
 /// Select the first clause that matches; `None` if the match is blocked.
 pub fn match_vals_opt(env : Env, vs : Array[Val], cls : Array[Clause]) -> Val? {
+  // call by value: the scrutinees are evaluated first
+  for v in vs {
+    match strict(v) {
+      Some(r) if is_raise(r) => return Some(r)
+      Some(_) => ()
+      None => return None
+    }
+  }
   for cl in cls {
     let out : Array[Val] = []
     let mut res = Matched

@@ -185,19 +185,16 @@ fn elab_fn_sig(fd : @parser.FnDecl) -> Unit raise ElabError {
     Some(ps) => elab_expl_binders(c1, ps)
     None => (c1, [])
   }
-  let ret = match fd.ret {
-    Some(r) => check_type(c2, r)
+  let (ret, ret_prop) = match fd.ret {
+    Some(r) => check_type_sort(c2, r)
     None =>
       if fd.name == "main" || fd.body is BodyExtern(_) {
-        Global("Unit")
+        (Global("Unit"), false)
       } else {
-        c2.fresh_meta()
+        (c2.fresh_meta(), false)
       }
   }
-  let ret = match fd.raises {
-    Some(r) => Raises(ret, check_type(c2, r))
-    None => ret
-  }
+  let ret = raising_cod(c2, ret, ret_prop, fd.raises)
   let bs = concat(bs1, bs2)
   let ty = pis(bs, ret)
   match fd.params {
@@ -650,11 +647,8 @@ fn elab_trait(td : @parser.TraitDecl) -> Unit raise ElabError {
   for m in td.methods {
     let (c1, bs1) = elab_impl_binders(sc.at(m.pos), m.impl_params)
     let (c2, bs2) = elab_expl_binders(c1, m.params)
-    let r = check_type(c2, m.ret)
-    let r = match m.raises {
-      Some(e) => Raises(r, check_type(c2, e))
-      None => r
-    }
+    let (r, r_prop) = check_type_sort(c2, m.ret)
+    let r = raising_cod(c2, r, r_prop, m.raises)
     ftys.push(
       finish(sc, tr + "::" + m.name, [pis(concat(bs1, bs2), r)], lvl=1)[0],
     )

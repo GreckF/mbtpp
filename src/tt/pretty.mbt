@@ -158,6 +158,15 @@ fn show_prec(names : Array[String], t : Tm, prec : Int32) -> String {
       }
       let (h, args) = flatten_app(t)
       match (h, args) {
+        (Global("%raise"), [(e, _)]) =>
+          return paren(prec > 1, "raise " + show_prec(names, e, 2))
+        // a delayed application (see raise.mbt)
+        (Global("%app"), [(f, _), (a, i), .. rest]) =>
+          return show_prec(
+            names,
+            rest.fold(init=App(f, a, i), (g, x) => App(g, x.0, x.1)),
+            prec,
+          )
         (Global("Id"), [_, (a, Expl), (b, Expl)]) =>
           return paren(
             prec > 1,

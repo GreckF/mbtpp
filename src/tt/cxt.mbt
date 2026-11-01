@@ -20,6 +20,9 @@ pub(all) struct Cxt {
   can_async : Bool
   ret_ty : Val?
   in_loop : Bool
+  /// In a type: calls that raise and `raise e` stand for their values (see
+  /// raise.mbt), since a type is not run.
+  in_type : Bool
 }
 
 ///|
@@ -36,6 +39,7 @@ pub fn empty_cxt(pos : Pos) -> Cxt {
     can_async: false,
     ret_ty: None,
     in_loop: false,
+    in_type: false,
   }
 }
 
@@ -243,6 +247,12 @@ pub fn Cxt::refine(self : Cxt, eqs0 : Array[(Val, Val)]) -> Refined {
       }
       (VLit(l1), VLit(l2)) => if l1 != l2 { return RConflict }
       (VLit(_), VCon(_, _)) | (VCon(_, _), VLit(_)) => return RConflict
+      // an error is not a value, and errors are equal when they are the same
+      // error (see raise.mbt)
+      (VPrim("%raise", [(e1, _), ..]), VPrim("%raise", [(e2, _), ..])) =>
+        eqs.push((e1, e2))
+      (VPrim("%raise", _), VLit(_) | VCon(_, _))
+      | (VLit(_) | VCon(_, _), VPrim("%raise", _)) => return RConflict
       _ =>
         if !cur.try_unify(a, b) {
           return RStuck(cur.show(a) + " = " + cur.show(b))

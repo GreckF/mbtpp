@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-578388e1.js";
+            window.path_to_searchindex_js = "../searchindex-731923af.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-77b35725.js"></script>
@@ -253,6 +253,53 @@ fn main {
 <li><code>noraise { 模式 =&gt; … }</code> 处理没有出错时的结果。<code>catch</code> 和 <code>noraise</code> 分支中抛出的错误不会被同一个
 <code>try</code> 捕获。</li>
 <li><code>catch</code> 的分支可以使用或模式、<code>as</code> 和守卫。</li>
+</ul>
+<h2 id="错误作为逻辑中的值"><a class="header" href="#错误作为逻辑中的值">错误作为逻辑中的值</a></h2>
+<p>类型检查时，会抛出错误的调用计算为值 <code>raise e</code>。它可以写进类型，可以比较，也可以被 <code>try</code> 捕获，
+因此可以证明一个函数在什么情况下抛出、什么情况下不抛出：</p>
+<pre><code class="language-moonbit">suberror Empty
+
+fn head(xs : List[Int]) -&gt; Int raise Empty {
+  match xs {
+    Nil =&gt; raise Empty
+    Cons(x, _) =&gt; x
+  }
+}
+
+fn const0(x : Int) -&gt; Int { 0 }
+
+lemma head_nil() -&gt; head(Nil) === raise Empty { Refl }
+
+lemma head_ok(x : Int, xs : List[Int]) -&gt;
+  (try { head(Cons(x, xs)); true } catch { _ =&gt; false }) === true { Refl }
+
+// 和运行时一样，参数的错误先发生
+lemma strict() -&gt; const0(head(Nil)) === raise Empty { Refl }
+
+enum Void {}
+
+// 错误不是值：这个等式不可能成立
+lemma not_zero(p : head(Nil) === 0) -&gt; Void { match p {} }
+
+fn main {
+  println(try { const0(head(Nil)) } catch { Empty =&gt; -1 })
+}
+</code></pre>
+<p>规则与运行时的按值求值一致：</p>
+<ul>
+<li>对 <code>raise e</code> 做 <code>match</code>、把它作为显式参数传给函数或构造子、<code>let x = raise e</code>，结果都是 <code>raise e</code>。
+函数体在调用之前不运行，所以 <code>(x) =&gt; raise e</code> 是一个值。隐式参数在运行时被擦除，不传播错误。</li>
+<li>函数只在参数已知不抛出时展开。<code>const0(head(xs))</code> 中 <code>xs</code> 是变量，无法确定 <code>head(xs)</code> 是否
+抛出，所以这个调用不展开，<code>const0(head(xs)) === 0</code> 不能用 <code>Refl</code> 证明。变量总是代表值，
+<code>const0(x) === 0</code> 可以。</li>
+<li><code>raise e</code> 与任何构造子和字面量都不同；<code>raise e1</code> 与 <code>raise e2</code> 相等当且仅当 <code>e1</code> 与 <code>e2</code> 相等。</li>
+<li>只有在类型中可以写会抛出的调用和 <code>raise e</code>。证明（纯的项）仍然不能调用会抛出的函数，所以纯的
+部分造不出错误，证明不会因此不一致。</li>
+<li>引理的隐式参数代表值，不能由合一解成可能抛出的项。构造子、类型，以及 <code>Id::sym</code>、<code>Id::trans</code>、
+<code>Id::cong</code>、<code>Id::subst</code> 的隐式参数可以，因为它们不依赖参数是值。</li>
+<li>返回证明（<code>Prop</code> 中的类型）的函数不能声明 <code>raise</code>：证明在运行时被擦除，错误会随之丢失。</li>
+<li><code>raise</code> 的参数是整个表达式：<code>raise Empty === x</code> 是 <code>raise (Empty === x)</code>，需要写成
+<code>(raise Empty) === x</code>。</li>
 </ul>
 
                     </main>

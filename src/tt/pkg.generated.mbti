@@ -85,6 +85,8 @@ pub fn is_prop_head(Tm) -> Bool
 
 pub fn is_prop_type(Array[Val?], Val) -> Bool
 
+pub fn is_raise(Val) -> Bool
+
 pub let last_error : Array[(@parser.Pos, String)]
 
 pub fn lit_type(@parser.Lit) -> Val
@@ -92,6 +94,8 @@ pub fn lit_type(@parser.Lit) -> Val
 pub fn lookup_global(String) -> GEntry?
 
 pub fn match_vals_opt(Array[Val], Array[Val], Array[Clause]) -> Val?
+
+pub fn may_raise(Val) -> Bool
 
 pub let mbt_builtin_traits : Map[String, Map[String, String]]
 
@@ -143,6 +147,8 @@ pub fn quote(Int32, Val) -> Tm
 
 pub fn quote_full(Int32, Val) -> Tm
 
+pub fn raise_val(Val) -> Val
+
 pub fn reset_state() -> Unit
 
 pub fn restore_metas(Array[Val?]) -> Unit
@@ -158,6 +164,8 @@ pub fn snapshot_metas() -> Array[Val?]
 pub let source_files : Array[String]
 
 pub fn split_pos(@parser.Pos) -> (Int32, Int32)
+
+pub fn strict(Val) -> Val?
 
 pub fn tm_effect(Tm) -> (Bool, Tm?)
 
@@ -234,6 +242,7 @@ pub(all) struct Cxt {
   can_async : Bool
   ret_ty : Val?
   in_loop : Bool
+  in_type : Bool
 }
 pub fn Cxt::at(Self, @parser.Pos) -> Self
 pub fn Cxt::bind(Self, String, Val) -> Self
@@ -310,6 +319,7 @@ pub(all) struct MbtInfo {
 
 pub(all) struct MetaEntry {
   mut sol : Val?
+  mut lax : Bool
 }
 
 pub(all) struct NameInfo {

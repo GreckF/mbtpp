@@ -148,10 +148,10 @@ test "codegen: an implicit field used at runtime is kept" {
       #|fn[T0] f_len_t(v : E_Vector[T0]) -> E_Nat raise {
       #|fn f_len(a2 : Value) -> Value raise {
       #|fn main {
+      #|enum E_Nat {
       #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
       #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
       #|fn f_show_to_string(inst : Value) -> Value raise {
-      #|enum E_Nat {
       #|fn f_nat_to_string_t(self : E_Nat) -> String raise {
       #|fn f_nat_to_string(a0 : Value) -> Value raise {
       #|fn f_nat_to_int_t(self : E_Nat) -> Int raise {
@@ -431,6 +431,78 @@ test "codegen: async functions are native" {
     ),
     content=(
       #|async fn g cannot be compiled to MoonBit: its type has no native MoonBit translation (like a type computed from a parameter, or a type parameter with a bound that occurs in no parameter and not in the result type)
+    ),
+  )
+}
+
+///|
+/// The MoonBit impls of a program: the lines starting with `impl`.
+fn impl_lines(src : String) -> String {
+  @tt.check_program("t.mbtpp", src) catch {
+    @tt.CheckError(msg) => return msg
+  }
+  let code = @codegen.generate([]) catch {
+    @codegen.CodegenError(msg) => return msg
+  }
+  code
+  .split("\n")
+  .filter(l => l.has_prefix("impl"))
+  .map(l => l.to_string())
+  .to_array()
+  .join("\n")
+}
+
+///|
+test "codegen: instances of Prelude traits for MoonBit++ datatypes are MoonBit impls" {
+  // an async function has only native code: printing, comparing, ... its
+  // datatypes needs the impls (Option and Result use MoonBit's own)
+  inspect(
+    impl_lines(
+      (
+        #|enum Color {
+        #|  Red
+        #|  Green
+        #|  Rgb(Int, Int, Int)
+        #|} derive(Show, Eq, Compare, Hash)
+        #|
+        #|struct Point {
+        #|  x : Int
+        #|  y : Int
+        #|} derive(Show, Eq, Compare)
+        #|
+        #|fn[T : Eq] same(a : T, b : T) -> Bool { a == b }
+        #|fn[T : Compare] smaller(a : T, b : T) -> T { if a.compare(b) <= 0 { a } else { b } }
+        #|fn[T : Show] show_all(xs : List[T]) -> String {
+        #|  match xs { Nil => ""; Cons(x, r) => x.to_string() + ";" + show_all(r) }
+        #|}
+        #|
+        #|async fn main {
+        #|  println(Rgb(1, 2, 3))
+        #|  println(Cons(Red, Cons(Green, Nil)))
+        #|  println(same(Rgb(1, 2, 3), Rgb(1, 2, 3)))
+        #|  println(smaller(Green, Red))
+        #|  println({ x: 1, y: 2 })
+        #|  println(same({ x: 1, y: 2 }, { x: 1, y: 3 }))
+        #|  println(smaller({ x: 2, y: 0 }, { x: 1, y: 9 }))
+        #|  println(show_all(Cons(Red, Cons(Rgb(0, 0, 0), Nil))))
+        #|  let n : Nat = 2
+        #|  println(n + 3)
+        #|  println(Some(Red))
+        #|  println(same(Some(1), Some(1)))
+        #|  let r : Result[Int, String] = Ok(1)
+        #|  println(r)
+        #|}
+      ),
+    ),
+    content=(
+      #|impl Show for E_Color with to_string(a0) {
+      #|impl Eq for E_Color with equal(a0, a1) {
+      #|impl Compare for E_Color with compare(a0, a1) {
+      #|impl Show for E_Point with to_string(a0) {
+      #|impl Eq for E_Point with equal(a0, a1) {
+      #|impl Compare for E_Point with compare(a0, a1) {
+      #|impl[T0 : Show] Show for E_List[T0] with to_string(a0) {
+      #|impl Show for E_Nat with to_string(a0) {
     ),
   )
 }

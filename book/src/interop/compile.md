@@ -24,6 +24,11 @@ enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
 
 `#mbt` 类型使用自己的名字而不是 `E_…`（见 [#mbt 类型与 trait](mbt-types.md)）。
 
+Prelude 中 `#mbt` trait（`Show`、`Eq`、`Compare`、`Hash`、`Default`、运算符等）的实例，在原生代码
+需要时成为 `E_…` 的 MoonBit `impl`，包括 `derive` 的实例；`Option` 与 `Result` 使用 MoonBit 自己的
+impl，它们的输出与比较和 Prelude 的实例相同。因此在 async 函数（只有原生代码）中也可以打印、比较
+这些数据。数组和 `Map` 还不在原生片段中。
+
 ## 统一表示
 
 其余部分（类型层计算、GADT 细化、非 `#mbt` 的 trait 等）使用统一值表示 `Value`。它是运行时

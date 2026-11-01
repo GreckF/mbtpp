@@ -1239,6 +1239,12 @@ pub fn generate_files(
   }
   // and so are the impls of `#mbt` traits, like the types
   for i in g.mbt_impls.copy() {
+    // impls for the native enums of MoonBit++ datatypes are made when used
+    match g.impl_info(i) {
+      Some((_, _, NEnum(d, _), tr)) if @tt.mbt_info(d) is None &&
+        !(@tt.mbt_info(tr) is Some({ defined: true, .. })) => continue
+      _ => ()
+    }
     g.need_impl(i)
   }
   while g.todo.length() > 0 {

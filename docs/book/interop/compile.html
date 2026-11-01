@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-62bd2cce.js";
+            window.path_to_searchindex_js = "../searchindex-f5dfa5af.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-935ffb6c.js"></script>
@@ -199,6 +199,10 @@
 enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
 </code></pre>
 <p><code>#mbt</code> 类型使用自己的名字而不是 <code>E_…</code>（见 <a href="mbt-types.html">#mbt 类型与 trait</a>）。</p>
+<p>Prelude 中 <code>#mbt</code> trait（<code>Show</code>、<code>Eq</code>、<code>Compare</code>、<code>Hash</code>、<code>Default</code>、运算符等）的实例，在原生代码
+需要时成为 <code>E_…</code> 的 MoonBit <code>impl</code>，包括 <code>derive</code> 的实例；<code>Option</code> 与 <code>Result</code> 使用 MoonBit 自己的
+impl，它们的输出与比较和 Prelude 的实例相同。因此在 async 函数（只有原生代码）中也可以打印、比较
+这些数据。数组和 <code>Map</code> 还不在原生片段中。</p>
 <h2 id="统一表示"><a class="header" href="#统一表示">统一表示</a></h2>
 <p>其余部分（类型层计算、GADT 细化、非 <code>#mbt</code> 的 trait 等）使用统一值表示 <code>Value</code>。它是运行时
 中的一个可扩展 enum（MoonBit 的 <code>extenum</code>），固定变体是 <code>VInt</code>、<code>VFun</code> 等；每个生成的文件用

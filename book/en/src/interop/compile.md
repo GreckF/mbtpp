@@ -24,6 +24,12 @@ enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
 
 `#mbt` types use their own names instead of `E_…` (see [#mbt Types and Traits](mbt-types.md)).
 
+Instances of the Prelude's `#mbt` traits (`Show`, `Eq`, `Compare`, `Hash`, `Default`, the operators, ...)
+become MoonBit `impl`s of the `E_…` types when native code needs them, derived instances included;
+`Option` and `Result` use MoonBit's own impls, which print and compare as the Prelude's instances do.
+So async functions (which only have native code) can print and compare these data too. Arrays and
+`Map` are not in the native fragment yet.
+
 ## Uniform representation
 
 Everything else (type-level computation, GADT refinement, non-`#mbt` traits, etc.) uses the uniform representation `Value`. It is

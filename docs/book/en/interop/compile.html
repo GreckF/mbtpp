@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-1d328ce0.js";
+            window.path_to_searchindex_js = "../searchindex-c26bbaf8.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-94125c94.js"></script>
@@ -199,6 +199,11 @@ function. The native types are:</p>
 enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
 </code></pre>
 <p><code>#mbt</code> types use their own names instead of <code>E_…</code> (see <a href="mbt-types.html">#mbt Types and Traits</a>).</p>
+<p>Instances of the Prelude’s <code>#mbt</code> traits (<code>Show</code>, <code>Eq</code>, <code>Compare</code>, <code>Hash</code>, <code>Default</code>, the operators, …)
+become MoonBit <code>impl</code>s of the <code>E_…</code> types when native code needs them, derived instances included;
+<code>Option</code> and <code>Result</code> use MoonBit’s own impls, which print and compare as the Prelude’s instances do.
+So async functions (which only have native code) can print and compare these data too. Arrays and
+<code>Map</code> are not in the native fragment yet.</p>
 <h2 id="uniform-representation"><a class="header" href="#uniform-representation">Uniform representation</a></h2>
 <p>Everything else (type-level computation, GADT refinement, non-<code>#mbt</code> traits, etc.) uses the uniform representation <code>Value</code>. It is
 an extensible enum (MoonBit’s <code>extenum</code>) in the runtime, with fixed variants <code>VInt</code>, <code>VFun</code>, and so on; each generated file uses

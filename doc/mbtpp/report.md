@@ -1,8 +1,7 @@
 # MoonBit++ 实现报告
 
 本文总结这一轮工作完成的功能、实现方式、验证方法和已知局限。仓库在
-`GreckF/mbtpp`（`main` 分支）；旧的 shitt 实现完整保存在同级目录
-`kitty-hawk-old` 中（含全部分支、remote 与 stash）。
+`GreckF/mbtpp`（`main` 分支）。
 
 > 声明：这是 vibe coding 的娱乐项目。类型检查器**没有终止检查**，用无限递归可以“证明”任何命题，
 > 请不要把它当作可信的证明工具。

@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-ac9eec09.js";
+            window.path_to_searchindex_js = "../searchindex-a9b046c2.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-2f5a2ad3.js"></script>
@@ -222,6 +222,40 @@ fn main {
 }
 </code></pre>
 <p>完整的例子见仓库中的 <code>examples/stlc.mbtpp</code>。</p>
+<h2 id="匹配目标中的表达式"><a class="header" href="#匹配目标中的表达式">匹配目标中的表达式</a></h2>
+<p>在证明中（目标是命题时），被匹配的表达式如果出现在目标里，会先被抽象成一个新的变量，再对这个
+变量做依赖匹配，所以每个分支中目标里的这个表达式被替换为分支的模式（Agda 的 <code>with</code>）。表达式
+可以出现在目标所提到的函数的定义中，检查器会展开几层去找：</p>
+<pre><code class="language-moonbit">fn insert(x : Int, xs : List[Int]) -&gt; List[Int] {
+  match xs {
+    Nil =&gt; Cons(x, Nil)
+    Cons(y, rest) =&gt; if x &lt;= y { Cons(x, xs) } else { Cons(y, insert(x, rest)) }
+  }
+}
+
+fn length(xs : List[Int]) -&gt; Nat {
+  match xs {
+    Nil =&gt; Z
+    Cons(_, r) =&gt; S(length(r))
+  }
+}
+
+lemma insert_length(x : Int, xs : List[Int]) -&gt; length(insert(x, xs)) === S(length(xs)) {
+  match xs {
+    Nil =&gt; Refl
+    Cons(y, rest) =&gt;
+      // 目标中 insert 的定义里有 `x &lt;= y`：true 分支中它是 true
+      match x &lt;= y {
+        true =&gt; Refl
+        false =&gt; Id::cong(S, insert_length(x, rest))
+      }
+  }
+}
+</code></pre>
+<ul>
+<li>只在目标是命题时这样做；普通函数中的 <code>match</code> 不受影响。</li>
+<li>字面量模式（<code>true</code>、<code>0</code>、<code>"a"</code>）也会细化被匹配的变量：分支中这个变量就是那个字面量。</li>
+</ul>
 <h2 id="prop-的消去"><a class="header" href="#prop-的消去">Prop 的消去</a></h2>
 <p>匹配 <code>Prop</code> 中的数据（证明）时，结果也必须在 <code>Prop</code> 中，因为证明在编译时被擦除，运行时无法根据它
 选择分支。例外是<strong>子单例</strong>：至多一个构造子、字段都是证明的命题，例如命题相等 <code>===</code>。匹配它不需要
@@ -278,7 +312,7 @@ fn main {
         <script src="../book-609e4cb8.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../theme/moonbit-731a77b0.js"></script>
+        <script src="../theme/moonbit-b0ead224.js"></script>
 
 
 

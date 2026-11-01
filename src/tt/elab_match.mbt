@@ -93,7 +93,17 @@ fn check_pat(
       }
     PLit(_, l) => {
       cxt.unify(ty, lit_type(l))
-      simple(as_name, CPLit(l))
+      let out = simple(as_name, CPLit(l))
+      // in the clause, the scrutinee is the literal
+      match scrut {
+        Some(v) if refine_scrut =>
+          match out.cxt.refine([(v, VLit(l))]) {
+            ROk(c2) => { ..out, cxt: c2, }
+            RConflict => { ..out, pat: CPWild, conflict: true, }
+            RStuck(_) => out
+          }
+        _ => out
+      }
     }
     PTuple(q, ps) =>
       check_pat(
@@ -371,10 +381,10 @@ fn elab_match(
   cxt : Cxt,
   scr : @parser.Expr,
   ret : @parser.MatchRet?,
-  arms : Array[@parser.Arm],
+  arms0 : Array[@parser.Arm],
   goal : Val?,
 ) -> (Tm, Val) raise ElabError {
-  let arms = expand_arms(cxt, arms)
+  let arms = expand_arms(cxt, arms0)
   // array and range patterns, `is` in guards (see sugar.mbt)
   let arms = match special_match(cxt.pos, scr, arms) {
     None => arms
@@ -419,6 +429,37 @@ fn elab_match(
       }
       let sts = scrs.map(s => infer_ins(cxt, s))
       let svals = sts.map(x => cxt.eval(x.0))
+      // a scrutinee that is not a variable but occurs in the goal (of a
+      // proof): abstract it, and match on a variable instead (`with`)
+      for i = 0; i < scrs.length(); i = i + 1 {
+        match with_motive(cxt, svals[i], goal) {
+          Some(motive) => {
+            let w = "%with" + cxt.lvl.to_string()
+            let c2 = cxt.bind(w, sts[i].1)
+            let new_scrs = scrs.mapi((k, e) => {
+              if k == i {
+                @parser.EVar(e.pos(), w)
+              } else {
+                e
+              }
+            })
+            let scr2 = if new_scrs.length() > 1 {
+              @parser.ETuple(scr.pos(), new_scrs)
+            } else {
+              new_scrs[0]
+            }
+            let (body, _) = elab_match(
+              c2,
+              scr2,
+              None,
+              arms0,
+              Some(c2.eval(motive)),
+            )
+            return (App(Lam(w, Expl, true, body), sts[i].0, Expl), goal)
+          }
+          None => ()
+        }
+      }
       let clauses : Array[Clause] = []
       for j = 0; j < arms.length(); j = j + 1 {
         let arm = arms[j]
@@ -871,4 +912,98 @@ fn elab_try(
     clauses.push({ pats: [out.pat], cond, body: check(out.cxt, rhs, ty), })
   }
   (Try(tb, clauses), ty)
+}
+
+///|
+/// When the scrutinee `sv` is not a variable and the goal is a proposition
+/// where it occurs (possibly after unfolding a few definitions, even those
+/// stuck on a `match`): the goal with it abstracted, under one more
+/// variable. Matching on that variable then refines the goal, as Agda's
+/// `with` does.
+fn with_motive(cxt : Cxt, sv : Val, goal : Val) -> Tm? {
+  match force(sv) {
+    VRigid(_, []) | VLit(_) | VCon(_, _) => return None
+    _ => ()
+  }
+  let g0 = cxt.quote(goal)
+  if !is_prop_head(g0) {
+    return None
+  }
+  let a = tm_shift(cxt.quote(sv), 1, 0)
+  // the depth exposing the most occurrences (the least one among those)
+  let mut best : (Tm, Int32)? = None
+  for depth = 0; depth <= 3; depth = depth + 1 {
+    let gt = if depth == 0 { g0 } else { quote_open(cxt.lvl, goal, depth) }
+    let (motive, found) = tm_abstract(tm_shift(gt, 1, 0), a, 0)
+    if found {
+      let n = var_count(motive, 0)
+      match best {
+        Some((_, m)) if m >= n => ()
+        _ => best = Some((motive, n))
+      }
+    }
+  }
+  best.map(x => x.0)
+}
+
+///|
+/// The occurrences of the variable `d` in `t`.
+fn var_count(t : Tm, d : Int32) -> Int32 {
+  let go = (x : Tm, k : Int32) => var_count(x, d + k)
+  match t {
+    Var(ix) => if ix == d { 1 } else { 0 }
+    Lam(_, _, _, b) => go(b, 1)
+    App(f, x, _) => go(f, 0) + go(x, 0)
+    Pi(_, _, _, s, b) => go(s, 0) + go(b, 1)
+    Let(_, s, v, b) => go(s, 0) + go(v, 0) + go(b, 1)
+    Match(ss, cls) =>
+      ss.fold(init=0, (n, x) => n + go(x, 0)) +
+      cls.fold(init=0, (n, cl) => n + go(cl.body, pats_slots(cl.pats)))
+    Raises(s, e) => go(s, 0) + go(e, 0)
+    _ => 0
+  }
+}
+
+///|
+/// Quote `v`, unfolding global functions `depth` levels deep, even where
+/// the result is stuck on a `match` (to find a term hidden in a definition).
+fn quote_open(lvl : Int32, v : Val, depth : Int32) -> Tm {
+  match force_meta(v) {
+    VGlobal(n, sp) if depth > 0 =>
+      match unfold(n, sp) {
+        Some(w) => quote_open(lvl, w, depth - 1)
+        None =>
+          // a function that is run (`a; b`, ...): evaluate its body
+          match globals.get(n) {
+            Some({ kind: GFunc(Some(body), true, arity), .. }) if sp.length() >=
+              arity &&
+              can_unfold(n) =>
+              quote_open(lvl, app_spine(eval([], body), sp), depth - 1)
+            _ => quote(lvl, v)
+          }
+      }
+    VMatch(env, vs, cls, sp) => {
+      let cls2 = cls.map(cl => {
+        let l2 = lvl + pats_slots(cl.pats)
+        {
+          pats: cl.pats,
+          cond: clause_guard_val(env, lvl, cl).map(g => quote_open(l2, g, depth)),
+          body: quote_open(l2, clause_body_val(env, lvl, cl), depth),
+        }
+      })
+      let mut t = Match(vs.map(x => quote_open(lvl, x, depth)), cls2)
+      for a in sp {
+        t = App(t, quote_open(lvl, a.0, depth), a.1)
+      }
+      t
+    }
+    VData(n, sp) | VCon(n, sp) | VGlobal(n, sp) => {
+      let mut t = Global(n)
+      for a in sp {
+        t = App(t, quote_open(lvl, a.0, depth), a.1)
+      }
+      t
+    }
+    _ => quote(lvl, v)
+  }
 }

@@ -84,8 +84,7 @@ fn has_effect(v : Val, print_ok : Bool) -> Bool {
     // a function that only a run can run (with mutable state) is only run
     // when called
     VLam(_, _, _, cl) =>
-      needs_run(cl.body) ||
-      cl.env.iter().any(x => has_effect(x, false))
+      needs_run(cl.body) || cl.env.iter().any(x => has_effect(x, false))
     VPi(_, _, _, a, cl) =>
       has_effect(a, false) || cl.env.iter().any(x => has_effect(x, false))
     VRaises(a, e) => has_effect(a, false) || has_effect(e, false)
@@ -125,9 +124,11 @@ fn captures_mut(t : Tm, xe : XEnv, depth : Int32, in_lam : Bool) -> Bool {
     Raises(a, e) => go(a, 0) || go(e, 0)
     // assigning a variable of the run also shares it
     Assign(ix, v) =>
-      (in_lam &&
-      ix >= depth &&
-      xe.muts.get(xe.slot(ix - depth)).unwrap_or(false)) ||
+      (
+        in_lam &&
+        ix >= depth &&
+        xe.muts.get(xe.slot(ix - depth)).unwrap_or(false)
+      ) ||
       go(v, 0)
     Return(v) | Raise(v) => go(v, 0)
     While(c, b, s) => go(c, 0) || go(b, 0) || go(s, 0)

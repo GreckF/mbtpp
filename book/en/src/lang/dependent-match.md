@@ -50,6 +50,47 @@ match progress(t1) {
 
 See `examples/stlc.mbtpp` in the repository for the full example.
 
+## Matching on an expression of the goal
+
+In a proof (when the goal is a proposition), an expression being matched that occurs in the goal is
+first abstracted into a new variable, which is then matched dependently: in each arm, the expression
+is replaced by the pattern of the arm in the goal (as Agda's `with` does). The expression may occur
+in the definitions of the functions the goal mentions: the checker unfolds a few levels to find it.
+
+```moonbit
+fn insert(x : Int, xs : List[Int]) -> List[Int] {
+  match xs {
+    Nil => Cons(x, Nil)
+    Cons(y, rest) => if x <= y { Cons(x, xs) } else { Cons(y, insert(x, rest)) }
+  }
+}
+
+fn length(xs : List[Int]) -> Nat {
+  match xs {
+    Nil => Z
+    Cons(_, r) => S(length(r))
+  }
+}
+
+lemma insert_length(x : Int, xs : List[Int]) -> length(insert(x, xs)) === S(length(xs)) {
+  match xs {
+    Nil => Refl
+    Cons(y, rest) =>
+      // the definition of insert in the goal has `x <= y`: it is true in
+      // the true arm
+      match x <= y {
+        true => Refl
+        false => Id::cong(S, insert_length(x, rest))
+      }
+  }
+}
+```
+
+- This is done only when the goal is a proposition; a `match` in an ordinary function is not
+  affected.
+- Literal patterns (`true`, `0`, `"a"`) refine the matched variable too: in the arm, the variable is
+  that literal.
+
 ## Eliminating Prop
 
 When matching on data in `Prop` (proofs), the result must also be in `Prop`: proofs are erased by

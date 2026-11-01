@@ -324,3 +324,20 @@ test "example unfolding" {
     ),
   )
 }
+
+///|
+test "example effects_dt" {
+  inspect(
+    run_example("effects_dt.mbtpp"),
+    content=(
+      #|http://localhost:8080
+      #|4 + 5 = nine
+      #|compare 1 2
+      #|compare 3 1
+      #|compare 3 2
+      #|Cons(1, Cons(2, Cons(3, Nil)))
+      #|16
+      #|
+    ),
+  )
+}

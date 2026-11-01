@@ -47,6 +47,43 @@ match progress(t1) {
 
 完整的例子见仓库中的 `examples/stlc.mbtpp`。
 
+## 匹配目标中的表达式
+
+在证明中（目标是命题时），被匹配的表达式如果出现在目标里，会先被抽象成一个新的变量，再对这个
+变量做依赖匹配，所以每个分支中目标里的这个表达式被替换为分支的模式（Agda 的 `with`）。表达式
+可以出现在目标所提到的函数的定义中，检查器会展开几层去找：
+
+```moonbit
+fn insert(x : Int, xs : List[Int]) -> List[Int] {
+  match xs {
+    Nil => Cons(x, Nil)
+    Cons(y, rest) => if x <= y { Cons(x, xs) } else { Cons(y, insert(x, rest)) }
+  }
+}
+
+fn length(xs : List[Int]) -> Nat {
+  match xs {
+    Nil => Z
+    Cons(_, r) => S(length(r))
+  }
+}
+
+lemma insert_length(x : Int, xs : List[Int]) -> length(insert(x, xs)) === S(length(xs)) {
+  match xs {
+    Nil => Refl
+    Cons(y, rest) =>
+      // 目标中 insert 的定义里有 `x <= y`：true 分支中它是 true
+      match x <= y {
+        true => Refl
+        false => Id::cong(S, insert_length(x, rest))
+      }
+  }
+}
+```
+
+- 只在目标是命题时这样做；普通函数中的 `match` 不受影响。
+- 字面量模式（`true`、`0`、`"a"`）也会细化被匹配的变量：分支中这个变量就是那个字面量。
+
 ## Prop 的消去
 
 匹配 `Prop` 中的数据（证明）时，结果也必须在 `Prop` 中，因为证明在编译时被擦除，运行时无法根据它

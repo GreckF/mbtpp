@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-0d688617.js";
+            window.path_to_searchindex_js = "../searchindex-1f159c7d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-754cddce.js"></script>
@@ -365,6 +365,34 @@ fn add_one(x : Int) -&gt; Int {
 // x is a variable, and the call still unfolds
 lemma add_one_x(x : Int) -&gt; add_one(x) === x + 1 { Refl }
 </code></pre>
+<p>Handling <code>ctl</code> operations is computed during checking too (resuming several times included, with
+the restoring of <code>let mut</code> variables), with a result when the arguments are concrete values:</p>
+<pre><code class="language-moonbit">effect Choose {
+  ctl Choose() -&gt; Bool
+}
+
+fn count_trues() -&gt; Int!Choose {
+  let mut n = 0
+  if perform Choose() { n = n + 1 }
+  if perform Choose() { n = n + 1 }
+  n
+}
+
+fn all_counts() -&gt; List[Int] {
+  try { Cons(count_trues(), Nil) } catch {
+    Choose() =&gt; resume(true).append(resume(false))
+  }
+}
+
+lemma all_counts_ok() -&gt; all_counts() === Cons(2, Cons(1, Cons(1, Cons(0, Nil)))) { Refl }
+</code></pre>
+<p>General proofs about functions with effects often go by cases on the conditions in their
+definitions: <code>match x &lt;= y</code> in a proof replaces the <code>x &lt;= y</code> of the goal by <code>true</code> or <code>false</code> (see
+<a href="dependent-match.html#matching-on-an-expression-of-the-goal">Dependent matching and refinement</a>).
+<code>examples/effects_dt.mbtpp</code> in the repository has fuller examples: a configuration effect whose
+result types depend on the keys, a <code>printf</code> whose format computes the types of its arguments, a
+proof for every input that a handler dropping the log does not change the result of a sort, and a
+search computed during type checking.</p>
 <h2 id="limitations"><a class="header" href="#limitations">Limitations</a></h2>
 <ul>
 <li>The arm of a tail-resumptive operation cannot perform <code>ctl</code> operations.</li>
@@ -426,7 +454,7 @@ lemma add_one_x(x : Int) -&gt; add_one(x) === x + 1 { Refl }
         <script src="../book-609e4cb8.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../theme/moonbit-731a77b0.js"></script>
+        <script src="../theme/moonbit-b0ead224.js"></script>
 
 
 

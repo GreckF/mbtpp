@@ -825,3 +825,81 @@ test "effect polymorphic functions get async versions in native code" {
     ),
   )
 }
+
+///|
+test "ctl handlers are computed during checking" {
+  inspect(
+    check_source(
+      "t.mbtpp",
+      (
+        #|effect Choose {
+        #|  ctl Choose() -> Bool
+        #|}
+        #|
+        #|fn count_trues() -> Int!Choose {
+        #|  let mut n = 0
+        #|  if perform Choose() { n = n + 1 }
+        #|  if perform Choose() { n = n + 1 }
+        #|  n
+        #|}
+        #|
+        #|fn all_counts() -> List[Int] {
+        #|  try { Cons(count_trues(), Nil) } catch {
+        #|    Choose() => resume(true).append(resume(false))
+        #|  }
+        #|}
+        #|
+        #|fn none() -> Int {
+        #|  try { count_trues() } catch { Choose() => -1 }
+        #|}
+        #|
+        #|// variables outside the `try` are shared
+        #|fn calls() -> Int {
+        #|  let mut k = 0
+        #|  let _ = try { Cons(count_trues(), Nil) } catch {
+        #|    Choose() => { k = k + 1; resume(true).append(resume(false)) }
+        #|  }
+        #|  k
+        #|}
+        #|
+        #|lemma l1() -> all_counts() === Cons(2, Cons(1, Cons(1, Cons(0, Nil)))) { Refl }
+        #|lemma l2() -> none() === -1 { Refl }
+        #|lemma l3() -> calls() === 3 { Refl }
+        #|lemma wrong() -> all_counts() === Cons(2, Cons(2, Cons(2, Cons(2, Nil)))) { Refl }
+      ),
+    ),
+    content=(
+      #|t.mbtpp:34:77: error: type mismatch
+      #|  expected: all_counts(()) === Cons(2, Cons(2, Cons(2, Cons(2, Nil))))
+      #|  actual:   ?345(_) === ?345(_)
+    ),
+  )
+}
+
+///|
+test "closures that perform effects, returned from a run" {
+  inspect(
+    check_source(
+      "t.mbtpp",
+      (
+        #|effect Out {
+        #|  Out(String) -> Unit
+        #|}
+        #|
+        #|fn emit2(a : String) -> (String) -> Unit!Out!Out {
+        #|  perform Out(a)
+        #|  (b : String) => perform Out(b)
+        #|}
+        #|
+        #|fn collect() -> String {
+        #|  let mut buf = ""
+        #|  try { emit2("x")("y") } catch { Out(s) => { buf = buf + s; resume() } }
+        #|  buf
+        #|}
+        #|
+        #|lemma l() -> collect() === "xy" { Refl }
+      ),
+    ),
+    content="ok",
+  )
+}

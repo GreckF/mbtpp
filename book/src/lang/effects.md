@@ -186,6 +186,35 @@ fn add_one(x : Int) -> Int {
 lemma add_one_x(x : Int) -> add_one(x) === x + 1 { Refl }
 ```
 
+`ctl` 操作的处理也会在检查时计算（包括恢复多次和 `let mut` 的恢复语义），参数是具体的值时可以
+算出结果：
+
+```moonbit
+effect Choose {
+  ctl Choose() -> Bool
+}
+
+fn count_trues() -> Int!Choose {
+  let mut n = 0
+  if perform Choose() { n = n + 1 }
+  if perform Choose() { n = n + 1 }
+  n
+}
+
+fn all_counts() -> List[Int] {
+  try { Cons(count_trues(), Nil) } catch {
+    Choose() => resume(true).append(resume(false))
+  }
+}
+
+lemma all_counts_ok() -> all_counts() === Cons(2, Cons(1, Cons(1, Cons(0, Nil)))) { Refl }
+```
+
+关于有效应的函数的一般证明，常常要对定义中的条件分情况讨论：在证明中 `match x <= y`，目标里
+出现的 `x <= y` 会被替换为 `true` 或 `false`（见[依赖匹配与细化](dependent-match.md#匹配目标中的表达式)）。
+仓库中的 `examples/effects_dt.mbtpp` 有更完整的例子：结果类型由键决定的配置效应、格式决定参数
+类型的 `printf`、对任意输入证明“丢弃日志的处理器不改变排序结果”，以及在检查时计算的搜索。
+
 ## 限制
 
 - 尾恢复操作的分支中不能执行 `ctl` 操作。

@@ -1,0 +1,219 @@
+// Dependent types and algebraic effects together.
+
+// ---- 1. A configuration whose values have types computed from their keys
+
+enum Key {
+  Port
+  Host
+  Debug
+}
+
+fn KeyType(k : Key) -> Type {
+  match k {
+    Port => Int
+    Host => String
+    Debug => Bool
+  }
+}
+
+// the result type of the operation depends on its argument
+effect Config {
+  Get(k : Key) -> KeyType(k)
+}
+
+fn url() -> String!Config {
+  let host = perform Get(Host)
+  let port = perform Get(Port)
+  let base = "http://" + host + ":" + port.to_string()
+  if perform Get(Debug) { base + "/debug" } else { base }
+}
+
+fn defaults(k : Key) -> KeyType(k) {
+  match k as j return KeyType(j) {
+    Port => 8080
+    Host => "localhost"
+    Debug => false
+  }
+}
+
+fn url_default() -> String {
+  try { url() } catch { Get(k) => resume(defaults(k)) }
+}
+
+lemma url_default_ok() -> url_default() === "http://localhost:8080" { Refl }
+
+// ---- 2. printf: the format computes the type, the output is an effect
+
+enum Fmt {
+  Lit(String, Fmt)
+  IntArg(Fmt)
+  StrArg(Fmt)
+  End
+}
+
+effect Out {
+  Out(String) -> Unit
+}
+
+fn Printf(f : Fmt) -> Type {
+  match f {
+    Lit(_, rest) => Printf(rest)
+    IntArg(rest) => (Int) -> Printf(rest)!Out
+    StrArg(rest) => (String) -> Printf(rest)!Out
+    End => Unit
+  }
+}
+
+fn printf(f : Fmt) -> Printf(f)!Out {
+  match f as g return Printf(g) {
+    Lit(s, rest) => {
+      perform Out(s)
+      printf(rest)
+    }
+    IntArg(rest) =>
+      (n : Int) => {
+        perform Out(n.to_string())
+        printf(rest)
+      }
+    StrArg(rest) =>
+      (s : String) => {
+        perform Out(s)
+        printf(rest)
+      }
+    End => ()
+  }
+}
+
+// a handler that collects the output
+fn sum_line(a : Int, b : Int, c : String) -> String {
+  let mut buf = ""
+  let f = IntArg(Lit(" + ", IntArg(Lit(" = ", StrArg(End)))))
+  try {
+    printf(f)(a)(b)(c)
+  } catch {
+    Out(s) => {
+      buf = buf + s
+      resume()
+    }
+  }
+  buf
+}
+
+lemma sum_line_ok() -> sum_line(1, 2, "three") === "1 + 2 = three" { Refl }
+
+// ---- 3. Logging does not change the result, for every input
+
+effect Log {
+  Log(String) -> Unit
+}
+
+fn insert_log(x : Int, xs : List[Int]) -> List[Int]!Log {
+  match xs {
+    Nil => Cons(x, Nil)
+    Cons(y, rest) => {
+      perform Log("compare \{x} \{y}")
+      if x <= y {
+        Cons(x, xs)
+      } else {
+        Cons(y, insert_log(x, rest))
+      }
+    }
+  }
+}
+
+fn sort_log(xs : List[Int]) -> List[Int]!Log {
+  match xs {
+    Nil => Nil
+    Cons(x, rest) => insert_log(x, sort_log(rest))
+  }
+}
+
+fn insert(x : Int, xs : List[Int]) -> List[Int] {
+  match xs {
+    Nil => Cons(x, Nil)
+    Cons(y, rest) => if x <= y { Cons(x, xs) } else { Cons(y, insert(x, rest)) }
+  }
+}
+
+fn sort(xs : List[Int]) -> List[Int] {
+  match xs {
+    Nil => Nil
+    Cons(x, rest) => insert(x, sort(rest))
+  }
+}
+
+// handlers that drop the log
+fn insert_quiet(x : Int, xs : List[Int]) -> List[Int] {
+  try { insert_log(x, xs) } catch { Log(_) => resume() }
+}
+
+fn sort_quiet(xs : List[Int]) -> List[Int] {
+  try { sort_log(xs) } catch { Log(_) => resume() }
+}
+
+lemma insert_same(x : Int, xs : List[Int]) -> insert_quiet(x, xs) === insert(x, xs) {
+  match xs {
+    Nil => Refl
+    Cons(y, rest) =>
+      // `x <= y` occurs in the goal (in both definitions): matching on it
+      // replaces it by `true` or `false` there
+      match x <= y {
+        true => Refl
+        false => Id::cong(r => List::Cons(y, r), insert_same(x, rest))
+      }
+  }
+}
+
+lemma sort_same(xs : List[Int]) -> sort_quiet(xs) === sort(xs) {
+  match xs {
+    Nil => Refl
+    Cons(x, rest) =>
+      Id::trans(
+        insert_same(x, sort_quiet(rest)),
+        Id::cong(r => insert(x, r), sort_same(rest)),
+      )
+  }
+}
+
+// ---- 4. Searching with an effect, checked during type checking
+
+enum Vec[T] : Nat -> Type {
+  VNil : Vec[T](0)
+  VCons[n : Nat](T, Vec[T](n)) : Vec[T](S(n))
+}
+
+effect Choose {
+  ctl Choose() -> Bool
+}
+
+// the length is fixed by the type, the bits by the handler
+fn bits(n : Nat) -> Vec[Bool](n)!Choose {
+  match n {
+    Z => VNil
+    S(k) => VCons(perform Choose(), bits(k))
+  }
+}
+
+fn all_bits(n : Nat) -> List[Vec[Bool](n)] {
+  try { Cons(bits(n), Nil) } catch {
+    Choose() => resume(true).append(resume(false))
+  }
+}
+
+lemma eight() -> all_bits(3).length() === 8 { Refl }
+
+fn main {
+  println(url_default())
+  println(sum_line(4, 5, "nine"))
+  let xs = Cons(3, Cons(1, Cons(2, Nil)))
+  let sorted = try {
+    sort_log(xs)
+  } catch {
+    Log(s) => {
+      println(s)
+      resume()
+    }
+  }
+  println(sorted)
+  println(all_bits(4).length())
+}

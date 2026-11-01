@@ -199,6 +199,38 @@ fn add_one(x : Int) -> Int {
 lemma add_one_x(x : Int) -> add_one(x) === x + 1 { Refl }
 ```
 
+Handling `ctl` operations is computed during checking too (resuming several times included, with
+the restoring of `let mut` variables), with a result when the arguments are concrete values:
+
+```moonbit
+effect Choose {
+  ctl Choose() -> Bool
+}
+
+fn count_trues() -> Int!Choose {
+  let mut n = 0
+  if perform Choose() { n = n + 1 }
+  if perform Choose() { n = n + 1 }
+  n
+}
+
+fn all_counts() -> List[Int] {
+  try { Cons(count_trues(), Nil) } catch {
+    Choose() => resume(true).append(resume(false))
+  }
+}
+
+lemma all_counts_ok() -> all_counts() === Cons(2, Cons(1, Cons(1, Cons(0, Nil)))) { Refl }
+```
+
+General proofs about functions with effects often go by cases on the conditions in their
+definitions: `match x <= y` in a proof replaces the `x <= y` of the goal by `true` or `false` (see
+[Dependent matching and refinement](dependent-match.md#matching-on-an-expression-of-the-goal)).
+`examples/effects_dt.mbtpp` in the repository has fuller examples: a configuration effect whose
+result types depend on the keys, a `printf` whose format computes the types of its arguments, a
+proof for every input that a handler dropping the log does not change the result of a sort, and a
+search computed during type checking.
+
 ## Limitations
 
 - The arm of a tail-resumptive operation cannot perform `ctl` operations.

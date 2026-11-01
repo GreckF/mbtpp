@@ -17,24 +17,31 @@ MoonBit++ 的设计与实现所参考的文献。每条注明用在哪里；采�
    （`src/tt`，[implementation.md](implementation.md)）。
 4. Rocq 参考手册：`match … as … in … return …`. <https://rocq-prover.org/doc/>
    — Rocq 风格的 return 子句（[return-clause](../../book/src/lang/return-clause.md)）。
+5. Conor McBride, James McKinna. The View from the Left. Journal of Functional Programming 14(1),
+   2004.
+   — `with` 抽象：证明中匹配目标里的表达式时，先把它抽象为变量
+   （[依赖匹配与细化](../../book/src/lang/dependent-match.md)，`src/tt/elab_match.mbt`）。
+6. Agda 用户手册：With-Abstraction.
+   <https://agda.readthedocs.io/en/latest/language/with-abstraction.html>
+   — 同上。
 
 ## 代数效应
 
-5. Gordon Plotkin, Matija Pretnar. Handlers of Algebraic Effects. ESOP 2009.
+7. Gordon Plotkin, Matija Pretnar. Handlers of Algebraic Effects. ESOP 2009.
    — 效应与处理器（[effects.md](effects.md)）。
-6. Daan Leijen. Type Directed Compilation of Row-Typed Algebraic Effects. POPL 2017.
+8. Daan Leijen. Type Directed Compilation of Row-Typed Algebraic Effects. POPL 2017.
    — 效应行、效应多态，Koka 的设计（[effects.md](effects.md)）。
-7. Ningning Xie, Daan Leijen. Generalized Evidence Passing for Effect Handlers: Efficient
+9. Ningning Xie, Daan Leijen. Generalized Evidence Passing for Effect Handlers: Efficient
    Compilation of Effect Handlers to C. ICFP 2021.
    — 尾恢复操作按能力（evidence）传递翻译、`ctl` 操作的单子翻译（`src/tt/effects.mbt`、
    `src/tt/ctl.mbt`）。
 
 ## 受控展开
 
-8. Daniel Gratzer, Jonathan Sterling, Carlo Angiuli, Thierry Coquand, Lars Birkedal. Controlling
+10. Daniel Gratzer, Jonathan Sterling, Carlo Angiuli, Thierry Coquand, Lars Birkedal. Controlling
    Unfolding in Type Theory. arXiv:2210.05420. <https://arxiv.org/abs/2210.05420>
    — `#opaque`、`#unfold`、`unfold(f) { e }`（[unfolding.md](unfolding.md)、
    [受控展开](../../book/src/lang/unfolding.md)）。
-9. Agda 用户手册：Opaque definitions（Agda 2.6.4 起）.
+11. Agda 用户手册：Opaque definitions（Agda 2.6.4 起）.
    <https://agda.readthedocs.io/en/latest/language/opaque-definitions.html>
    — 不用扩展类型、在展开处检查的实现方式；默认透明（[unfolding.md](unfolding.md)）。

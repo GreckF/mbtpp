@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0d688617.js";
+            window.path_to_searchindex_js = "searchindex-1f159c7d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-754cddce.js"></script>
@@ -926,6 +926,44 @@ the index of the constructor is unified with <code>t1</code>, so the checker kno
 }
 </code></pre>
 <p>See <code>examples/stlc.mbtpp</code> in the repository for the full example.</p>
+<h2 id="matching-on-an-expression-of-the-goal"><a class="header" href="#matching-on-an-expression-of-the-goal">Matching on an expression of the goal</a></h2>
+<p>In a proof (when the goal is a proposition), an expression being matched that occurs in the goal is
+first abstracted into a new variable, which is then matched dependently: in each arm, the expression
+is replaced by the pattern of the arm in the goal (as Agda’s <code>with</code> does). The expression may occur
+in the definitions of the functions the goal mentions: the checker unfolds a few levels to find it.</p>
+<pre><code class="language-moonbit">fn insert(x : Int, xs : List[Int]) -&gt; List[Int] {
+  match xs {
+    Nil =&gt; Cons(x, Nil)
+    Cons(y, rest) =&gt; if x &lt;= y { Cons(x, xs) } else { Cons(y, insert(x, rest)) }
+  }
+}
+
+fn length(xs : List[Int]) -&gt; Nat {
+  match xs {
+    Nil =&gt; Z
+    Cons(_, r) =&gt; S(length(r))
+  }
+}
+
+lemma insert_length(x : Int, xs : List[Int]) -&gt; length(insert(x, xs)) === S(length(xs)) {
+  match xs {
+    Nil =&gt; Refl
+    Cons(y, rest) =&gt;
+      // the definition of insert in the goal has `x &lt;= y`: it is true in
+      // the true arm
+      match x &lt;= y {
+        true =&gt; Refl
+        false =&gt; Id::cong(S, insert_length(x, rest))
+      }
+  }
+}
+</code></pre>
+<ul>
+<li>This is done only when the goal is a proposition; a <code>match</code> in an ordinary function is not
+affected.</li>
+<li>Literal patterns (<code>true</code>, <code>0</code>, <code>"a"</code>) refine the matched variable too: in the arm, the variable is
+that literal.</li>
+</ul>
 <h2 id="eliminating-prop"><a class="header" href="#eliminating-prop">Eliminating Prop</a></h2>
 <p>When matching on data in <code>Prop</code> (proofs), the result must also be in <code>Prop</code>: proofs are erased by
 compilation, so the program cannot choose an arm by them at run time. The exception is a
@@ -2150,6 +2188,34 @@ fn add_one(x : Int) -&gt; Int {
 // x is a variable, and the call still unfolds
 lemma add_one_x(x : Int) -&gt; add_one(x) === x + 1 { Refl }
 </code></pre>
+<p>Handling <code>ctl</code> operations is computed during checking too (resuming several times included, with
+the restoring of <code>let mut</code> variables), with a result when the arguments are concrete values:</p>
+<pre><code class="language-moonbit">effect Choose {
+  ctl Choose() -&gt; Bool
+}
+
+fn count_trues() -&gt; Int!Choose {
+  let mut n = 0
+  if perform Choose() { n = n + 1 }
+  if perform Choose() { n = n + 1 }
+  n
+}
+
+fn all_counts() -&gt; List[Int] {
+  try { Cons(count_trues(), Nil) } catch {
+    Choose() =&gt; resume(true).append(resume(false))
+  }
+}
+
+lemma all_counts_ok() -&gt; all_counts() === Cons(2, Cons(1, Cons(1, Cons(0, Nil)))) { Refl }
+</code></pre>
+<p>General proofs about functions with effects often go by cases on the conditions in their
+definitions: <code>match x &lt;= y</code> in a proof replaces the <code>x &lt;= y</code> of the goal by <code>true</code> or <code>false</code> (see
+<a href="#matching-on-an-expression-of-the-goal">Dependent matching and refinement</a>).
+<code>examples/effects_dt.mbtpp</code> in the repository has fuller examples: a configuration effect whose
+result types depend on the keys, a <code>printf</code> whose format computes the types of its arguments, a
+proof for every input that a handler dropping the log does not change the result of a sort, and a
+search computed during type checking.</p>
 <h2 id="limitations"><a class="header" href="#limitations">Limitations</a></h2>
 <ul>
 <li>The arm of a tail-resumptive operation cannot perform <code>ctl</code> operations.</li>
@@ -2946,7 +3012,7 @@ comparisons and conversions.</li>
         <script src="book-609e4cb8.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="theme/moonbit-731a77b0.js"></script>
+        <script src="theme/moonbit-b0ead224.js"></script>
 
         <script>
         window.addEventListener('load', function() {

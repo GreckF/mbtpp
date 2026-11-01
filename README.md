@@ -46,7 +46,7 @@ compiling and dependencies. Install a release (see
 [Releases](https://github.com/GreckF/mbtpp/releases) for the versions):
 
 ```sh
-npm install -g https://github.com/GreckF/mbtpp/releases/download/v0.4.0/moonpp-0.4.0.tgz
+npm install -g https://github.com/GreckF/mbtpp/releases/download/v0.5.0/moonpp-0.5.0.tgz
 ```
 
 or, from a checkout, build it once with

@@ -12,6 +12,7 @@
 
 - `Int`、`Double`、`Bool`、`Char`、`String`、`Unit`；
 - 类型参数和函数类型；
+- 数组 `Array[T]`（`T` 是原生类型），即 MoonBit 的数组；
 - 参数都是类型、字段都是原生类型的数据类型。
 
 索引和被擦除的字段消失，例如：
@@ -27,7 +28,10 @@ enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
 Prelude 中 `#mbt` trait（`Show`、`Eq`、`Compare`、`Hash`、`Default`、运算符等）的实例，在原生代码
 需要时成为 `E_…` 的 MoonBit `impl`，包括 `derive` 的实例；`Option` 与 `Result` 使用 MoonBit 自己的
 impl，它们的输出与比较和 Prelude 的实例相同。因此在 async 函数（只有原生代码）中也可以打印、比较
-这些数据。数组和 `Map` 还不在原生片段中。
+这些数据（以及数组和 `Map`）。
+
+数组不会在原生代码与统一表示之间转换：两边的数组若是副本，修改就不能共享。参数或结果含数组的
+函数有原生和统一表示两个版本，原生代码之间、统一表示代码之间各自直接传递数组。
 
 ## 统一表示
 

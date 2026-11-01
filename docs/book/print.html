@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f5dfa5af.js";
+            window.path_to_searchindex_js = "searchindex-5611e418.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-935ffb6c.js"></script>
@@ -2267,6 +2267,7 @@ MoonBit 填入。填入的位置是生成的 <code>.mbt</code> 中的位置。</
 <ul>
 <li><code>Int</code>、<code>Double</code>、<code>Bool</code>、<code>Char</code>、<code>String</code>、<code>Unit</code>；</li>
 <li>类型参数和函数类型；</li>
+<li>数组 <code>Array[T]</code>（<code>T</code> 是原生类型），即 MoonBit 的数组；</li>
 <li>参数都是类型、字段都是原生类型的数据类型。</li>
 </ul>
 <p>索引和被擦除的字段消失，例如：</p>
@@ -2278,7 +2279,9 @@ enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
 <p>Prelude 中 <code>#mbt</code> trait（<code>Show</code>、<code>Eq</code>、<code>Compare</code>、<code>Hash</code>、<code>Default</code>、运算符等）的实例，在原生代码
 需要时成为 <code>E_…</code> 的 MoonBit <code>impl</code>，包括 <code>derive</code> 的实例；<code>Option</code> 与 <code>Result</code> 使用 MoonBit 自己的
 impl，它们的输出与比较和 Prelude 的实例相同。因此在 async 函数（只有原生代码）中也可以打印、比较
-这些数据。数组和 <code>Map</code> 还不在原生片段中。</p>
+这些数据（以及数组和 <code>Map</code>）。</p>
+<p>数组不会在原生代码与统一表示之间转换：两边的数组若是副本，修改就不能共享。参数或结果含数组的
+函数有原生和统一表示两个版本，原生代码之间、统一表示代码之间各自直接传递数组。</p>
 <h2 id="统一表示"><a class="header" href="#统一表示">统一表示</a></h2>
 <p>其余部分（类型层计算、GADT 细化、非 <code>#mbt</code> 的 trait 等）使用统一值表示 <code>Value</code>。它是运行时
 中的一个可扩展 enum（MoonBit 的 <code>extenum</code>），固定变体是 <code>VInt</code>、<code>VFun</code> 等；每个生成的文件用

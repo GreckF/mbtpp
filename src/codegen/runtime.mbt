@@ -77,6 +77,26 @@ let runtime_src : String =
   #|  PLit(Value)
   #|}
   #|
+  #|///|
+  #|/// Indexing of native arrays, with the errors of the uniform code.
+  #|fn[T] rt_arr_get(xs : Array[T], i : Int) -> T raise {
+  #|  if i >= 0 && i < xs.length() {
+  #|    xs[i]
+  #|  } else {
+  #|    rt_fail("index out of bounds: " + i.to_string())
+  #|  }
+  #|}
+  #|
+  #|///|
+  #|fn[T] rt_arr_set(xs : Array[T], i : Int, x : T) -> Unit raise {
+  #|  if i >= 0 && i < xs.length() {
+  #|    xs[i] = x
+  #|  } else {
+  #|    rt_fail("index out of bounds: " + i.to_string())
+  #|  }
+  #|}
+  #|
+  #|///|
   #|fn[T] rt_fail(msg : String) -> T raise {
   #|  raise CAbort(msg)
   #|}

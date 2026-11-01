@@ -506,3 +506,83 @@ test "codegen: instances of Prelude traits for MoonBit++ datatypes are MoonBit i
     ),
   )
 }
+
+///|
+test "codegen: arrays are MoonBit arrays in native code" {
+  // never converted to `Value`: native and uniform code do not share them
+  inspect(
+    signatures(
+      (
+        #|struct Counter {
+        #|  mut n : Int
+        #|}
+        #|
+        #|fn bump(c : Counter) -> Unit { c.n = c.n + 1 }
+        #|
+        #|fn fill(xs : Array[Int], v : Int) -> Unit {
+        #|  for i = 0; i < xs.length(); i = i + 1 { xs[i] = v }
+        #|}
+        #|
+        #|// a dependent result: uniform code, sharing the array with native helpers
+        #|fn[n : Nat] make_vec(len : Int) -> Array[Int] {
+        #|  let a = Array::make(len, 0)
+        #|  fill(a, 5)
+        #|  a.push(n.to_int())
+        #|  a
+        #|}
+        #|
+        #|fn total(xs : Array[Int]) -> Int {
+        #|  let mut s = 0
+        #|  for x in xs { s = s + x }
+        #|  s
+        #|}
+        #|
+        #|async fn main {
+        #|  let c : Counter = { n: 0 }
+        #|  bump(c)
+        #|  bump(c)
+        #|  println(c.n)
+        #|  let a = [1, 2, 3]
+        #|  fill(a, 7)
+        #|  println(a)
+        #|  let m : Map[String, Int] = {}
+        #|  m["x"] = 1
+        #|  m["y"] = 2
+        #|  m["x"] = 10
+        #|  println(m)
+        #|  let grid = [[1, 2], [3]]
+        #|  grid[1].push(4)
+        #|  println(grid)
+        #|  println(a[5])
+        #|}
+      ),
+    ),
+    content=(
+      #|enum E_Counter {
+      #|fn f_fill_t(xs : Array[Int], v : Int) -> Unit raise {
+      #|fn f_fill(xs : Value, v : Value) -> Value raise {
+      #|fn f_counter_n_t(self : E_Counter) -> Array[Int] raise {
+      #|fn f_counter_n(self : Value) -> Value raise {
+      #|fn f_bump_t(c : E_Counter) -> Unit raise {
+      #|fn f_bump(c : Value) -> Value raise {
+      #|async fn main {
+      #|enum E_Map[T0, T1] {
+      #|fn[T0, T1] f_map_map_values_t(self : E_Map[T0, T1]) -> Array[Array[T1]] raise {
+      #|fn f_map_map_values(self : Value) -> Value raise {
+      #|fn[T0, T1] f_map_map_keys_t(self : E_Map[T0, T1]) -> Array[Array[T0]] raise {
+      #|fn f_map_map_keys(self : Value) -> Value raise {
+      #|fn[T0 : Eq, T1] f_map_op_set_t(self : E_Map[T0, T1], key : T0, value : T1) -> Unit raise {
+      #|fn f_map_op_set(v_inst_k : Value, self : Value, key : Value, value : Value) -> Value raise {
+      #|fn[T0 : Eq, T1] f_map_set_t(self : E_Map[T0, T1], key : T0, value : T1) -> Unit raise {
+      #|fn f_map_set(v_inst_k : Value, self : Value, key : Value, value : Value) -> Value raise {
+      #|fn[T0 : Eq, T1] f_map_index_of_t(self : E_Map[T0, T1], key : T0) -> Int raise {
+      #|fn f_map_index_of(v_inst_k : Value, self : Value, key : Value) -> Value raise {
+      #|fn f_eq_op_equal(inst : Value) -> Value raise {
+      #|fn[T0, T1] f_map_new_t(v : Unit) -> E_Map[T0, T1] raise {
+      #|fn f_map_new(v : Value) -> Value raise {
+      #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
+      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
+      #|fn f_show_to_string(inst : Value) -> Value raise {
+    ),
+  )
+}

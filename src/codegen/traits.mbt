@@ -260,6 +260,7 @@ fn Gen::satisfies(self : Gen, t : NTy, tr : String) -> Bool {
       self.satisfies(a, tr)
     NEnum("Result", [a, b]) if tr is ("Show" | "Eq") =>
       self.satisfies(a, tr) && self.satisfies(b, tr)
+    NForeign("Array", [a]) if tr == "Show" => self.satisfies(a, tr)
     _ => {
       for i in @tt.instances_of(tr) {
         // imported impls exist in MoonBit already

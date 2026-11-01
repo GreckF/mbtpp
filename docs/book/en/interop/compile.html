@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-c26bbaf8.js";
+            window.path_to_searchindex_js = "../searchindex-32fcfbae.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-94125c94.js"></script>
@@ -191,6 +191,7 @@ function. The native types are:</p>
 <ul>
 <li><code>Int</code>, <code>Double</code>, <code>Bool</code>, <code>Char</code>, <code>String</code>, <code>Unit</code>;</li>
 <li>type parameters and function types;</li>
+<li>arrays <code>Array[T]</code> (with <code>T</code> native), as MoonBit arrays;</li>
 <li>data types whose parameters are all types and whose fields are all native types.</li>
 </ul>
 <p>Indices and erased fields disappear, for example:</p>
@@ -202,8 +203,11 @@ enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
 <p>Instances of the Prelude’s <code>#mbt</code> traits (<code>Show</code>, <code>Eq</code>, <code>Compare</code>, <code>Hash</code>, <code>Default</code>, the operators, …)
 become MoonBit <code>impl</code>s of the <code>E_…</code> types when native code needs them, derived instances included;
 <code>Option</code> and <code>Result</code> use MoonBit’s own impls, which print and compare as the Prelude’s instances do.
-So async functions (which only have native code) can print and compare these data too. Arrays and
-<code>Map</code> are not in the native fragment yet.</p>
+So async functions (which only have native code) can print and compare these data too (and arrays
+and <code>Map</code>).</p>
+<p>Arrays are not converted between native code and the uniform representation: as copies, they could
+not share their mutations. A function with arrays among its parameters or result has a native and a
+uniform version; native code passes arrays to native code, and uniform code to uniform code.</p>
 <h2 id="uniform-representation"><a class="header" href="#uniform-representation">Uniform representation</a></h2>
 <p>Everything else (type-level computation, GADT refinement, non-<code>#mbt</code> traits, etc.) uses the uniform representation <code>Value</code>. It is
 an extensible enum (MoonBit’s <code>extenum</code>) in the runtime, with fixed variants <code>VInt</code>, <code>VFun</code>, and so on; each generated file uses

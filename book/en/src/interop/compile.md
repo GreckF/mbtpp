@@ -12,6 +12,7 @@ function. The native types are:
 
 - `Int`, `Double`, `Bool`, `Char`, `String`, `Unit`;
 - type parameters and function types;
+- arrays `Array[T]` (with `T` native), as MoonBit arrays;
 - data types whose parameters are all types and whose fields are all native types.
 
 Indices and erased fields disappear, for example:
@@ -27,8 +28,12 @@ enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
 Instances of the Prelude's `#mbt` traits (`Show`, `Eq`, `Compare`, `Hash`, `Default`, the operators, ...)
 become MoonBit `impl`s of the `E_…` types when native code needs them, derived instances included;
 `Option` and `Result` use MoonBit's own impls, which print and compare as the Prelude's instances do.
-So async functions (which only have native code) can print and compare these data too. Arrays and
-`Map` are not in the native fragment yet.
+So async functions (which only have native code) can print and compare these data too (and arrays
+and `Map`).
+
+Arrays are not converted between native code and the uniform representation: as copies, they could
+not share their mutations. A function with arrays among its parameters or result has a native and a
+uniform version; native code passes arrays to native code, and uniform code to uniform code.
 
 ## Uniform representation
 

@@ -263,6 +263,13 @@ fn Gen::native_ty_in(self : Gen, ctx : Array[TyCtx], t : @tt.Tm) -> NTy? {
     _ => {
       let (h, args) = flatten_app(t)
       match h {
+        // MoonBit's array; never converted to `Value` (the uniform code has
+        // its own arrays, and both could not share mutations)
+        Global("Array") if args.length() == 1 =>
+          match self.native_ty_in(ctx, args[0]) {
+            Some(a) => Some(NForeign("Array", [a]))
+            None => None
+          }
         Global(d) if @tt.is_foreign_type(d) => {
           let np = @tt.data_info(d).unwrap().nparams
           if args.length() < np {
@@ -451,6 +458,10 @@ fn Gen::to_value(
       })
       enum_fn(d, "to_value") + "(" + [e, ..fs].join(", ") + ")"
     }
+    // arrays (and other types with arguments) are not converted (see
+    // `convertible`): the conversions of a native enum with such fields are
+    // never called
+    NForeign(_, [_, ..]) => "abort(\"an array cannot be converted\")"
     // only types without arguments are converted (see `convertible`)
     NForeign(_, _) =>
       "VForeign(" + self.foreign_variant(self.mbt_ty(t)) + "(" + e + "))"
@@ -520,6 +531,7 @@ fn Gen::of_value(
       })
       enum_fn(d, "of_value") + "(" + [e, ..fs].join(", ") + ")"
     }
+    NForeign(_, [_, ..]) => "abort(\"an array cannot be converted\")"
     NForeign(_, _) => {
       let ty = self.mbt_ty(t)
       "(match " +
@@ -1020,6 +1032,12 @@ fn Gen::typed_check(
       }
       "(" + xs.join(", ") + ") => {\n" + cb + "\n}"
     }
+    (ArrayLit(es), NForeign("Array", [a])) =>
+      "([" +
+      es.map(x => self.typed_check(env, x, a)).join(", ") +
+      "] : " +
+      self.mbt_ty(ty) +
+      ")"
     _ => {
       let (c, t2) = self.typed(env, t)
       ignore(unify_t(t2, ty))
@@ -1101,6 +1119,8 @@ fn Gen::typed_app(
       self.typed_ffi(env, n, p, g.ty, args)
     GFunc(_, _, _) if method_of(n) is Some((tr, m)) =>
       self.typed_method(env, tr, m, args)
+    GPrim(p, k) if args.length() == k && p.has_prefix("%array_") =>
+      self.typed_array(env, p, args)
     GPrim(p, k) if args.length() == k => {
       let (tpl, tys, res) = match native_prims.get(p) {
         Some(x) => x
@@ -1454,6 +1474,11 @@ fn Gen::typed_term(
       }
     Lit(LInt(k)) =>
       (if k < 0 { "(" + k.to_string() + ")" } else { k.to_string() }, NInt)
+    ArrayLit(es) if es.length() > 0 => {
+      let (c0, t0) = self.typed(env, es[0])
+      let cs = [c0, ..es[1:].to_array().map(x => self.typed_check(env, x, t0))]
+      ("[" + cs.join(", ") + "]", NForeign("Array", [t0]))
+    }
     Lit(LDouble(d)) => (double_lit(d), NDouble)
     Lit(LInt64(n)) => ("(" + n.to_string() + "L)", NInt64)
     Lit(LUInt(n)) => (n.to_string() + "U", NUInt)
@@ -1982,5 +2007,52 @@ fn Gen::ensure_async(self : Gen, n : String) -> Bool {
       true
     }
     None => false
+  }
+}
+
+///|
+/// A primitive on arrays: `args` are the type of the elements, then the
+/// arguments.
+fn Gen::typed_array(
+  self : Gen,
+  env : Array[TLocal],
+  p : String,
+  args : Array[@tt.Tm],
+) -> (String, NTy) raise NotTyped {
+  // the type of the elements: from the array argument when there is one
+  let elem = if args.length() > 1 && p != "%array_make" && p != "%array_new" {
+    match self.typed(env, args[1]).1 {
+      NForeign("Array", [e]) => e
+      _ => raise NotTyped
+    }
+  } else {
+    self.type_arg(env, args[0])
+  }
+  if elem is NAny {
+    raise NotTyped
+  }
+  let at = NForeign("Array", [elem])
+  let arr = () => self.typed_check(env, args[1], at)
+  match (p, args.length()) {
+    ("%array_make", 3) => {
+      let cs = self.typed_args(env, [args[1], args[2]], [NInt, elem])
+      ("Array::make(" + cs[0] + ", " + cs[1] + ")", at)
+    }
+    ("%array_new", _) => ("(Array::new() : " + self.mbt_ty(at) + ")", at)
+    ("%array_length", 2) => (arr() + ".length()", NInt)
+    ("%array_get", 3) => {
+      let i = self.typed_check(env, args[2], NInt)
+      ("rt_arr_get(" + arr() + ", " + i + ")", elem)
+    }
+    ("%array_set", 4) => {
+      let i = self.typed_check(env, args[2], NInt)
+      let x = self.typed_check(env, args[3], elem)
+      ("rt_arr_set(" + arr() + ", " + i + ", " + x + ")", NUnit)
+    }
+    ("%array_push", 3) => {
+      let x = self.typed_check(env, args[2], elem)
+      (arr() + ".push(" + x + ")", NUnit)
+    }
+    _ => raise NotTyped
   }
 }

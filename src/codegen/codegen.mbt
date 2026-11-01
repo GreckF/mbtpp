@@ -668,7 +668,14 @@ let inline_prims : Map[String, String] = {
 fn subst_args(template : String, args : Array[String]) -> String {
   let mut s = template
   for k = args.length() - 1; k >= 0; k = k - 1 {
-    s = s.replace_all(old="$" + k.to_string(), new=args[k])
+    // `2.to_byte()` would be a Double: `(2).to_byte()`
+    let a = args[k]
+    let a = if a.length() > 0 && a[0] >= '0' && a[0] <= '9' {
+      "(" + a + ")"
+    } else {
+      a
+    }
+    s = s.replace_all(old="$" + k.to_string(), new=a)
   }
   s
 }

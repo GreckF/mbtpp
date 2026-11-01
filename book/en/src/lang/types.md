@@ -2,7 +2,9 @@
 
 ## Universes
 
-- `Type : Type`: types are values, and the type of a type is `Type` (which makes the system inconsistent; see the disclaimer in the [introduction](../README.md)).
+- `Type : Type`: types are values, and the type of a type is `Type`. This makes the logic
+  inconsistent (false propositions can be proved), a deliberate trade-off like the lack of
+  termination checking; see [Propositions and proofs](proofs.md).
 - `Prop : Type`: the universe of propositions. Values of types in `Prop` are proofs; proofs are irrelevant, so any two proofs of the same type are considered equal.
   See [Propositions and proofs](proofs.md).
 

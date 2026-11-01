@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-d8623055.js";
+            window.path_to_searchindex_js = "../searchindex-02c7fc71.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-94125c94.js"></script>
@@ -184,10 +184,14 @@
                         <h1 id="compiling-to-moonbit"><a class="header" href="#compiling-to-moonbit">Compiling to MoonBit</a></h1>
 <p>The compiler translates the type-checked program into MoonBit. <code>moonpp build</code> and <code>moonpp run --compiled</code> use it;
 “Compile to MoonBit” in the <a href="https://greckf.github.io/mbtpp/">Playground</a> shows the result directly.</p>
-<p>Two translations are mixed:</p>
+<p>Two translations are mixed: code expressible with MoonBit types becomes ordinary MoonBit code
+(the native translation), and the rest uses a dynamic uniform representation. Values are converted
+at the boundary between the two.</p>
 <h2 id="native-translation"><a class="header" href="#native-translation">Native translation</a></h2>
-<p>A function whose parameters and result are native types, and whose body is in the first-order fragment, is translated into an ordinary (possibly generic) MoonBit
-function. The native types are:</p>
+<p>Types that can be translated natively are native types, and the expressions that can be translated
+natively, using values of native types only, form the <strong>native fragment</strong>. A function whose
+parameters and result are native types, and whose body is in the native fragment, is translated into
+an ordinary (possibly generic) MoonBit function. The native types are:</p>
 <ul>
 <li><code>Int</code>, <code>Double</code>, <code>Bool</code>, <code>Char</code>, <code>String</code>, <code>Unit</code>;</li>
 <li>type parameters and function types;</li>
@@ -212,7 +216,8 @@ uniform version; native code passes arrays to native code, and uniform code to u
 <p>Everything else (type-level computation, GADT refinement, non-<code>#mbt</code> traits, etc.) uses the uniform representation <code>Value</code>. It is
 an extensible enum (MoonBit’s <code>extenum</code>) in the runtime, with fixed variants <code>VInt</code>, <code>VFun</code>, and so on; each generated file uses
 <code>extenum Value += { … }</code> to add the constructors of its own data types. Indices and erased fields do not appear, and fields are
-<code>Value</code>. For example, the GADT in <code>basic.mbtpp</code>:</p>
+<code>Value</code>. For example, the GADT in <code>examples/basic.mbtpp</code> of the repository (the <code>Exp</code> of
+<a href="../lang/enum.html">enum and indexed types</a>):</p>
 <pre><code class="language-text">enum Exp : [T] -&gt; Type {
   IntLit(Int) : Exp[Int]
   Add(Exp[Int], Exp[Int]) : Exp[Int]

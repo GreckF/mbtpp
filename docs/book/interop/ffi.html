@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-fc1e96bd.js";
+            window.path_to_searchindex_js = "../searchindex-724f11aa.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-935ffb6c.js"></script>
@@ -196,7 +196,7 @@
 <tbody>
 <tr><td><code>Int</code>、<code>Double</code>、<code>Bool</code>、<code>Char</code>、<code>String</code>、<code>Unit</code></td><td>标量</td></tr>
 <tr><td>类型参数</td><td>不转换（值本身）</td></tr>
-<tr><td><code>Array[T]</code>、<code>T?</code></td><td>逐元素</td></tr>
+<tr><td><code>Array[T]</code>、<code>T?</code></td><td>逐元素（数组是副本，MoonBit 函数对它的修改不会反映到统一表示的数组中）</td></tr>
 <tr><td><code>#mbt</code> 数据类型（包括导入的 <code>pub(all)</code> 类型）</td><td>逐构造子</td></tr>
 <tr><td>函数类型</td><td>回调：MoonBit 调用时转换参数和结果</td></tr>
 <tr><td>不透明类型</td><td>装箱</td></tr>

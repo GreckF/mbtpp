@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-d8623055.js";
+            window.path_to_searchindex_js = "searchindex-02c7fc71.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-94125c94.js"></script>
@@ -194,18 +194,16 @@ not MoonBit’s <code>Map</code>, so imported functions taking or returning a Mo
 comparisons and conversions.</li>
 <li>When functions with mutable state are run during type checking, calls that use arrays, imported functions or lambdas capturing <code>let mut</code> variables are not run (see <a href="lang/mutation.html">Mutable State and Loops</a>).</li>
 <li>Time limits are measured in wall-clock time, so a file may time out on a slower machine (see <a href="lang/type-level.html#time-limits">Time limits</a>).</li>
-<li>Structs have no mutable fields, and there are no struct patterns.</li>
-<li>Traits have no default methods.</li>
 </ul>
 <h2 id="imports"><a class="header" href="#imports">Imports</a></h2>
 <ul>
 <li>The interpreter cannot run imported MoonBit functions; they can only be called after compilation.</li>
 <li>The interpreter runs async functions synchronously, without concurrency; async functions are only compiled to native code (see <a href="lang/async.html">async Functions</a>).</li>
-<li>Generic <code>impl</code>s, trait objects, and similar items in imported packages are not imported (see <a href="interop/types.html">Type mapping and items not imported</a>).</li>
+<li>Imported functions returning a trait object <code>&amp;Tr</code> cannot be compiled yet; for the other items that are not imported, see <a href="interop/types.html">Type mapping and items not imported</a>.</li>
 </ul>
 <h2 id="compiler"><a class="header" href="#compiler">Compiler</a></h2>
 <ul>
-<li>Arrays are not native types in native code: signatures containing arrays use the uniform representation and cannot be <code>#mbt</code>.</li>
+<li><code>Hash</code> values differ between the interpreter and the compiled program (which uses MoonBit’s hashes).</li>
 <li>Values are converted by value between the uniform representation and native code, so frequently passing large data across the boundary is slow.</li>
 </ul>
 <h2 id="tooling"><a class="header" href="#tooling">Tooling</a></h2>

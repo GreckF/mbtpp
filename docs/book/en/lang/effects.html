@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-d8623055.js";
+            window.path_to_searchindex_js = "../searchindex-02c7fc71.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-94125c94.js"></script>
@@ -206,14 +206,17 @@ fn main {
 }
 </code></pre>
 <ul>
-<li><code>effect E[T] { Op(A) -&gt; R }</code> declares an effect. <code>perform Op(x)</code> has the type <code>R</code>, the type of the
-argument of <code>resume</code>; write <code>resume()</code> when <code>R</code> is <code>Unit</code>.</li>
-<li>The effects of a function follow its result type: <code>-&gt; T!E1 + E2 raise Err</code>. A function with effects
-is called in a <code>try</code> that handles them, or in a function that declares them too.</li>
+<li><code>effect E[T] { Op(A) -&gt; R }</code> declares an effect; its operations are in <code>{ … }</code>. <code>perform Op(x)</code> has
+the type <code>R</code>, the type of the argument of <code>resume</code>; write <code>resume()</code> when <code>R</code> is <code>Unit</code>.</li>
+<li>The effects a function may perform follow its result type after <code>!</code>, joined with <code>+</code>, as in
+<code>-&gt; T!E1 + E2</code>. This list is the function’s <strong>effect row</strong>. A function with effects is called in a
+<code>try</code> that handles them, or in a function whose effect row contains them too.</li>
 <li>The arms of a <code>try</code> may handle errors and operations together; only operation arms have <code>resume</code>.</li>
-<li>Handlers are deep: after <code>resume</code>, the next operations are handled by the same <code>try</code>.</li>
-<li>Handlers are lexical: a lambda captures the handlers in scope when it is created, so a lambda that
-performs an effect is created inside its handler, or in a function that declares the effect.</li>
+<li>After <code>resume</code>, the operations the <code>try</code> body performs later are handled by the same <code>try</code>: in the
+example, all three <code>Yield</code>s go to the same arm (such handlers are called “deep”).</li>
+<li>Handlers are found by lexical scope: an operation performed in a lambda is handled by the <code>try</code>
+around the place where the lambda is created, not where it is called. So a lambda that performs an
+effect is created inside its handler, or in a function whose effect row contains the effect.</li>
 </ul>
 <h2 id="two-kinds-of-operations"><a class="header" href="#two-kinds-of-operations">Two kinds of operations</a></h2>
 <p>An operation is <strong>tail-resumptive</strong> by default: every path of its arms ends with <code>resume(…)</code>. Such an
@@ -241,15 +244,21 @@ fn main {
 </code></pre>
 <ul>
 <li>In a <code>ctl</code> arm, <code>resume(v)</code> runs the rest of the <code>try</code> body (still handled by this handler) and
-returns the result of the <code>try</code>; it can be called any number of times.</li>
+returns the result of the <code>try</code>; it can be called any number of times. In the example each
+<code>Choose</code> resumes twice, the <code>try</code> body runs to the end 4 times, and the first <code>println</code> prints the
+results of the four choices, <code>Cons(2, Cons(1, Cons(1, Cons(0, Nil))))</code>; the second <code>try</code> does not
+resume and prints <code>-1</code>.</li>
 <li>Each resumption continues with the values the <code>let mut</code> variables had when the operation was
-performed (the result above is <code>[2, 1, 1, 0]</code>); variables outside the <code>try</code>, arrays and <code>mut</code>
-fields are shared.</li>
-<li>Code with <code>ctl</code> effects is translated into code returning “computations” and compiled with the
-uniform representation, slower than direct code; code with tail-resumptive operations only is not
-affected.</li>
+performed: both resumptions of the second <code>Choose</code> above start from the same <code>n</code>, independently.
+Variables outside the <code>try</code>, arrays and <code>mut</code> fields are shared: what one resumption changes, the
+next one sees.</li>
+<li>Code using <code>ctl</code> operations is translated into code returning “computations” and compiled with the
+<a href="../interop/compile.html#uniform-representation">uniform representation</a>, slower than direct code;
+code with tail-resumptive operations only is not affected.</li>
 </ul>
 <h2 id="effect-polymorphism"><a class="header" href="#effect-polymorphism">Effect polymorphism</a></h2>
+<p>A function taking a callback should often have the callback’s effects: it performs <code>Yield</code> when the
+callback does, and is pure when the callback is. <strong>Effect variables</strong> express this:</p>
 <pre><code class="language-moonbit">fn[T, e] each(xs : List[T], f : (T) -&gt; Unit!e) -&gt; Unit!e {
   match xs {
     Nil =&gt; ()
@@ -258,20 +267,37 @@ affected.</li>
 }
 </code></pre>
 <ul>
-<li>A lowercase name in a row is an effect variable, among the implicit parameters. Calls infer it from
-the arguments: <code>each(xs, x =&gt; perform Yield(x))</code> has the effect <code>Yield[T]</code>, and <code>each(xs, g)</code> (<code>g</code>
-pure) has none.</li>
-<li><strong>It can be left out</strong>: when a parameter of function type is only called, or passed on directly as
-an argument (not stored, returned, or captured by a returned closure), the checker adds <code>!e</code> and
-shows it in the function’s type. Functions of the Prelude such as <code>List::map</code> are thus effect
-polymorphic. When the parameter escapes (as in <code>compose</code>), leaving it out means pure; write <code>!e</code>
-for effects.</li>
-<li><code>!pure</code> asks for a pure function explicitly, and turns off the inference.</li>
+<li>
+<p>A lowercase name in an effect row (<code>e</code> here) is an effect variable, written in <code>fn[…]</code> like type
+parameters. Calls infer it from the arguments: <code>each(xs, x =&gt; perform Yield(x))</code> has the effect
+<code>Yield[T]</code>, and <code>each(xs, g)</code> (<code>g</code> pure) has none.</p>
+</li>
+<li>
+<p>Effect variables <strong>can be left out</strong>. When a parameter of function type is only called, or passed
+on directly as an argument to another function, the checker adds the missing <code>!e</code>, and the inferred
+effect variable shows in the function’s type. <code>each</code> above has the same type without <code>e</code>, and
+functions of the Prelude such as <code>List::map</code> are effect polymorphic for this reason.</p>
+</li>
+<li>
+<p>When the parameter is stored, returned, or captured by a returned closure (it <strong>escapes</strong>), no
+effect variable is added, and leaving it out means the callback must be pure. For example,
+composing two functions:</p>
+<pre><code class="language-moonbit">// f and g are captured by the returned closure: write e for effects
+fn[A, B, C, e] compose(f : (A) -&gt; B!e, g : (B) -&gt; C!e) -&gt; (A) -&gt; C!e {
+  x =&gt; g(f(x))
+}
+</code></pre>
+<p>Without <code>!e</code>, <code>compose</code> takes pure functions only, and a lambda performing an effect is an error.</p>
+</li>
+<li>
+<p><code>!pure</code> asks for purity explicitly, and turns off the inference: <code>fn[T] apply(f : (T) -&gt; T!pure, x : T) -&gt; T</code> takes pure callbacks only.</p>
+</li>
 </ul>
 <h2 id="errors-and-async-are-effects-too"><a class="header" href="#errors-and-async-are-effects-too">Errors and async are effects too</a></h2>
-<p><code>raise E</code> and <code>async</code> are ways of writing effect rows: <code>-&gt; T raise E</code> is <code>-&gt; T!Raise[E]</code>, and the
-result type of an <code>async fn</code> has the effect <code>Async</code>. Effect variables therefore cover them too, and
-functions of the Prelude such as <code>List::map</code> raise, or are async, when their callback is:</p>
+<p><code>raise E</code> and <code>async</code> are other ways of writing effect rows: <code>-&gt; T raise E</code> is <code>-&gt; T!Raise[E]</code>, and
+the result type of an <code>async fn</code> has the effect <code>Async</code>. Effect variables therefore cover them too:
+functions of the Prelude such as <code>List::map</code> raise when their callback raises, and are async when it
+is async:</p>
 <pre><code class="language-moonbit">suberror TooBig {
   TooBig(Int)
 }
@@ -289,11 +315,13 @@ fn main {
   println(r)
 }
 </code></pre>
-<p>They keep their own translation: errors still compile to MoonBit errors, and async to native MoonBit
-async. An effect polymorphic function given an async callback gets a native async version.</p>
+<p>They keep their own translation when compiled: errors still compile to MoonBit errors, and async to
+native MoonBit async. When an effect polymorphic function is given an async callback, the compiler
+generates a native async version of it.</p>
 <h2 id="computing-during-type-checking"><a class="header" href="#computing-during-type-checking">Computing during type checking</a></h2>
-<p>A fully handled computation is pure, and the checker computes it, even when the handler updates a
-<code>let mut</code>:</p>
+<p>Effects fully handled inside a function do not appear in its type: the function is pure, and the
+checker computes it like any other function (see <a href="type-level.html">Type-Level Computation</a>), even when
+the handler updates a <code>let mut</code>:</p>
 <pre><code class="language-moonbit">effect Emit {
   Emit(Int) -&gt; Unit
 }
@@ -317,15 +345,34 @@ fn main {
   println(sum(Cons(4, Cons(5, Nil))))
 }
 </code></pre>
-<p>A handler without state only passes closures: it unfolds even when the arguments are variables, and
-can be reasoned about by induction.</p>
+<p><code>sum</code> updates a <code>let mut</code>, so, like other functions with mutable state, it is executed during
+checking, and gives a result only when the arguments are concrete values (see
+<a href="mutation.html#interaction-with-type-checking">Mutable State and Loops</a>). When the handler uses no
+<code>let mut</code>, handling only passes the arms in as functions: the call unfolds even when the arguments
+are variables, so general facts can be proved about it:</p>
+<pre><code class="language-moonbit">effect Ask {
+  Ask() -&gt; Int
+}
+
+fn add_asked(x : Int) -&gt; Int!Ask {
+  x + perform Ask()
+}
+
+fn add_one(x : Int) -&gt; Int {
+  try { add_asked(x) } catch { Ask() =&gt; resume(1) }
+}
+
+// x is a variable, and the call still unfolds
+lemma add_one_x(x : Int) -&gt; add_one(x) === x + 1 { Refl }
+</code></pre>
 <h2 id="limitations"><a class="header" href="#limitations">Limitations</a></h2>
 <ul>
 <li>The arm of a tail-resumptive operation cannot perform <code>ctl</code> operations.</li>
-<li>A <code>try</code> cannot handle errors and <code>ctl</code> operations together; a <code>try … catch</code> (of errors) and <code>defer</code>
-cannot enclose code that performs <code>ctl</code> operations.</li>
-<li>Proofs (functions returning a type in <code>Prop</code>) have no effects.</li>
-<li>Effects do not combine with <code>async</code>, and are not shared between packages.</li>
+<li>A <code>try</code> cannot handle errors and <code>ctl</code> operations together; a <code>try … catch</code> (catching errors) and
+<code>defer</code> cannot enclose code that performs <code>ctl</code> operations.</li>
+<li>Functions returning propositions (such as <code>lemma</code>s) have no effects.</li>
+<li>Async functions cannot declare other effects.</li>
+<li>Effects cannot be used across packages.</li>
 </ul>
 
                     </main>

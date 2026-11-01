@@ -119,10 +119,12 @@ fn main {
 ```
 
 - **The run finishes** when every decision can be made: for example with concrete arguments, or,
-  like `inc(x)`, when no decision is needed. Errors reach their `try` as usual, and output such as
+  like `inc(x)`, when no decision is needed. Errors reach their `try` as usual; an error `e` that
+  escapes the function makes the result of the call `raise e` (see
+  [Errors as values of the logic](errors.md#errors-as-values-of-the-logic)). Output such as
   `println` is skipped (it does not change the result).
 - **The call stays folded** when a decision depends on an unknown value (`if x < 0` in `abs(x)`,
-  where `x` is a variable); when an error escapes the function; when the function uses an array
+  where `x` is a variable); when the function uses an array
   (arrays are mutable), an imported MoonBit function or an async function; or when a lambda
   captures a `let mut` variable. The result could then depend on more than the arguments.
 - So general properties over variable arguments, such as "for all `n`, `sum_to(n) * 2 == n * (n +

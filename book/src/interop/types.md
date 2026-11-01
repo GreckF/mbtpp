@@ -5,14 +5,15 @@
 | MoonBit | MoonBit++ |
 | --- | --- |
 | `Int32`（即 `Int`）、`Double`、`Bool`、`Char`、`String`、`Unit` | 同名内置类型（`Int32` 即 `Int`） |
+| `Int64`、`UInt`、`UInt64`、`Byte`、`Float` | 同名内置类型 |
 | `Array[T]`、`T?`、`Result[T, E]` | 同名类型 |
 | `StringView`、`ArrayView[T]` | `String`、`Array[T]` |
 | `pub(all) enum`、`pub(all) struct` | 同样的 enum、struct，自动 `#mbt`；可以构造和匹配 |
 | `pub enum`、`pub struct`（只读） | 同上，但不能构造，只能匹配和传递 |
 | `pub(open) trait` | trait，自动 `#mbt`；可以为本程序的类型实现 |
 | `pub trait` | trait，不能实现 |
-| `type T`（抽象类型），以及未定义的类型（`Int64`、`Map` 等） | 不透明类型 |
-| 未知的 trait 约束（`Hash` 等） | 不透明 trait，任何类型都满足 |
+| `type T`（抽象类型），以及 MoonBit++ 中没有的类型（如 `Bytes`） | 不透明类型 |
+| 既不是 Prelude trait、也不是导入的 trait 的约束 | 不透明 trait，任何类型都满足 |
 | `(A) -> B raise E`、`x~ : T`、`x? : T` | 相同 |
 | `&Tr`（trait 对象） | `&Tr`，见 [trait 对象](../lang/trait-objects.md)；返回 `&Tr` 的函数还不能编译 |
 

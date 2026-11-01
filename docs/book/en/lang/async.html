@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-d8623055.js";
+            window.path_to_searchindex_js = "../searchindex-02c7fc71.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-94125c94.js"></script>
@@ -200,7 +200,7 @@ async fn main {
 <ul>
 <li><strong>Syntax</strong>: top-level and local functions are written <code>async fn name(…)</code>, anonymous functions
 <code>async fn(…) { … }</code>, and function types <code>async (A) -&gt; B</code>.</li>
-<li><strong>Errors</strong>: as in MoonBit, an async function may raise any error by default (like <code>raise Error</code>). <code>raise E</code> restricts the error type, and <code>noraise</code> says it does not raise.</li>
+<li><strong>Errors</strong>: as in MoonBit, an async function may raise any error by default (like <code>raise  Error</code>). <code>raise E</code> restricts the error type, and <code>noraise</code> says it does not raise.</li>
 <li><strong>Calls</strong>: an async function can only be called from an async function. A lambda (including
 <code>x =&gt; …</code>) checked against an async function type is async, like the second argument of <code>twice</code>
 above. A synchronous function can pass an async function around as a value, but cannot call it.</li>
@@ -238,6 +238,9 @@ done
 </code></pre>
 <p><code>async</code> is a keyword, but it can still be a package alias: <code>@async.sleep</code>.</p>
 <h2 id="compilation"><a class="header" href="#compilation">Compilation</a></h2>
+<p>The compiler translates code in two ways (see <a href="../interop/compile.html">Compiling to MoonBit</a>): the
+part expressible with MoonBit types (the <strong>native fragment</strong>) becomes ordinary MoonBit code, and the
+rest uses a dynamic <strong>uniform representation</strong>.</p>
 <ul>
 <li>Async functions are only compiled to native MoonBit code, because functions in the uniform
 representation are synchronous. Their signature and body must be in the native fragment;
@@ -246,7 +249,7 @@ otherwise compilation fails and names the first term that is not, with the same 
 <li>Async functions can also only be used by native code. If code in the uniform representation
 refers to an async function, for example a synchronous function outside the native fragment that
 returns an async lambda, compilation fails.</li>
-<li><code>async fn main</code> compiles to MoonBit’s <code>async fn main</code>, and <code>#mbt async fn</code> is exported as <code>pub async fn</code>.</li>
+<li><code>async fn main</code> compiles to MoonBit’s <code>async fn main</code>, and <code>#mbt async fn</code> is exported as <code>pub  async fn</code>.</li>
 <li><code>moonbitlang/async</code> supports the native, JS and wasm targets, but not wasm-gc.</li>
 </ul>
 

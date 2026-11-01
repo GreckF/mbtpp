@@ -55,8 +55,9 @@ of the colon:
 
 Traits and types share one namespace and cannot have the same name, so there is no ambiguity. Note:
 
-- This rule applies only inside `[...]`. An explicit parameter `(x : Add)` is checked as a type and
-  is an error: there are no MoonBit trait objects `&Add`.
+- This rule applies only inside `[...]`. An explicit parameter `(x : Add)` is an error, because
+  `Add` is a trait, not a type; for "any value implementing a trait", use a trait object `&Tr` (see
+  [Trait objects](trait-objects.md); `Add` itself cannot be a trait object).
 - Local names take precedence: if an enclosing parameter has the same name as a trait, the right
   side of the colon refers to that parameter.
 - Multiple bounds must have the same kind (the kind of `T` is taken from the first trait);
@@ -116,7 +117,8 @@ are imported); see derive below.
 `Hash` values differ between the interpreter and compiled programs (which use MoonBit's hashes).
 
 `println` requires `Show`. Except for `Monad`, these traits are MoonBit's own traits: in the
-compiled program, the instances for `#mbt` types are real MoonBit impls (e.g.
+compiled program, the instances for `#mbt` types (types marked `#mbt` that stand for MoonBit
+types, see [#mbt types and traits](../interop/mbt-types.md)) are real MoonBit impls (e.g.
 `impl Eq for Shape with equal(a0, a1)`), so MoonBit code can print, compare and sort these
 values; a `#mbt fn` with these bounds (`fn[T : Show + Eq]`) compiles to a MoonBit function with
 the same bounds. Instances for other types are only used inside MoonBit++ (MoonBit already has

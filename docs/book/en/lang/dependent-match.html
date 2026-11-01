@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-d8623055.js";
+            window.path_to_searchindex_js = "../searchindex-02c7fc71.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-94125c94.js"></script>
@@ -208,12 +208,17 @@ fn main {
 and combinations like <code>(VNil, VCons(…))</code> need not be written.</li>
 <li>In each arm the goal type <code>Vec2[T](n)</code> is refined too: the <code>VNil</code> arm returns <code>Vec2[T](0)</code>, and the
 <code>VCons</code> arm returns <code>Vec2[T](S(n'))</code>.</li>
-<li>Matching on implicit parameters refines as well, e.g. <code>match g { Empty =&gt; …; Extend(_, _) =&gt; … }</code>,
-where <code>g</code> is an implicit parameter of the function.</li>
+<li>Matching on implicit parameters refines as well. In <code>fn[T, n : Nat] first_or(v : Vector[T](n), d : T)</code>,
+for example, <code>match n { … }</code> gives <code>v : Vector[T](S(_))</code> in the <code>S(_)</code> arm, so a <code>match</code> on <code>v</code>
+there only needs the <code>Cons</code> arm.</li>
 </ul>
 <h2 id="matching-on-the-result-of-a-function-call"><a class="header" href="#matching-on-the-result-of-a-function-call">Matching on the result of a function call</a></h2>
 <p>When the scrutinee is not a variable (e.g. a function call), the index relationships in its result
-type are still used to refine the goal type:</p>
+type are still used to refine the goal type. The fragment below comes from the type safety proof of
+the simply typed λ-calculus: <code>progress(t1)</code> has the type <code>Progress(t1)</code>, and its result says that
+the term <code>t1</code> can take a step (<code>PrStep</code>) or is a value (<code>PrDone</code>). In the <code>PrDone(_, VLam(b))</code> arm,
+the index of the constructor is unified with <code>t1</code>, so the checker knows that <code>t1</code> is <code>Lam(b)</code>, and
+<code>StApp(b, t2)</code> is a step of <code>App(t1, t2)</code>:</p>
 <pre><code class="language-text">match progress(t1) {
   PrStep(_, u1, st1) =&gt; PrStep(_, _, StApp1(t1, u1, t2, st1))
   PrDone(_, VLam(b)) =&gt; PrStep(_, _, StApp(b, t2))
@@ -221,8 +226,11 @@ type are still used to refine the goal type:</p>
 </code></pre>
 <p>See <code>examples/stlc.mbtpp</code> in the repository for the full example.</p>
 <h2 id="eliminating-prop"><a class="header" href="#eliminating-prop">Eliminating Prop</a></h2>
-<p>When matching on data in <code>Prop</code>, the result must also be in <code>Prop</code>, unless the type is a
-subsingleton (such as propositional equality <code>===</code>, which has at most one proof).</p>
+<p>When matching on data in <code>Prop</code> (proofs), the result must also be in <code>Prop</code>: proofs are erased by
+compilation, so the program cannot choose an arm by them at run time. The exception is a
+<strong>subsingleton</strong>: a proposition with at most one constructor, whose fields are all proofs, such as
+propositional equality <code>===</code>. Matching on it chooses nothing at run time, so the result can have any
+type (see <a href="proofs.html">Propositions and proofs</a>).</p>
 
                     </main>
 

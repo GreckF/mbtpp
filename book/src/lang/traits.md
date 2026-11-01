@@ -53,8 +53,9 @@ fn main {
 
 trait 和类型在同一个命名空间中，不能同名，所以不会有歧义。注意：
 
-- 这条规则只用于 `[...]`。显式参数 `(x : Add)` 按类型检查，会报错：没有 MoonBit 的 trait
-  对象 `&Add`。
+- 这条规则只用于 `[...]`。显式参数 `(x : Add)` 会报错，因为 `Add` 是 trait 而不是类型；需要
+  “任意实现了某 trait 的值”时用 trait 对象 `&Tr`（见 [trait 对象](trait-objects.md)，`Add` 本身
+  不能做成 trait 对象）。
 - 局部名字优先：如果外层有与 trait 同名的参数，冒号右边指的是那个参数。
 - 多个约束的种类要相同（`T` 的种类取自第一个 trait），`[M : Monad + Show]` 会报错。
 
@@ -110,7 +111,8 @@ fn main {
 `Hash` 的值在解释器和编译后的程序中不同（编译后用的是 MoonBit 的哈希）。
 
 `println` 需要 `Show`。除 `Monad` 外，这些 trait 就是 MoonBit 自己的 trait：编译后，`#mbt`
-类型的实例是真正的 MoonBit impl（例如 `impl Eq for Shape with equal(a0, a1)`），MoonBit 代码
+类型（标了 `#mbt`、直接对应 MoonBit 类型的类型，见 [#mbt 类型与 trait](../interop/mbt-types.md)）
+的实例是真正的 MoonBit impl（例如 `impl Eq for Shape with equal(a0, a1)`），MoonBit 代码
 可以直接打印、比较、排序这些值；带这些约束的 `#mbt fn`（`fn[T : Show + Eq]`）编译成带同样
 约束的 MoonBit 函数。其他类型的实例只在 MoonBit++ 内部使用（MoonBit 已经有 `Int`、`String`
 等类型的实例）。

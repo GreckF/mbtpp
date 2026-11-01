@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-d8623055.js";
+            window.path_to_searchindex_js = "../searchindex-02c7fc71.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-94125c94.js"></script>
@@ -298,12 +298,13 @@ is a variable, so whether <code>head(xs)</code> raises is unknown: the call is n
 <code>const0(x) === 0</code> can.</li>
 <li><code>raise e</code> differs from every constructor and literal; <code>raise e1</code> equals <code>raise e2</code> exactly when <code>e1</code>
 equals <code>e2</code>.</li>
-<li>Raising calls and <code>raise e</code> can only be written in types. A proof (a pure term) still cannot call a
-raising function, so the pure part cannot build an error, and errors do not make the logic
-inconsistent.</li>
-<li>The implicit arguments of a lemma stand for values, and unification does not solve them with terms
-that may raise. Those of constructors, of types, and of <code>Id::sym</code>, <code>Id::trans</code>, <code>Id::cong</code> and
-<code>Id::subst</code> can be such terms, since these do not rely on their arguments being values.</li>
+<li>Raising calls and <code>raise e</code> can only be written in types, as in the statement
+<code>head(Nil) === raise Empty</code> of a lemma. A proof itself is a pure term and cannot call a raising
+function, so no error can be built in a proof, and errors do not make the logic inconsistent.</li>
+<li>The parameters of a lemma (implicit ones included) stand for values: when a lemma is used,
+unification does not infer its implicit arguments as terms that may raise, or a lemma about values
+could be applied to errors. The implicit arguments of constructors, of types, and of <code>Id::sym</code>,
+<code>Id::trans</code>, <code>Id::cong</code> and <code>Id::subst</code> have no such restriction: these hold for every term.</li>
 <li>A function that returns a proof (a type in <code>Prop</code>) cannot declare <code>raise</code>: proofs are erased at run
 time, and the error would be lost with them.</li>
 <li>The argument of <code>raise</code> is the whole expression: <code>raise Empty === x</code> is <code>raise (Empty === x)</code>; write

@@ -12,18 +12,16 @@
   comparisons and conversions.
 - When functions with mutable state are run during type checking, calls that use arrays, imported functions or lambdas capturing `let mut` variables are not run (see [Mutable State and Loops](lang/mutation.md)).
 - Time limits are measured in wall-clock time, so a file may time out on a slower machine (see [Time limits](lang/type-level.md#time-limits)).
-- Structs have no mutable fields, and there are no struct patterns.
-- Traits have no default methods.
 
 ## Imports
 
 - The interpreter cannot run imported MoonBit functions; they can only be called after compilation.
 - The interpreter runs async functions synchronously, without concurrency; async functions are only compiled to native code (see [async Functions](lang/async.md)).
-- Generic `impl`s, trait objects, and similar items in imported packages are not imported (see [Type mapping and items not imported](interop/types.md)).
+- Imported functions returning a trait object `&Tr` cannot be compiled yet; for the other items that are not imported, see [Type mapping and items not imported](interop/types.md).
 
 ## Compiler
 
-- Arrays are not native types in native code: signatures containing arrays use the uniform representation and cannot be `#mbt`.
+- `Hash` values differ between the interpreter and the compiled program (which uses MoonBit's hashes).
 - Values are converted by value between the uniform representation and native code, so frequently passing large data across the boundary is slow.
 
 ## Tooling

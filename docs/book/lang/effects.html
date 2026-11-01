@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-fc1e96bd.js";
+            window.path_to_searchindex_js = "../searchindex-724f11aa.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-935ffb6c.js"></script>
@@ -206,14 +206,16 @@ fn main {
 }
 </code></pre>
 <ul>
-<li><code>effect E[T] { Op(A) -&gt; R }</code> 声明一个效应。<code>perform Op(x)</code> 的结果类型是 <code>R</code>，也就是 <code>resume</code>
-的参数类型；<code>R</code> 是 <code>Unit</code> 时写 <code>resume()</code>。</li>
-<li>函数的效应写在返回类型后：<code>-&gt; T!E1 + E2 raise Err</code>。调用一个有效应的函数，要么在处理这些效应的
-<code>try</code> 中，要么所在函数自己也声明这些效应。</li>
+<li><code>effect E[T] { Op(A) -&gt; R }</code> 声明一个效应，<code>{ … }</code> 中是它的操作。<code>perform Op(x)</code> 的结果类型是
+<code>R</code>，也就是 <code>resume</code> 的参数类型；<code>R</code> 是 <code>Unit</code> 时写 <code>resume()</code>。</li>
+<li>函数可能执行的效应写在返回类型后的 <code>!</code> 之后，多个效应用 <code>+</code> 连接，例如 <code>-&gt; T!E1 + E2</code>。这个
+列表称为函数的<strong>效应行</strong>。调用一个有效应的函数，要么在处理这些效应的 <code>try</code> 中，要么所在函数的
+效应行也包含这些效应。</li>
 <li><code>try</code> 的分支可以同时处理错误和效应操作，只有效应分支中有 <code>resume</code>。</li>
-<li>处理器是深的：<code>resume</code> 之后，后面的操作仍由同一个 <code>try</code> 处理。</li>
-<li>处理器是词法的：lambda 在创建时捕获作用域中的处理器，所以执行效应的 lambda 要在处理器之内，或在
-声明了该效应的函数之内创建。</li>
+<li><code>resume</code> 之后，<code>try</code> 体中后面执行的操作仍由同一个 <code>try</code> 处理：上例中三次 <code>Yield</code> 都进入同一个
+分支（这样的处理器称为“深”的）。</li>
+<li>处理器按词法作用域确定：lambda 中执行的操作，由创建这个 lambda 的地方外围的 <code>try</code> 处理，而不是
+调用它的地方。所以执行效应的 lambda 要在处理器之内，或在效应行包含该效应的函数之内创建。</li>
 </ul>
 <h2 id="两种操作"><a class="header" href="#两种操作">两种操作</a></h2>
 <p>默认的操作是<strong>尾恢复</strong>的：处理分支的每条路径都以 <code>resume(…)</code> 结束。这样的操作编译为普通的函数
@@ -240,13 +242,17 @@ fn main {
 </code></pre>
 <ul>
 <li><code>ctl</code> 分支中，<code>resume(v)</code> 运行 <code>try</code> 体中剩下的部分（仍由这个处理器处理），返回 <code>try</code> 的结果；
-它可以被调用任意次。</li>
-<li><code>let mut</code> 变量在每次恢复时都从执行操作时的值继续（上例的结果是 <code>[2, 1, 1, 0]</code>）；<code>try</code> 外面的
-变量、数组和 <code>mut</code> 字段是共享的。</li>
-<li>用到 <code>ctl</code> 效应的代码会被翻译为返回“计算“的代码，使用统一表示编译，比直接的代码慢；只用尾恢复
-操作的代码不受影响。</li>
+它可以被调用任意次。上例中每个 <code>Choose</code> 恢复两次，<code>try</code> 体共运行完 4 次，第一个 <code>println</code> 输出
+四种选择下的结果 <code>Cons(2, Cons(1, Cons(1, Cons(0, Nil))))</code>；第二个 <code>try</code> 不恢复，输出 <code>-1</code>。</li>
+<li>每次恢复时，<code>let mut</code> 变量从执行操作那一刻的值继续：上例中第二次 <code>Choose</code> 的两次恢复都从同一个
+<code>n</code> 开始，互不影响。<code>try</code> 外面的变量、数组和 <code>mut</code> 字段则是共享的，一次恢复中的修改在下一次恢复
+中可见。</li>
+<li>用到 <code>ctl</code> 操作的代码会被翻译为返回“计算”的代码，使用<a href="../interop/compile.html#统一表示">统一表示</a>
+编译，比直接的代码慢；只用尾恢复操作的代码不受影响。</li>
 </ul>
 <h2 id="效应多态"><a class="header" href="#效应多态">效应多态</a></h2>
+<p>一个接受回调的函数，往往应该具有回调的效应：回调执行 <code>Yield</code>，它就执行 <code>Yield</code>；回调是纯的，
+它也是纯的。这用<strong>效应变量</strong>表示：</p>
 <pre><code class="language-moonbit">fn[T, e] each(xs : List[T], f : (T) -&gt; Unit!e) -&gt; Unit!e {
   match xs {
     Nil =&gt; ()
@@ -255,17 +261,35 @@ fn main {
 }
 </code></pre>
 <ul>
-<li>行中的小写名字是效应变量，写在隐式参数中。调用时它由参数推断：<code>each(xs, x =&gt; perform Yield(x))</code>
-有效应 <code>Yield[T]</code>，<code>each(xs, g)</code>（<code>g</code> 是纯函数）没有效应。</li>
-<li><strong>可以省略</strong>：函数类型的参数如果在函数体中只被调用、或直接作为参数传出（不被存储、返回，或被返回
-的闭包捕获），省略 <code>!e</code> 时检查器自动加上，并显示在函数的类型中。Prelude 中的 <code>List::map</code> 等函数
-因此是效应多态的。参数会逃逸时（比如 <code>compose</code>），省略表示纯，需要效应时要写 <code>!e</code>。</li>
-<li><code>!pure</code> 显式地要求纯，并关闭自动推导。</li>
+<li>
+<p>效应行中的小写名字（这里的 <code>e</code>）是效应变量，和类型参数一样写在 <code>fn[…]</code> 中。调用时它由参数
+推断：<code>each(xs, x =&gt; perform Yield(x))</code> 有效应 <code>Yield[T]</code>，<code>each(xs, g)</code>（<code>g</code> 是纯函数）没有
+效应。</p>
+</li>
+<li>
+<p>效应变量<strong>可以省略</strong>。函数类型的参数如果在函数体中只被调用、或直接作为参数传给别的函数，省略
+<code>!e</code> 时检查器自动加上，推导出的效应变量显示在函数的类型中。上面的 <code>each</code> 不写 <code>e</code> 也是同样的
+类型，Prelude 中的 <code>List::map</code> 等函数也因此是效应多态的。</p>
+</li>
+<li>
+<p>参数被存储、被返回，或被返回的闭包捕获时（称为<strong>逃逸</strong>），不会自动加上效应变量，省略表示回调
+必须是纯的。例如组合两个函数：</p>
+<pre><code class="language-moonbit">// f 和 g 被返回的闭包捕获：需要效应时要写出 e
+fn[A, B, C, e] compose(f : (A) -&gt; B!e, g : (B) -&gt; C!e) -&gt; (A) -&gt; C!e {
+  x =&gt; g(f(x))
+}
+</code></pre>
+<p>不写 <code>!e</code> 时，<code>compose</code> 只接受纯函数，传入执行效应的 lambda 会报错。</p>
+</li>
+<li>
+<p><code>!pure</code> 显式地要求纯，并关闭自动推导：<code>fn[T] apply(f : (T) -&gt; T!pure, x : T) -&gt; T</code> 只接受纯的
+回调。</p>
+</li>
 </ul>
 <h2 id="错误与-async-也是效应"><a class="header" href="#错误与-async-也是效应">错误与 async 也是效应</a></h2>
-<p><code>raise E</code> 和 <code>async</code> 是效应行的写法：<code>-&gt; T raise E</code> 就是 <code>-&gt; T!Raise[E]</code>，<code>async fn</code> 的返回类型
-有效应 <code>Async</code>。效应变量因此也覆盖它们，Prelude 的 <code>List::map</code> 等函数会跟随回调抛出错误或成为
-async：</p>
+<p><code>raise E</code> 和 <code>async</code> 是效应行的另一种写法：<code>-&gt; T raise E</code> 就是 <code>-&gt; T!Raise[E]</code>，<code>async fn</code> 的
+返回类型有效应 <code>Async</code>。所以效应变量也包括它们：Prelude 的 <code>List::map</code> 等函数，回调会抛出错误时
+它也会抛出，回调是 async 时它也是 async：</p>
 <pre><code class="language-moonbit">suberror TooBig {
   TooBig(Int)
 }
@@ -283,10 +307,11 @@ fn main {
   println(r)
 }
 </code></pre>
-<p>翻译保持专用：错误仍编译为 MoonBit 的错误，async 仍编译为 MoonBit 原生的 async。一个效应多态的
-函数被传入 async 回调时，会生成它的原生 async 版本。</p>
+<p>编译时它们保持专用的翻译：错误仍编译为 MoonBit 的错误，async 仍编译为 MoonBit 原生的 async。
+一个效应多态的函数被传入 async 回调时，编译器会生成它的原生 async 版本。</p>
 <h2 id="检查时的计算"><a class="header" href="#检查时的计算">检查时的计算</a></h2>
-<p>被完整处理的计算是纯的，类型检查时会计算，处理器修改 <code>let mut</code> 也可以：</p>
+<p>在函数内部被完整处理的效应不会出现在函数的类型中，这个函数是纯的，类型检查时会像其他函数一样
+被计算（见<a href="type-level.html">类型层计算</a>），处理器修改 <code>let mut</code> 也可以：</p>
 <pre><code class="language-moonbit">effect Emit {
   Emit(Int) -&gt; Unit
 }
@@ -310,14 +335,32 @@ fn main {
   println(sum(Cons(4, Cons(5, Nil))))
 }
 </code></pre>
-<p>没有状态的处理器只是传入闭包，参数是变量时也能展开，可以对它做归纳。</p>
+<p><code>sum</code> 修改了 <code>let mut</code>，所以和其他使用可变状态的函数一样，在检查时被执行，参数是具体的值时才能
+算出结果（见<a href="mutation.html#与类型检查的关系">可变状态与循环</a>）。处理器不用 <code>let mut</code> 时，处理只是把
+分支作为函数传进去，参数是变量也能展开，所以可以对它做一般的证明：</p>
+<pre><code class="language-moonbit">effect Ask {
+  Ask() -&gt; Int
+}
+
+fn add_asked(x : Int) -&gt; Int!Ask {
+  x + perform Ask()
+}
+
+fn add_one(x : Int) -&gt; Int {
+  try { add_asked(x) } catch { Ask() =&gt; resume(1) }
+}
+
+// x 是变量，调用仍然展开
+lemma add_one_x(x : Int) -&gt; add_one(x) === x + 1 { Refl }
+</code></pre>
 <h2 id="限制"><a class="header" href="#限制">限制</a></h2>
 <ul>
-<li>尾恢复操作的分支不能执行 <code>ctl</code> 操作。</li>
-<li>一个 <code>try</code> 不能同时处理错误和 <code>ctl</code> 操作；<code>try … catch</code>（错误）和 <code>defer</code> 不能包住执行 <code>ctl</code>
-操作的代码。</li>
-<li>证明（返回 <code>Prop</code> 中类型的函数）不能有效应。</li>
-<li>效应不能和 <code>async</code> 组合，也不能跨包使用。</li>
+<li>尾恢复操作的分支中不能执行 <code>ctl</code> 操作。</li>
+<li>一个 <code>try</code> 不能同时处理错误和 <code>ctl</code> 操作；<code>try … catch</code>（捕获错误的）和 <code>defer</code> 不能包住执行
+<code>ctl</code> 操作的代码。</li>
+<li>返回命题的函数（如 <code>lemma</code>）不能有效应。</li>
+<li>async 函数不能再声明其他效应。</li>
+<li>效应不能跨包使用。</li>
 </ul>
 
                     </main>

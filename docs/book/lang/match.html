@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-fc1e96bd.js";
+            window.path_to_searchindex_js = "../searchindex-724f11aa.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-935ffb6c.js"></script>
@@ -199,7 +199,8 @@ fn main {
 <ul>
 <li><strong>模式</strong>：变量、通配符 <code>_</code>、构造子（可以嵌套）、字面量、元组。</li>
 <li>分支按顺序匹配，可以重叠，第一个匹配的分支生效。</li>
-<li><strong>构造子的隐式参数</strong>可以在模式中绑定或忽略：<code>If[t](c, a, b)</code>、<code>IZ[_, a] =&gt; a</code>。</li>
+<li><strong>构造子的隐式参数</strong>可以在模式中用 <code>[...]</code> 绑定或忽略，例如对<a href="enum.html">enum 与索引类型</a>中的
+向量写 <code>Cons[n](x, xs)</code>，<code>n</code> 绑定为 <code>xs</code> 的长度；<code>Cons[_](x, xs)</code> 与 <code>Cons(x, xs)</code> 相同。</li>
 <li><strong><code>let</code> 模式</strong>：<code>let (a, b) = pair</code>。</li>
 </ul>
 <h2 id="或模式as-与守卫"><a class="header" href="#或模式as-与守卫">或模式、<code>as</code> 与守卫</a></h2>

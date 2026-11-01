@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-d8623055.js";
+            window.path_to_searchindex_js = "../searchindex-02c7fc71.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-94125c94.js"></script>
@@ -199,7 +199,9 @@ fn main {
 <ul>
 <li><strong>Patterns</strong>: variables, the wildcard <code>_</code>, constructors (possibly nested), literals, tuples.</li>
 <li>Arms are tried in order and may overlap; the first matching arm wins.</li>
-<li><strong>Implicit parameters of constructors</strong> can be bound or ignored in patterns: <code>If[t](c, a, b)</code>, <code>IZ[_, a] =&gt; a</code>.</li>
+<li><strong>Implicit parameters of constructors</strong> can be bound or ignored in patterns with <code>[...]</code>: for the
+vectors of <a href="enum.html">enum and indexed types</a>, <code>Cons[n](x, xs)</code> binds <code>n</code> to the length of <code>xs</code>;
+<code>Cons[_](x, xs)</code> is the same as <code>Cons(x, xs)</code>.</li>
 <li><strong><code>let</code> patterns</strong>: <code>let (a, b) = pair</code>.</li>
 </ul>
 <h2 id="or-patterns-as-and-guards"><a class="header" href="#or-patterns-as-and-guards">Or-patterns, <code>as</code>, and guards</a></h2>

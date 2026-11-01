@@ -45,7 +45,7 @@ The output includes `pub(all) enum Tree[T0]`, `pub(all) struct Pt`, `pub(open) t
 
 - Only type parameters, no indices; not a proposition and not a `suberror`; constructors have no implicit fields.
 - Field types are MoonBit types: `Int`, `Double`, `Bool`, `Char`, `String`, `Unit`, type parameters, `#mbt`
-  types, and function types between them. Arrays are not supported yet.
+  types, arrays `Array[T]` of these types, and function types between them.
 - Generated type and constructor names must start with an uppercase letter and must not clash with existing names such as `Value` or `Option`.
 
 ## #mbt("name")

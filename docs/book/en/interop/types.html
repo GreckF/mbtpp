@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-d8623055.js";
+            window.path_to_searchindex_js = "../searchindex-02c7fc71.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-94125c94.js"></script>
@@ -190,14 +190,15 @@
 </thead>
 <tbody>
 <tr><td><code>Int32</code> (i.e. <code>Int</code>), <code>Double</code>, <code>Bool</code>, <code>Char</code>, <code>String</code>, <code>Unit</code></td><td>The built-in types of the same name (<code>Int32</code> is <code>Int</code>)</td></tr>
+<tr><td><code>Int64</code>, <code>UInt</code>, <code>UInt64</code>, <code>Byte</code>, <code>Float</code></td><td>The built-in types of the same name</td></tr>
 <tr><td><code>Array[T]</code>, <code>T?</code>, <code>Result[T, E]</code></td><td>The types of the same name</td></tr>
 <tr><td><code>StringView</code>, <code>ArrayView[T]</code></td><td><code>String</code>, <code>Array[T]</code></td></tr>
 <tr><td><code>pub(all) enum</code>, <code>pub(all) struct</code></td><td>The same enum or struct, automatically <code>#mbt</code>; can be constructed and matched</td></tr>
 <tr><td><code>pub enum</code>, <code>pub struct</code> (read-only)</td><td>As above, but cannot be constructed, only matched and passed around</td></tr>
 <tr><td><code>pub(open) trait</code></td><td>A trait, automatically <code>#mbt</code>; can be implemented for this program’s types</td></tr>
 <tr><td><code>pub trait</code></td><td>A trait that cannot be implemented</td></tr>
-<tr><td><code>type T</code> (abstract types), and undefined types (<code>Int64</code>, <code>Map</code>, etc.)</td><td>Opaque types</td></tr>
-<tr><td>Unknown trait bounds (<code>Hash</code>, etc.)</td><td>Opaque traits, satisfied by every type</td></tr>
+<tr><td><code>type T</code> (abstract types), and types MoonBit++ does not have (such as <code>Bytes</code>)</td><td>Opaque types</td></tr>
+<tr><td>Bounds that are neither Prelude traits nor imported traits</td><td>Opaque traits, satisfied by every type</td></tr>
 <tr><td><code>(A) -&gt; B raise E</code>, <code>x~ : T</code>, <code>x? : T</code></td><td>The same</td></tr>
 <tr><td><code>&amp;Tr</code> (trait objects)</td><td><code>&amp;Tr</code>, see <a href="../lang/trait-objects.html">Trait Objects</a>; functions returning <code>&amp;Tr</code> cannot be compiled yet</td></tr>
 </tbody>

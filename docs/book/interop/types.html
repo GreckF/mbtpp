@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-fc1e96bd.js";
+            window.path_to_searchindex_js = "../searchindex-724f11aa.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-935ffb6c.js"></script>
@@ -190,14 +190,15 @@
 </thead>
 <tbody>
 <tr><td><code>Int32</code>（即 <code>Int</code>）、<code>Double</code>、<code>Bool</code>、<code>Char</code>、<code>String</code>、<code>Unit</code></td><td>同名内置类型（<code>Int32</code> 即 <code>Int</code>）</td></tr>
+<tr><td><code>Int64</code>、<code>UInt</code>、<code>UInt64</code>、<code>Byte</code>、<code>Float</code></td><td>同名内置类型</td></tr>
 <tr><td><code>Array[T]</code>、<code>T?</code>、<code>Result[T, E]</code></td><td>同名类型</td></tr>
 <tr><td><code>StringView</code>、<code>ArrayView[T]</code></td><td><code>String</code>、<code>Array[T]</code></td></tr>
 <tr><td><code>pub(all) enum</code>、<code>pub(all) struct</code></td><td>同样的 enum、struct，自动 <code>#mbt</code>；可以构造和匹配</td></tr>
 <tr><td><code>pub enum</code>、<code>pub struct</code>（只读）</td><td>同上，但不能构造，只能匹配和传递</td></tr>
 <tr><td><code>pub(open) trait</code></td><td>trait，自动 <code>#mbt</code>；可以为本程序的类型实现</td></tr>
 <tr><td><code>pub trait</code></td><td>trait，不能实现</td></tr>
-<tr><td><code>type T</code>（抽象类型），以及未定义的类型（<code>Int64</code>、<code>Map</code> 等）</td><td>不透明类型</td></tr>
-<tr><td>未知的 trait 约束（<code>Hash</code> 等）</td><td>不透明 trait，任何类型都满足</td></tr>
+<tr><td><code>type T</code>（抽象类型），以及 MoonBit++ 中没有的类型（如 <code>Bytes</code>）</td><td>不透明类型</td></tr>
+<tr><td>既不是 Prelude trait、也不是导入的 trait 的约束</td><td>不透明 trait，任何类型都满足</td></tr>
 <tr><td><code>(A) -&gt; B raise E</code>、<code>x~ : T</code>、<code>x? : T</code></td><td>相同</td></tr>
 <tr><td><code>&amp;Tr</code>（trait 对象）</td><td><code>&amp;Tr</code>，见 <a href="../lang/trait-objects.html">trait 对象</a>；返回 <code>&amp;Tr</code> 的函数还不能编译</td></tr>
 </tbody>

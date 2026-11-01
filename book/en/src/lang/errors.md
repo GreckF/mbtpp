@@ -124,12 +124,13 @@ The rules follow call-by-value evaluation at run time:
   `const0(x) === 0` can.
 - `raise e` differs from every constructor and literal; `raise e1` equals `raise e2` exactly when `e1`
   equals `e2`.
-- Raising calls and `raise e` can only be written in types. A proof (a pure term) still cannot call a
-  raising function, so the pure part cannot build an error, and errors do not make the logic
-  inconsistent.
-- The implicit arguments of a lemma stand for values, and unification does not solve them with terms
-  that may raise. Those of constructors, of types, and of `Id::sym`, `Id::trans`, `Id::cong` and
-  `Id::subst` can be such terms, since these do not rely on their arguments being values.
+- Raising calls and `raise e` can only be written in types, as in the statement
+  `head(Nil) === raise Empty` of a lemma. A proof itself is a pure term and cannot call a raising
+  function, so no error can be built in a proof, and errors do not make the logic inconsistent.
+- The parameters of a lemma (implicit ones included) stand for values: when a lemma is used,
+  unification does not infer its implicit arguments as terms that may raise, or a lemma about values
+  could be applied to errors. The implicit arguments of constructors, of types, and of `Id::sym`,
+  `Id::trans`, `Id::cong` and `Id::subst` have no such restriction: these hold for every term.
 - A function that returns a proof (a type in `Prop`) cannot declare `raise`: proofs are erased at run
   time, and the error would be lost with them.
 - The argument of `raise` is the whole expression: `raise Empty === x` is `raise (Empty === x)`; write

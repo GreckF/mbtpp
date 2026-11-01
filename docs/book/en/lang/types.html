@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-d8623055.js";
+            window.path_to_searchindex_js = "../searchindex-02c7fc71.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-94125c94.js"></script>
@@ -184,7 +184,9 @@
                         <h1 id="types"><a class="header" href="#types">Types</a></h1>
 <h2 id="universes"><a class="header" href="#universes">Universes</a></h2>
 <ul>
-<li><code>Type : Type</code>: types are values, and the type of a type is <code>Type</code> (which makes the system inconsistent; see the disclaimer in the <a href="../README.html">introduction</a>).</li>
+<li><code>Type : Type</code>: types are values, and the type of a type is <code>Type</code>. This makes the logic
+inconsistent (false propositions can be proved), a deliberate trade-off like the lack of
+termination checking; see <a href="proofs.html">Propositions and proofs</a>.</li>
 <li><code>Prop : Type</code>: the universe of propositions. Values of types in <code>Prop</code> are proofs; proofs are irrelevant, so any two proofs of the same type are considered equal.
 See <a href="proofs.html">Propositions and proofs</a>.</li>
 </ul>

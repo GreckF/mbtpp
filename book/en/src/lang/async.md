@@ -68,6 +68,10 @@ done
 
 ## Compilation
 
+The compiler translates code in two ways (see [Compiling to MoonBit](../interop/compile.md)): the
+part expressible with MoonBit types (the **native fragment**) becomes ordinary MoonBit code, and the
+rest uses a dynamic **uniform representation**.
+
 - Async functions are only compiled to native MoonBit code, because functions in the uniform
   representation are synchronous. Their signature and body must be in the native fragment;
   otherwise compilation fails and names the first term that is not, with the same rules as

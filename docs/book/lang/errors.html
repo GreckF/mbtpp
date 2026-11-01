@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-fc1e96bd.js";
+            window.path_to_searchindex_js = "../searchindex-724f11aa.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-935ffb6c.js"></script>
@@ -293,10 +293,11 @@ fn main {
 抛出，所以这个调用不展开，<code>const0(head(xs)) === 0</code> 不能用 <code>Refl</code> 证明。变量总是代表值，
 <code>const0(x) === 0</code> 可以。</li>
 <li><code>raise e</code> 与任何构造子和字面量都不同；<code>raise e1</code> 与 <code>raise e2</code> 相等当且仅当 <code>e1</code> 与 <code>e2</code> 相等。</li>
-<li>只有在类型中可以写会抛出的调用和 <code>raise e</code>。证明（纯的项）仍然不能调用会抛出的函数，所以纯的
-部分造不出错误，证明不会因此不一致。</li>
-<li>引理的隐式参数代表值，不能由合一解成可能抛出的项。构造子、类型，以及 <code>Id::sym</code>、<code>Id::trans</code>、
-<code>Id::cong</code>、<code>Id::subst</code> 的隐式参数可以，因为它们不依赖参数是值。</li>
+<li>会抛出的调用和 <code>raise e</code> 只能写在类型中，例如引理的结论 <code>head(Nil) === raise Empty</code>。证明本身
+是纯的项，不能调用会抛出的函数，所以证明中造不出错误，逻辑不会因此不一致。</li>
+<li>引理的参数（包括隐式参数）代表值：调用引理时，隐式参数不会被合一推断为可能抛出的项，否则就能把
+关于值的引理用在错误上。构造子、类型，以及 <code>Id::sym</code>、<code>Id::trans</code>、<code>Id::cong</code>、<code>Id::subst</code> 的
+隐式参数没有这个限制，它们对任何项都成立。</li>
 <li>返回证明（<code>Prop</code> 中的类型）的函数不能声明 <code>raise</code>：证明在运行时被擦除，错误会随之丢失。</li>
 <li><code>raise</code> 的参数是整个表达式：<code>raise Empty === x</code> 是 <code>raise (Empty === x)</code>，需要写成
 <code>(raise Empty) === x</code>。</li>

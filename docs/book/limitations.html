@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-fc1e96bd.js";
+            window.path_to_searchindex_js = "searchindex-724f11aa.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-935ffb6c.js"></script>
@@ -193,18 +193,16 @@
 <li>没有 <code>BigInt</code> 字面量（<code>1N</code>）、<code>Int16</code>、<code>UInt16</code>；<code>Float</code> 的方法只有运算、比较和转换。</li>
 <li>类型检查时执行非纯函数时，用到数组、导入函数或捕获 <code>let mut</code> 的 lambda 的调用不执行（见<a href="lang/mutation.html">可变状态与循环</a>）。</li>
 <li>检查时限按实际时间计算，同一个文件在较慢的机器上可能超时（见<a href="lang/type-level.html#检查时限">检查时限</a>）。</li>
-<li>结构体没有可变字段，没有结构体模式。</li>
-<li>trait 没有默认方法。</li>
 </ul>
 <h2 id="导入"><a class="header" href="#导入">导入</a></h2>
 <ul>
 <li>解释器不能运行导入的 MoonBit 函数，只能在编译后调用。</li>
 <li>解释器同步执行 async 函数，没有并发；async 函数只编译成原生代码（见 <a href="lang/async.html">async 函数</a>）。</li>
-<li>导入包中的泛型 <code>impl</code>、trait 对象等不导入（见<a href="interop/types.html">类型对应与不导入的项</a>）。</li>
+<li>返回 trait 对象 <code>&amp;Tr</code> 的导入函数还不能编译；其他不导入的项见<a href="interop/types.html">类型对应与不导入的项</a>。</li>
 </ul>
 <h2 id="编译器"><a class="header" href="#编译器">编译器</a></h2>
 <ul>
-<li>数组在原生代码中不是原生类型：含数组的签名走统一表示，也不能是 <code>#mbt</code>。</li>
+<li><code>Hash</code> 的值在解释器和编译后的程序中不同（编译后用 MoonBit 的哈希）。</li>
 <li>统一表示与原生代码之间按值转换，频繁跨边界传递大型数据会慢。</li>
 </ul>
 <h2 id="工具"><a class="header" href="#工具">工具</a></h2>

@@ -19,7 +19,9 @@ fn main {
 
 - **Patterns**: variables, the wildcard `_`, constructors (possibly nested), literals, tuples.
 - Arms are tried in order and may overlap; the first matching arm wins.
-- **Implicit parameters of constructors** can be bound or ignored in patterns: `If[t](c, a, b)`, `IZ[_, a] => a`.
+- **Implicit parameters of constructors** can be bound or ignored in patterns with `[...]`: for the
+  vectors of [enum and indexed types](enum.md), `Cons[n](x, xs)` binds `n` to the length of `xs`;
+  `Cons[_](x, xs)` is the same as `Cons(x, xs)`.
 - **`let` patterns**: `let (a, b) = pair`.
 
 ## Or-patterns, `as`, and guards

@@ -15,7 +15,6 @@ fn main {
 - **Construction**: `{ x: 1, y: 2 }`; the type is determined by the expected type.
 - **Field access**: `p.x`.
 - **Parameters**: `struct Name[T, n : Nat] { … }`.
-- Struct patterns (`{ x: a, y: b } => …`) are not supported; use field access.
 
 ## Dependent fields
 

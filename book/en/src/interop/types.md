@@ -5,14 +5,15 @@
 | MoonBit | MoonBit++ |
 | --- | --- |
 | `Int32` (i.e. `Int`), `Double`, `Bool`, `Char`, `String`, `Unit` | The built-in types of the same name (`Int32` is `Int`) |
+| `Int64`, `UInt`, `UInt64`, `Byte`, `Float` | The built-in types of the same name |
 | `Array[T]`, `T?`, `Result[T, E]` | The types of the same name |
 | `StringView`, `ArrayView[T]` | `String`, `Array[T]` |
 | `pub(all) enum`, `pub(all) struct` | The same enum or struct, automatically `#mbt`; can be constructed and matched |
 | `pub enum`, `pub struct` (read-only) | As above, but cannot be constructed, only matched and passed around |
 | `pub(open) trait` | A trait, automatically `#mbt`; can be implemented for this program's types |
 | `pub trait` | A trait that cannot be implemented |
-| `type T` (abstract types), and undefined types (`Int64`, `Map`, etc.) | Opaque types |
-| Unknown trait bounds (`Hash`, etc.) | Opaque traits, satisfied by every type |
+| `type T` (abstract types), and types MoonBit++ does not have (such as `Bytes`) | Opaque types |
+| Bounds that are neither Prelude traits nor imported traits | Opaque traits, satisfied by every type |
 | `(A) -> B raise E`, `x~ : T`, `x? : T` | The same |
 | `&Tr` (trait objects) | `&Tr`, see [Trait Objects](../lang/trait-objects.md); functions returning `&Tr` cannot be compiled yet |
 

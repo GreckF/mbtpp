@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-fc1e96bd.js";
+            window.path_to_searchindex_js = "searchindex-724f11aa.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-935ffb6c.js"></script>
@@ -474,7 +474,8 @@ fn main {
 <h1 id="类型"><a class="header" href="#类型">类型</a></h1>
 <h2 id="宇宙"><a class="header" href="#宇宙">宇宙</a></h2>
 <ul>
-<li><code>Type : Type</code>：类型本身是值，类型的类型是 <code>Type</code>（因此不一致，见<a href="README.html">介绍</a>中的声明）。</li>
+<li><code>Type : Type</code>：类型本身是值，类型的类型是 <code>Type</code>。这使逻辑不一致（可以证明假命题），与没有终止
+检查一样是有意的取舍，见<a href="#命题与证明">命题与证明</a>。</li>
 <li><code>Prop : Type</code>：命题的宇宙。<code>Prop</code> 中类型的值是证明；证明无关，任意两个同类型的证明视为相等。
 见<a href="#命题与证明">命题与证明</a>。</li>
 </ul>
@@ -674,7 +675,6 @@ fn main {
 <li><strong>构造</strong>：<code>{ x: 1, y: 2 }</code>，类型由期望类型决定。</li>
 <li><strong>字段访问</strong>：<code>p.x</code>。</li>
 <li><strong>参数</strong>：<code>struct Name[T, n : Nat] { … }</code>。</li>
-<li>不支持结构体模式（<code>{ x: a, y: b } =&gt; …</code>），用字段访问。</li>
 </ul>
 <h2 id="依赖字段"><a class="header" href="#依赖字段">依赖字段</a></h2>
 <p>后面的字段可以依赖前面的字段，例如一个带长度证明的数组：</p>
@@ -753,7 +753,8 @@ fn main {
 <ul>
 <li><strong>模式</strong>：变量、通配符 <code>_</code>、构造子（可以嵌套）、字面量、元组。</li>
 <li>分支按顺序匹配，可以重叠，第一个匹配的分支生效。</li>
-<li><strong>构造子的隐式参数</strong>可以在模式中绑定或忽略：<code>If[t](c, a, b)</code>、<code>IZ[_, a] =&gt; a</code>。</li>
+<li><strong>构造子的隐式参数</strong>可以在模式中用 <code>[...]</code> 绑定或忽略，例如对<a href="#enum-与索引类型">enum 与索引类型</a>中的
+向量写 <code>Cons[n](x, xs)</code>，<code>n</code> 绑定为 <code>xs</code> 的长度；<code>Cons[_](x, xs)</code> 与 <code>Cons(x, xs)</code> 相同。</li>
 <li><strong><code>let</code> 模式</strong>：<code>let (a, b) = pair</code>。</li>
 </ul>
 <h2 id="或模式as-与守卫"><a class="header" href="#或模式as-与守卫">或模式、<code>as</code> 与守卫</a></h2>
@@ -892,11 +893,14 @@ fn main {
 <code>(VNil, VCons(…))</code> 这样的组合不需要写。</li>
 <li>每个分支中，目标类型 <code>Vec2[T](n)</code> 也被细化：<code>VNil</code> 分支返回 <code>Vec2[T](0)</code>，<code>VCons</code> 分支返回
 <code>Vec2[T](S(n'))</code>。</li>
-<li>匹配隐式参数也会细化，例如 <code>match g { Empty =&gt; …; Extend(_, _) =&gt; … }</code>，其中 <code>g</code> 是函数的
-隐式参数。</li>
+<li>匹配隐式参数也会细化。例如在 <code>fn[T, n : Nat] first_or(v : Vector[T](n), d : T)</code> 中
+<code>match n { … }</code>：<code>S(_)</code> 分支中 <code>v : Vector[T](S(_))</code>，所以再匹配 <code>v</code> 时只需要 <code>Cons</code> 分支。</li>
 </ul>
 <h2 id="匹配函数调用的结果"><a class="header" href="#匹配函数调用的结果">匹配函数调用的结果</a></h2>
-<p>被匹配的不是变量（例如函数调用）时，结果类型中的索引关系同样用于细化目标类型：</p>
+<p>被匹配的不是变量（例如函数调用）时，结果类型中的索引关系同样用于细化目标类型。下面的片段取自
+简单类型 λ 演算的类型安全证明：<code>progress(t1)</code> 的类型是 <code>Progress(t1)</code>，结果说明项 <code>t1</code> 能再走一步
+（<code>PrStep</code>）或已经是值（<code>PrDone</code>）。在 <code>PrDone(_, VLam(b))</code> 分支中，构造子的索引与 <code>t1</code> 合一，
+检查器得知 <code>t1</code> 就是 <code>Lam(b)</code>，所以 <code>StApp(b, t2)</code> 可以作为 <code>App(t1, t2)</code> 的一步：</p>
 <pre><code class="language-text">match progress(t1) {
   PrStep(_, u1, st1) =&gt; PrStep(_, _, StApp1(t1, u1, t2, st1))
   PrDone(_, VLam(b)) =&gt; PrStep(_, _, StApp(b, t2))
@@ -904,8 +908,9 @@ fn main {
 </code></pre>
 <p>完整的例子见仓库中的 <code>examples/stlc.mbtpp</code>。</p>
 <h2 id="prop-的消去"><a class="header" href="#prop-的消去">Prop 的消去</a></h2>
-<p>匹配 <code>Prop</code> 中的数据时，结果也必须在 <code>Prop</code> 中，除非这个类型是子单例（如命题相等 <code>===</code>，
-它最多只有一个证明）。</p>
+<p>匹配 <code>Prop</code> 中的数据（证明）时，结果也必须在 <code>Prop</code> 中，因为证明在编译时被擦除，运行时无法根据它
+选择分支。例外是<strong>子单例</strong>：至多一个构造子、字段都是证明的命题，例如命题相等 <code>===</code>。匹配它不需要
+在运行时做选择，所以结果可以是任意类型（见<a href="#命题与证明">命题与证明</a>）。</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="覆盖检查与不可能分支"><a class="header" href="#覆盖检查与不可能分支">覆盖检查与不可能分支</a></h1>
 <p>每个 <code>match</code> 都要覆盖所有情况，否则报错：</p>
@@ -1210,8 +1215,9 @@ fn main {
 </ul>
 <p>trait 和类型在同一个命名空间中，不能同名，所以不会有歧义。注意：</p>
 <ul>
-<li>这条规则只用于 <code>[...]</code>。显式参数 <code>(x : Add)</code> 按类型检查，会报错：没有 MoonBit 的 trait
-对象 <code>&amp;Add</code>。</li>
+<li>这条规则只用于 <code>[...]</code>。显式参数 <code>(x : Add)</code> 会报错，因为 <code>Add</code> 是 trait 而不是类型；需要
+“任意实现了某 trait 的值”时用 trait 对象 <code>&amp;Tr</code>（见 <a href="#trait-对象">trait 对象</a>，<code>Add</code> 本身
+不能做成 trait 对象）。</li>
 <li>局部名字优先：如果外层有与 trait 同名的参数，冒号右边指的是那个参数。</li>
 <li>多个约束的种类要相同（<code>T</code> 的种类取自第一个 trait），<code>[M : Monad + Show]</code> 会报错。</li>
 </ul>
@@ -1266,7 +1272,8 @@ fn main {
 <code>Debug</code> 是导入的包中的 trait（导入这两个包后可用），见下面的 derive。</p>
 <p><code>Hash</code> 的值在解释器和编译后的程序中不同（编译后用的是 MoonBit 的哈希）。</p>
 <p><code>println</code> 需要 <code>Show</code>。除 <code>Monad</code> 外，这些 trait 就是 MoonBit 自己的 trait：编译后，<code>#mbt</code>
-类型的实例是真正的 MoonBit impl（例如 <code>impl Eq for Shape with equal(a0, a1)</code>），MoonBit 代码
+类型（标了 <code>#mbt</code>、直接对应 MoonBit 类型的类型，见 <a href="#mbt-类型与-trait">#mbt 类型与 trait</a>）
+的实例是真正的 MoonBit impl（例如 <code>impl Eq for Shape with equal(a0, a1)</code>），MoonBit 代码
 可以直接打印、比较、排序这些值；带这些约束的 <code>#mbt fn</code>（<code>fn[T : Show + Eq]</code>）编译成带同样
 约束的 MoonBit 函数。其他类型的实例只在 MoonBit++ 内部使用（MoonBit 已经有 <code>Int</code>、<code>String</code>
 等类型的实例）。</p>
@@ -1507,10 +1514,11 @@ fn main {
 </code></pre>
 <ul>
 <li><strong>能跑完</strong>：所有判断都能确定，例如参数是具体的值，或者像 <code>inc(x)</code> 那样根本不需要判断。错误
-会正常传到 <code>try</code>，<code>println</code> 等输出被跳过（输出不影响结果）。</li>
-<li><strong>保持不展开</strong>：需要根据未知的值做判断（<code>abs(x)</code> 中的 <code>if x &lt; 0</code>，<code>x</code> 是变量）；错误一直抛到
-函数外；用到数组（数组是可变的）、导入的 MoonBit 函数或 async 函数；lambda 捕获了 <code>let mut</code>
-变量。这些情况下结果可能不只由参数决定，所以不展开。</li>
+会正常传到 <code>try</code>；抛出函数外的错误 <code>e</code> 使调用的结果是 <code>raise e</code>（见
+<a href="#错误作为逻辑中的值">错误作为逻辑中的值</a>）。<code>println</code> 等输出被跳过（输出不影响结果）。</li>
+<li><strong>保持不展开</strong>：需要根据未知的值做判断（<code>abs(x)</code> 中的 <code>if x &lt; 0</code>，<code>x</code> 是变量）；用到数组
+（数组是可变的）、导入的 MoonBit 函数或 async 函数；lambda 捕获了 <code>let mut</code> 变量。这些情况下
+结果可能不只由参数决定，所以不展开。</li>
 <li>所以关于变量参数的一般性质，例如“对所有 <code>n</code>，<code>sum_to(n) * 2 == n * (n + 1)</code>”，仍然不能这样
 证明。</li>
 <li>不终止的循环会让检查一直执行下去，直到这个定义的<a href="#检查时限">检查时限</a>。</li>
@@ -1628,10 +1636,11 @@ fn main {
 抛出，所以这个调用不展开，<code>const0(head(xs)) === 0</code> 不能用 <code>Refl</code> 证明。变量总是代表值，
 <code>const0(x) === 0</code> 可以。</li>
 <li><code>raise e</code> 与任何构造子和字面量都不同；<code>raise e1</code> 与 <code>raise e2</code> 相等当且仅当 <code>e1</code> 与 <code>e2</code> 相等。</li>
-<li>只有在类型中可以写会抛出的调用和 <code>raise e</code>。证明（纯的项）仍然不能调用会抛出的函数，所以纯的
-部分造不出错误，证明不会因此不一致。</li>
-<li>引理的隐式参数代表值，不能由合一解成可能抛出的项。构造子、类型，以及 <code>Id::sym</code>、<code>Id::trans</code>、
-<code>Id::cong</code>、<code>Id::subst</code> 的隐式参数可以，因为它们不依赖参数是值。</li>
+<li>会抛出的调用和 <code>raise e</code> 只能写在类型中，例如引理的结论 <code>head(Nil) === raise Empty</code>。证明本身
+是纯的项，不能调用会抛出的函数，所以证明中造不出错误，逻辑不会因此不一致。</li>
+<li>引理的参数（包括隐式参数）代表值：调用引理时，隐式参数不会被合一推断为可能抛出的项，否则就能把
+关于值的引理用在错误上。构造子、类型，以及 <code>Id::sym</code>、<code>Id::trans</code>、<code>Id::cong</code>、<code>Id::subst</code> 的
+隐式参数没有这个限制，它们对任何项都成立。</li>
 <li>返回证明（<code>Prop</code> 中的类型）的函数不能声明 <code>raise</code>：证明在运行时被擦除，错误会随之丢失。</li>
 <li><code>raise</code> 的参数是整个表达式：<code>raise Empty === x</code> 是 <code>raise (Empty === x)</code>，需要写成
 <code>(raise Empty) === x</code>。</li>
@@ -1694,6 +1703,8 @@ done
 </code></pre>
 <p><code>async</code> 是关键字，但仍然可以作为包的别名：<code>@async.sleep</code>。</p>
 <h2 id="编译"><a class="header" href="#编译">编译</a></h2>
+<p>编译器用两种方式翻译代码（见<a href="#编译到-moonbit">编译到 MoonBit</a>）：能用 MoonBit 类型表达的
+部分（<strong>原生片段</strong>）翻译成普通的 MoonBit 代码，其余部分使用一种动态的<strong>统一表示</strong>。</p>
 <ul>
 <li>async 函数只编译成原生 MoonBit 代码，因为统一表示中的函数是同步的。它的签名和函数体必须在原生
 片段中，否则编译报错并指出第一个不在原生片段中的项，规则与 <a href="#mbt-函数"><code>#mbt</code> 函数</a>
@@ -1729,14 +1740,16 @@ fn main {
 }
 </code></pre>
 <ul>
-<li><code>effect E[T] { Op(A) -&gt; R }</code> 声明一个效应。<code>perform Op(x)</code> 的结果类型是 <code>R</code>，也就是 <code>resume</code>
-的参数类型；<code>R</code> 是 <code>Unit</code> 时写 <code>resume()</code>。</li>
-<li>函数的效应写在返回类型后：<code>-&gt; T!E1 + E2 raise Err</code>。调用一个有效应的函数，要么在处理这些效应的
-<code>try</code> 中，要么所在函数自己也声明这些效应。</li>
+<li><code>effect E[T] { Op(A) -&gt; R }</code> 声明一个效应，<code>{ … }</code> 中是它的操作。<code>perform Op(x)</code> 的结果类型是
+<code>R</code>，也就是 <code>resume</code> 的参数类型；<code>R</code> 是 <code>Unit</code> 时写 <code>resume()</code>。</li>
+<li>函数可能执行的效应写在返回类型后的 <code>!</code> 之后，多个效应用 <code>+</code> 连接，例如 <code>-&gt; T!E1 + E2</code>。这个
+列表称为函数的<strong>效应行</strong>。调用一个有效应的函数，要么在处理这些效应的 <code>try</code> 中，要么所在函数的
+效应行也包含这些效应。</li>
 <li><code>try</code> 的分支可以同时处理错误和效应操作，只有效应分支中有 <code>resume</code>。</li>
-<li>处理器是深的：<code>resume</code> 之后，后面的操作仍由同一个 <code>try</code> 处理。</li>
-<li>处理器是词法的：lambda 在创建时捕获作用域中的处理器，所以执行效应的 lambda 要在处理器之内，或在
-声明了该效应的函数之内创建。</li>
+<li><code>resume</code> 之后，<code>try</code> 体中后面执行的操作仍由同一个 <code>try</code> 处理：上例中三次 <code>Yield</code> 都进入同一个
+分支（这样的处理器称为“深”的）。</li>
+<li>处理器按词法作用域确定：lambda 中执行的操作，由创建这个 lambda 的地方外围的 <code>try</code> 处理，而不是
+调用它的地方。所以执行效应的 lambda 要在处理器之内，或在效应行包含该效应的函数之内创建。</li>
 </ul>
 <h2 id="两种操作"><a class="header" href="#两种操作">两种操作</a></h2>
 <p>默认的操作是<strong>尾恢复</strong>的：处理分支的每条路径都以 <code>resume(…)</code> 结束。这样的操作编译为普通的函数
@@ -1763,13 +1776,17 @@ fn main {
 </code></pre>
 <ul>
 <li><code>ctl</code> 分支中，<code>resume(v)</code> 运行 <code>try</code> 体中剩下的部分（仍由这个处理器处理），返回 <code>try</code> 的结果；
-它可以被调用任意次。</li>
-<li><code>let mut</code> 变量在每次恢复时都从执行操作时的值继续（上例的结果是 <code>[2, 1, 1, 0]</code>）；<code>try</code> 外面的
-变量、数组和 <code>mut</code> 字段是共享的。</li>
-<li>用到 <code>ctl</code> 效应的代码会被翻译为返回“计算“的代码，使用统一表示编译，比直接的代码慢；只用尾恢复
-操作的代码不受影响。</li>
+它可以被调用任意次。上例中每个 <code>Choose</code> 恢复两次，<code>try</code> 体共运行完 4 次，第一个 <code>println</code> 输出
+四种选择下的结果 <code>Cons(2, Cons(1, Cons(1, Cons(0, Nil))))</code>；第二个 <code>try</code> 不恢复，输出 <code>-1</code>。</li>
+<li>每次恢复时，<code>let mut</code> 变量从执行操作那一刻的值继续：上例中第二次 <code>Choose</code> 的两次恢复都从同一个
+<code>n</code> 开始，互不影响。<code>try</code> 外面的变量、数组和 <code>mut</code> 字段则是共享的，一次恢复中的修改在下一次恢复
+中可见。</li>
+<li>用到 <code>ctl</code> 操作的代码会被翻译为返回“计算”的代码，使用<a href="#统一表示">统一表示</a>
+编译，比直接的代码慢；只用尾恢复操作的代码不受影响。</li>
 </ul>
 <h2 id="效应多态"><a class="header" href="#效应多态">效应多态</a></h2>
+<p>一个接受回调的函数，往往应该具有回调的效应：回调执行 <code>Yield</code>，它就执行 <code>Yield</code>；回调是纯的，
+它也是纯的。这用<strong>效应变量</strong>表示：</p>
 <pre><code class="language-moonbit">fn[T, e] each(xs : List[T], f : (T) -&gt; Unit!e) -&gt; Unit!e {
   match xs {
     Nil =&gt; ()
@@ -1778,17 +1795,35 @@ fn main {
 }
 </code></pre>
 <ul>
-<li>行中的小写名字是效应变量，写在隐式参数中。调用时它由参数推断：<code>each(xs, x =&gt; perform Yield(x))</code>
-有效应 <code>Yield[T]</code>，<code>each(xs, g)</code>（<code>g</code> 是纯函数）没有效应。</li>
-<li><strong>可以省略</strong>：函数类型的参数如果在函数体中只被调用、或直接作为参数传出（不被存储、返回，或被返回
-的闭包捕获），省略 <code>!e</code> 时检查器自动加上，并显示在函数的类型中。Prelude 中的 <code>List::map</code> 等函数
-因此是效应多态的。参数会逃逸时（比如 <code>compose</code>），省略表示纯，需要效应时要写 <code>!e</code>。</li>
-<li><code>!pure</code> 显式地要求纯，并关闭自动推导。</li>
+<li>
+<p>效应行中的小写名字（这里的 <code>e</code>）是效应变量，和类型参数一样写在 <code>fn[…]</code> 中。调用时它由参数
+推断：<code>each(xs, x =&gt; perform Yield(x))</code> 有效应 <code>Yield[T]</code>，<code>each(xs, g)</code>（<code>g</code> 是纯函数）没有
+效应。</p>
+</li>
+<li>
+<p>效应变量<strong>可以省略</strong>。函数类型的参数如果在函数体中只被调用、或直接作为参数传给别的函数，省略
+<code>!e</code> 时检查器自动加上，推导出的效应变量显示在函数的类型中。上面的 <code>each</code> 不写 <code>e</code> 也是同样的
+类型，Prelude 中的 <code>List::map</code> 等函数也因此是效应多态的。</p>
+</li>
+<li>
+<p>参数被存储、被返回，或被返回的闭包捕获时（称为<strong>逃逸</strong>），不会自动加上效应变量，省略表示回调
+必须是纯的。例如组合两个函数：</p>
+<pre><code class="language-moonbit">// f 和 g 被返回的闭包捕获：需要效应时要写出 e
+fn[A, B, C, e] compose(f : (A) -&gt; B!e, g : (B) -&gt; C!e) -&gt; (A) -&gt; C!e {
+  x =&gt; g(f(x))
+}
+</code></pre>
+<p>不写 <code>!e</code> 时，<code>compose</code> 只接受纯函数，传入执行效应的 lambda 会报错。</p>
+</li>
+<li>
+<p><code>!pure</code> 显式地要求纯，并关闭自动推导：<code>fn[T] apply(f : (T) -&gt; T!pure, x : T) -&gt; T</code> 只接受纯的
+回调。</p>
+</li>
 </ul>
 <h2 id="错误与-async-也是效应"><a class="header" href="#错误与-async-也是效应">错误与 async 也是效应</a></h2>
-<p><code>raise E</code> 和 <code>async</code> 是效应行的写法：<code>-&gt; T raise E</code> 就是 <code>-&gt; T!Raise[E]</code>，<code>async fn</code> 的返回类型
-有效应 <code>Async</code>。效应变量因此也覆盖它们，Prelude 的 <code>List::map</code> 等函数会跟随回调抛出错误或成为
-async：</p>
+<p><code>raise E</code> 和 <code>async</code> 是效应行的另一种写法：<code>-&gt; T raise E</code> 就是 <code>-&gt; T!Raise[E]</code>，<code>async fn</code> 的
+返回类型有效应 <code>Async</code>。所以效应变量也包括它们：Prelude 的 <code>List::map</code> 等函数，回调会抛出错误时
+它也会抛出，回调是 async 时它也是 async：</p>
 <pre><code class="language-moonbit">suberror TooBig {
   TooBig(Int)
 }
@@ -1806,10 +1841,11 @@ fn main {
   println(r)
 }
 </code></pre>
-<p>翻译保持专用：错误仍编译为 MoonBit 的错误，async 仍编译为 MoonBit 原生的 async。一个效应多态的
-函数被传入 async 回调时，会生成它的原生 async 版本。</p>
+<p>编译时它们保持专用的翻译：错误仍编译为 MoonBit 的错误，async 仍编译为 MoonBit 原生的 async。
+一个效应多态的函数被传入 async 回调时，编译器会生成它的原生 async 版本。</p>
 <h2 id="检查时的计算"><a class="header" href="#检查时的计算">检查时的计算</a></h2>
-<p>被完整处理的计算是纯的，类型检查时会计算，处理器修改 <code>let mut</code> 也可以：</p>
+<p>在函数内部被完整处理的效应不会出现在函数的类型中，这个函数是纯的，类型检查时会像其他函数一样
+被计算（见<a href="#类型层计算">类型层计算</a>），处理器修改 <code>let mut</code> 也可以：</p>
 <pre><code class="language-moonbit">effect Emit {
   Emit(Int) -&gt; Unit
 }
@@ -1833,14 +1869,32 @@ fn main {
   println(sum(Cons(4, Cons(5, Nil))))
 }
 </code></pre>
-<p>没有状态的处理器只是传入闭包，参数是变量时也能展开，可以对它做归纳。</p>
+<p><code>sum</code> 修改了 <code>let mut</code>，所以和其他使用可变状态的函数一样，在检查时被执行，参数是具体的值时才能
+算出结果（见<a href="#与类型检查的关系">可变状态与循环</a>）。处理器不用 <code>let mut</code> 时，处理只是把
+分支作为函数传进去，参数是变量也能展开，所以可以对它做一般的证明：</p>
+<pre><code class="language-moonbit">effect Ask {
+  Ask() -&gt; Int
+}
+
+fn add_asked(x : Int) -&gt; Int!Ask {
+  x + perform Ask()
+}
+
+fn add_one(x : Int) -&gt; Int {
+  try { add_asked(x) } catch { Ask() =&gt; resume(1) }
+}
+
+// x 是变量，调用仍然展开
+lemma add_one_x(x : Int) -&gt; add_one(x) === x + 1 { Refl }
+</code></pre>
 <h2 id="限制"><a class="header" href="#限制">限制</a></h2>
 <ul>
-<li>尾恢复操作的分支不能执行 <code>ctl</code> 操作。</li>
-<li>一个 <code>try</code> 不能同时处理错误和 <code>ctl</code> 操作；<code>try … catch</code>（错误）和 <code>defer</code> 不能包住执行 <code>ctl</code>
-操作的代码。</li>
-<li>证明（返回 <code>Prop</code> 中类型的函数）不能有效应。</li>
-<li>效应不能和 <code>async</code> 组合，也不能跨包使用。</li>
+<li>尾恢复操作的分支中不能执行 <code>ctl</code> 操作。</li>
+<li>一个 <code>try</code> 不能同时处理错误和 <code>ctl</code> 操作；<code>try … catch</code>（捕获错误的）和 <code>defer</code> 不能包住执行
+<code>ctl</code> 操作的代码。</li>
+<li>返回命题的函数（如 <code>lemma</code>）不能有效应。</li>
+<li>async 函数不能再声明其他效应。</li>
+<li>效应不能跨包使用。</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="prelude"><a class="header" href="#prelude">Prelude</a></h1>
@@ -2204,14 +2258,15 @@ fn main {
 </thead>
 <tbody>
 <tr><td><code>Int32</code>（即 <code>Int</code>）、<code>Double</code>、<code>Bool</code>、<code>Char</code>、<code>String</code>、<code>Unit</code></td><td>同名内置类型（<code>Int32</code> 即 <code>Int</code>）</td></tr>
+<tr><td><code>Int64</code>、<code>UInt</code>、<code>UInt64</code>、<code>Byte</code>、<code>Float</code></td><td>同名内置类型</td></tr>
 <tr><td><code>Array[T]</code>、<code>T?</code>、<code>Result[T, E]</code></td><td>同名类型</td></tr>
 <tr><td><code>StringView</code>、<code>ArrayView[T]</code></td><td><code>String</code>、<code>Array[T]</code></td></tr>
 <tr><td><code>pub(all) enum</code>、<code>pub(all) struct</code></td><td>同样的 enum、struct，自动 <code>#mbt</code>；可以构造和匹配</td></tr>
 <tr><td><code>pub enum</code>、<code>pub struct</code>（只读）</td><td>同上，但不能构造，只能匹配和传递</td></tr>
 <tr><td><code>pub(open) trait</code></td><td>trait，自动 <code>#mbt</code>；可以为本程序的类型实现</td></tr>
 <tr><td><code>pub trait</code></td><td>trait，不能实现</td></tr>
-<tr><td><code>type T</code>（抽象类型），以及未定义的类型（<code>Int64</code>、<code>Map</code> 等）</td><td>不透明类型</td></tr>
-<tr><td>未知的 trait 约束（<code>Hash</code> 等）</td><td>不透明 trait，任何类型都满足</td></tr>
+<tr><td><code>type T</code>（抽象类型），以及 MoonBit++ 中没有的类型（如 <code>Bytes</code>）</td><td>不透明类型</td></tr>
+<tr><td>既不是 Prelude trait、也不是导入的 trait 的约束</td><td>不透明 trait，任何类型都满足</td></tr>
 <tr><td><code>(A) -&gt; B raise E</code>、<code>x~ : T</code>、<code>x? : T</code></td><td>相同</td></tr>
 <tr><td><code>&amp;Tr</code>（trait 对象）</td><td><code>&amp;Tr</code>，见 <a href="#trait-对象">trait 对象</a>；返回 <code>&amp;Tr</code> 的函数还不能编译</td></tr>
 </tbody>
@@ -2260,10 +2315,11 @@ MoonBit 填入。填入的位置是生成的 <code>.mbt</code> 中的位置。</
 <h1 id="编译到-moonbit"><a class="header" href="#编译到-moonbit">编译到 MoonBit</a></h1>
 <p>编译器把类型检查后的程序翻译成 MoonBit。<code>moonpp build</code> 和 <code>moonpp run --compiled</code> 使用它；
 <a href="https://greckf.github.io/mbtpp/">Playground</a> 中的“编译到 MoonBit”可以直接查看结果。</p>
-<p>两种翻译混合使用：</p>
+<p>两种翻译混合使用：能用 MoonBit 类型表达的代码翻译成普通的 MoonBit 代码（原生翻译），其余代码
+使用动态的统一表示。两种代码之间在边界上转换。</p>
 <h2 id="原生翻译"><a class="header" href="#原生翻译">原生翻译</a></h2>
-<p>参数和结果都是原生类型、函数体也在一阶片段中的函数，翻译成普通的（可以是泛型的）MoonBit
-函数。原生类型是：</p>
+<p>能原生翻译的类型称为原生类型，只用原生类型的值、能原生翻译的表达式称为<strong>原生片段</strong>。参数和结果
+都是原生类型、函数体也在原生片段中的函数，翻译成普通的（可以是泛型的）MoonBit 函数。原生类型是：</p>
 <ul>
 <li><code>Int</code>、<code>Double</code>、<code>Bool</code>、<code>Char</code>、<code>String</code>、<code>Unit</code>；</li>
 <li>类型参数和函数类型；</li>
@@ -2286,7 +2342,8 @@ impl，它们的输出与比较和 Prelude 的实例相同。因此在 async 函
 <p>其余部分（类型层计算、GADT 细化、非 <code>#mbt</code> 的 trait 等）使用统一值表示 <code>Value</code>。它是运行时
 中的一个可扩展 enum（MoonBit 的 <code>extenum</code>），固定变体是 <code>VInt</code>、<code>VFun</code> 等；每个生成的文件用
 <code>extenum Value += { … }</code> 加入自己的数据类型中用到的构造子，索引和被擦除的字段不出现，字段是
-<code>Value</code>。例如 <code>basic.mbtpp</code> 的 GADT：</p>
+<code>Value</code>。例如仓库中 <code>examples/basic.mbtpp</code> 的 GADT（与 <a href="#enum-与索引类型">enum 与索引类型</a>中的
+<code>Exp</code> 相同）：</p>
 <pre><code class="language-text">enum Exp : [T] -&gt; Type {
   IntLit(Int) : Exp[Int]
   Add(Exp[Int], Exp[Int]) : Exp[Int]
@@ -2345,7 +2402,7 @@ impl，它们的输出与比较和 Prelude 的实例相同。因此在 async 函
 <tbody>
 <tr><td><code>Int</code>、<code>Double</code>、<code>Bool</code>、<code>Char</code>、<code>String</code>、<code>Unit</code></td><td>标量</td></tr>
 <tr><td>类型参数</td><td>不转换（值本身）</td></tr>
-<tr><td><code>Array[T]</code>、<code>T?</code></td><td>逐元素</td></tr>
+<tr><td><code>Array[T]</code>、<code>T?</code></td><td>逐元素（数组是副本，MoonBit 函数对它的修改不会反映到统一表示的数组中）</td></tr>
 <tr><td><code>#mbt</code> 数据类型（包括导入的 <code>pub(all)</code> 类型）</td><td>逐构造子</td></tr>
 <tr><td>函数类型</td><td>回调：MoonBit 调用时转换参数和结果</td></tr>
 <tr><td>不透明类型</td><td>装箱</td></tr>
@@ -2401,7 +2458,7 @@ fn main {
 <ul>
 <li>只有类型参数，没有索引；不是命题，不是 <code>suberror</code>；构造子没有隐式字段。</li>
 <li>字段类型是 MoonBit 类型：<code>Int</code>、<code>Double</code>、<code>Bool</code>、<code>Char</code>、<code>String</code>、<code>Unit</code>、类型参数、<code>#mbt</code>
-类型，以及它们之间的函数类型。暂不支持数组。</li>
+类型、元素是这些类型的数组 <code>Array[T]</code>，以及它们之间的函数类型。</li>
 <li>生成的类型名和构造子须以大写字母开头，不能与 <code>Value</code>、<code>Option</code> 等已有名字冲突。</li>
 </ul>
 <h2 id="mbt名字"><a class="header" href="#mbt名字">#mbt(“名字”)</a></h2>
@@ -2533,18 +2590,16 @@ or a bound that is not #mbt)
 <li>没有 <code>BigInt</code> 字面量（<code>1N</code>）、<code>Int16</code>、<code>UInt16</code>；<code>Float</code> 的方法只有运算、比较和转换。</li>
 <li>类型检查时执行非纯函数时，用到数组、导入函数或捕获 <code>let mut</code> 的 lambda 的调用不执行（见<a href="#可变状态与循环">可变状态与循环</a>）。</li>
 <li>检查时限按实际时间计算，同一个文件在较慢的机器上可能超时（见<a href="#检查时限">检查时限</a>）。</li>
-<li>结构体没有可变字段，没有结构体模式。</li>
-<li>trait 没有默认方法。</li>
 </ul>
 <h2 id="导入"><a class="header" href="#导入">导入</a></h2>
 <ul>
 <li>解释器不能运行导入的 MoonBit 函数，只能在编译后调用。</li>
 <li>解释器同步执行 async 函数，没有并发；async 函数只编译成原生代码（见 <a href="#async-函数">async 函数</a>）。</li>
-<li>导入包中的泛型 <code>impl</code>、trait 对象等不导入（见<a href="#类型对应与不导入的项">类型对应与不导入的项</a>）。</li>
+<li>返回 trait 对象 <code>&amp;Tr</code> 的导入函数还不能编译；其他不导入的项见<a href="#类型对应与不导入的项">类型对应与不导入的项</a>。</li>
 </ul>
 <h2 id="编译器"><a class="header" href="#编译器">编译器</a></h2>
 <ul>
-<li>数组在原生代码中不是原生类型：含数组的签名走统一表示，也不能是 <code>#mbt</code>。</li>
+<li><code>Hash</code> 的值在解释器和编译后的程序中不同（编译后用 MoonBit 的哈希）。</li>
 <li>统一表示与原生代码之间按值转换，频繁跨边界传递大型数据会慢。</li>
 </ul>
 <h2 id="工具"><a class="header" href="#工具">工具</a></h2>

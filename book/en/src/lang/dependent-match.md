@@ -28,13 +28,18 @@ fn main {
   and combinations like `(VNil, VCons(…))` need not be written.
 - In each arm the goal type `Vec2[T](n)` is refined too: the `VNil` arm returns `Vec2[T](0)`, and the
   `VCons` arm returns `Vec2[T](S(n'))`.
-- Matching on implicit parameters refines as well, e.g. `match g { Empty => …; Extend(_, _) => … }`,
-  where `g` is an implicit parameter of the function.
+- Matching on implicit parameters refines as well. In `fn[T, n : Nat] first_or(v : Vector[T](n), d : T)`,
+  for example, `match n { … }` gives `v : Vector[T](S(_))` in the `S(_)` arm, so a `match` on `v`
+  there only needs the `Cons` arm.
 
 ## Matching on the result of a function call
 
 When the scrutinee is not a variable (e.g. a function call), the index relationships in its result
-type are still used to refine the goal type:
+type are still used to refine the goal type. The fragment below comes from the type safety proof of
+the simply typed λ-calculus: `progress(t1)` has the type `Progress(t1)`, and its result says that
+the term `t1` can take a step (`PrStep`) or is a value (`PrDone`). In the `PrDone(_, VLam(b))` arm,
+the index of the constructor is unified with `t1`, so the checker knows that `t1` is `Lam(b)`, and
+`StApp(b, t2)` is a step of `App(t1, t2)`:
 
 ```text
 match progress(t1) {
@@ -47,5 +52,8 @@ See `examples/stlc.mbtpp` in the repository for the full example.
 
 ## Eliminating Prop
 
-When matching on data in `Prop`, the result must also be in `Prop`, unless the type is a
-subsingleton (such as propositional equality `===`, which has at most one proof).
+When matching on data in `Prop` (proofs), the result must also be in `Prop`: proofs are erased by
+compilation, so the program cannot choose an arm by them at run time. The exception is a
+**subsingleton**: a proposition with at most one constructor, whose fields are all proofs, such as
+propositional equality `===`. Matching on it chooses nothing at run time, so the result can have any
+type (see [Propositions and proofs](proofs.md)).

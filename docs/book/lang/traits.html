@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-fc1e96bd.js";
+            window.path_to_searchindex_js = "../searchindex-724f11aa.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-935ffb6c.js"></script>
@@ -233,8 +233,9 @@ fn main {
 </ul>
 <p>trait 和类型在同一个命名空间中，不能同名，所以不会有歧义。注意：</p>
 <ul>
-<li>这条规则只用于 <code>[...]</code>。显式参数 <code>(x : Add)</code> 按类型检查，会报错：没有 MoonBit 的 trait
-对象 <code>&amp;Add</code>。</li>
+<li>这条规则只用于 <code>[...]</code>。显式参数 <code>(x : Add)</code> 会报错，因为 <code>Add</code> 是 trait 而不是类型；需要
+“任意实现了某 trait 的值”时用 trait 对象 <code>&amp;Tr</code>（见 <a href="trait-objects.html">trait 对象</a>，<code>Add</code> 本身
+不能做成 trait 对象）。</li>
 <li>局部名字优先：如果外层有与 trait 同名的参数，冒号右边指的是那个参数。</li>
 <li>多个约束的种类要相同（<code>T</code> 的种类取自第一个 trait），<code>[M : Monad + Show]</code> 会报错。</li>
 </ul>
@@ -289,7 +290,8 @@ fn main {
 <code>Debug</code> 是导入的包中的 trait（导入这两个包后可用），见下面的 derive。</p>
 <p><code>Hash</code> 的值在解释器和编译后的程序中不同（编译后用的是 MoonBit 的哈希）。</p>
 <p><code>println</code> 需要 <code>Show</code>。除 <code>Monad</code> 外，这些 trait 就是 MoonBit 自己的 trait：编译后，<code>#mbt</code>
-类型的实例是真正的 MoonBit impl（例如 <code>impl Eq for Shape with equal(a0, a1)</code>），MoonBit 代码
+类型（标了 <code>#mbt</code>、直接对应 MoonBit 类型的类型，见 <a href="../interop/mbt-types.html">#mbt 类型与 trait</a>）
+的实例是真正的 MoonBit impl（例如 <code>impl Eq for Shape with equal(a0, a1)</code>），MoonBit 代码
 可以直接打印、比较、排序这些值；带这些约束的 <code>#mbt fn</code>（<code>fn[T : Show + Eq]</code>）编译成带同样
 约束的 MoonBit 函数。其他类型的实例只在 MoonBit++ 内部使用（MoonBit 已经有 <code>Int</code>、<code>String</code>
 等类型的实例）。</p>

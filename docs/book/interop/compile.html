@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-fc1e96bd.js";
+            window.path_to_searchindex_js = "../searchindex-724f11aa.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-935ffb6c.js"></script>
@@ -184,10 +184,11 @@
                         <h1 id="编译到-moonbit"><a class="header" href="#编译到-moonbit">编译到 MoonBit</a></h1>
 <p>编译器把类型检查后的程序翻译成 MoonBit。<code>moonpp build</code> 和 <code>moonpp run --compiled</code> 使用它；
 <a href="https://greckf.github.io/mbtpp/">Playground</a> 中的“编译到 MoonBit”可以直接查看结果。</p>
-<p>两种翻译混合使用：</p>
+<p>两种翻译混合使用：能用 MoonBit 类型表达的代码翻译成普通的 MoonBit 代码（原生翻译），其余代码
+使用动态的统一表示。两种代码之间在边界上转换。</p>
 <h2 id="原生翻译"><a class="header" href="#原生翻译">原生翻译</a></h2>
-<p>参数和结果都是原生类型、函数体也在一阶片段中的函数，翻译成普通的（可以是泛型的）MoonBit
-函数。原生类型是：</p>
+<p>能原生翻译的类型称为原生类型，只用原生类型的值、能原生翻译的表达式称为<strong>原生片段</strong>。参数和结果
+都是原生类型、函数体也在原生片段中的函数，翻译成普通的（可以是泛型的）MoonBit 函数。原生类型是：</p>
 <ul>
 <li><code>Int</code>、<code>Double</code>、<code>Bool</code>、<code>Char</code>、<code>String</code>、<code>Unit</code>；</li>
 <li>类型参数和函数类型；</li>
@@ -210,7 +211,8 @@ impl，它们的输出与比较和 Prelude 的实例相同。因此在 async 函
 <p>其余部分（类型层计算、GADT 细化、非 <code>#mbt</code> 的 trait 等）使用统一值表示 <code>Value</code>。它是运行时
 中的一个可扩展 enum（MoonBit 的 <code>extenum</code>），固定变体是 <code>VInt</code>、<code>VFun</code> 等；每个生成的文件用
 <code>extenum Value += { … }</code> 加入自己的数据类型中用到的构造子，索引和被擦除的字段不出现，字段是
-<code>Value</code>。例如 <code>basic.mbtpp</code> 的 GADT：</p>
+<code>Value</code>。例如仓库中 <code>examples/basic.mbtpp</code> 的 GADT（与 <a href="../lang/enum.html">enum 与索引类型</a>中的
+<code>Exp</code> 相同）：</p>
 <pre><code class="language-text">enum Exp : [T] -&gt; Type {
   IntLit(Int) : Exp[Int]
   Add(Exp[Int], Exp[Int]) : Exp[Int]

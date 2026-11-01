@@ -3,12 +3,16 @@
 The compiler translates the type-checked program into MoonBit. `moonpp build` and `moonpp run --compiled` use it;
 "Compile to MoonBit" in the [Playground](https://greckf.github.io/mbtpp/) shows the result directly.
 
-Two translations are mixed:
+Two translations are mixed: code expressible with MoonBit types becomes ordinary MoonBit code
+(the native translation), and the rest uses a dynamic uniform representation. Values are converted
+at the boundary between the two.
 
 ## Native translation
 
-A function whose parameters and result are native types, and whose body is in the first-order fragment, is translated into an ordinary (possibly generic) MoonBit
-function. The native types are:
+Types that can be translated natively are native types, and the expressions that can be translated
+natively, using values of native types only, form the **native fragment**. A function whose
+parameters and result are native types, and whose body is in the native fragment, is translated into
+an ordinary (possibly generic) MoonBit function. The native types are:
 
 - `Int`, `Double`, `Bool`, `Char`, `String`, `Unit`;
 - type parameters and function types;
@@ -40,7 +44,8 @@ uniform version; native code passes arrays to native code, and uniform code to u
 Everything else (type-level computation, GADT refinement, non-`#mbt` traits, etc.) uses the uniform representation `Value`. It is
 an extensible enum (MoonBit's `extenum`) in the runtime, with fixed variants `VInt`, `VFun`, and so on; each generated file uses
 `extenum Value += { … }` to add the constructors of its own data types. Indices and erased fields do not appear, and fields are
-`Value`. For example, the GADT in `basic.mbtpp`:
+`Value`. For example, the GADT in `examples/basic.mbtpp` of the repository (the `Exp` of
+[enum and indexed types](../lang/enum.md)):
 
 ```text
 enum Exp : [T] -> Type {

@@ -3,12 +3,13 @@
 编译器把类型检查后的程序翻译成 MoonBit。`moonpp build` 和 `moonpp run --compiled` 使用它；
 [Playground](https://greckf.github.io/mbtpp/) 中的“编译到 MoonBit”可以直接查看结果。
 
-两种翻译混合使用：
+两种翻译混合使用：能用 MoonBit 类型表达的代码翻译成普通的 MoonBit 代码（原生翻译），其余代码
+使用动态的统一表示。两种代码之间在边界上转换。
 
 ## 原生翻译
 
-参数和结果都是原生类型、函数体也在一阶片段中的函数，翻译成普通的（可以是泛型的）MoonBit
-函数。原生类型是：
+能原生翻译的类型称为原生类型，只用原生类型的值、能原生翻译的表达式称为**原生片段**。参数和结果
+都是原生类型、函数体也在原生片段中的函数，翻译成普通的（可以是泛型的）MoonBit 函数。原生类型是：
 
 - `Int`、`Double`、`Bool`、`Char`、`String`、`Unit`；
 - 类型参数和函数类型；
@@ -38,7 +39,8 @@ impl，它们的输出与比较和 Prelude 的实例相同。因此在 async 函
 其余部分（类型层计算、GADT 细化、非 `#mbt` 的 trait 等）使用统一值表示 `Value`。它是运行时
 中的一个可扩展 enum（MoonBit 的 `extenum`），固定变体是 `VInt`、`VFun` 等；每个生成的文件用
 `extenum Value += { … }` 加入自己的数据类型中用到的构造子，索引和被擦除的字段不出现，字段是
-`Value`。例如 `basic.mbtpp` 的 GADT：
+`Value`。例如仓库中 `examples/basic.mbtpp` 的 GADT（与 [enum 与索引类型](../lang/enum.md)中的
+`Exp` 相同）：
 
 ```text
 enum Exp : [T] -> Type {

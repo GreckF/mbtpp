@@ -11,7 +11,7 @@ Supported signatures:
 | --- | --- |
 | `Int`, `Double`, `Bool`, `Char`, `String`, `Unit` | Scalar |
 | Type parameters | None (the value itself) |
-| `Array[T]`, `T?` | Element by element |
+| `Array[T]`, `T?` | Element by element (an array is copied: changes made by the MoonBit function are not seen by the uniform array) |
 | `#mbt` data types (including imported `pub(all)` types) | Constructor by constructor |
 | Function types | Callback: arguments and results are converted when MoonBit calls it |
 | Opaque types | Boxed |

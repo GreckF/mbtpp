@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-d8623055.js";
+            window.path_to_searchindex_js = "../searchindex-02c7fc71.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-94125c94.js"></script>
@@ -235,8 +235,9 @@ Read it as “a type <code>T</code> that implements <code>Add</code>”.</li>
 </ul>
 <p>Traits and types share one namespace and cannot have the same name, so there is no ambiguity. Note:</p>
 <ul>
-<li>This rule applies only inside <code>[...]</code>. An explicit parameter <code>(x : Add)</code> is checked as a type and
-is an error: there are no MoonBit trait objects <code>&amp;Add</code>.</li>
+<li>This rule applies only inside <code>[...]</code>. An explicit parameter <code>(x : Add)</code> is an error, because
+<code>Add</code> is a trait, not a type; for “any value implementing a trait”, use a trait object <code>&amp;Tr</code> (see
+<a href="trait-objects.html">Trait objects</a>; <code>Add</code> itself cannot be a trait object).</li>
 <li>Local names take precedence: if an enclosing parameter has the same name as a trait, the right
 side of the colon refers to that parameter.</li>
 <li>Multiple bounds must have the same kind (the kind of <code>T</code> is taken from the first trait);
@@ -295,7 +296,8 @@ fn main {
 are imported); see derive below.</p>
 <p><code>Hash</code> values differ between the interpreter and compiled programs (which use MoonBit’s hashes).</p>
 <p><code>println</code> requires <code>Show</code>. Except for <code>Monad</code>, these traits are MoonBit’s own traits: in the
-compiled program, the instances for <code>#mbt</code> types are real MoonBit impls (e.g.
+compiled program, the instances for <code>#mbt</code> types (types marked <code>#mbt</code> that stand for MoonBit
+types, see <a href="../interop/mbt-types.html">#mbt types and traits</a>) are real MoonBit impls (e.g.
 <code>impl Eq for Shape with equal(a0, a1)</code>), so MoonBit code can print, compare and sort these
 values; a <code>#mbt fn</code> with these bounds (<code>fn[T : Show + Eq]</code>) compiles to a MoonBit function with
 the same bounds. Instances for other types are only used inside MoonBit++ (MoonBit already has

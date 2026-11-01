@@ -275,6 +275,9 @@ let runtime_src : String =
   #|
   #|let out_buf : StringBuilder = StringBuilder::new()
   #|
+  #|// the markers of effect handlers (tt/ctl.mbt)
+  #|let rt_marker : Ref[Int] = Ref::new(0)
+  #|
   #|fn rt_write(s : String) -> Unit {
   #|  for c in s {
   #|    if c == '\n' {
@@ -563,6 +566,10 @@ let runtime_src : String =
   #|    ("%print", [VStr(s)]) => {
   #|      rt_write(s)
   #|      VUnit
+  #|    }
+  #|    ("%effect_marker", _) => {
+  #|      rt_marker.val = rt_marker.val + 1
+  #|      VInt(rt_marker.val)
   #|    }
   #|    ("%panic", _) => rt_fail("panic")
   #|    ("%abort", [VStr(s)]) => rt_fail(s)

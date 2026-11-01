@@ -34,6 +34,9 @@ let effect_decls : Map[String, Array[String]] = {}
 fn reset_effects() -> Unit {
   effect_ops.clear()
   effect_decls.clear()
+  // the calls of `resume` in the arms of `ctl` operations (ctl.mbt)
+  effect_decls.set("%Resume", [])
+  reset_ctl()
 }
 
 ///|
@@ -81,14 +84,18 @@ fn expand_effect(d : @parser.Decl) -> @parser.Decl raise ElabError {
         ops.push(op.name)
       }
       effect_decls.set(ed.name, ops)
+      // a `ctl` operation's field returns its computation (ctl.mbt); the
+      // marker identifies the handler
       let fields = ed.ops.map(op => {
-        let ty : @parser.Expr = if op.ctl {
-          EVar(op.pos, "Int")
-        } else {
-          EPi(op.pos, [], Some(op.params), op.ret, None)
-        }
-        (op.pos, op.name, ty)
+        (
+          op.pos,
+          op.name,
+          @parser.EPi(op.pos, [], Some(op.params), op.ret, None),
+        )
       })
+      if ed.ops.iter().any(op => op.ctl) {
+        fields.push((ed.pos, "%marker", EVar(ed.pos, "Int")))
+      }
       DStruct({
         pos: ed.pos,
         name: ed.name,
@@ -208,9 +215,6 @@ fn elab_perform(
     Some(i) => i
     None => cxt.fail(op + " is not an operation of an effect")
   }
-  if info.ctl {
-    cxt.fail("`ctl` operations are not supported yet")
-  }
   if args.length() != info.nparams {
     cxt.fail(
       op +
@@ -220,8 +224,8 @@ fn elab_perform(
       args.length().to_string(),
     )
   }
-  match lookup_level(cxt, cap_name(info.eff)) {
-    Some(l) => require_effect(cxt, cxt.types[l])
+  let l = match lookup_level(cxt, cap_name(info.eff)) {
+    Some(l) => l
     None =>
       cxt.fail(
         "perform " +
@@ -231,14 +235,19 @@ fn elab_perform(
         " and the function does not declare it",
       )
   }
-  infer(
+  require_effect(cxt, cxt.types[l])
+  let (t, ty) = infer(
     cxt,
     EApp(pos, EField(pos, EVar(pos, cap_name(info.eff)), op), None, Some(args)),
   )
+  if info.ctl {
+    // the call returns the computation of the operation (ctl.mbt)
+    ensure_ctl_runtime()
+    (mark_call(cxt, t, row_cons(cxt.types[l], row_nil())), ty)
+  } else {
+    (t, ty)
+  }
 }
-
-// ---------------------------------------------------------------------------
-// Handlers
 
 ///|
 /// The operation an arm of a `try` handles, if any.
@@ -351,34 +360,120 @@ fn elab_handle(
   // the capabilities, in the context outside of the body: an operation in
   // an arm goes to an outer handler
   let caps : Array[Tm] = []
+  let dispatches : Array[Tm?] = []
   for k = 0; k < effs.length(); k = k + 1 {
     let e = effs[k]
+    let ops = effect_decls[e]
+    let has_ctl = ops.iter().any(op => effect_ops[op].ctl)
+    let ctl_ops = ops.filter(op => effect_ops[op].ctl && op_arms.contains(op))
+    if ctl_ops.length() > 0 {
+      ensure_ctl_runtime()
+      if err_arms.length() > 0 {
+        cxt.fail(
+          "a `try` cannot handle errors and `ctl` operations together yet; use two `try`s",
+        )
+      }
+    }
+    // the marker and the fields of the ctl operations are bound around the
+    // capability
+    let mut ccx = cxt
+    if has_ctl {
+      ccx = ccx.bind("%m", VData("Int", []))
+    }
+    let ctl_tys : Array[Val] = []
+    for op in ctl_ops {
+      let (_, fty) = infer(bc, EField(pos, EVar(pos, cap_name(e)), op))
+      ctl_tys.push(fty)
+      ccx = ccx.bind("%ctl$" + op, fty)
+    }
     let fields : Array[(String, @parser.Expr)] = []
-    for op in effect_decls[e] {
-      let f = match op_arms.get(op) {
-        Some(oas) => op_closure(cxt, pos, op, oas)
-        // not handled here: an outer handler's
-        None =>
-          match lookup_level(cxt, cap_name(e)) {
-            Some(_) => EField(pos, EVar(pos, cap_name(e)), op)
-            None =>
-              cxt.fail(
-                "this handler of " +
-                e +
-                " does not handle " +
-                op +
-                ", and no outer handler does",
-              )
-          }
+    for op in ops {
+      let f = if ctl_ops.contains(op) {
+        @parser.EVar(pos, "%ctl$" + op)
+      } else {
+        match op_arms.get(op) {
+          Some(oas) => op_closure(cxt, pos, op, oas)
+          // not handled here: an outer handler's
+          None =>
+            match lookup_level(cxt, cap_name(e)) {
+              Some(_) => EField(pos, EVar(pos, cap_name(e)), op)
+              None =>
+                cxt.fail(
+                  "this handler of " +
+                  e +
+                  " does not handle " +
+                  op +
+                  ", and no outer handler does",
+                )
+            }
+        }
       }
       fields.push((op, f))
     }
-    caps.push(
-      check({ ..cxt, arm_lams: true, }, EStruct(pos, fields), cap_tys[k]),
+    if has_ctl {
+      // without ctl arms here, the operations go to the outer handler
+      let m : @parser.Expr = if ctl_ops.length() == 0 &&
+        lookup_level(cxt, cap_name(e)) is Some(_) {
+        EField(pos, EVar(pos, cap_name(e)), "%marker")
+      } else {
+        EVar(pos, "%m")
+      }
+      fields.push(("%marker", m))
+    }
+    let mut capv = check(
+      { ..ccx, arm_lams: true, },
+      EStruct(pos, fields),
+      cap_tys[k],
     )
+    let scope = if has_ctl { ["%m"] } else { [] }
+    let closures : Array[Tm] = []
+    for op in ctl_ops {
+      closures.push(ctl_field(e, op, scope))
+      scope.push("%ctl$" + op)
+    }
+    for j = ctl_ops.length() - 1; j >= 0; j = j - 1 {
+      capv = Let("%ctl$" + ctl_ops[j], any_ty(), closures[j], capv)
+    }
+    if has_ctl {
+      capv = Let(
+        "%m",
+        Global("Int"),
+        App(Global("%effect_marker"), Lit(LUnit), Expl),
+        capv,
+      )
+    }
+    // the capability is under the previous ones
+    caps.push(shift_tm(capv, k, 0))
+    if ctl_ops.length() > 0 {
+      let arm_tms : Array[Tm] = []
+      for j = 0; j < ctl_ops.length(); j = j + 1 {
+        arm_tms.push(
+          ctl_arm(cxt, pos, ctl_ops[j], op_arms[ctl_ops[j]], ctl_tys[j], ty),
+        )
+      }
+      dispatches.push(Some(dispatch_tm(e, ctl_ops, arm_tms)))
+    } else {
+      dispatches.push(None)
+    }
   }
   let mut t = tb
   for k = effs.length() - 1; k >= 0; k = k - 1 {
+    match dispatches[k] {
+      Some(d) => {
+        // the marker of this capability (variable 0)
+        let mut marker = Global(effs[k] + "::%marker")
+        for _ in 0..<type_arity(effs[k]) {
+          marker = App(marker, any_ty(), Impl)
+        }
+        marker = App(marker, Var(0), Expl)
+        t = App(
+          App(App(Global("%handle"), marker, Expl), shift_tm(d, k + 1, 0), Expl),
+          t,
+          Expl,
+        )
+      }
+      None => ()
+    }
     t = Let(cap_name(effs[k]), quote(cxt.lvl + k, cap_tys[k]), caps[k], t)
   }
   (t, ty)
@@ -520,6 +615,11 @@ fn item_effect(item : Val) -> String? {
 /// whose type is being inferred) is extended.
 fn require_effect(cxt : Cxt, item : Val) -> Unit raise ElabError {
   let item = force(item)
+  if cxt.in_fun_arm && item_effect(item) is Some(n) && is_ctl_effect(n) {
+    cxt.fail(
+      "the handler of a tail-resumptive operation cannot perform `ctl` operations",
+    )
+  }
   if item is VData("%RowNil", _) {
     return
   }
@@ -820,4 +920,150 @@ fn used_outside_rows(t : Tm, ix : Int32) -> Bool {
     Global(_) | U | PropU | Lit(_) => false
     _ => true
   }
+}
+
+///|
+/// The field of a `ctl` operation in a capability: a function of the
+/// operation's arguments returning the computation that performs it. `scope`
+/// names the variables it is under (the marker `%m` first).
+fn ctl_field(eff : String, op : String, scope : Array[String]) -> Tm {
+  let n = effect_ops[op].nparams
+  let args = if n == 0 {
+    ["%u"]
+  } else {
+    Array::makei(n, k => "%a" + k.to_string())
+  }
+  let idx = effect_decls[eff].search(op).unwrap()
+  n_tm(
+    NLam(
+      args,
+      NCon("Op", [
+        NV("%m"),
+        NLit(LInt(idx)),
+        NLam(["%g"], NApp(NV("%g"), args.map(a => NV(a)))),
+        NLam(["%v"], NCon("Pure", [NV("%v")])),
+      ]),
+    ),
+    scope,
+  )
+}
+
+///|
+/// The arms of a `ctl` operation: a function of its arguments, then of
+/// `resume : (R) -> A`, whose body is translated (it calls `resume`, of the
+/// effect `%Resume`). `fty` is the type of the operation's field; `ans` the
+/// type of the `try`.
+fn ctl_arm(
+  cxt : Cxt,
+  pos : Pos,
+  op : String,
+  oas : Array[@parser.Arm],
+  fty : Val,
+  ans : Val,
+) -> Tm raise ElabError {
+  let mut c = cxt
+  let mut t = force(fty)
+  let names : Array[String] = []
+  while t is VPi(_, Expl, g, a, cl) && (names.length() == 0 || !g) {
+    let x = "%a" + names.length().to_string()
+    names.push(x)
+    let v = v_var(c.lvl)
+    c = c.bind(x, a)
+    t = force(inst(cl, v))
+  }
+  let resume_row = App(
+    App(
+      Global("%Effs"),
+      App(App(Global("%Row"), Global("%Resume"), Impl), Global("%RowNil"), Impl),
+      Impl,
+    ),
+    Global("%NoRaise"),
+    Impl,
+  )
+  let rty = VPi("v", Expl, true, t, {
+    env: c.env,
+    body: Raises(quote(c.lvl + 1, ans), resume_row),
+  })
+  let c2 = {
+    ..c.bind("resume", rty),
+    handled: [..cxt.handled, "%Resume"],
+    arm_lams: false,
+    in_fun_arm: false,
+  }
+  let n = effect_ops[op].nparams
+  let arms2 : Array[@parser.Arm] = []
+  for a in oas {
+    let args = match arm_op(a) {
+      Some((_, ps)) => ps
+      None => []
+    }
+    if args.length() != n {
+      c
+      .at(a.pos)
+      .fail(
+        op +
+        " takes " +
+        n.to_string() +
+        " argument(s), got " +
+        args.length().to_string(),
+      )
+    }
+    let pat : @parser.Pat = match args.length() {
+      0 => PWild(a.pos)
+      1 => args[0]
+      _ => PTuple(a.pos, args)
+    }
+    let rhs = match a.rhs {
+      Some(r) => r
+      None => c.at(a.pos).fail("missing handler body")
+    }
+    arms2.push({ pos: a.pos, pat, cond: a.cond, rhs: Some(rhs), })
+  }
+  let scrut : @parser.Expr = match n {
+    0 => ELit(pos, LUnit)
+    1 => EVar(pos, names[0])
+    _ => ETuple(pos, names.map(x => @parser.EVar(pos, x)))
+  }
+  let body = check(c2, EMatch(pos, scrut, None, arms2), ans)
+  let row = App(
+    App(Global("%Row"), Global("%Resume"), Impl),
+    Global("%RowNil"),
+    Impl,
+  )
+  let mut out = Lam("resume", Expl, true, mark("%mbody", row, body))
+  for k = names.length() - 1; k >= 0; k = k - 1 {
+    out = Lam(names[k], Expl, true, out)
+  }
+  out
+}
+
+///|
+/// `(i, p, resume) => match i { k => p(arm_k)(resume) }` (in the context of
+/// the arms).
+fn dispatch_tm(eff : String, ops : Array[String], arms : Array[Tm]) -> Tm {
+  let cls : Array[Clause] = []
+  for j = 0; j < ops.length(); j = j + 1 {
+    let idx = effect_decls[eff].search(ops[j]).unwrap()
+    // under i, p, resume and the pattern's slot
+    cls.push({
+      pats: [CPLit(LInt(idx))],
+      cond: None,
+      body: App(App(Var(2), shift_tm(arms[j], 4, 0), Expl), Var(1), Expl),
+    })
+  }
+  cls.push({
+    pats: [CPWild],
+    cond: None,
+    body: App(
+      App(Global("abort"), any_ty(), Impl),
+      Lit(LStr("unknown operation")),
+      Expl,
+    ),
+  })
+  Lam(
+    "i",
+    Expl,
+    true,
+    Lam("p", Expl, true, Lam("resume", Expl, true, Match([Var(2)], cls))),
+  )
 }

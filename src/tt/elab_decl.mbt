@@ -7,7 +7,11 @@ fn register(name : String, ty : Tm, kind : GKind) -> Unit {
 ///|
 fn set_body(name : String, body : Tm, arity : Int32) -> Unit {
   match globals.get(name) {
-    Some(g) => g.kind = GFunc(Some(body), contains_imperative(body), arity)
+    Some(g) => {
+      // the marks of effects are lowered (ctl.mbt)
+      let body = lower_body(name, body)
+      g.kind = GFunc(Some(body), contains_imperative(body), arity)
+    }
     None => ()
   }
 }
@@ -300,7 +304,7 @@ fn elab_fn_body(fd : @parser.FnDecl) -> Unit raise ElabError {
     eff_row: codomain_row(rty),
     handled: [],
   }
-  let t = check(bc, body, body_ty)
+  let t = mark_body(bc, check(bc, body, body_ty), codomain_row(rty))
   let res = finish(cxt, fd.name, [wrap_lams(bs, t), g.ty])
   globals.set(fd.name, {
     name: fd.name,
@@ -309,6 +313,13 @@ fn elab_fn_body(fd : @parser.FnDecl) -> Unit raise ElabError {
     kind: g.kind,
   })
   set_body(fd.name, res[0], n)
+  match ctl_error.val {
+    Some(msg) => {
+      ctl_error.val = None
+      raise ElabError(fd.pos, msg)
+    }
+    None => ()
+  }
 }
 
 ///|

@@ -311,6 +311,9 @@ fn Machine::apply(
 }
 
 ///|
+let effect_markers : Ref[Int32] = Ref::new(0)
+
+///|
 fn Machine::prim(
   self : Machine,
   p : String,
@@ -328,6 +331,11 @@ fn Machine::prim(
         p.unsafe_substring(start=5, end=p.length()) +
         " in the interpreter (imports are only type checked)",
       )
+    // the markers of effect handlers (tt/ctl.mbt)
+    ("%effect_marker", _) => {
+      effect_markers.val = effect_markers.val + 1
+      RLit(LInt(effect_markers.val))
+    }
     ("%panic", _) => raise CAbort("panic")
     ("%abort", [RLit(LStr(s))]) => raise CAbort(s)
     ("%array_make", [RLit(LInt(n)), x]) => RArr(Array::make(n, x))

@@ -250,6 +250,7 @@ pub(all) struct Cxt {
   eff_row : Val
   handled : Array[String]
   arm_lams : Bool
+  in_fun_arm : Bool
 }
 pub fn Cxt::at(Self, @parser.Pos) -> Self
 pub fn Cxt::bind(Self, String, Val) -> Self

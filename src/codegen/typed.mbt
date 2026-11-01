@@ -136,6 +136,7 @@ fn Gen::enum_ok(self : Gen, d : String) -> Bool {
       // effect capabilities stay uniform: their fields are closures of any
       // type (see tt/effects.mbt)
       !@tt.is_effect(d) &&
+      !d.has_prefix("%") &&
       (!d.has_prefix("@") || is_mbt_type(d)) &&
       di.cons.length() > 0 &&
       data_params_are_types(d, di.nparams)

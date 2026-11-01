@@ -102,6 +102,10 @@ fn check_src(file : String, src : String) -> Unit raise CheckError {
       @parser.DOpaque({ line: 0, col: 0, }, "%Effs", 2),
       @parser.DOpaque({ line: 0, col: 0, }, "%Row", 2),
       @parser.DOpaque({ line: 0, col: 0, }, "%RowNil", 0),
+      // `ctl` operations (see ctl.mbt)
+      @parser.DOpaque({ line: 0, col: 0, }, "%Any", 0),
+      @parser.DOpaque({ line: 0, col: 0, }, "%Resume", 0),
+      comp_decl(),
       ..decls,
     ]
   } else {
@@ -512,4 +516,40 @@ pub fn param_labels(name : String) -> Array[(String, Bool)?]? {
 /// traits of imported packages).
 pub fn is_opaque_trait(name : String) -> Bool {
   st.opaque_traits.contains(name)
+}
+
+///|
+/// `enum %Comp[A, B, C, D] { Pure(A); Op(Int, Int, B, C); Ret(D); Brk; Cont }`:
+/// the computations of code with `ctl` operations (see ctl.mbt).
+fn comp_decl() -> @parser.Decl {
+  let p : Pos = { line: 0, col: 0, }
+  let b = (x : String, t : String) => {
+    (
+      { pos: p, name: x, ty: Some(EVar(p, t)), kind: Positional, } :
+      @parser.Binder)
+  }
+  let con = (n : String, ps : Array[@parser.Binder]) => {
+    (
+      { pos: p, name: n, impl_params: [], params: ps, ret: None, } :
+      @parser.ConDecl)
+  }
+  DEnum({
+    pos: p,
+    name: "%Comp",
+    impl_params: ["A", "B", "C", "D"].map(x => {
+      (
+        { pos: p, name: x, ty: Some(EType(p)), kind: Positional, } :
+        @parser.Binder)
+    }),
+    params: None,
+    sig: None,
+    cons: [
+      con("Pure", [b("v", "A")]),
+      con("Op", [b("m", "Int"), b("i", "Int"), b("p", "B"), b("k", "C")]),
+      con("Ret", [b("v", "D")]),
+      con("Brk", []),
+      con("Cont", []),
+    ],
+    is_error: false,
+  })
 }

@@ -684,7 +684,7 @@ fn app_core(
           if !cxt.in_type {
             require_row(cxt, codomain_row(ty))
           }
-          (t, r)
+          (mark_call(cxt, t, codomain_row(ty)), r)
         }
         _ => (t, ty)
       }
@@ -1299,6 +1299,7 @@ fn check_lam(
       ret_ty: Some(body_ty),
       in_loop: false,
       arm_lams: false,
+      in_fun_arm: true,
     }
   } else {
     {
@@ -1309,9 +1310,13 @@ fn check_lam(
       in_loop: false,
       eff_row: codomain_row(ty),
       handled: [],
+      in_fun_arm: false,
     }
   }
-  lams(wrap, check(bc, body, body_ty))
+  let tb = check(bc, body, body_ty)
+  // a body with `ctl` effects is translated (ctl.mbt)
+  let tb = if cxt.arm_lams { tb } else { mark_body(bc, tb, codomain_row(ty)) }
+  lams(wrap, tb)
 }
 
 ///|

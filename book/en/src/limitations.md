@@ -3,7 +3,7 @@
 ## Language
 
 - No termination checking or strict positivity checking (by design): you can "prove" false propositions.
-- No resumable algebraic effects, and no automation tactics such as `simp`, `omega`, or `auto`.
+- No automation tactics such as `simp`, `omega`, or `auto`. For the limits of algebraic effects, see [Algebraic Effects](lang/effects.md#limitations).
 - Recursive local functions cannot use the `let mut` variables around them.
 - A `match` with array patterns is not checked for coverage and does not refine types.
 - `Map` is implemented in MoonBit++ by the Prelude (in insertion order, with linear lookups); it is

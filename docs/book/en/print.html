@@ -37,10 +37,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a453ea38.js";
+            window.path_to_searchindex_js = "searchindex-e8ef89c5.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-ec08c6a2.js"></script>
+        <script src="toc-94125c94.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -1761,6 +1761,130 @@ returns an async lambda, compilation fails.</li>
 <li><code>moonbitlang/async</code> supports the native, JS and wasm targets, but not wasm-gc.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="algebraic-effects"><a class="header" href="#algebraic-effects">Algebraic Effects</a></h1>
+<p>An effect is a set of operations that functions <strong>perform</strong> and that a <code>try</code> <strong>handles</strong>. A handler
+can give a result back to where the operation was performed with <code>resume</code>, which lets the code go on.</p>
+<pre><code class="language-moonbit">effect Yield[T] {
+  Yield(T) -&gt; Unit
+}
+
+fn[T] iter_array(xs : Array[T]) -&gt; Unit!Yield[T] {
+  for x in xs {
+    perform Yield(x)
+  }
+}
+
+fn main {
+  try {
+    iter_array([1, 2, 3])
+  } catch {
+    Yield(x) =&gt; {
+      println(x)
+      resume()
+    }
+  }
+}
+</code></pre>
+<ul>
+<li><code>effect E[T] { Op(A) -&gt; R }</code> declares an effect. <code>perform Op(x)</code> has the type <code>R</code>, the type of the
+argument of <code>resume</code>; write <code>resume()</code> when <code>R</code> is <code>Unit</code>.</li>
+<li>The effects of a function follow its result type: <code>-&gt; T!E1 + E2 raise Err</code>. A function with effects
+is called in a <code>try</code> that handles them, or in a function that declares them too.</li>
+<li>The arms of a <code>try</code> may handle errors and operations together; only operation arms have <code>resume</code>.</li>
+<li>Handlers are deep: after <code>resume</code>, the next operations are handled by the same <code>try</code>.</li>
+<li>Handlers are lexical: a lambda captures the handlers in scope when it is created, so a lambda that
+performs an effect is created inside its handler, or in a function that declares the effect.</li>
+</ul>
+<h2 id="two-kinds-of-operations"><a class="header" href="#two-kinds-of-operations">Two kinds of operations</a></h2>
+<p>An operation is <strong>tail-resumptive</strong> by default: every path of its arms ends with <code>resume(…)</code>. Such an
+operation compiles to a plain function call, with no overhead. To resume elsewhere, several times, or
+not at all, declare the operation with <code>ctl</code>:</p>
+<pre><code class="language-moonbit">effect Choose {
+  ctl Choose() -&gt; Bool
+}
+
+fn count_trues() -&gt; Int!Choose {
+  let mut n = 0
+  if perform Choose() { n = n + 1 }
+  if perform Choose() { n = n + 1 }
+  n
+}
+
+fn main {
+  // resume twice: all paths
+  println(try { Cons(count_trues(), Nil) } catch {
+    Choose() =&gt; resume(true).append(resume(false))
+  })
+  // do not resume: abort
+  println(try { count_trues() } catch { Choose() =&gt; -1 })
+}
+</code></pre>
+<ul>
+<li>In a <code>ctl</code> arm, <code>resume(v)</code> runs the rest of the <code>try</code> body (still handled by this handler) and
+returns the result of the <code>try</code>; it can be called any number of times.</li>
+<li>Each resumption continues with the values the <code>let mut</code> variables had when the operation was
+performed (the result above is <code>[2, 1, 1, 0]</code>); variables outside the <code>try</code>, arrays and <code>mut</code>
+fields are shared.</li>
+<li>Code with <code>ctl</code> effects is translated into code returning “computations” and compiled with the
+uniform representation, slower than direct code; code with tail-resumptive operations only is not
+affected.</li>
+</ul>
+<h2 id="effect-polymorphism"><a class="header" href="#effect-polymorphism">Effect polymorphism</a></h2>
+<pre><code class="language-moonbit">fn[T, e] each(xs : List[T], f : (T) -&gt; Unit!e) -&gt; Unit!e {
+  match xs {
+    Nil =&gt; ()
+    Cons(x, rest) =&gt; { f(x); each(rest, f) }
+  }
+}
+</code></pre>
+<ul>
+<li>A lowercase name in a row is an effect variable, among the implicit parameters. Calls infer it from
+the arguments: <code>each(xs, x =&gt; perform Yield(x))</code> has the effect <code>Yield[T]</code>, and <code>each(xs, g)</code> (<code>g</code>
+pure) has none.</li>
+<li><strong>It can be left out</strong>: when a parameter of function type is only called, or passed on directly as
+an argument (not stored, returned, or captured by a returned closure), the checker adds <code>!e</code> and
+shows it in the function’s type. Functions of the Prelude such as <code>List::map</code> are thus effect
+polymorphic. When the parameter escapes (as in <code>compose</code>), leaving it out means pure; write <code>!e</code>
+for effects.</li>
+<li><code>!pure</code> asks for a pure function explicitly, and turns off the inference.</li>
+</ul>
+<h2 id="computing-during-type-checking"><a class="header" href="#computing-during-type-checking">Computing during type checking</a></h2>
+<p>A fully handled computation is pure, and the checker computes it, even when the handler updates a
+<code>let mut</code>:</p>
+<pre><code class="language-moonbit">effect Emit {
+  Emit(Int) -&gt; Unit
+}
+
+fn emit_all(xs : List[Int]) -&gt; Unit!Emit {
+  match xs {
+    Nil =&gt; ()
+    Cons(x, rest) =&gt; { perform Emit(x); emit_all(rest) }
+  }
+}
+
+fn sum(xs : List[Int]) -&gt; Int {
+  let mut s = 0
+  try { emit_all(xs) } catch { Emit(x) =&gt; { s = s + x; resume() } }
+  s
+}
+
+lemma sum3() -&gt; sum(Cons(1, Cons(2, Cons(3, Nil)))) === 6 { Refl }
+
+fn main {
+  println(sum(Cons(4, Cons(5, Nil))))
+}
+</code></pre>
+<p>A handler without state only passes closures: it unfolds even when the arguments are variables, and
+can be reasoned about by induction.</p>
+<h2 id="limitations"><a class="header" href="#limitations">Limitations</a></h2>
+<ul>
+<li>The arm of a tail-resumptive operation cannot perform <code>ctl</code> operations.</li>
+<li>A <code>try</code> cannot handle errors and <code>ctl</code> operations together; a <code>try … catch</code> (of errors) and <code>defer</code>
+cannot enclose code that performs <code>ctl</code> operations.</li>
+<li>Proofs (functions returning a type in <code>Prop</code>) have no effects.</li>
+<li>Effects do not combine with <code>async</code>, and are not shared between packages.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="prelude"><a class="header" href="#prelude">Prelude</a></h1>
 <p>The Prelude is loaded automatically into every program (<code>moonpp --no-prelude</code> turns it off).</p>
 <div class="table-wrapper">
@@ -2462,7 +2586,7 @@ test file <code>export_wbtest.mbt</code> to the <code>main/</code> directory of 
 <h2 id="language"><a class="header" href="#language">Language</a></h2>
 <ul>
 <li>No termination checking or strict positivity checking (by design): you can “prove” false propositions.</li>
-<li>No resumable algebraic effects, and no automation tactics such as <code>simp</code>, <code>omega</code>, or <code>auto</code>.</li>
+<li>No automation tactics such as <code>simp</code>, <code>omega</code>, or <code>auto</code>. For the limits of algebraic effects, see <a href="#limitations">Algebraic Effects</a>.</li>
 <li>Recursive local functions cannot use the <code>let mut</code> variables around them.</li>
 <li>A <code>match</code> with array patterns is not checked for coverage and does not refine types.</li>
 <li><code>Map</code> is implemented in MoonBit++ by the Prelude (in insertion order, with linear lookups); it is

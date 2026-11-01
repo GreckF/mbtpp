@@ -28,6 +28,7 @@
 - [可变状态与循环](lang/mutation.md)
 - [错误处理](lang/errors.md)
 - [async 函数](lang/async.md)
+- [代数效应](lang/effects.md)
 - [Prelude](lang/prelude.md)
 
 # moonpp

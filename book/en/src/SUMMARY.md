@@ -28,6 +28,7 @@
 - [Mutable State and Loops](lang/mutation.md)
 - [Error Handling](lang/errors.md)
 - [async Functions](lang/async.md)
+- [Algebraic Effects](lang/effects.md)
 - [Prelude](lang/prelude.md)
 
 # moonpp

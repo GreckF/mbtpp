@@ -37,10 +37,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-48d46ae4.js";
+            window.path_to_searchindex_js = "searchindex-cab40463.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-77b35725.js"></script>
+        <script src="toc-935ffb6c.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -1704,6 +1704,122 @@ done
 <li><code>moonbitlang/async</code> 支持 native、JS 和 wasm 目标，不支持 wasm-gc。</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="代数效应"><a class="header" href="#代数效应">代数效应</a></h1>
+<p>效应是一组可以在函数中<strong>执行</strong>（<code>perform</code>）、在 <code>try</code> 中<strong>处理</strong>的操作。处理器可以用 <code>resume</code>
+把结果交还给执行操作的地方，让它继续运行。</p>
+<pre><code class="language-moonbit">effect Yield[T] {
+  Yield(T) -&gt; Unit
+}
+
+fn[T] iter_array(xs : Array[T]) -&gt; Unit!Yield[T] {
+  for x in xs {
+    perform Yield(x)
+  }
+}
+
+fn main {
+  try {
+    iter_array([1, 2, 3])
+  } catch {
+    Yield(x) =&gt; {
+      println(x)
+      resume()
+    }
+  }
+}
+</code></pre>
+<ul>
+<li><code>effect E[T] { Op(A) -&gt; R }</code> 声明一个效应。<code>perform Op(x)</code> 的结果类型是 <code>R</code>，也就是 <code>resume</code>
+的参数类型；<code>R</code> 是 <code>Unit</code> 时写 <code>resume()</code>。</li>
+<li>函数的效应写在返回类型后：<code>-&gt; T!E1 + E2 raise Err</code>。调用一个有效应的函数，要么在处理这些效应的
+<code>try</code> 中，要么所在函数自己也声明这些效应。</li>
+<li><code>try</code> 的分支可以同时处理错误和效应操作，只有效应分支中有 <code>resume</code>。</li>
+<li>处理器是深的：<code>resume</code> 之后，后面的操作仍由同一个 <code>try</code> 处理。</li>
+<li>处理器是词法的：lambda 在创建时捕获作用域中的处理器，所以执行效应的 lambda 要在处理器之内，或在
+声明了该效应的函数之内创建。</li>
+</ul>
+<h2 id="两种操作"><a class="header" href="#两种操作">两种操作</a></h2>
+<p>默认的操作是<strong>尾恢复</strong>的：处理分支的每条路径都以 <code>resume(…)</code> 结束。这样的操作编译为普通的函数
+调用，没有额外开销。需要在别处恢复、恢复多次或不恢复时，用 <code>ctl</code> 声明操作：</p>
+<pre><code class="language-moonbit">effect Choose {
+  ctl Choose() -&gt; Bool
+}
+
+fn count_trues() -&gt; Int!Choose {
+  let mut n = 0
+  if perform Choose() { n = n + 1 }
+  if perform Choose() { n = n + 1 }
+  n
+}
+
+fn main {
+  // 恢复两次：所有路径
+  println(try { Cons(count_trues(), Nil) } catch {
+    Choose() =&gt; resume(true).append(resume(false))
+  })
+  // 不恢复：中止
+  println(try { count_trues() } catch { Choose() =&gt; -1 })
+}
+</code></pre>
+<ul>
+<li><code>ctl</code> 分支中，<code>resume(v)</code> 运行 <code>try</code> 体中剩下的部分（仍由这个处理器处理），返回 <code>try</code> 的结果；
+它可以被调用任意次。</li>
+<li><code>let mut</code> 变量在每次恢复时都从执行操作时的值继续（上例的结果是 <code>[2, 1, 1, 0]</code>）；<code>try</code> 外面的
+变量、数组和 <code>mut</code> 字段是共享的。</li>
+<li>用到 <code>ctl</code> 效应的代码会被翻译为返回“计算“的代码，使用统一表示编译，比直接的代码慢；只用尾恢复
+操作的代码不受影响。</li>
+</ul>
+<h2 id="效应多态"><a class="header" href="#效应多态">效应多态</a></h2>
+<pre><code class="language-moonbit">fn[T, e] each(xs : List[T], f : (T) -&gt; Unit!e) -&gt; Unit!e {
+  match xs {
+    Nil =&gt; ()
+    Cons(x, rest) =&gt; { f(x); each(rest, f) }
+  }
+}
+</code></pre>
+<ul>
+<li>行中的小写名字是效应变量，写在隐式参数中。调用时它由参数推断：<code>each(xs, x =&gt; perform Yield(x))</code>
+有效应 <code>Yield[T]</code>，<code>each(xs, g)</code>（<code>g</code> 是纯函数）没有效应。</li>
+<li><strong>可以省略</strong>：函数类型的参数如果在函数体中只被调用、或直接作为参数传出（不被存储、返回，或被返回
+的闭包捕获），省略 <code>!e</code> 时检查器自动加上，并显示在函数的类型中。Prelude 中的 <code>List::map</code> 等函数
+因此是效应多态的。参数会逃逸时（比如 <code>compose</code>），省略表示纯，需要效应时要写 <code>!e</code>。</li>
+<li><code>!pure</code> 显式地要求纯，并关闭自动推导。</li>
+</ul>
+<h2 id="检查时的计算"><a class="header" href="#检查时的计算">检查时的计算</a></h2>
+<p>被完整处理的计算是纯的，类型检查时会计算，处理器修改 <code>let mut</code> 也可以：</p>
+<pre><code class="language-moonbit">effect Emit {
+  Emit(Int) -&gt; Unit
+}
+
+fn emit_all(xs : List[Int]) -&gt; Unit!Emit {
+  match xs {
+    Nil =&gt; ()
+    Cons(x, rest) =&gt; { perform Emit(x); emit_all(rest) }
+  }
+}
+
+fn sum(xs : List[Int]) -&gt; Int {
+  let mut s = 0
+  try { emit_all(xs) } catch { Emit(x) =&gt; { s = s + x; resume() } }
+  s
+}
+
+lemma sum3() -&gt; sum(Cons(1, Cons(2, Cons(3, Nil)))) === 6 { Refl }
+
+fn main {
+  println(sum(Cons(4, Cons(5, Nil))))
+}
+</code></pre>
+<p>没有状态的处理器只是传入闭包，参数是变量时也能展开，可以对它做归纳。</p>
+<h2 id="限制"><a class="header" href="#限制">限制</a></h2>
+<ul>
+<li>尾恢复操作的分支不能执行 <code>ctl</code> 操作。</li>
+<li>一个 <code>try</code> 不能同时处理错误和 <code>ctl</code> 操作；<code>try … catch</code>（错误）和 <code>defer</code> 不能包住执行 <code>ctl</code>
+操作的代码。</li>
+<li>证明（返回 <code>Prop</code> 中类型的函数）不能有效应。</li>
+<li>效应不能和 <code>async</code> 组合，也不能跨包使用。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="prelude"><a class="header" href="#prelude">Prelude</a></h1>
 <p>每个程序都自动加载 Prelude（<code>moonpp --no-prelude</code> 可以关闭）。</p>
 <div class="table-wrapper">
@@ -2377,7 +2493,7 @@ or a bound that is not #mbt)
 <h2 id="语言"><a class="header" href="#语言">语言</a></h2>
 <ul>
 <li>没有终止检查和严格正性检查（按设计）：可以“证明”假命题。</li>
-<li>没有可恢复的代数效应，没有 <code>simp</code>、<code>omega</code>、<code>auto</code> 等自动化策略。</li>
+<li>没有 <code>simp</code>、<code>omega</code>、<code>auto</code> 等自动化策略。代数效应的限制见<a href="#限制">代数效应</a>。</li>
 <li>递归的局部函数不能使用外层的 <code>let mut</code> 变量。</li>
 <li>含数组模式的 <code>match</code> 不做覆盖检查，也不细化类型。</li>
 <li><code>Map</code> 是 Prelude 用 MoonBit++ 实现的（按插入顺序，查找是线性的），不是 MoonBit 的 <code>Map</code>：参数或返回值

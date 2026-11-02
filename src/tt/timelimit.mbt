@@ -139,6 +139,7 @@ fn strip_limits(d : @parser.Decl) -> @parser.Decl {
     DMbt(p, n, ro, x) => DMbt(p, n, ro, strip_limits(x))
     DPub(x) => DPub(strip_limits(x))
     DDerive(ds, x) => DDerive(ds, strip_limits(x))
+    DUnfoldAttr(p, a, x) => DUnfoldAttr(p, a, strip_limits(x))
     _ => d
   }
 }

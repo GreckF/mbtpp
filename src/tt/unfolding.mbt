@@ -54,18 +54,24 @@ fn reset_unfolding() -> Unit {
 fn strip_unfold_attrs(d : @parser.Decl) -> @parser.Decl {
   match d {
     DUnfoldAttr(_, a, inner) => {
-      match inner.inner() {
-        DFn(fd) =>
+      let name = match inner.inner() {
+        DFn(fd) => Some(fd.name)
+        // `lemma l : P = proof { … }`
+        DDef(_, n, _, _, _) => Some(n)
+        _ => None
+      }
+      match name {
+        Some(n) =>
           match a {
-            Opaque => unfold_modes.set(fd.name, false)
-            Sealed => unfold_modes.set(fd.name, true)
+            Opaque => unfold_modes.set(n, false)
+            Sealed => unfold_modes.set(n, true)
             Unfolds(names) =>
               for x in names {
-                map_push(unfold_deps, fd.name, x.1)
-                map_push(unfold_attr_names, fd.name, x)
+                map_push(unfold_deps, n, x.1)
+                map_push(unfold_attr_names, n, x)
               }
           }
-        _ => ()
+        None => ()
       }
       strip_unfold_attrs(inner)
     }

@@ -706,6 +706,21 @@ fn Parser::ann_elem(self : Parser) -> Expr raise ParseError {
 
 ///|
 fn Parser::block(self : Parser) -> Expr raise ParseError {
+  // inside a block, `unfold(f) { e }` is an unfolding again
+  let saved = in_condition.val
+  in_condition.val = false
+  let r = self.block_in() catch {
+    e => {
+      in_condition.val = saved
+      raise e
+    }
+  }
+  in_condition.val = saved
+  r
+}
+
+///|
+fn Parser::block_in(self : Parser) -> Expr raise ParseError {
   let pos = self.pos()
   self.expect("{")
   let stmts : Array[Stmt] = []
@@ -1065,7 +1080,7 @@ fn Parser::noraise_opt(self : Parser) -> Array[Arm]? raise ParseError {
 fn Parser::if_expr(self : Parser) -> Expr raise ParseError {
   let pos = self.pos()
   self.expect("if")
-  let c = self.expr()
+  let c = self.cond_expr()
   let t = self.block()
   if self.accept("else") {
     let e = if self.at("if") { self.if_expr() } else { self.block() }
@@ -1079,7 +1094,7 @@ fn Parser::if_expr(self : Parser) -> Expr raise ParseError {
 fn Parser::match_expr(self : Parser) -> Expr raise ParseError {
   let pos = self.pos()
   self.expect("match")
-  let scrut = self.expr()
+  let scrut = self.cond_expr()
   let as_name = if self.accept("as") { Some(self.ident()) } else { None }
   let in_ty = if self.accept("in") { Some(self.expr()) } else { None }
   let ret = if self.accept("return") { Some(self.expr()) } else { None }
@@ -1415,7 +1430,7 @@ fn Parser::stmt(self : Parser) -> Stmt raise ParseError {
     return SDefer(pos, self.expr())
   }
   if self.accept("guard") {
-    let c = self.expr()
+    let c = self.cond_expr()
     let e = if self.accept("else") { Some(self.block()) } else { None }
     return SGuard(pos, c, e)
   }
@@ -1518,7 +1533,7 @@ fn Parser::loop_stmt(
 ///|
 fn Parser::plain_loop(self : Parser, pos : Pos) -> Stmt raise ParseError {
   if self.accept("while") {
-    let c = self.expr()
+    let c = self.cond_expr()
     return SWhile(pos, c, self.block())
   }
   self.expect("for")
@@ -1529,7 +1544,7 @@ fn Parser::plain_loop(self : Parser, pos : Pos) -> Stmt raise ParseError {
       xs.push(self.ident())
     }
     self.expect("in")
-    let e = self.expr()
+    let e = self.cond_expr()
     return SForIn(pos, xs, e, self.block())
   }
   let inits : Array[(String, Expr)] = []
@@ -1737,7 +1752,7 @@ fn Parser::decl(self : Parser) -> Decl raise ParseError {
         Unfolds(names)
       }
       let d = self.decl()
-      if !(d.inner() is DFn(_)) {
+      if !(d.inner() is (DFn(_) | DDef(_, _, _, _, _))) {
         raise ParseError(pos, "#" + attr + " applies to functions and lemmas")
       }
       return DUnfoldAttr(pos, a, d)
@@ -2270,7 +2285,7 @@ fn Parser::unfold_names(self : Parser) -> Array[(Pos, String)] raise ParseError 
 ///|
 /// At `unfold(f, g) {`?
 fn Parser::at_unfold_block(self : Parser) -> Bool {
-  if !self.at_k(1, "(") {
+  if in_condition.val || !self.at_k(1, "(") {
     return false
   }
   let mut k = 2
@@ -2282,4 +2297,23 @@ fn Parser::at_unfold_block(self : Parser) -> Bool {
     }
   }
   false
+}
+
+///|
+/// Parsing a condition (`if c {`, `match e {`, ...), where `unfold(f) {` is
+/// a call followed by the block of the `if`.
+let in_condition : Ref[Bool] = Ref::new(false)
+
+///|
+fn Parser::cond_expr(self : Parser) -> Expr raise ParseError {
+  let saved = in_condition.val
+  in_condition.val = true
+  let r = self.expr() catch {
+    e => {
+      in_condition.val = saved
+      raise e
+    }
+  }
+  in_condition.val = saved
+  r
 }

@@ -499,7 +499,7 @@ fn lower_body(name : String, body : Tm) -> Tm {
 ///|
 fn has_marks(t : Tm) -> Bool {
   match t {
-    Global("%mcall" | "%mbody" | "%handle") => true
+    Global("%mcall" | "%mbody" | "%marm" | "%handle") => true
     App(f, a, _) => has_marks(f) || has_marks(a)
     Lam(_, _, _, b) => has_marks(b)
     Let(_, _, v, b) | LetMut(_, _, v, b) => has_marks(v) || has_marks(b)
@@ -552,6 +552,8 @@ fn make_m(name : String) -> Unit {
         GFunc(_, _, n) => {
           let t = lower(body, true)
           g.kind = GFunc(Some(t), contains_imperative(t), n)
+          // unfolded where the function is (controlled unfolding)
+          unfold_deps.set(m, [name])
         }
         _ => ()
       }
@@ -573,8 +575,33 @@ fn lower(t : Tm, vars : Bool) -> Tm {
       } else {
         go(b)
       }
-    App(App(App(Global("%handle"), marker, _), dispatch, _), body, _) =>
-      App(Global("%eff_run"), handle_tm(marker, dispatch, body, vars), Expl)
+    // the body of a `ctl` arm: its `return` goes on to the function
+    App(App(Global("%marm"), _, _), b, _) => m_tr(b, vars, [])
+    App(App(App(Global("%handle"), marker, _), dispatch, _), body, _) => {
+      let h = handle_tm(marker, dispatch, body, vars)
+      // `return`, `break` and `continue` in the body or the arms leave the
+      // `try`: done here, in direct code
+      let ret = has_jump(body, true, false) || has_jump(dispatch, true, false)
+      let brk = has_jump(body, false, false) || has_jump(dispatch, false, false)
+      if !ret && !brk {
+        return App(Global("%eff_run"), h, Expl)
+      }
+      let pv = (c : String) => [CPCon("%Comp::" + c, [CPVar("v")])]
+      let cls : Array[Clause] = [{ pats: pv("Pure"), cond: None, body: Var(0) }]
+      if ret {
+        cls.push({ pats: pv("Ret"), cond: None, body: Return(Var(0)) })
+      }
+      if brk {
+        cls.push({ pats: [CPCon("%Comp::Brk", [])], cond: None, body: Break })
+        cls.push({ pats: [CPCon("%Comp::Cont", [])], cond: None, body: Continue })
+      }
+      cls.push({
+        pats: [CPVar("c")],
+        cond: None,
+        body: App(Global("%eff_run"), Var(0), Expl),
+      })
+      Match([h], cls)
+    }
     App(f, a, i) => App(go(f), go(a), i)
     Lam(x, i, g, b) => Lam(x, i, g, go(b))
     Let(x, a, v, b) => Let(x, a, go(v), go(b))
@@ -688,7 +715,14 @@ fn m_tr(t : Tm, vars : Bool, muts : Array[Int32]) -> Tm {
   }
   match t {
     App(App(Global("%mcall"), row, _), c, _) =>
-      if row_is_ctl(row, vars) {
+      if row_is_ctl(row, vars) && muts.length() > 0 {
+        // a bind, so that the `let mut` variables are saved here too
+        bind_tm(
+          call_tr(c, vars, muts),
+          Lam("v", Expl, true, pure_tm(Var(0))),
+          muts,
+        )
+      } else if row_is_ctl(row, vars) {
         call_tr(c, vars, muts)
       } else {
         m_tr(c, vars, muts)
@@ -875,5 +909,28 @@ fn seq_go(
     Let("p", any_ty(), lower(p, vars), rest)
   } else {
     bind_tm(m_tr(p, vars, m), Lam("p", Expl, true, rest), m)
+  }
+}
+
+///|
+/// Does `t` have a `return` (`ret`), or a `break`/`continue` out of `t`
+/// (`in_loop`: under a loop of `t`)?
+fn has_jump(t : Tm, ret : Bool, in_loop : Bool) -> Bool {
+  let go = (x : Tm) => has_jump(x, ret, in_loop)
+  match t {
+    Return(_) if ret => true
+    Break | Continue => !ret && !in_loop
+    While(a, b, s) =>
+      go(a) || has_jump(b, ret, true) || has_jump(s, ret, true)
+    Lam(_, _, _, b) => go(b)
+    App(f, a, _) => go(f) || go(a)
+    Let(_, _, v, b) | LetMut(_, _, v, b) => go(v) || go(b)
+    Match(ss, cls) | Try(Match(ss, _), cls) =>
+      ss.iter().any(go) || cls.iter().any(c => go(c.body))
+    Try(b, cls) => go(b) || cls.iter().any(c => go(c.body))
+    Seq(a, b) | Defer(a, b) => go(a) || go(b)
+    Assign(_, v) | Raise(v) | Return(v) => go(v)
+    ArrayLit(es) => es.iter().any(go)
+    _ => false
   }
 }

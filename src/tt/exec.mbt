@@ -298,8 +298,9 @@ fn exec(xe : XEnv, t : Tm) -> Val raise ExecStop {
       }
       xapply_spine(r, vals[arity:].to_array())
     }
-    App(_, _, _) if xclosures.length() > 0 &&
-      global_call(t) is Some((n, body, arity)) => {
+    // a call that may get a closure of the run (the arguments are run
+    // first: a lambda argument may be the first such closure)
+    App(_, _, _) if global_call(t) is Some((n, body, arity)) => {
       let (_, args) = flatten_app(t)
       let vals = args.map(a => (exec(xe, a.0), a.1))
       if !vals.iter().any(v => has_xclo(v.0)) {

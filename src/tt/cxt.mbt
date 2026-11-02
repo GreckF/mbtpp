@@ -155,6 +155,8 @@ pub fn Cxt::unify(
   expected : Val,
   actual : Val,
 ) -> Unit raise ElabError {
+  // the hint about opaque functions is about the failing unification
+  blocked_opaque.clear()
   unify(self.ltypes(), expected, actual) catch {
     UnifyError(_) =>
       self.fail(
@@ -164,6 +166,7 @@ pub fn Cxt::unify(
         self.show(actual),
       )
   }
+  blocked_opaque.clear()
 }
 
 ///|

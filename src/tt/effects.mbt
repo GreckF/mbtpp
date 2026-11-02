@@ -362,6 +362,22 @@ fn elab_handle(
     Some(g) => (check(bc, inner, g), g)
     None => infer_ins(bc, inner)
   }
+  // handlers are lexical: a function performing a handled effect cannot
+  // leave the `try` (it would use this handler after it is gone)
+  let rty = bc.quote(ty)
+  for e in effs {
+    if mentions_global(rty, e) {
+      cxt
+      .at(pos)
+      .fail(
+        "the result of this try has the type " +
+        bc.show(ty) +
+        ", which performs " +
+        e +
+        ": a function performing an effect cannot leave the try that handles it",
+      )
+    }
+  }
   // the capabilities, in the context outside of the body: an operation in
   // an arm goes to an outer handler
   let caps : Array[Tm] = []
@@ -1110,7 +1126,8 @@ fn ctl_arm(
     Global("%RowNil"),
     Impl,
   )
-  let mut out = Lam("resume", Expl, true, mark("%mbody", row, body))
+  // not a function frame: `return` in an arm leaves the enclosing function
+  let mut out = Lam("resume", Expl, true, mark("%marm", row, body))
   for k = names.length() - 1; k >= 0; k = k - 1 {
     out = Lam(names[k], Expl, true, out)
   }
@@ -1146,4 +1163,20 @@ fn dispatch_tm(eff : String, ops : Array[String], arms : Array[Tm]) -> Tm {
     true,
     Lam("p", Expl, true, Lam("resume", Expl, true, Match([Var(2)], cls))),
   )
+}
+
+///|
+/// Does `t` mention the global `g`?
+fn mentions_global(t : Tm, g : String) -> Bool {
+  let go = (x : Tm) => mentions_global(x, g)
+  match t {
+    Global(n) => n == g
+    Lam(_, _, _, b) => go(b)
+    App(f, a, _) => go(f) || go(a)
+    Pi(_, _, _, a, b) => go(a) || go(b)
+    Let(_, a, v, b) => go(a) || go(v) || go(b)
+    Raises(a, e) => go(a) || go(e)
+    Match(ss, cls) => ss.iter().any(go) || cls.iter().any(c => go(c.body))
+    _ => false
+  }
 }

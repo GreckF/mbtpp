@@ -96,7 +96,7 @@ fn check_pat(
       let out = simple(as_name, CPLit(l))
       // in the clause, the scrutinee is the literal
       match scrut {
-        Some(v) if refine_scrut =>
+        Some(v) if refine_scrut && !is_mut_var(out.cxt, v) =>
           match out.cxt.refine([(v, VLit(l))]) {
             ROk(c2) => { ..out, cxt: c2, }
             RConflict => { ..out, pat: CPWild, conflict: true, }
@@ -279,7 +279,7 @@ fn check_pat(
       }
       if refine_scrut {
         match scrut {
-          Some(v) =>
+          Some(v) if !is_mut_var(cur, v) =>
             match cur.refine([(v, v_var(s))]) {
               ROk(c2) => cur = c2
               RConflict =>
@@ -292,7 +292,7 @@ fn check_pat(
                 }
               RStuck(_) => ()
             }
-          None => ()
+          _ => ()
         }
       }
       {
@@ -383,6 +383,7 @@ fn elab_match(
   ret : @parser.MatchRet?,
   arms0 : Array[@parser.Arm],
   goal : Val?,
+  with_ok~ : Bool = true,
 ) -> (Tm, Val) raise ElabError {
   let arms = expand_arms(cxt, arms0)
   // array and range patterns, `is` in guards (see sugar.mbt)
@@ -431,13 +432,20 @@ fn elab_match(
       let svals = sts.map(x => cxt.eval(x.0))
       // a scrutinee that is not a variable but occurs in the goal (of a
       // proof): abstract it, and match on a variable instead (`with`)
-      for i = 0; i < scrs.length(); i = i + 1 {
+      for i = 0; i < scrs.length() && with_ok; i = i + 1 {
         match with_motive(cxt, svals[i], goal) {
-          Some(motive) => {
+          Some((motive, hyps)) => {
             let w = "%with" + cxt.lvl.to_string()
-            let c2 = cxt.bind(w, sts[i].1)
-            let new_scrs = scrs.mapi((k, e) => {
-              if k == i {
+            // the expression, then the hypotheses about it, abstracted (they
+            // shadow the originals)
+            let mut c2 = cxt.bind(w, sts[i].1)
+            for j = 0; j < hyps.length(); j = j + 1 {
+              let (l, hty) = hyps[j]
+              c2 = c2.bind(cxt.names[l], c2.eval(tm_shift(hty, j, 0)))
+            }
+            let k = hyps.length()
+            let new_scrs = scrs.mapi((n, e) => {
+              if n == i {
                 @parser.EVar(e.pos(), w)
               } else {
                 e
@@ -448,14 +456,47 @@ fn elab_match(
             } else {
               new_scrs[0]
             }
-            let (body, _) = elab_match(
-              c2,
-              scr2,
-              None,
-              arms0,
-              Some(c2.eval(motive)),
-            )
-            return (App(Lam(w, Expl, true, body), sts[i].0, Expl), goal)
+            let snap = snapshot_metas()
+            let res : Result[(Tm, Val), ElabError] = try {
+              Ok(
+                elab_match(
+                  c2,
+                  scr2,
+                  None,
+                  arms0,
+                  Some(c2.eval(tm_shift(motive, k, 0))),
+                ),
+              )
+            } catch {
+              e => Err(e)
+            }
+            match res {
+              Ok((body, _)) => {
+                let mut f = body
+                for j = k - 1; j >= 0; j = j - 1 {
+                  f = Lam(cxt.names[hyps[j].0], Expl, true, f)
+                }
+                f = App(Lam(w, Expl, true, f), sts[i].0, Expl)
+                for h in hyps {
+                  f = App(f, Var(cxt.lvl - 1 - h.0), Expl)
+                }
+                return (f, goal)
+              }
+              // without the abstraction
+              Err(e) => {
+                restore_metas(snap)
+                return elab_match(
+                    cxt,
+                    scr,
+                    None,
+                    arms0,
+                    Some(goal),
+                    with_ok=false,
+                  ) catch {
+                    _ => raise e
+                  }
+              }
+            }
           }
           None => ()
         }
@@ -502,8 +543,11 @@ fn elab_match(
       let mut cc = cxt
       let problem : Array[Val] = []
       for i = 0; i < scrs.length(); i = i + 1 {
-        match force(svals[i]) {
+        match force(cxt.subst(svals[i])) {
           VRigid(x, []) if cxt.bound[x] => problem.push(svals[i])
+          // a known value (a refined variable): its clauses that cannot
+          // match were dropped
+          VLit(_) | VCon(_, _) as w => problem.push(w)
           _ => {
             problem.push(v_var(cc.lvl))
             cc = cc.bind("_", sts[i].1)
@@ -920,7 +964,11 @@ fn elab_try(
 /// stuck on a `match`): the goal with it abstracted, under one more
 /// variable. Matching on that variable then refines the goal, as Agda's
 /// `with` does.
-fn with_motive(cxt : Cxt, sv : Val, goal : Val) -> Tm? {
+fn with_motive(
+  cxt : Cxt,
+  sv : Val,
+  goal : Val,
+) -> (Tm, Array[(Int32, Tm)])? {
   match force(sv) {
     VRigid(_, []) | VLit(_) | VCon(_, _) => return None
     _ => ()
@@ -943,7 +991,27 @@ fn with_motive(cxt : Cxt, sv : Val, goal : Val) -> Tm? {
       }
     }
   }
-  best.map(x => x.0)
+  match best {
+    None => None
+    Some((motive, _)) => {
+      // the hypotheses (bound variables) whose types mention it, abstracted
+      // too, under the new variable
+      let hyps : Array[(Int32, Tm)] = []
+      for l = 0; l < cxt.lvl; l = l + 1 {
+        if cxt.bound[l] && !cxt.muts[l] {
+          let (t, found) = tm_abstract(
+            tm_shift(cxt.quote(cxt.types[l]), 1, 0),
+            a,
+            0,
+          )
+          if found {
+            hyps.push((l, t))
+          }
+        }
+      }
+      Some((motive, hyps))
+    }
+  }
 }
 
 ///|
@@ -997,13 +1065,30 @@ fn quote_open(lvl : Int32, v : Val, depth : Int32) -> Tm {
       }
       t
     }
-    VData(n, sp) | VCon(n, sp) | VGlobal(n, sp) => {
+    VData(n, sp) | VCon(n, sp) | VGlobal(n, sp) | VPrim(n, sp) => {
       let mut t = Global(n)
       for a in sp {
         t = App(t, quote_open(lvl, a.0, depth), a.1)
       }
       t
     }
+    VRigid(l, sp) => {
+      let mut t = Var(lvl - 1 - l)
+      for a in sp {
+        t = App(t, quote_open(lvl, a.0, depth), a.1)
+      }
+      t
+    }
     _ => quote(lvl, v)
+  }
+}
+
+///|
+/// A `let mut` variable: it may be assigned later, so a clause does not
+/// refine it.
+fn is_mut_var(cxt : Cxt, v : Val) -> Bool {
+  match force(cxt.subst(v)) {
+    VRigid(l, []) => cxt.muts[l]
+    _ => false
   }
 }

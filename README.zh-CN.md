@@ -116,3 +116,9 @@ moonpp run --compiled          # 编译到 MoonBit 并用 `moon run` 运行
 [doc/mbtpp/effects.md](doc/mbtpp/effects.md)），实现说明见
 [doc/mbtpp/implementation.md](doc/mbtpp/implementation.md)，参考文献见
 [doc/mbtpp/references.md](doc/mbtpp/references.md)。
+
+## AI 编程助手的 skill
+
+[`skills/mbtpp`](skills/mbtpp/SKILL.md) 是给 AI 编程助手（如 Claude Code）用的 skill：MoonBit++ 语法速查、
+`moonpp` 的用法与常见报错、issue 报告守则。复制到 `~/.claude/skills/mbtpp`（或项目的
+`.claude/skills/mbtpp`）即可使用。

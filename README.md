@@ -137,3 +137,9 @@ notes are in [doc/mbtpp/proposal.md](doc/mbtpp/proposal.md) (algebraic effects:
 [doc/mbtpp/effects.md](doc/mbtpp/effects.md), in Chinese), the implementation in
 [doc/mbtpp/implementation.md](doc/mbtpp/implementation.md), and the references in
 [doc/mbtpp/references.md](doc/mbtpp/references.md).
+
+## Skill for AI coding agents
+
+[`skills/mbtpp`](skills/mbtpp/SKILL.md) is a skill for AI coding agents such as Claude Code: a MoonBit++
+syntax reference, how to use `moonpp` and read its errors, and guidelines for reporting issues (written in
+Chinese). Copy it to `~/.claude/skills/mbtpp` (or a project's `.claude/skills/mbtpp`) to use it.

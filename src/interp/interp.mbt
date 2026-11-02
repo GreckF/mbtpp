@@ -8,6 +8,8 @@ pub(all) enum RVal {
   RPartial(Partial, Array[(RVal, @tt.Icit)])
   RClo(REnv, @tt.Tm)
   RArr(Array[RVal])
+  /// A `Nat` (`Z` is 0, `S(n)` is n + 1).
+  RNat(BigInt)
   /// Types and other erased values.
   RType
 }
@@ -89,6 +91,7 @@ pub fn show_rval(v : RVal) -> String {
       }
     }
     RArr(xs) => "[" + xs.map(show_rval).join(", ") + "]"
+    RNat(n) => n.to_string()
     RClo(_, _) | RPartial(_, _) => "<function>"
     RType => "<type>"
   }
@@ -101,6 +104,11 @@ fn Machine::global(self : Machine, n : String) -> RVal raise Ctl {
     None => ()
   }
   let v = match @tt.globals.get(n) {
+    // `Nat` is native: its constructors and the prelude functions on it
+    _ if n == "Nat::Z" => RNat(0N)
+    _ if n == "Nat::S" => RPartial(PPrim("%nat_succ", 1), [])
+    _ if @tt.nat_natives.get(n) is Some((p, arity)) =>
+      RPartial(PPrim(p, arity), [])
     Some(g) =>
       match g.kind {
         GFunc(Some(body), _, _) => self.eval(ENil, body)
@@ -134,6 +142,12 @@ fn rmatch(p : @tt.CPat, v : RVal, out : Array[RVal]) -> Bool {
   out.push(v)
   match p {
     CPVar(_) | CPWild => true
+    CPCon("Nat::Z", []) => v is RNat(n) && n == 0N
+    CPCon("Nat::S", [q]) =>
+      match v {
+        RNat(n) if n > 0N => rmatch(q, RNat(n - 1N), out)
+        _ => false
+      }
     CPCon(c, ps) =>
       match v {
         RCon(c2, args) if c2 == c && args.length() == ps.length() => {
@@ -354,6 +368,15 @@ fn Machine::prim(
       } else {
         raise CAbort("index out of bounds: " + i.to_string())
       }
+    ("%nat_succ", [RNat(n)]) => RNat(n + 1N)
+    ("%nat_of_int", [RLit(LInt(i))]) =>
+      RNat(if i <= 0 { 0N } else { BigInt::from_int(i) })
+    ("%nat_to_int", [RNat(n)]) => RLit(LInt(n.to_int()))
+    ("%nat_add", [RNat(a), RNat(b)]) => RNat(a + b)
+    ("%nat_mul", [RNat(a), RNat(b)]) => RNat(a * b)
+    ("%nat_eq", [RNat(a), RNat(b)]) => RLit(LBool(a == b))
+    ("%nat_compare", [RNat(a), RNat(b)]) => RLit(LInt(a.compare(b)))
+    ("%nat_to_string", [RNat(n)]) => RLit(LStr(n.to_string()))
     ("%array_push", [RArr(xs), x]) => {
       xs.push(x)
       RLit(LUnit)

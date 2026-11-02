@@ -334,9 +334,22 @@ fn short_con(c : String) -> String {
 
 ///|
 /// A MoonBit pattern for a core pattern; `names` receives the variables of
-/// its slots (in slot order).
-fn Gen::native_pat(self : Gen, p : @tt.CPat, names : Array[Local]) -> String {
+/// its slots (in slot order), `conds` the tests it needs besides the pattern.
+fn Gen::native_pat(
+  self : Gen,
+  p : @tt.CPat,
+  names : Array[Local],
+  conds : Array[String],
+) -> String {
   match p {
+    CPCon("Nat::Z" | "Nat::S", _) => {
+      let n = self.name("n")
+      let (k, exact) = nat_pat_slots(p, j => {
+        names.push(LVar(if j == 0 { n } else { "VNat(as_nat(\{n}) - \{j}N)" }))
+      })
+      conds.push("as_nat(\{n}) " + (if exact { "==" } else { ">=" }) + " \{k}N")
+      var_marker + n + end_marker
+    }
     CPVar(x) => {
       let n = self.name(x)
       names.push(LVar(n))
@@ -356,7 +369,7 @@ fn Gen::native_pat(self : Gen, p : @tt.CPat, names : Array[Local]) -> String {
           // an erased field (only variables bind it, see erase.mbt)
           names.push(LErased)
         } else {
-          subs.push(self.native_pat(ps[j], names))
+          subs.push(self.native_pat(ps[j], names, conds))
         }
       }
       "(" + self.con_code(c, subs) + as_marker + n + end_marker + ")"
@@ -379,6 +392,28 @@ fn Gen::native_pat(self : Gen, p : @tt.CPat, names : Array[Local]) -> String {
       "(" + lp + as_marker + n + end_marker + ")"
     }
   }
+}
+
+///|
+/// A pattern `S(…S(q))` of a native `Nat` (see `Gen::app`), with `q` a
+/// variable, `_` or `Z`, is the test `n >= k`, or `n == k` when `q` is `Z`
+/// (the result: `(k, exact)`). Its nodes are slots with the values `n - j`,
+/// j = 0 .. k (outermost first), given to `slot`.
+fn nat_pat_slots(p : @tt.CPat, slot : (Int32) -> Unit) -> (Int32, Bool) {
+  let mut q = p
+  let mut k = 0
+  while true {
+    slot(k)
+    match q {
+      CPCon("Nat::S", [q2]) => {
+        q = q2
+        k = k + 1
+      }
+      CPCon("Nat::Z", _) => return (k, true)
+      _ => return (k, false)
+    }
+  }
+  (k, false)
 }
 
 ///|
@@ -594,6 +629,7 @@ fn Gen::match_code(
   buf.write_string("match " + subject + " {\n")
   for cl in cls {
     let names : Array[Local] = []
+    let conds : Array[String] = []
     let ps = cl.pats.mapi((k, p) => {
       if proofs[k] {
         for _ in 0..<@tt.pats_slots([p]) {
@@ -601,7 +637,7 @@ fn Gen::match_code(
         }
         "_"
       } else {
-        self.native_pat(p, names)
+        self.native_pat(p, names, conds)
       }
     })
     let mut env2 = env
@@ -610,10 +646,11 @@ fn Gen::match_code(
     }
     let lhs = if ps.length() == 1 { ps[0] } else { "(" + ps.join(", ") + ")" }
     let body = self.tm(env2, cl.body)
-    let when = match cl.cond {
-      Some(g) => " if truthy(" + self.tm(env2, g) + ")"
-      None => ""
+    match cl.cond {
+      Some(g) => conds.push("truthy(" + self.tm(env2, g) + ")")
+      None => ()
     }
+    let when = if conds.is_empty() { "" } else { " if " + conds.join(" && ") }
     buf.write_string(
       resolve_bindings(lhs, body + when) + when + " => (" + body + ")\n",
     )
@@ -664,6 +701,14 @@ let inline_prims : Map[String, String] = {
   "%array_length": "VInt(as_arr($0).length())",
   "%array_push": "{ as_arr($0).push($1); VUnit }",
   "%print": "{ rt_write(as_str($0)); VUnit }",
+  "%nat_succ": "VNat(as_nat($0) + 1N)",
+  "%nat_of_int": "VNat(nat_of_int(as_int($0)))",
+  "%nat_to_int": "VInt(as_nat($0).to_int())",
+  "%nat_add": "VNat(as_nat($0) + as_nat($1))",
+  "%nat_mul": "VNat(as_nat($0) * as_nat($1))",
+  "%nat_eq": "VBool(as_nat($0) == as_nat($1))",
+  "%nat_compare": "VInt(as_nat($0).compare(as_nat($1)))",
+  "%nat_to_string": "VStr(as_nat($0).to_string())",
 }
 
 ///|
@@ -719,6 +764,18 @@ fn Gen::app(self : Gen, env : Array[Local], t : @tt.Tm) -> String {
   if h is Global(n) && @tt.is_async_global(n) {
     return self.async_use(n)
   }
+  // a `Nat` is a `BigInt`: numerals, `S` and the prelude functions on `Nat`
+  // (`@tt.nat_natives`) are native
+  if @tt.nat_lit(t) is Some(k) {
+    return "VNat(\{k}N)"
+  }
+  match nat_prim(h) {
+    Some((p, k)) if args.length() >= k => {
+      let cs = args.map(a => self.tm(env, a))
+      return apply_rest(self.prim_call(p, cs[:k].to_array()), cs[k:].to_array())
+    }
+    _ => ()
+  }
   match h {
     Global(n) =>
       match @tt.globals.get(n) {
@@ -766,6 +823,16 @@ fn Gen::app(self : Gen, env : Array[Local], t : @tt.Tm) -> String {
     _ => ()
   }
   apply_rest(self.tm(env, h), args.map(a => self.tm(env, a)))
+}
+
+///|
+/// The native operation of a global on `Nat`, and its arity (see `Gen::app`).
+fn nat_prim(h : @tt.Tm) -> (String, Int32)? {
+  match h {
+    Global("Nat::S") => Some(("%nat_succ", 1))
+    Global(n) => @tt.nat_natives.get(n)
+    _ => None
+  }
 }
 
 ///|
@@ -925,6 +992,7 @@ fn Gen::global_value(self : Gen, n : String) -> String {
     return self.async_use(n)
   }
   match @tt.globals.get(n) {
+    _ if n == "Nat::Z" => "VNat(0N)"
     Some({ kind: GCon(ci), .. }) if ci.nparams + ci.nargs == 0 =>
       self.con_code(n, [])
     Some({ kind: GData(_), .. }) => "VType"
@@ -1003,6 +1071,15 @@ fn Gen::global_def(self : Gen, name : String) -> Unit raise CodegenError {
     None => raise CodegenError("unknown global " + name)
   }
   let id = self.gid(name)
+  // `S` and the prelude functions on `Nat` are native (see `app`)
+  match nat_prim(Global(name)) {
+    Some((p, k)) => {
+      let xs = Array::makei(k, j => "a" + j.to_string())
+      self.cached(id, curried(k, self.prim_call(p, xs)))
+      return
+    }
+    None => ()
+  }
   // an async function only has its native version (see `check_async_fns`;
   // uses in uniform code are errors, see `async_use`)
   if @tt.is_async_global(name) {

@@ -341,3 +341,53 @@ test "example effects_dt" {
     ),
   )
 }
+
+///|
+test "Nat runs as a BigInt" {
+  inspect(
+    run_source(
+      "t.mbtpp",
+      (
+        #|fn fact(n : Nat) -> Nat {
+        #|  match n {
+        #|    Z => 1
+        #|    S(k) => n * fact(k)
+        #|  }
+        #|}
+        #|
+        #|fn pred2(n : Nat) -> Nat {
+        #|  match n {
+        #|    S(S(k)) => k
+        #|    S(Z) as one => one
+        #|    _ => 0
+        #|  }
+        #|}
+        #|
+        #|lemma fact3 : fact(3) === 6 = Refl
+        #|
+        #|fn main {
+        #|  println(fact(30))
+        #|  println(fact(10).to_int())
+        #|  println("\{pred2(5)} \{pred2(1)} \{pred2(0)}")
+        #|  println((3 : Nat) == 3)
+        #|  println((2 : Nat).compare(5))
+        #|  println(int_to_nat(100000) + int_to_nat(-5))
+        #|  println([1, 2, 3].size())
+        #|  let xs : List[Nat] = Cons((1 : Nat), Cons((2 : Nat), Nil))
+        #|  println(xs.map(S))
+        #|}
+      ),
+    ),
+    content=(
+      #|265252859812191058636308480000000
+      #|3628800
+      #|3 1 0
+      #|true
+      #|-1
+      #|100000
+      #|3
+      #|Cons(2, Cons(3, Nil))
+      #|
+    ),
+  )
+}

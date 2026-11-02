@@ -37,16 +37,21 @@ fn flatten_app(t : Tm) -> (Tm, Array[(Tm, Icit)]) {
 }
 
 ///|
-fn nat_lit(t : Tm) -> Int32? {
-  match flatten_app(t) {
-    (Global("Nat::Z"), []) => Some(0)
-    (Global("Nat::S"), [(a, Expl)]) =>
-      match nat_lit(a) {
-        Some(n) => Some(n + 1)
-        None => None
+/// The number `S(…S(Z))` denotes.
+pub fn nat_lit(t : Tm) -> Int32? {
+  let mut n = 0
+  let mut cur = t
+  while true {
+    match cur {
+      Global("Nat::Z") => return Some(n)
+      App(Global("Nat::S"), a, Expl) => {
+        n = n + 1
+        cur = a
       }
-    _ => None
+      _ => return None
+    }
   }
+  None
 }
 
 ///|

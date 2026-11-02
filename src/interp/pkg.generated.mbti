@@ -2,6 +2,7 @@
 package "username/mbtpp/interp"
 
 import {
+  "moonbitlang/core/bigint",
   "moonbitlang/core/ref",
   "username/mbtpp/parser",
   "username/mbtpp/tt",
@@ -38,6 +39,7 @@ pub(all) enum RVal {
   RPartial(Partial, Array[(RVal, @tt.Icit)])
   RClo(REnv, @tt.Tm)
   RArr(Array[RVal])
+  RNat(@bigint.BigInt)
   RType
 }
 

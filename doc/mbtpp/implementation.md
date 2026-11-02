@@ -55,6 +55,12 @@
   decided by a fixed point. Native datatypes become generic MoonBit enums
   without indices or erased fields, with conversions to and from `Value`.
   Typed code calls imported MoonBit functions directly.
+- `Nat` is a `BigInt` at run time (`VNat` in the uniform representation,
+  `BigInt` in native code; the interpreter's `RNat`): numerals are literals,
+  `S` adds one, a pattern `S(…S(p))` is a guard `n >= k` (`== k` when `p`
+  is `Z`) whose slots are `n - j`, and the Prelude functions listed in
+  `@tt.nat_natives` are native operations. The checker keeps the unary
+  definitions.
 - `traits.mbt`: `#mbt` types and traits (checked in `src/tt/mbt.mbt`):
   `#mbt` datatypes are the MoonBit types of their names, `#mbt` traits
   MoonBit traits; bounds become MoonBit bounds, method calls `Tr::m(..)`,

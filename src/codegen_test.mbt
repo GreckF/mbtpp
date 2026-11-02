@@ -29,34 +29,67 @@ fn signatures(src : String) -> String {
         !l.has_prefix("fn init")
       ) ||
       l.has_prefix("enum E_") {
-      // drop the counters: f12_fib -> f_fib, x_34 -> x
-      let buf = StringBuilder::new()
-      let cs : Array[Char] = l.iter().collect()
-      let mut i = 0
-      while i < cs.length() {
-        let c = cs[i]
-        if (c == '_' || (c == 'f' && (i == 0 || !is_word(cs[i - 1])))) &&
-          i + 1 < cs.length() &&
-          cs[i + 1] >= '0' &&
-          cs[i + 1] <= '9' &&
-          (c == 'f' || (i > 0 && is_word(cs[i - 1]))) {
-          buf.write_char(if c == 'f' { 'f' } else { ' ' })
-          i = i + 1
-          while i < cs.length() && cs[i] >= '0' && cs[i] <= '9' {
-            i = i + 1
-          }
-          if c == '_' {
-            // `x_34` -> `x`
-            let s = buf.to_string()
-            buf.reset()
-            buf.write_string(s.unsafe_substring(start=0, end=s.length() - 1))
-          }
-        } else {
-          buf.write_char(c)
-          i = i + 1
-        }
+      out.push((if is_async { "async " } else { "" }) + strip_counters(l))
+    }
+  }
+  out.join("\n")
+}
+
+///|
+/// Drop the counters of generated names: f12_fib -> f_fib, x_34 -> x.
+fn strip_counters(l : String) -> String {
+  let buf = StringBuilder::new()
+  let cs : Array[Char] = l.iter().collect()
+  let mut i = 0
+  while i < cs.length() {
+    let c = cs[i]
+    if (c == '_' || (c == 'f' && (i == 0 || !is_word(cs[i - 1])))) &&
+      i + 1 < cs.length() &&
+      cs[i + 1] >= '0' &&
+      cs[i + 1] <= '9' &&
+      (c == 'f' || (i > 0 && is_word(cs[i - 1]))) {
+      buf.write_char(if c == 'f' { 'f' } else { ' ' })
+      i = i + 1
+      while i < cs.length() && cs[i] >= '0' && cs[i] <= '9' {
+        i = i + 1
       }
-      out.push((if is_async { "async " } else { "" }) + buf.to_string())
+      if c == '_' {
+        // `x_34` -> `x`
+        let s = buf.to_string()
+        buf.reset()
+        buf.write_string(s.unsafe_substring(start=0, end=s.length() - 1))
+      }
+    } else {
+      buf.write_char(c)
+      i = i + 1
+    }
+  }
+  buf.to_string()
+}
+
+///|
+/// The generated code of the global function `name` (its definitions `f`
+/// and `f_t`), without counters.
+fn fn_code(src : String, name : String) -> String {
+  @tt.check_program("t.mbtpp", src) catch {
+    @tt.CheckError(msg) => return msg
+  }
+  let code = @codegen.generate([]) catch {
+    @codegen.CodegenError(msg) => return msg
+  }
+  let out : Array[String] = []
+  let mut inside = false
+  for line in code.split("\n") {
+    let l = strip_counters(line.to_string())
+    if l.has_prefix("fn f_" + name + "(") ||
+      l.has_prefix("fn f_" + name + "_t(") {
+      inside = true
+    }
+    if inside {
+      out.push(l)
+      if l == "}" {
+        inside = false
+      }
     }
   }
   out.join("\n")
@@ -145,17 +178,12 @@ test "codegen: an implicit field used at runtime is kept" {
     ),
     content=(
       #|enum E_Vector[T0] {
-      #|fn[T0] f_len_t(v : E_Vector[T0]) -> E_Nat raise {
+      #|fn[T0] f_len_t(v : E_Vector[T0]) -> BigInt raise {
       #|fn f_len(a2 : Value) -> Value raise {
       #|fn main {
-      #|enum E_Nat {
       #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
       #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
       #|fn f_show_to_string(inst : Value) -> Value raise {
-      #|fn f_nat_to_string_t(self : E_Nat) -> String raise {
-      #|fn f_nat_to_string(a0 : Value) -> Value raise {
-      #|fn f_nat_to_int_t(self : E_Nat) -> Int raise {
-      #|fn f_nat_to_int(a0 : Value) -> Value raise {
     ),
   )
 }
@@ -523,7 +551,6 @@ test "codegen: instances of Prelude traits for MoonBit++ datatypes are MoonBit i
       #|impl Eq for E_Point with equal(a0, a1) {
       #|impl Compare for E_Point with compare(a0, a1) {
       #|impl[T0 : Show] Show for E_List[T0] with to_string(a0) {
-      #|impl Show for E_Nat with to_string(a0) {
     ),
   )
 }
@@ -681,15 +708,71 @@ test "codegen: a datatype that takes the name of a #mbt trait is not #mbt" {
     ),
     content=(
       #|enum E_Sub {
-      #|fn f_apply_t(n : E_Nat, s : E_Sub) -> Int raise {
+      #|fn f_apply_t(n : BigInt, s : E_Sub) -> Int raise {
       #|fn f_apply(a0 : Value, a1 : Value) -> Value raise {
       #|fn main {
-      #|enum E_Nat {
       #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
       #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
       #|fn f_show_to_string(inst : Value) -> Value raise {
-      #|fn f_nat_to_int_t(self : E_Nat) -> Int raise {
-      #|fn f_nat_to_int(a0 : Value) -> Value raise {
+    ),
+  )
+}
+
+///|
+test "codegen: Nat is a BigInt" {
+  let src =
+    #|fn pred2(n : Nat) -> Nat {
+    #|  match n {
+    #|    S(S(k)) => k
+    #|    S(Z) as one => one
+    #|    _ => 0
+    #|  }
+    #|}
+    #|
+    #|fn NAry(n : Nat) -> Type {
+    #|  match n {
+    #|    Z => Int
+    #|    S(k) => (Int) -> NAry(k)
+    #|  }
+    #|}
+    #|
+    #|fn sum_n(n : Nat, acc : Int) -> NAry(n) {
+    #|  match n as m return NAry(m) {
+    #|    Z => acc
+    #|    S(k) => x => sum_n(k, acc + x)
+    #|  }
+    #|}
+    #|
+    #|fn main {
+    #|  println(pred2(5) * 10 + int_to_nat(2))
+    #|  println(sum_n(2, 0)(1)(2))
+    #|}
+  // native code: tests on the BigInt, whose slots are `n - j`
+  inspect(
+    fn_code(src, "pred2"),
+    content=(
+      #|fn f_pred2_t(n : BigInt) -> BigInt raise {
+      #|match n {
+      #|n if n >= 2N => (n - 2N)
+      #|n if n == 1N => n
+      #|_ => 0N
+      #|_ => rt_fail("no match")
+      #|}
+      #|fn f_pred2(a0 : Value) -> Value raise {
+      #|  VNat(f_pred2_t(as_nat(a0)))
+      #|}
+    ),
+  )
+  // uniform code
+  inspect(
+    fn_code(src, "sum_n"),
+    content=(
+      #|fn f_sum_n(n : Value, acc : Value) -> Value raise {
+      #|match n {
+      #|n if as_nat(n) == 0N => (acc)
+      #|n if as_nat(n) >= 1N => (VFun(x => f_sum_n(VNat(as_nat(n) - 1N), VInt(as_int(acc) + as_int(x)))))
+      #|_ => rt_fail("no match")
+      #|}
     ),
   )
 }

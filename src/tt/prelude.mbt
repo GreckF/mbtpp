@@ -1,4 +1,19 @@
 ///|
+/// Prelude functions on `Nat` that run as native operations in the
+/// interpreter and in compiled code, where a `Nat` is a `BigInt`: name ->
+/// (primitive, number of parameters). The checker computes with their
+/// definitions (`Nat` is unary there).
+pub let nat_natives : Map[String, (String, Int32)] = {
+  "int_to_nat": ("%nat_of_int", 1),
+  "Nat::to_int": ("%nat_to_int", 1),
+  "Nat::op_add": ("%nat_add", 2),
+  "Nat::op_mul": ("%nat_mul", 2),
+  "Nat::op_equal": ("%nat_eq", 2),
+  "Nat::compare": ("%nat_compare", 2),
+  "Nat::to_string": ("%nat_to_string", 1),
+}
+
+///|
 /// The MoonBit++ prelude. `Int`, `String`, `Char`, `Bool`, `Unit`,
 /// `Array` and `Error` are built in.
 pub let prelude_src : String =
@@ -153,6 +168,15 @@ pub let prelude_src : String =
   #|    (Z, Z) => true
   #|    (S(a), S(b)) => a == b
   #|    _ => false
+  #|  }
+  #|}
+  #|
+  #|fn Nat::compare(self : Nat, other : Nat) -> Int {
+  #|  match (self, other) {
+  #|    (Z, Z) => 0
+  #|    (Z, S(_)) => -1
+  #|    (S(_), Z) => 1
+  #|    (S(a), S(b)) => a.compare(b)
   #|  }
   #|}
   #|
@@ -599,7 +623,7 @@ pub let prelude_src : String =
   #|impl Compare for Bool with compare(a, b) {
   #|  if a == b { 0 } else if a { 1 } else { -1 }
   #|}
-  #|impl Compare for Nat with compare(a, b) { a.to_int().compare(b.to_int()) }
+  #|impl Compare for Nat with compare(a, b) { a.compare(b) }
   #|impl Compare for Unit with compare(_, _) { 0 }
   #|
   #|impl[T : Compare] Compare for Option[T] with compare(a, b) {

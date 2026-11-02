@@ -7,8 +7,8 @@
 /// parameters instantiated to `Value`. Other functions keep the uniform
 /// translation.
 ///
-/// Native types: `Int`, `Double`, `Bool`, `Char`, `String`, `Unit`, type
-/// parameters, and datatypes whose parameters are types and whose (not
+/// Native types: `Int`, `Double`, `Bool`, `Char`, `String`, `Unit`, `Nat`
+/// (MoonBit's `BigInt`), type parameters, and datatypes whose parameters are types and whose (not
 /// erased) fields are native. Indices and erased fields disappear: e.g.
 /// `Vector[T](n)` becomes the MoonBit enum `E_Vector[T0]` with constructors
 /// `Nil` and `Cons(T0, E_Vector[T0])`. A `#mbt` datatype is the MoonBit type
@@ -26,6 +26,8 @@ priv enum NTy {
   NChar
   NString
   NUnit
+  /// `Nat`, a `BigInt` (`Z` is 0, `S(n)` is n + 1).
+  NNat
   NEnum(String, Array[NTy])
   /// An opaque MoonBit type (`Json`, `@bigint.BigInt`, `@hashmap.HashMap[K, V]`),
   /// used as is.
@@ -234,6 +236,7 @@ fn Gen::native_ty_in(self : Gen, ctx : Array[TyCtx], t : @tt.Tm) -> NTy? {
     Global("Char") => Some(NChar)
     Global("String") => Some(NString)
     Global("Unit") => Some(NUnit)
+    Global("Nat") => Some(NNat)
     Pi(_, Expl, true, _, _) => {
       // one explicit argument group; the result may not depend on it
       let ps : Array[NTy] = []
@@ -363,6 +366,7 @@ fn Gen::mbt_ty(self : Gen, t : NTy) -> String {
     NChar => "Char"
     NString => "String"
     NUnit | NAny => "Unit"
+    NNat => "BigInt"
     NSelf => "Self"
     NVar(k) => tvar(k)
     NFun(ps, r) =>
@@ -417,6 +421,7 @@ fn Gen::to_value(
     NBool => "VBool(" + e + ")"
     NChar => "VChar(" + e + ")"
     NString => "VStr(" + e + ")"
+    NNat => "VNat(" + e + ")"
     NUnit | NAny => "{ ignore(" + e + "); VUnit }"
     NSelf => e
     NVar(k) =>
@@ -487,6 +492,7 @@ fn Gen::of_value(
     NBool => "as_bool(" + e + ")"
     NChar => "as_char(" + e + ")"
     NString => "as_str(" + e + ")"
+    NNat => "as_nat(" + e + ")"
     NUnit | NAny => "as_unit(" + e + ")"
     NSelf => e
     NVar(k) =>
@@ -767,6 +773,14 @@ fn Gen::native_sig(self : Gen, name : String) -> TSig? {
 ///|
 /// Native templates of primitives: (template, argument types, result type).
 let native_prims : Map[String, (String, Array[NTy], NTy)] = {
+  "%nat_succ": ("($0 + 1N)", [NNat], NNat),
+  "%nat_of_int": ("nat_of_int($0)", [NInt], NNat),
+  "%nat_to_int": ("$0.to_int()", [NNat], NInt),
+  "%nat_add": ("($0 + $1)", [NNat, NNat], NNat),
+  "%nat_mul": ("($0 * $1)", [NNat, NNat], NNat),
+  "%nat_eq": ("($0 == $1)", [NNat, NNat], NBool),
+  "%nat_compare": ("$0.compare($1)", [NNat, NNat], NInt),
+  "%nat_to_string": ("$0.to_string()", [NNat], NString),
   "%int_add": ("($0 + $1)", [NInt, NInt], NInt),
   "%int_sub": ("($0 - $1)", [NInt, NInt], NInt),
   "%int_mul": ("($0 * $1)", [NInt, NInt], NInt),
@@ -1068,6 +1082,18 @@ fn Gen::typed_app(
   t : @tt.Tm,
 ) -> (String, NTy) raise NotTyped {
   let (h, args) = flatten_app(t)
+  // a `Nat` is a `BigInt` (see `Gen::app`)
+  if @tt.nat_lit(t) is Some(k) {
+    return ("\{k}N", NNat)
+  }
+  match nat_prim(h) {
+    Some((p, k)) if args.length() == k => {
+      let (tpl, tys, res) = native_prims.get(p).unwrap()
+      return (subst_args(tpl, self.prim_args(env, args, tys)), res)
+    }
+    Some(_) => raise NotTyped
+    None => ()
+  }
   let n = match h {
     Global(n) => n
     Var(_) => {
@@ -1165,17 +1191,7 @@ fn Gen::typed_app(
           expl.push(args[i])
         }
       }
-      // `1 + if c { a } else { b }` is not MoonBit
-      let cs = self
-        .typed_args(env, expl, tys)
-        .map(c => {
-          if c.has_prefix("if ") || c.has_prefix("match ") {
-            "(" + c + ")"
-          } else {
-            c
-          }
-        })
-      (subst_args(tpl, cs), res)
+      (subst_args(tpl, self.prim_args(env, expl, tys)), res)
     }
     GFunc(_, _, _) if self.async_instance(n, g.ty, args) => {
       if !self.ensure_async(n) {
@@ -1267,6 +1283,26 @@ fn Gen::typed_app(
       }
     _ => raise NotTyped
   }
+}
+
+///|
+/// The arguments of a primitive (inserted in its template).
+fn Gen::prim_args(
+  self : Gen,
+  env : Array[TLocal],
+  args : Array[@tt.Tm],
+  tys : Array[NTy],
+) -> Array[String] raise NotTyped {
+  // `1 + if c { a } else { b }` is not MoonBit
+  self
+  .typed_args(env, args, tys)
+  .map(c => {
+    if c.has_prefix("if ") || c.has_prefix("match ") {
+      "(" + c + ")"
+    } else {
+      c
+    }
+  })
 }
 
 ///|
@@ -1403,8 +1439,21 @@ fn Gen::typed_pat(
   p : @tt.CPat,
   ty : NTy,
   names : Array[TLocal],
+  conds : Array[String],
 ) -> String raise NotTyped {
   match p {
+    // a test on the `BigInt` (see `nat_pat_slots`)
+    CPCon("Nat::Z" | "Nat::S", _) => {
+      if ty != NNat {
+        raise NotTyped
+      }
+      let n = self.name("n")
+      let (k, exact) = nat_pat_slots(p, j => {
+        names.push(TVar(if j == 0 { n } else { "(\{n} - \{j}N)" }, NNat))
+      })
+      conds.push(n + (if exact { " == " } else { " >= " }) + "\{k}N")
+      var_marker + n + end_marker
+    }
     CPVar(x) => {
       let n = self.name(x)
       names.push(TVar(n, ty))
@@ -1430,7 +1479,7 @@ fn Gen::typed_pat(
       for j = 0; j < ps.length(); j = j + 1 {
         match fields[j] {
           Some(ft) =>
-            subs.push(self.typed_pat(ps[j], subst_nty(ft, targs), names))
+            subs.push(self.typed_pat(ps[j], subst_nty(ft, targs), names, conds))
           None =>
             // an erased field: only variables bind it (see erase.mbt)
             names.push(TNone)
@@ -1679,9 +1728,10 @@ fn Gen::typed_term(
           let mut ty = NAny
           for cl in cls {
             let names : Array[TLocal] = []
+            let conds : Array[String] = []
             let ps : Array[String] = []
             for k = 0; k < cl.pats.length(); k = k + 1 {
-              ps.push(self.typed_pat(cl.pats[k], scr[k].1, names))
+              ps.push(self.typed_pat(cl.pats[k], scr[k].1, names, conds))
             }
             let mut env2 = env
             for nm in names {
@@ -1689,13 +1739,18 @@ fn Gen::typed_term(
             }
             let (cb, tb) = self.typed(env2, cl.body)
             ty = unify_t(ty, tb)
-            let when = match cl.cond {
+            match cl.cond {
               Some(g) => {
                 let (cg, tg) = self.typed(env2, g)
                 ignore(unify_t(tg, NBool))
-                " if (" + cg + ")"
+                conds.push("(" + cg + ")")
               }
-              None => ""
+              None => ()
+            }
+            let when = if conds.is_empty() {
+              ""
+            } else {
+              " if " + conds.join(" && ")
             }
             let lhs = if ps.length() == 1 {
               ps[0]

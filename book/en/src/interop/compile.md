@@ -15,6 +15,7 @@ parameters and result are native types, and whose body is in the native fragment
 an ordinary (possibly generic) MoonBit function. The native types are:
 
 - `Int`, `Double`, `Bool`, `Char`, `String`, `Unit`;
+- `Nat`, as MoonBit's `BigInt` (see [Nat](#nat) below);
 - type parameters and function types;
 - arrays `Array[T]` (with `T` native), as MoonBit arrays;
 - data types whose parameters are all types and whose fields are all native types.
@@ -38,6 +39,43 @@ and `Map`).
 Arrays are not converted between native code and the uniform representation: as copies, they could
 not share their mutations. A function with arrays among its parameters or result has a native and a
 uniform version; native code passes arrays to native code, and uniform code to uniform code.
+
+## Nat
+
+When type checking, `Nat` is the unary `Z`, `S(n)`, and proofs compute with the definitions. At run
+time (in the interpreter and in compiled programs), a `Nat` is an arbitrary-precision integer,
+MoonBit's `BigInt`:
+
+- `Z` is 0 and `S(e)` is `e + 1`; numerals are `BigInt` literals (such as `10N`).
+- A pattern `S(…S(p))` (k levels) tests whether the value is ≥ k (= k when `p` is `Z`), and each
+  level binds the value minus its depth.
+- The Prelude's `+`, `*`, `==`, `compare`, `to_int`, `to_string` on `Nat` and `int_to_nat` are
+  `BigInt` operations.
+
+So arithmetic on `Nat` no longer takes time proportional to the numbers, and does not overflow the
+stack by deep recursion:
+
+```text
+fn fact(n : Nat) -> Nat {
+  match n {
+    Z => 1
+    S(k) => n * fact(k)
+  }
+}
+// native translation
+fn f45_fact_t(n : BigInt) -> BigInt raise {
+  match n {
+    n0 if n0 == 0N => 1N
+    n1 if n1 >= 1N => n * f45_fact_t(n1 - 1N)
+    _ => rt_fail("no match")
+  }
+}
+```
+
+`fact(30)` is `265252859812191058636308480000000`. Functions you define by structural recursion
+(another addition, say) still recurse once per level, each level being a `BigInt` operation. `Nat`
+is not a MoonBit type: the parameters and results of a `#mbt fn` cannot be `Nat`, since a `BigInt`
+from MoonBit could be negative.
 
 ## Uniform representation
 

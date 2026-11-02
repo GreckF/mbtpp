@@ -123,6 +123,10 @@ pub let mut_fields : Map[String, Bool]
 
 pub let name_infos : Array[NameInfo]
 
+pub fn nat_lit(Tm) -> Int32?
+
+pub let nat_natives : Map[String, (String, Int32)]
+
 pub fn new_meta() -> Int32
 
 pub fn nf(Array[Val], Tm) -> Tm

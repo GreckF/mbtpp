@@ -429,4 +429,6 @@ fn main {
 - 函数：`println`、`print`、`abort(msg)`、`panic()`、`fail(msg)`、`not(b)`、`int_to_nat(i)`、
   `n.to_int()`、`assert_eq`、`assert_true` 等。
 - `List`：`append`、`reverse`、`length`、`map`、`flat_map`（效应多态）。
+- `Nat` 在检查时是一进制的，运行时（解释器和编译后）是任意精度整数 `BigInt`：`+`、`*`、`==`、
+  `compare`、`to_int` 是原生运算，`S(k)` 模式是减一，所以可以放心做大数算术。
 - `moonpp --no-prelude` 关闭 Prelude。

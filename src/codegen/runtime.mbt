@@ -22,6 +22,8 @@ let runtime_src : String =
   #|  VUnit
   #|  VFun((Value) -> Value raise)
   #|  VArr(Array[Value])
+  #|  /// A `Nat` (`Z` is 0, `S(n)` is n + 1).
+  #|  VNat(BigInt)
   #|  VType
   #|  VForeign(Foreign)
   #|  /// A constructor that is not of the program (e.g. a MoonBit error).
@@ -39,6 +41,10 @@ let runtime_src : String =
   #|fn con_decode(v : Value) -> (String, Array[Value])? {
   #|  match v {
   #|    VDyn(c, xs) => return Some((c, xs))
+  #|    VNat(n) =>
+  #|      return Some(
+  #|        if n == 0N { ("Nat::Z", []) } else { ("Nat::S", [VNat(n - 1N)]) },
+  #|      )
   #|    _ => ()
   #|  }
   #|  for d in con_decoders {
@@ -161,6 +167,7 @@ let runtime_src : String =
   #|    (VChar(x), VChar(y)) => x == y
   #|    (VBool(x), VBool(y)) => x == y
   #|    (VUnit, VUnit) => true
+  #|    (VNat(x), VNat(y)) => x == y
   #|    (VArr(xs), VArr(ys)) => {
   #|      if xs.length() != ys.length() {
   #|        return false
@@ -251,6 +258,7 @@ let runtime_src : String =
   #|    VChar(c) => c.to_string().escape()
   #|    VBool(b) => b.to_string()
   #|    VUnit => "()"
+  #|    VNat(n) => n.to_string()
   #|    VArr(xs) => "[" + xs.map(show_value).join(", ") + "]"
   #|    VFun(_) => "<function>"
   #|    VType => "<type>"
@@ -285,6 +293,7 @@ let runtime_src : String =
   #|    (VStr(x), VStr(y)) => x.compare(y)
   #|    (VChar(x), VChar(y)) => x.compare(y)
   #|    (VBool(x), VBool(y)) => x.compare(y)
+  #|    (VNat(x), VNat(y)) => x.compare(y)
   #|    _ => show_value(self).compare(show_value(other))
   #|  }
   #|}
@@ -390,6 +399,21 @@ let runtime_src : String =
   #|  match v {
   #|    VArr(xs) => xs
   #|    _ => rt_fail("expected an Array, got " + show_value(v))
+  #|  }
+  #|}
+  #|
+  #|fn as_nat(v : Value) -> BigInt raise {
+  #|  match v {
+  #|    VNat(n) => n
+  #|    _ => rt_fail("expected a Nat, got " + show_value(v))
+  #|  }
+  #|}
+  #|
+  #|fn nat_of_int(i : Int) -> BigInt {
+  #|  if i <= 0 {
+  #|    0N
+  #|  } else {
+  #|    BigInt::from_int(i)
   #|  }
   #|}
   #|
@@ -591,6 +615,14 @@ let runtime_src : String =
   #|      rt_marker.val = rt_marker.val + 1
   #|      VInt(rt_marker.val)
   #|    }
+  #|    ("%nat_succ", [VNat(n)]) => VNat(n + 1N)
+  #|    ("%nat_of_int", [VInt(i)]) => VNat(nat_of_int(i))
+  #|    ("%nat_to_int", [VNat(n)]) => VInt(n.to_int())
+  #|    ("%nat_add", [VNat(a), VNat(b)]) => VNat(a + b)
+  #|    ("%nat_mul", [VNat(a), VNat(b)]) => VNat(a * b)
+  #|    ("%nat_eq", [VNat(a), VNat(b)]) => VBool(a == b)
+  #|    ("%nat_compare", [VNat(a), VNat(b)]) => VInt(a.compare(b))
+  #|    ("%nat_to_string", [VNat(n)]) => VStr(n.to_string())
   #|    ("%panic", _) => rt_fail("panic")
   #|    ("%abort", [VStr(s)]) => rt_fail(s)
   #|    ("%error_to_string", [e]) => VStr(show_value(e))

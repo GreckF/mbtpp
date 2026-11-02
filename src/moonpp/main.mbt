@@ -14,7 +14,8 @@ let help_msg : String =
   #|  moonpp build [path]        compile to a MoonBit project and `moon build` it: by default
   #|                             mbtpp_out/<pkg> in the project (or _mbtpp_build/<file> for a
   #|                             single file), with the dependencies of the project
-  #|  moonpp run --compiled [path]  compile to MoonBit and run it with `moon run`
+  #|  moonpp run --compiled [path] [-- args]  compile to MoonBit and run it with
+  #|                             `moon run`, passing `args` to the program
   #|  moonpp add <user/module>   add a dependency (`moon add`) and extract its interfaces
   #|  moonpp remove <module>     remove a dependency (`moon remove`)
   #|  moonpp install             install the dependencies (`moon install`) and extract interfaces
@@ -70,6 +71,8 @@ struct Options {
   compiled : Bool
   /// The directory of the generated MoonBit project.
   output : String?
+  /// The arguments after `--`, for the program (`run --compiled`).
+  args : Array[String]
 }
 
 ///|
@@ -411,6 +414,8 @@ fn compile(opts : Options, path : String?) -> (String, String) raise Failure {
       #|
     ),
   )
+  // the JS backend produces ES modules: `node main.js` needs this
+  write_file(out + "/package.json", "{ \"type\": \"module\" }\n")
   let source = match project {
     Some(root) => relative(dir, root)
     None => files[0]
@@ -473,6 +478,26 @@ fn compile(opts : Options, path : String?) -> (String, String) raise Failure {
 }
 
 ///|
+/// A command line argument for the shell (`sh` or `cmd`), quoted when
+/// needed.
+fn shell_arg(a : String) -> String {
+  if a != "" &&
+    a
+    .iter()
+    .all(c => {
+      (c >= 'a' && c <= 'z') ||
+      (c >= 'A' && c <= 'Z') ||
+      (c >= '0' && c <= '9') ||
+      c is ('-' | '_' | '.' | '/' | ':' | '=' | ',' | '+')
+    }) {
+    return a
+  }
+  "\"" +
+  a.replace_all(old="\\", new="\\\\").replace_all(old="\"", new="\\\"") +
+  "\""
+}
+
+///|
 fn cmd_build(opts : Options, path : String?) -> Bool raise Failure {
   let (out, pkg) = compile(opts, path)
   moon("build", out)
@@ -490,8 +515,18 @@ fn cmd_build(opts : Options, path : String?) -> Bool raise Failure {
 fn cmd_run(opts : Options, path : String?) -> Bool raise Failure {
   if opts.compiled {
     let (mod_dir, pkg) = compile(opts, path)
-    moon("run -q " + pkg, mod_dir)
+    let args = if opts.args.is_empty() {
+      ""
+    } else {
+      " -- " + opts.args.map(shell_arg).join(" ")
+    }
+    moon("run -q " + pkg + args, mod_dir)
     return true
+  }
+  if !opts.args.is_empty() {
+    die(
+      "arguments after `--` are passed to compiled programs: use `moonpp run --compiled`",
+    )
   }
   let (base, pkgs) = targets(path)
   let (dir, files) = if pkgs.length() == 1 {
@@ -655,9 +690,16 @@ fn run_cli(args : Array[String]) -> Bool raise Failure {
   let mut verbose = false
   let mut compiled = false
   let mut output : String? = None
+  let prog_args : Array[String] = []
   let mut i = 0
   while i < args.length() {
     match args[i] {
+      "--" => {
+        for a in args[i + 1:] {
+          prog_args.push(a)
+        }
+        break
+      }
       "--no-prelude" => prelude = false
       "--verbose" => verbose = true
       "--compiled" => compiled = true
@@ -672,7 +714,7 @@ fn run_cli(args : Array[String]) -> Bool raise Failure {
     }
     i = i + 1
   }
-  let opts = { prelude, verbose, compiled, output, }
+  let opts = { prelude, verbose, compiled, output, args: prog_args, }
   match rest {
     [] | ["help"] | ["--help"] | ["-h"] => {
       println(help_msg)

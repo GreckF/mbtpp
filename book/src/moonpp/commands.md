@@ -7,7 +7,7 @@
 | `moonpp fix [路径]` | 给这些 `pub` 声明加上 `#mbt` |
 | `moonpp ide <文件> [--overlay <json>]` | 为编辑器检查文件所在的包，输出 JSON（见[编辑器](editor.md)） |
 | `moonpp run [路径]` | 用解释器运行 main 包（或指定的包、文件） |
-| `moonpp run --compiled [路径]` | 编译到 MoonBit 并用 `moon run` 运行 |
+| `moonpp run --compiled [路径] [-- 参数…]` | 编译到 MoonBit 并用 `moon run` 运行；`--` 之后的参数传给程序 |
 | `moonpp test [路径]` | 用解释器运行 `test "名字" { … }` 块，块中可以用 `assert_eq`、`assert_true` 等 |
 | `moonpp build [路径] [-o 目录]` | 编译成 MoonBit 项目并 `moon build` |
 | `moonpp add <user/module[@版本]>` | 添加依赖（`moon add`），并为缺少接口的包生成 `.mbti` |
@@ -25,6 +25,7 @@
 | `--no-prelude` | 不加载 Prelude |
 | `--compiled` | `run` 时运行编译结果而不是解释执行 |
 | `-o`、`--output <目录>` | `build`、`run --compiled` 时生成项目的位置 |
+| `-- 参数…` | `run --compiled` 时传给程序的命令行参数（例如用 `@sys.get_cli_args()` 读取） |
 
 ## 单个文件
 

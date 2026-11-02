@@ -8,6 +8,7 @@ mbtpp_out/main/
   moon.work         工作区：自身，加上本地模块（绝对路径）
   README.md
   .gitignore
+  package.json      {"type": "module"}：JS 后端的产物是 ES module，可以直接 node main.js
   main/
     moon.pkg            导入的 MoonBit 包；main 包
     main.mbt            src/main/main.mbtpp 编译的结果

@@ -8,6 +8,7 @@ mbtpp_out/main/
   moon.work         workspace: itself, plus local modules (absolute paths)
   README.md
   .gitignore
+  package.json      {"type": "module"}: the JS backend emits ES modules, so node main.js works
   main/
     moon.pkg            imported MoonBit packages; main package
     main.mbt            compiled from src/main/main.mbtpp

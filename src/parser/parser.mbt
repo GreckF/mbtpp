@@ -584,7 +584,8 @@ fn Parser::unary(self : Parser) -> Expr raise ParseError {
 fn Parser::args(self : Parser, close : String) -> Array[Expr] raise ParseError {
   let es : Array[Expr] = []
   while !self.at(close) {
-    es.push(self.arg())
+    // tagged arguments are for calls; in `[...]`, `T?` is a type
+    es.push(if close == ")" { self.arg() } else { self.expr() })
     if !self.accept(",") {
       break
     }

@@ -902,3 +902,46 @@ test "refutations in Dec" {
     ),
   )
 }
+
+///|
+/// `T?` followed by a comma in type arguments is a type, not a tagged
+/// argument (bugs/006 of moonlit).
+test "option types in type arguments" {
+  inspect(
+    run_source(
+      "t.mbtpp",
+      (
+        #|fn f() -> Result[Int?, String] {
+        #|  Ok(None)
+        #|}
+        #|
+        #|fn g(x : Result[String?, Int?]) -> Int {
+        #|  match x {
+        #|    Ok(_) => 1
+        #|    Err(_) => 2
+        #|  }
+        #|}
+        #|
+        #|fn opt(a : Int, title? : String) -> String {
+        #|  match title {
+        #|    Some(t) => t
+        #|    None => a.to_string()
+        #|  }
+        #|}
+        #|
+        #|fn main {
+        #|  println(f())
+        #|  println(g(Err(None)))
+        #|  let title : String? = Some("t")
+        #|  println(opt(1, title?))
+        #|}
+      ),
+    ),
+    content=(
+      #|Ok(None)
+      #|2
+      #|t
+      #|
+    ),
+  )
+}

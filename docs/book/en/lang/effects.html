@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-1f159c7d.js";
+            window.path_to_searchindex_js = "../searchindex-55df5e9a.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-754cddce.js"></script>
@@ -395,7 +395,9 @@ proof for every input that a handler dropping the log does not change the result
 search computed during type checking.</p>
 <h2 id="limitations"><a class="header" href="#limitations">Limitations</a></h2>
 <ul>
-<li>The arm of a tail-resumptive operation cannot perform <code>ctl</code> operations.</li>
+<li>The arm of a tail-resumptive operation cannot perform <code>ctl</code> operations, nor raise errors.</li>
+<li>A function performing an effect cannot leave the <code>try</code> that handles it (as the result of the
+<code>try</code>, say): handlers are lexical, and that one is gone afterwards. Such programs are rejected.</li>
 <li>A <code>try</code> cannot handle errors and <code>ctl</code> operations together; a <code>try … catch</code> (catching errors) and
 <code>defer</code> cannot enclose code that performs <code>ctl</code> operations.</li>
 <li>Functions returning propositions (such as <code>lemma</code>s) have no effects.</li>

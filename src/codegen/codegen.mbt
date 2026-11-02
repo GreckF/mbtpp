@@ -48,6 +48,8 @@ priv struct Gen {
   async_busy : Array[String]
   /// The native result type of the function being translated.
   mut cur_result : NTy?
+  /// The step of the innermost native `for` loop, run by `continue`.
+  mut cur_step : String?
   /// While deciding the typed functions nothing is emitted.
   mut dry : Bool
   scheduled : Map[String, Bool]
@@ -1164,6 +1166,7 @@ fn Gen::new(imports : Array[(String, String)]) -> Gen {
     async_fns: {},
     async_busy: [],
     cur_result: None,
+    cur_step: None,
     dry: false,
     scheduled: {},
     cur_bounds: [],

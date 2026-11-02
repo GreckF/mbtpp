@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-a9b046c2.js";
+            window.path_to_searchindex_js = "../searchindex-3307130a.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-2f5a2ad3.js"></script>
@@ -222,7 +222,8 @@ fn main {
 <ul>
 <li><strong>可变变量</strong>：<code>let mut x = e</code>，赋值 <code>x = e</code>，以及 <code>+=</code>、<code>-=</code>、<code>*=</code>、<code>/=</code>。</li>
 <li><strong>循环</strong>：<code>while c { … }</code>；C 风格 <code>for i = 0; i &lt; n; i = i + 1 { … }</code>；<code>for x in xs { … }</code>
-遍历数组；<code>for k in a..&lt;b</code>、<code>for k in a..=b</code> 遍历区间。</li>
+遍历数组；<code>for k in a..&lt;b</code>、<code>for k in a..=b</code> 遍历区间。和 MoonBit 一样，循环变量在循环体中
+不能赋值，每次迭代都是新的绑定（闭包捕获的是那一次的值）。</li>
 <li><strong><code>break</code></strong>、<strong><code>continue</code></strong> 作用于最内层循环；<strong><code>return</code></strong> 从当前函数返回，在 lambda 中只从
 lambda 返回。</li>
 <li><strong><code>for i, x in xs</code></strong> 同时给出下标和元素。</li>

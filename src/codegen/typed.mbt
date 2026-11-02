@@ -366,9 +366,9 @@ fn Gen::mbt_ty(self : Gen, t : NTy) -> String {
     NSelf => "Self"
     NVar(k) => tvar(k)
     NFun(ps, r) =>
-      "(" + self.mbt_params(ps) + ") -> " + self.mbt_ty(r) + " raise"
+      "(" + self.mbt_params(ps) + ") -> " + self.mbt_result(r) + " raise"
     NAsyncFun(ps, r) =>
-      "async (" + self.mbt_params(ps) + ") -> " + self.mbt_ty(r) + " raise"
+      "async (" + self.mbt_params(ps) + ") -> " + self.mbt_result(r) + " raise"
     NEnum(d, args) => {
       self.need_enum(d)
       if args.length() == 0 {
@@ -1027,7 +1027,7 @@ fn Gen::typed_check(
         return "async fn(" +
           typed_ps.join(", ") +
           ") -> " +
-          self.mbt_ty(r) +
+          self.mbt_result(r) +
           " raise {\n" +
           cb +
           "\n}"
@@ -1134,6 +1134,23 @@ fn Gen::typed_app(
       self.typed_ffi(env, n, p, g.ty, args)
     GFunc(_, _, _) if method_of(n) is Some((tr, m)) =>
       self.typed_method(env, tr, m, args)
+    // `abort(msg)`, `panic()`: of any type
+    GPrim("%abort" | "%panic" as p, k) if args.length() == k => {
+      let icits = binder_icits(g.ty, k)
+      let msgs : Array[@tt.Tm] = []
+      for i = 0; i < k; i = i + 1 {
+        if icits[i] == Expl {
+          msgs.push(args[i])
+        }
+      }
+      if p == "%abort" && msgs.length() == 1 {
+        ("abort(" + self.typed_check(env, msgs[0], NString) + ")", NAny)
+      } else if p == "%panic" {
+        ("panic()", NAny)
+      } else {
+        raise NotTyped
+      }
+    }
     GPrim(p, k) if args.length() == k && p.has_prefix("%array_") =>
       self.typed_array(env, p, args)
     GPrim(p, k) if args.length() == k => {
@@ -1513,7 +1530,8 @@ fn Gen::typed_term(
     Let(x, ty, v, b) => {
       // a lambda (or a top-level function as a value) gets its parameter
       // types from the type of the `let`
-      let (cv, tv) = if v is Lam(_, Expl, _, _) || is_global_fn(v) {
+      let (cv, tv) = if v is (Lam(_, Expl, _, _) | ArrayLit(_)) ||
+        is_global_fn(v) {
         let nt = self.type_arg(env, ty)
         (self.typed_check(env, v, nt), nt)
       } else {
@@ -1546,8 +1564,7 @@ fn Gen::typed_term(
     Assign(ix, v) =>
       match env[env.length() - 1 - ix] {
         TMut(n, ty) => {
-          let (cv, tv) = self.typed(env, v)
-          ignore(unify_t(ty, tv))
+          let cv = self.typed_check(env, v, ty)
           ("{\n" + n + " = " + cv + "\n}", NUnit)
         }
         _ => raise NotTyped
@@ -1696,19 +1713,27 @@ fn Gen::typed_term(
     While(c, b, step) => {
       let (cc, tc) = self.typed(env, c)
       ignore(unify_t(tc, NBool))
-      // `continue` must still run the step
-      if !(step is Lit(LUnit)) && has_continue(b) {
-        raise NotTyped
-      }
-      let (cb, tb) = self.typed(env, b)
       let (cs, ts) = self.typed(env, step)
+      // `continue` must still run the step
+      let saved = self.cur_step
+      self.cur_step = if step is Lit(LUnit) { None } else { Some(stmt(cs, ts)) }
+      let body = Ok(self.typed(env, b)) catch { e => Err(e) }
+      self.cur_step = saved
+      let (cb, tb) = match body {
+        Ok(x) => x
+        Err(e) => raise e
+      }
       (
         "while " + cc + " {\n" + stmt(cb, tb) + "\n" + stmt(cs, ts) + "\n}",
         NUnit,
       )
     }
     Break => ("break", NAny)
-    Continue => ("continue", NAny)
+    Continue =>
+      match self.cur_step {
+        Some(s) => ("{\n" + s + "\ncontinue\n}", NAny)
+        None => ("continue", NAny)
+      }
     Return(v) => {
       let (cv, tv) = self.typed(env, v)
       match self.cur_result {
@@ -1743,21 +1768,6 @@ fn Gen::typed_term(
       )
     }
     _ => raise NotTyped
-  }
-}
-
-///|
-fn has_continue(t : @tt.Tm) -> Bool {
-  match t {
-    Continue => true
-    While(_, _, _) | Lam(_, _, _, _) => false
-    App(f, a, _) => has_continue(f) || has_continue(a)
-    Let(_, _, v, b) | LetMut(_, _, v, b) => has_continue(v) || has_continue(b)
-    Match(ss, cls) =>
-      ss.iter().any(has_continue) || cls.iter().any(cl => has_continue(cl.body))
-    Seq(a, b) | Defer(a, b) => has_continue(a) || has_continue(b)
-    Assign(_, v) | Return(v) => has_continue(v)
-    _ => false
   }
 }
 
@@ -1798,7 +1808,10 @@ fn Gen::typed_fn(
   }
   self.cur_result = Some(sig.result)
   self.cur_bounds = sig.bounds
-  let res = Ok(self.typed(env, b)) catch { err => Err(err) }
+  // checked against the result type (a lambda or `[]` needs it)
+  let res = Ok((self.typed_check(env, b, sig.result), sig.result)) catch {
+    err => Err(err)
+  }
   self.cur_result = None
   self.cur_bounds = []
   match res {
@@ -1823,7 +1836,7 @@ fn Gen::typed_fn(
             (if async_version { "_ta(" } else { "_t(" }) +
             params.join(", ") +
             ") -> " +
-            self.mbt_ty(sig.result) +
+            self.mbt_result(sig.result) +
             " raise {\n" +
             code +
             "\n}\n",
@@ -2077,7 +2090,7 @@ fn Gen::typed_array(
 /// A top-level function, possibly given its implicit arguments only.
 fn is_global_fn(t : @tt.Tm) -> Bool {
   let mut h = t
-  while h is App(f, _, Impl) {
+  while h is App(f, _, Impl | Inst) {
     h = f
   }
   match h {
@@ -2087,5 +2100,15 @@ fn is_global_fn(t : @tt.Tm) -> Bool {
         _ => false
       }
     _ => false
+  }
+}
+
+///|
+/// The result type of a function type: in parentheses when it is itself a
+/// function type.
+fn Gen::mbt_result(self : Gen, r : NTy) -> String {
+  match r {
+    NFun(_, _) | NAsyncFun(_, _) => "(" + self.mbt_ty(r) + ")"
+    _ => self.mbt_ty(r)
   }
 }

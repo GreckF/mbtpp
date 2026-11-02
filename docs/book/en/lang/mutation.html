@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-1f159c7d.js";
+            window.path_to_searchindex_js = "../searchindex-55df5e9a.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-754cddce.js"></script>
@@ -222,7 +222,9 @@ fn main {
 <ul>
 <li><strong>Mutable variables</strong>: <code>let mut x = e</code>, assignment <code>x = e</code>, and <code>+=</code>, <code>-=</code>, <code>*=</code>, <code>/=</code>.</li>
 <li><strong>Loops</strong>: <code>while c { … }</code>; C-style <code>for i = 0; i &lt; n; i = i + 1 { … }</code>; <code>for x in xs { … }</code>
-iterates over an array; <code>for k in a..&lt;b</code> and <code>for k in a..=b</code> iterate over a range.</li>
+iterates over an array; <code>for k in a..&lt;b</code> and <code>for k in a..=b</code> iterate over a range. As in
+MoonBit, loop variables cannot be assigned in the body, and each iteration binds them anew (a
+closure keeps the value of its iteration).</li>
 <li><strong><code>break</code></strong> and <strong><code>continue</code></strong> apply to the innermost loop; <strong><code>return</code></strong> returns from the current
 function, and inside a lambda it returns only from the lambda.</li>
 <li><strong><code>for i, x in xs</code></strong> gives the index and the element.</li>
@@ -303,7 +305,7 @@ escapes the function makes the result of the call <code>raise e</code> (see
 where <code>x</code> is a variable); when the function uses an array
 (arrays are mutable), an imported MoonBit function or an async function; or when a lambda
 captures a <code>let mut</code> variable. The result could then depend on more than the arguments.</li>
-<li>So general properties over variable arguments, such as “for all <code>n</code>, <code>sum_to(n) * 2 == n * (n +  1)</code>”, still cannot be proved this way.</li>
+<li>So general properties over variable arguments, such as “for all <code>n</code>, <code>sum_to(n) * 2 == n * (n + 1)</code>”, still cannot be proved this way.</li>
 <li>A loop that does not terminate keeps the checker running until the
 <a href="type-level.html#time-limits">time limit</a> of the definition.</li>
 </ul>

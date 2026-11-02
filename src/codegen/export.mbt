@@ -316,7 +316,7 @@ fn Gen::export_fn(self : Gen, name : String, sig : TSig) -> Unit {
     "(" +
     decls.join(", ") +
     ") -> " +
-    self.mbt_ty(sig.result) +
+    self.mbt_result(sig.result) +
     (if raises { " raise" } else { "" }) +
     " {\n" +
     body_code +

@@ -36,7 +36,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-a9b046c2.js";
+            window.path_to_searchindex_js = "../searchindex-3307130a.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-2f5a2ad3.js"></script>
@@ -380,7 +380,9 @@ lemma all_counts_ok() -&gt; all_counts() === Cons(2, Cons(1, Cons(1, Cons(0, Nil
 类型的 <code>printf</code>、对任意输入证明“丢弃日志的处理器不改变排序结果”，以及在检查时计算的搜索。</p>
 <h2 id="限制"><a class="header" href="#限制">限制</a></h2>
 <ul>
-<li>尾恢复操作的分支中不能执行 <code>ctl</code> 操作。</li>
+<li>尾恢复操作的分支中不能执行 <code>ctl</code> 操作，也不能抛出错误。</li>
+<li>执行某个效应的函数不能离开处理这个效应的 <code>try</code>（例如作为 <code>try</code> 的结果返回）：处理器是词法的，
+离开后它已不存在。这种程序会被拒绝。</li>
 <li>一个 <code>try</code> 不能同时处理错误和 <code>ctl</code> 操作；<code>try … catch</code>（捕获错误的）和 <code>defer</code> 不能包住执行
 <code>ctl</code> 操作的代码。</li>
 <li>返回命题的函数（如 <code>lemma</code>）不能有效应。</li>

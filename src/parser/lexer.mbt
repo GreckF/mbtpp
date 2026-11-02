@@ -299,7 +299,9 @@ pub fn tokenize(
               } else if d >= 'A' && d <= 'F' {
                 d.to_int() - 'A'.to_int() + 10
               } else {
-                raise ParseError(pos, "expected two hexadecimal digits after \\x")
+                raise ParseError(
+                  pos, "expected two hexadecimal digits after \\x",
+                )
               })
             adv()
           }
@@ -368,7 +370,11 @@ pub fn tokenize(
         (peek(0) == 'e' || peek(0) == 'E') &&
         (
           (peek(1) >= '0' && peek(1) <= '9') ||
-          ((peek(1) == '+' || peek(1) == '-') && peek(2) >= '0' && peek(2) <= '9')
+          (
+            (peek(1) == '+' || peek(1) == '-') &&
+            peek(2) >= '0' &&
+            peek(2) <= '9'
+          )
         )
       if exp {
         text.write_char('e')
@@ -399,7 +405,10 @@ pub fn tokenize(
         if too_big || v > max + (if neg { 1UL } else { 0UL }) {
           raise ParseError(
             pos,
-            "the integer literal " + text.to_string() + " is out of range for " + ty,
+            "the integer literal " +
+            text.to_string() +
+            " is out of range for " +
+            ty,
           )
         }
       }

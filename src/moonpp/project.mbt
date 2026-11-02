@@ -58,7 +58,7 @@ fn list_dir(dir : String) -> Array[String] {
 }
 
 ///|
-fn dict_compare(a : String, b : String) -> Int {
+fn dict_compare(a : String, b : String) -> Int32 {
   let n = if a.length() < b.length() { a.length() } else { b.length() }
   for k = 0; k < n; k = k + 1 {
     let c = a.code_unit_at(k).compare(b.code_unit_at(k))
@@ -281,8 +281,7 @@ fn is_project_package(dir : String) -> Bool {
 /// An absolute form of a path, for comparisons.
 fn absolute_path(path : String) -> String {
   let p = path.replace_all(old="\\", new="/")
-  let abs = p.has_prefix("/") ||
-    (p.length() > 1 && p.code_unit_at(1) == ':')
+  let abs = p.has_prefix("/") || (p.length() > 1 && p.code_unit_at(1) == ':')
   let full = normalize_path(if abs { p } else { current_dir() + "/" + p })
   // a drive letter in either case
   if full.length() > 1 && full.code_unit_at(1) == ':' {

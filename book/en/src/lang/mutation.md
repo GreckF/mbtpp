@@ -41,7 +41,9 @@ fn main {
 
 - **Mutable variables**: `let mut x = e`, assignment `x = e`, and `+=`, `-=`, `*=`, `/=`.
 - **Loops**: `while c { … }`; C-style `for i = 0; i < n; i = i + 1 { … }`; `for x in xs { … }`
-  iterates over an array; `for k in a..<b` and `for k in a..=b` iterate over a range.
+  iterates over an array; `for k in a..<b` and `for k in a..=b` iterate over a range. As in
+  MoonBit, loop variables cannot be assigned in the body, and each iteration binds them anew (a
+  closure keeps the value of its iteration).
 - **`break`** and **`continue`** apply to the innermost loop; **`return`** returns from the current
   function, and inside a lambda it returns only from the lambda.
 - **`for i, x in xs`** gives the index and the element.

@@ -5,6 +5,18 @@
 - No termination checking or strict positivity checking (by design): you can "prove" false propositions.
 - No automation tactics such as `simp`, `omega`, or `auto`. For the limits of algebraic effects, see [Algebraic Effects](lang/effects.md#limitations).
 - Recursive local functions cannot use the `let mut` variables around them.
+- `Show` does not quote strings and characters inside containers: `println(Some("x"))` prints
+  `Some(x)`, where MoonBit prints `Some("x")`.
+- A generic instance overlapping a more specific one (`impl[T] Tr for Array[T]` and
+  `impl Tr for Array[Int]`) is not an error, and the generic one found first is used; MoonBit
+  rejects such programs. Implementing the same method twice for the same type is an error.
+- `Array` and tuples have no `Compare` instance; integer literals are not overloaded by the expected
+  type (`let x : Int64 = 3` needs `3L`).
+- A match on a proof (of a `Prop` that is not a subsingleton) may appear where the result is a
+  proof, but the side effects of its arms (output, assignments) do not happen in the compiled
+  program, where proofs are erased.
+- Comparison operators can be chained (`a == b == c` parses left-associatively); MoonBit does not
+  allow it.
 - A `match` with array patterns is not checked for coverage and does not refine types.
 - `Map` is implemented in MoonBit++ by the Prelude (in insertion order, with linear lookups); it is
   not MoonBit's `Map`, so imported functions taking or returning a MoonBit `Map` cannot be called.
@@ -16,6 +28,8 @@
 ## Imports
 
 - The interpreter cannot run imported MoonBit functions; they can only be called after compilation.
+- `moonpp test` cannot use packages imported for tests only (`for "test"`).
+- Importing `moonbitlang/core/builtin` crashes the checker.
 - The interpreter runs async functions synchronously, without concurrency; async functions are only compiled to native code (see [async Functions](lang/async.md)).
 - Imported functions returning a trait object `&Tr` cannot be compiled yet; for the other items that are not imported, see [Type mapping and items not imported](interop/types.md).
 

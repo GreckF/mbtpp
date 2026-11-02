@@ -1054,7 +1054,21 @@ pub fn check_decls(
         let h = impl_head(id.for_ty)
         let key = "impl$" + id.trait_name + "$" + h
         match impl_groups.get(key) {
-          Some(g) => g.push(id)
+          Some(g) => {
+            // MoonBit rejects two impls of a method for the same type
+            if g.iter().any(o => o.meth == id.meth) {
+              raise ElabError(
+                id.pos,
+                "duplicate impl of " +
+                id.trait_name +
+                "::" +
+                id.meth +
+                " for " +
+                h,
+              )
+            }
+            g.push(id)
+          }
           None => {
             impl_groups.set(key, [id])
             mbt_impls.push((id.pos, key, id.trait_name))

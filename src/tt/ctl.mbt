@@ -587,13 +587,19 @@ fn lower(t : Tm, vars : Bool) -> Tm {
         return App(Global("%eff_run"), h, Expl)
       }
       let pv = (c : String) => [CPCon("%Comp::" + c, [CPVar("v")])]
-      let cls : Array[Clause] = [{ pats: pv("Pure"), cond: None, body: Var(0) }]
+      let cls : Array[Clause] = [
+        { pats: pv("Pure"), cond: None, body: Var(0), },
+      ]
       if ret {
-        cls.push({ pats: pv("Ret"), cond: None, body: Return(Var(0)) })
+        cls.push({ pats: pv("Ret"), cond: None, body: Return(Var(0)), })
       }
       if brk {
-        cls.push({ pats: [CPCon("%Comp::Brk", [])], cond: None, body: Break })
-        cls.push({ pats: [CPCon("%Comp::Cont", [])], cond: None, body: Continue })
+        cls.push({ pats: [CPCon("%Comp::Brk", [])], cond: None, body: Break, })
+        cls.push({
+          pats: [CPCon("%Comp::Cont", [])],
+          cond: None,
+          body: Continue,
+        })
       }
       cls.push({
         pats: [CPVar("c")],
@@ -920,8 +926,7 @@ fn has_jump(t : Tm, ret : Bool, in_loop : Bool) -> Bool {
   match t {
     Return(_) if ret => true
     Break | Continue => !ret && !in_loop
-    While(a, b, s) =>
-      go(a) || has_jump(b, ret, true) || has_jump(s, ret, true)
+    While(a, b, s) => go(a) || has_jump(b, ret, true) || has_jump(s, ret, true)
     Lam(_, _, _, b) => go(b)
     App(f, a, _) => go(f) || go(a)
     Let(_, _, v, b) | LetMut(_, _, v, b) => go(v) || go(b)

@@ -204,12 +204,7 @@ fn check_block(
       for k = lets.length() - 1; k >= 0; k = k - 1 {
         // under the variables and the copies 0 .. k-1: variable `k` is n-1
         let (x, a, _) = lets[k]
-        tb = Let(
-          x,
-          tm_shift(a, lets.length(), 0),
-          Var(lets.length() - 1),
-          tb,
-        )
+        tb = Let(x, tm_shift(a, lets.length(), 0), Var(lets.length() - 1), tb)
       }
       let mut step = Lit(LUnit)
       for k = updates.length() - 1; k >= 0; k = k - 1 {

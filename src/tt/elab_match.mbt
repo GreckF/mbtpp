@@ -457,17 +457,15 @@ fn elab_match(
               new_scrs[0]
             }
             let snap = snapshot_metas()
-            let res : Result[(Tm, Val), ElabError] = try {
-              Ok(
-                elab_match(
-                  c2,
-                  scr2,
-                  None,
-                  arms0,
-                  Some(c2.eval(tm_shift(motive, k, 0))),
-                ),
-              )
-            } catch {
+            let res : Result[(Tm, Val), ElabError] = Ok(
+              elab_match(
+                c2,
+                scr2,
+                None,
+                arms0,
+                Some(c2.eval(tm_shift(motive, k, 0))),
+              ),
+            ) catch {
               e => Err(e)
             }
             match res {
@@ -486,15 +484,15 @@ fn elab_match(
               Err(e) => {
                 restore_metas(snap)
                 return elab_match(
-                    cxt,
-                    scr,
-                    None,
-                    arms0,
-                    Some(goal),
-                    with_ok=false,
-                  ) catch {
-                    _ => raise e
-                  }
+                  cxt,
+                  scr,
+                  None,
+                  arms0,
+                  Some(goal),
+                  with_ok=false,
+                ) catch {
+                  _ => raise e
+                }
               }
             }
           }
@@ -964,11 +962,7 @@ fn elab_try(
 /// stuck on a `match`): the goal with it abstracted, under one more
 /// variable. Matching on that variable then refines the goal, as Agda's
 /// `with` does.
-fn with_motive(
-  cxt : Cxt,
-  sv : Val,
-  goal : Val,
-) -> (Tm, Array[(Int32, Tm)])? {
+fn with_motive(cxt : Cxt, sv : Val, goal : Val) -> (Tm, Array[(Int32, Tm)])? {
   match force(sv) {
     VRigid(_, []) | VLit(_) | VCon(_, _) => return None
     _ => ()

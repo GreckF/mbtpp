@@ -233,7 +233,9 @@ search computed during type checking.
 
 ## Limitations
 
-- The arm of a tail-resumptive operation cannot perform `ctl` operations.
+- The arm of a tail-resumptive operation cannot perform `ctl` operations, nor raise errors.
+- A function performing an effect cannot leave the `try` that handles it (as the result of the
+  `try`, say): handlers are lexical, and that one is gone afterwards. Such programs are rejected.
 - A `try` cannot handle errors and `ctl` operations together; a `try … catch` (catching errors) and
   `defer` cannot enclose code that performs `ctl` operations.
 - Functions returning propositions (such as `lemma`s) have no effects.

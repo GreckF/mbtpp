@@ -9,7 +9,7 @@
 | Literal | Examples | Type |
 | --- | --- | --- |
 | Integer | `0`, `42`, `1_000`, `-1`, `0xFF`, `0o17`, `0b1010` | `Int`; expands to `S(…S(Z))` when the expected type is `Nat` |
-| Floating point | `1.5`, `2.0` | `Double` |
+| Floating point | `1.5`, `2.0`, `1e-7`, `2.5E3` | `Double` |
 | Other integers | `1L`, `1U`, `1UL`, `0xFFU` | `Int64`, `UInt`, `UInt64` |
 | Single-precision float | `1.5F` | `Float` |
 | Byte | `b'a'`, `b'\x01'` | `Byte` |
@@ -21,7 +21,8 @@
 | Array | `[1, 2, 3]` | `Array[Int]` |
 | Tuple | `(1, "a")` | `(Int, String)` |
 
-Escapes: `\n \t \r \\ \" \' \0`.
+Escapes: `\n \t \r \\ \" \' \0`. An integer literal out of the range of its type (`3000000000` for
+`Int`) is an error.
 
 Multiline strings: consecutive `#|` lines form one string, with newlines between the lines; `#|`
 lines are kept as they are, and `$|` lines allow escapes and interpolation.

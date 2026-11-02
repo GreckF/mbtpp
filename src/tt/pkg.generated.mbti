@@ -91,6 +91,8 @@ pub fn is_raise(Val) -> Bool
 
 pub let last_error : Array[(@parser.Pos, String)]
 
+pub fn lit_same(@parser.Lit, @parser.Lit) -> Bool
+
 pub fn lit_type(@parser.Lit) -> Val
 
 pub fn lookup_global(String) -> GEntry?

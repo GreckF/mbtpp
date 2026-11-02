@@ -851,9 +851,7 @@ fn elab_app(
         VPi(_, i, _, _, _) if i != Expl => ()
         VU | VProp => ()
         _ => {
-          let (et, ety) = elab_method(cxt, ht, hty, "op_get", None, [
-            AE(idx[0]),
-          ])
+          let (et, ety) = elab_method(cxt, ht, hty, "op_get", None, [AE(idx[0])])
           match expl_args {
             None => return (et, ety)
             Some(args) =>
@@ -1815,9 +1813,7 @@ fn check_prop_args() -> Unit raise ElabError {
     let (cxt, arg) = x
     let v = force(cxt.eval(arg))
     if !(v is VFlex(_, _)) && !is_prop_type(cxt.ltypes(), v) {
-      cxt.fail(
-        "expected a proposition (a type in Prop), got " + cxt.show(v),
-      )
+      cxt.fail("expected a proposition (a type in Prop), got " + cxt.show(v))
     }
   }
 }

@@ -41,7 +41,8 @@ fn main {
 
 - **可变变量**：`let mut x = e`，赋值 `x = e`，以及 `+=`、`-=`、`*=`、`/=`。
 - **循环**：`while c { … }`；C 风格 `for i = 0; i < n; i = i + 1 { … }`；`for x in xs { … }`
-  遍历数组；`for k in a..<b`、`for k in a..=b` 遍历区间。
+  遍历数组；`for k in a..<b`、`for k in a..=b` 遍历区间。和 MoonBit 一样，循环变量在循环体中
+  不能赋值，每次迭代都是新的绑定（闭包捕获的是那一次的值）。
 - **`break`**、**`continue`** 作用于最内层循环；**`return`** 从当前函数返回，在 lambda 中只从
   lambda 返回。
 - **`for i, x in xs`** 同时给出下标和元素。

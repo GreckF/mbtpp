@@ -435,7 +435,8 @@ pub fn is_proof(ts : LTypes, v : Val) -> Bool {
 /// NaN is itself.
 pub fn lit_same(a : Lit, b : Lit) -> Bool {
   match (a, b) {
-    (LDouble(x), LDouble(y)) => x.reinterpret_as_int64() == y.reinterpret_as_int64()
+    (LDouble(x), LDouble(y)) =>
+      x.reinterpret_as_int64() == y.reinterpret_as_int64()
     (LFloat(x), LFloat(y)) => x.reinterpret_as_int() == y.reinterpret_as_int()
     _ => a == b
   }

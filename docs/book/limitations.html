@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a9b046c2.js";
+            window.path_to_searchindex_js = "searchindex-3307130a.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-2f5a2ad3.js"></script>
@@ -187,6 +187,14 @@
 <li>没有终止检查和严格正性检查（按设计）：可以“证明”假命题。</li>
 <li>没有 <code>simp</code>、<code>omega</code>、<code>auto</code> 等自动化策略。代数效应的限制见<a href="lang/effects.html#限制">代数效应</a>。</li>
 <li>递归的局部函数不能使用外层的 <code>let mut</code> 变量。</li>
+<li><code>Show</code> 不给容器中的字符串和字符加引号：<code>println(Some("x"))</code> 输出 <code>Some(x)</code>，MoonBit 输出
+<code>Some("x")</code>。</li>
+<li>泛型实例与更具体的实例重叠时（<code>impl[T] Tr for Array[T]</code> 和 <code>impl Tr for Array[Int]</code>），不报错，
+使用先找到的泛型实例；MoonBit 拒绝这样的程序。同一类型的同一方法实现两次会报错。</li>
+<li><code>Array</code> 和元组没有 <code>Compare</code> 实例；整数字面量不按期望类型重载（<code>let x : Int64 = 3</code> 要写 <code>3L</code>）。</li>
+<li>对证明（非子单例的 <code>Prop</code>）的匹配可以出现在结果是证明的地方，但分支中的副作用（输出、修改
+变量）在编译后的程序中不会发生，因为证明被擦除。</li>
+<li>比较运算符可以连写（<code>a == b == c</code> 按左结合解析），MoonBit 不允许。</li>
 <li>含数组模式的 <code>match</code> 不做覆盖检查，也不细化类型。</li>
 <li><code>Map</code> 是 Prelude 用 MoonBit++ 实现的（按插入顺序，查找是线性的），不是 MoonBit 的 <code>Map</code>：参数或返回值
 是 MoonBit <code>Map</code> 的导入函数不能调用。</li>
@@ -197,6 +205,8 @@
 <h2 id="导入"><a class="header" href="#导入">导入</a></h2>
 <ul>
 <li>解释器不能运行导入的 MoonBit 函数，只能在编译后调用。</li>
+<li><code>moonpp test</code> 不能使用只为测试导入的包（<code>for "test"</code>）。</li>
+<li>导入 <code>moonbitlang/core/builtin</code> 会让检查器崩溃。</li>
 <li>解释器同步执行 async 函数，没有并发；async 函数只编译成原生代码（见 <a href="lang/async.html">async 函数</a>）。</li>
 <li>返回 trait 对象 <code>&amp;Tr</code> 的导入函数还不能编译；其他不导入的项见<a href="interop/types.html">类型对应与不导入的项</a>。</li>
 </ul>

@@ -192,7 +192,7 @@ fn Gen::need_trait(self : Gen, tr : String) -> Unit {
           ps.map(p => self.mbt_ty(p)).join(", ")
         }
         buf.write_string(
-          "  " + m + "(" + params + ") -> " + self.mbt_ty(r) + " raise\n",
+          "  " + m + "(" + params + ") -> " + self.mbt_result(r) + " raise\n",
         )
       }
       _ => ()

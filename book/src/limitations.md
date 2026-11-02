@@ -5,6 +5,14 @@
 - 没有终止检查和严格正性检查（按设计）：可以“证明”假命题。
 - 没有 `simp`、`omega`、`auto` 等自动化策略。代数效应的限制见[代数效应](lang/effects.md#限制)。
 - 递归的局部函数不能使用外层的 `let mut` 变量。
+- `Show` 不给容器中的字符串和字符加引号：`println(Some("x"))` 输出 `Some(x)`，MoonBit 输出
+  `Some("x")`。
+- 泛型实例与更具体的实例重叠时（`impl[T] Tr for Array[T]` 和 `impl Tr for Array[Int]`），不报错，
+  使用先找到的泛型实例；MoonBit 拒绝这样的程序。同一类型的同一方法实现两次会报错。
+- `Array` 和元组没有 `Compare` 实例；整数字面量不按期望类型重载（`let x : Int64 = 3` 要写 `3L`）。
+- 对证明（非子单例的 `Prop`）的匹配可以出现在结果是证明的地方，但分支中的副作用（输出、修改
+  变量）在编译后的程序中不会发生，因为证明被擦除。
+- 比较运算符可以连写（`a == b == c` 按左结合解析），MoonBit 不允许。
 - 含数组模式的 `match` 不做覆盖检查，也不细化类型。
 - `Map` 是 Prelude 用 MoonBit++ 实现的（按插入顺序，查找是线性的），不是 MoonBit 的 `Map`：参数或返回值
   是 MoonBit `Map` 的导入函数不能调用。
@@ -15,6 +23,8 @@
 ## 导入
 
 - 解释器不能运行导入的 MoonBit 函数，只能在编译后调用。
+- `moonpp test` 不能使用只为测试导入的包（`for "test"`）。
+- 导入 `moonbitlang/core/builtin` 会让检查器崩溃。
 - 解释器同步执行 async 函数，没有并发；async 函数只编译成原生代码（见 [async 函数](lang/async.md)）。
 - 返回 trait 对象 `&Tr` 的导入函数还不能编译；其他不导入的项见[类型对应与不导入的项](interop/types.md)。
 

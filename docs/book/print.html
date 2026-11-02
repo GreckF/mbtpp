@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a9b046c2.js";
+            window.path_to_searchindex_js = "searchindex-3307130a.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-2f5a2ad3.js"></script>
@@ -253,7 +253,7 @@ fn main {
 </thead>
 <tbody>
 <tr><td>整数</td><td><code>0</code>、<code>42</code>、<code>1_000</code>、<code>-1</code>、<code>0xFF</code>、<code>0o17</code>、<code>0b1010</code></td><td><code>Int</code>；期望类型是 <code>Nat</code> 时展开为 <code>S(…S(Z))</code></td></tr>
-<tr><td>浮点</td><td><code>1.5</code>、<code>2.0</code></td><td><code>Double</code></td></tr>
+<tr><td>浮点</td><td><code>1.5</code>、<code>2.0</code>、<code>1e-7</code>、<code>2.5E3</code></td><td><code>Double</code></td></tr>
 <tr><td>其他整数</td><td><code>1L</code>、<code>1U</code>、<code>1UL</code>、<code>0xFFU</code></td><td><code>Int64</code>、<code>UInt</code>、<code>UInt64</code></td></tr>
 <tr><td>单精度浮点</td><td><code>1.5F</code></td><td><code>Float</code></td></tr>
 <tr><td>字节</td><td><code>b'a'</code>、<code>b'\x01'</code></td><td><code>Byte</code></td></tr>
@@ -267,7 +267,7 @@ fn main {
 </tbody>
 </table>
 </div>
-<p>转义：<code>\n \t \r \\ \" \' \0</code>。</p>
+<p>转义：<code>\n \t \r \\ \" \' \0</code>。超出类型范围的整数字面量（如 <code>Int</code> 的 <code>3000000000</code>）是错误。</p>
 <p>多行字符串：连续的 <code>#|</code> 行组成一个字符串，行之间是换行；<code>#|</code> 行原样保留，<code>$|</code> 行支持转义和插值。</p>
 <pre><code class="language-moonbit">fn main {
   let name = "MoonBit++"
@@ -1627,7 +1627,8 @@ fn main {
 <ul>
 <li><strong>可变变量</strong>：<code>let mut x = e</code>，赋值 <code>x = e</code>，以及 <code>+=</code>、<code>-=</code>、<code>*=</code>、<code>/=</code>。</li>
 <li><strong>循环</strong>：<code>while c { … }</code>；C 风格 <code>for i = 0; i &lt; n; i = i + 1 { … }</code>；<code>for x in xs { … }</code>
-遍历数组；<code>for k in a..&lt;b</code>、<code>for k in a..=b</code> 遍历区间。</li>
+遍历数组；<code>for k in a..&lt;b</code>、<code>for k in a..=b</code> 遍历区间。和 MoonBit 一样，循环变量在循环体中
+不能赋值，每次迭代都是新的绑定（闭包捕获的是那一次的值）。</li>
 <li><strong><code>break</code></strong>、<strong><code>continue</code></strong> 作用于最内层循环；<strong><code>return</code></strong> 从当前函数返回，在 lambda 中只从
 lambda 返回。</li>
 <li><strong><code>for i, x in xs</code></strong> 同时给出下标和元素。</li>
@@ -2121,7 +2122,9 @@ lemma all_counts_ok() -&gt; all_counts() === Cons(2, Cons(1, Cons(1, Cons(0, Nil
 类型的 <code>printf</code>、对任意输入证明“丢弃日志的处理器不改变排序结果”，以及在检查时计算的搜索。</p>
 <h2 id="限制"><a class="header" href="#限制">限制</a></h2>
 <ul>
-<li>尾恢复操作的分支中不能执行 <code>ctl</code> 操作。</li>
+<li>尾恢复操作的分支中不能执行 <code>ctl</code> 操作，也不能抛出错误。</li>
+<li>执行某个效应的函数不能离开处理这个效应的 <code>try</code>（例如作为 <code>try</code> 的结果返回）：处理器是词法的，
+离开后它已不存在。这种程序会被拒绝。</li>
 <li>一个 <code>try</code> 不能同时处理错误和 <code>ctl</code> 操作；<code>try … catch</code>（捕获错误的）和 <code>defer</code> 不能包住执行
 <code>ctl</code> 操作的代码。</li>
 <li>返回命题的函数（如 <code>lemma</code>）不能有效应。</li>
@@ -2180,7 +2183,7 @@ lemma all_counts_ok() -&gt; all_counts() === Cons(2, Cons(1, Cons(1, Cons(0, Nil
 </ul>
 <h2 id="安装发布版"><a class="header" href="#安装发布版">安装发布版</a></h2>
 <p><a href="https://github.com/GreckF/mbtpp/releases">Releases</a> 页面的每个版本都附有 npm 包：</p>
-<pre><code class="language-bash">npm install -g https://github.com/GreckF/mbtpp/releases/download/v0.5.0/moonpp-0.5.0.tgz
+<pre><code class="language-bash">npm install -g https://github.com/GreckF/mbtpp/releases/download/v0.6.0/moonpp-0.6.0.tgz
 moonpp version
 </code></pre>
 <p>推送 <code>v*</code> tag 时，GitHub Actions 会测试、构建并发布（<code>.github/workflows/release.yml</code>）。</p>
@@ -2816,6 +2819,14 @@ or a bound that is not #mbt)
 <li>没有终止检查和严格正性检查（按设计）：可以“证明”假命题。</li>
 <li>没有 <code>simp</code>、<code>omega</code>、<code>auto</code> 等自动化策略。代数效应的限制见<a href="#限制">代数效应</a>。</li>
 <li>递归的局部函数不能使用外层的 <code>let mut</code> 变量。</li>
+<li><code>Show</code> 不给容器中的字符串和字符加引号：<code>println(Some("x"))</code> 输出 <code>Some(x)</code>，MoonBit 输出
+<code>Some("x")</code>。</li>
+<li>泛型实例与更具体的实例重叠时（<code>impl[T] Tr for Array[T]</code> 和 <code>impl Tr for Array[Int]</code>），不报错，
+使用先找到的泛型实例；MoonBit 拒绝这样的程序。同一类型的同一方法实现两次会报错。</li>
+<li><code>Array</code> 和元组没有 <code>Compare</code> 实例；整数字面量不按期望类型重载（<code>let x : Int64 = 3</code> 要写 <code>3L</code>）。</li>
+<li>对证明（非子单例的 <code>Prop</code>）的匹配可以出现在结果是证明的地方，但分支中的副作用（输出、修改
+变量）在编译后的程序中不会发生，因为证明被擦除。</li>
+<li>比较运算符可以连写（<code>a == b == c</code> 按左结合解析），MoonBit 不允许。</li>
 <li>含数组模式的 <code>match</code> 不做覆盖检查，也不细化类型。</li>
 <li><code>Map</code> 是 Prelude 用 MoonBit++ 实现的（按插入顺序，查找是线性的），不是 MoonBit 的 <code>Map</code>：参数或返回值
 是 MoonBit <code>Map</code> 的导入函数不能调用。</li>
@@ -2826,6 +2837,8 @@ or a bound that is not #mbt)
 <h2 id="导入"><a class="header" href="#导入">导入</a></h2>
 <ul>
 <li>解释器不能运行导入的 MoonBit 函数，只能在编译后调用。</li>
+<li><code>moonpp test</code> 不能使用只为测试导入的包（<code>for "test"</code>）。</li>
+<li>导入 <code>moonbitlang/core/builtin</code> 会让检查器崩溃。</li>
 <li>解释器同步执行 async 函数，没有并发；async 函数只编译成原生代码（见 <a href="#async-函数">async 函数</a>）。</li>
 <li>返回 trait 对象 <code>&amp;Tr</code> 的导入函数还不能编译；其他不导入的项见<a href="#类型对应与不导入的项">类型对应与不导入的项</a>。</li>
 </ul>

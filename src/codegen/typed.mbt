@@ -339,6 +339,18 @@ fn Gen::native_ty_in(self : Gen, ctx : Array[TyCtx], t : @tt.Tm) -> NTy? {
           self
           .native_targs(d, args, a => self.native_ty_in(ctx, a))
           .map(targs => NEnum(d, targs))
+        // a type alias (`typealias Int as Expr`, kept in the types of
+        // fields): its definition
+        Global(n) if @tt.globals.get(n)
+          is Some({ kind: GFunc(Some(_), _, _), .. }) => {
+          let env = Array::makei(ctx.length(), i => @tt.v_var(i))
+          let t2 = @tt.quote_full(ctx.length(), @tt.eval(env, t))
+          if flatten_app(t2).0 is Global(m) && m == n {
+            None
+          } else {
+            self.native_ty_in(ctx, t2)
+          }
+        }
         _ => None
       }
     }
@@ -1035,6 +1047,14 @@ let native_prims : Map[String, (String, Array[NTy], NTy)] = {
   "%str_eq": ("($0 == $1)", [NString, NString], NBool),
   "%str_compare": ("$0.compare($1)", [NString, NString], NInt),
   "%str_length": ("$0.length()", [NString], NInt),
+  "%str_get": ("str_get($0, $1)", [NString, NInt], NChar),
+  "%str_substring": (
+    "str_substring($0, $1, $2)",
+    [NString, NInt, NInt],
+    NString,
+  ),
+  "%int_to_char": ("int_to_char($0)", [NInt], NChar),
+  "%unit_to_string": ("\"()\"", [NUnit], NString),
   "%bool_eq": ("($0 == $1)", [NBool, NBool], NBool),
   "%bool_not": ("(!$0)", [NBool], NBool),
   "%bool_to_string": ("$0.to_string()", [NBool], NString),
@@ -1708,6 +1728,16 @@ fn Gen::typed_pat(
 }
 
 ///|
+/// MoonBit does not allow `match if ...`, `while match ...`: parentheses.
+fn paren_block(c : String) -> String {
+  if c.has_prefix("if ") || c.has_prefix("match ") {
+    "(" + c + ")"
+  } else {
+    c
+  }
+}
+
+///|
 /// A native expression used as a statement.
 fn stmt(code : String, t : NTy) -> String {
   match t {
@@ -1913,7 +1943,7 @@ fn Gen::typed_term(
           }
           let buf = StringBuilder::new()
           let subject = if scr.length() == 1 {
-            scr[0].0
+            paren_block(scr[0].0)
           } else {
             "(" + scr.map(x => x.0).join(", ") + ")"
           }
@@ -1961,6 +1991,7 @@ fn Gen::typed_term(
     While(c, b, step) => {
       let (cc, tc) = self.typed(env, c)
       ignore(unify_t(tc, NBool))
+      let cc = paren_block(cc)
       let (cs, ts) = self.typed(env, step)
       // `continue` must still run the step
       let saved = self.cur_step

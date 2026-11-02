@@ -140,8 +140,12 @@ pub fn native_report(
       if g.typed_set.contains(n) {
         continue
       }
+      // a type-level function is not code
+      if @tt.show_tm([], e.ty).has_suffix("-> Type") {
+        continue
+      }
       let why = match g.native_sig(n) {
-        None => "its signature has no native translation"
+        None => "its signature has no native translation: " + g.sig_reason(n)
         Some(_) => {
           g.diagnose = true
           g.culprit = None
@@ -154,7 +158,9 @@ pub fn native_report(
         }
       }
       out.push((n, why))
-    } else if is_native_const_candidate(n, e) && !g.native_consts.contains(n) {
+    } else if is_native_const_candidate(n, e) &&
+      g.native_ty_in([], e.ty) is Some(_) &&
+      !g.native_consts.contains(n) {
       let why = match g.typed_const(n) {
         Some(_) =>
           "it holds arrays, and code in the uniform representation uses it"

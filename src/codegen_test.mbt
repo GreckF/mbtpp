@@ -979,3 +979,61 @@ test "codegen: global lets in native code" {
     ),
   )
 }
+
+///|
+test "codegen: aliases in fields, if in match and while, string indexing" {
+  let src =
+    #|typealias Int as Expr
+    #|
+    #|struct Decl {
+    #|  ty : Expr
+    #|  name : String
+    #|}
+    #|
+    #|fn first(d : Decl) -> Char {
+    #|  d.name[0]
+    #|}
+    #|
+    #|fn count(d : Decl, n : Int) -> Int {
+    #|  let mut i = 0
+    #|  while if d.ty > 0 { i < n } else { false } {
+    #|    i = i + 1
+    #|  }
+    #|  match if i > 2 { 1 } else { 0 } {
+    #|    1 => i
+    #|    _ => d.ty
+    #|  }
+    #|}
+    #|
+    #|fn main {
+    #|  let d : Decl = { ty: 7, name: "abc" }
+    #|  println(first(d))
+    #|  println(count(d, 5))
+    #|}
+  inspect(
+    signatures(src),
+    content=(
+      #|enum E_Decl {
+      #|fn f_count_t(d : E_Decl, n : Int) -> Int raise {
+      #|fn f_count(a0 : Value, a1 : Value) -> Value raise {
+      #|fn f_decl_ty_t(self : E_Decl) -> Int raise {
+      #|fn f_decl_ty(a0 : Value) -> Value raise {
+      #|fn f_first_t(d : E_Decl) -> Char raise {
+      #|fn f_first(a0 : Value) -> Value raise {
+      #|fn f_decl_name_t(self : E_Decl) -> String raise {
+      #|fn f_decl_name(a0 : Value) -> Value raise {
+      #|fn main {
+      #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
+      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
+      #|fn f_show_to_string(inst : Value) -> Value raise {
+    ),
+  )
+  inspect(
+    run_source("t.mbtpp", src),
+    content=(
+      #|a
+      #|5
+      #|
+    ),
+  )
+}

@@ -441,6 +441,28 @@ let runtime_src : String =
   #|  }
   #|}
   #|
+  #|fn str_get(a : String, i : Int) -> Char raise {
+  #|  match a.get_char(i) {
+  #|    Some(c) => c
+  #|    None => rt_fail("index out of bounds")
+  #|  }
+  #|}
+  #|
+  #|fn str_substring(a : String, i : Int, j : Int) -> String raise {
+  #|  if i >= 0 && i <= j && j <= a.length() {
+  #|    a.unsafe_substring(start=i, end=j)
+  #|  } else {
+  #|    rt_fail("index out of bounds")
+  #|  }
+  #|}
+  #|
+  #|fn int_to_char(a : Int) -> Char raise {
+  #|  match a.to_char() {
+  #|    Some(c) => c
+  #|    None => rt_fail("invalid character code")
+  #|  }
+  #|}
+  #|
   #|fn nat_sub(a : BigInt, b : BigInt) -> BigInt {
   #|  if a > b { a - b } else { 0N }
   #|}

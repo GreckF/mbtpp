@@ -80,6 +80,7 @@ fn mbt_only(t : NTy) -> Bool {
     NEnum(d, args) => is_mbt_type(d) && args.iter().all(mbt_only)
     NForeign(_, args) => args.iter().all(mbt_only)
     NFun(ps, r) | NAsyncFun(ps, r) => ps.iter().all(mbt_only) && mbt_only(r)
+    NNat("BigInt") => true
     // a `BigInt` from MoonBit could be negative
     NNat(_) => false
     _ => true
@@ -335,6 +336,25 @@ fn builtin_instance(t : NTy, tr : String) -> Bool {
     // MoonBit's `BigInt` prints, compares and computes as `Nat` does (not as
     // other Nat-like types, like `Fin`, print)
     ("Show" | "Eq" | "Compare" | "Add" | "Mul", NNat("Nat")) => true
+    (
+      "Show"
+      | "Eq"
+      | "Compare"
+      | "Hash"
+      | "Default"
+      | "Add"
+      | "Sub"
+      | "Mul"
+      | "Div"
+      | "Mod"
+      | "Neg"
+      | "BitAnd"
+      | "BitOr"
+      | "BitXOr"
+      | "Shl"
+      | "Shr",
+      NNat("BigInt"),
+    ) => true
     ("Sub" | "Mul" | "Div" | "Neg", NInt | NDouble) => true
     ("Mod", NInt) => true
     ("Default", NInt | NDouble | NString | NBool | NUnit) => true

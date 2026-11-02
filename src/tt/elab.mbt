@@ -192,6 +192,15 @@ fn resolve_name(
   prefer_type : Bool,
   expected : String?,
 ) -> String raise ElabError {
+  // `@pkg.T::m` where `@pkg.T` is another type `U`: `U::m`
+  let x = match x.find("::") {
+    Some(k) if x.has_prefix("@") =>
+      match import_type_aliases.get(x.unsafe_substring(start=0, end=k)) {
+        Some(u) => u + x.unsafe_substring(start=k, end=x.length())
+        None => x
+      }
+    _ => x
+  }
   // `@pkg.Ctor` is a constructor of a type of package `pkg`
   if x.has_prefix("@") && !x.contains("::") && !globals.contains(x) {
     match x.rev_find(".") {

@@ -377,6 +377,52 @@ fn Machine::prim(
     ("%nat_eq", [RNat(a), RNat(b)]) => RLit(LBool(a == b))
     ("%nat_compare", [RNat(a), RNat(b)]) => RLit(LInt(a.compare(b)))
     ("%nat_to_string", [RNat(n)]) => RLit(LStr(n.to_string()))
+    ("%nat_lt", [RNat(a), RNat(b)]) => RLit(LBool(a < b))
+    ("%nat_le", [RNat(a), RNat(b)]) => RLit(LBool(a <= b))
+    ("%nat_gt", [RNat(a), RNat(b)]) => RLit(LBool(a > b))
+    ("%nat_ge", [RNat(a), RNat(b)]) => RLit(LBool(a >= b))
+    ("%nat_sub", [RNat(a), RNat(b)]) => RNat(if a > b { a - b } else { 0N })
+    ("%nat_div", [RNat(a), RNat(b)]) => RNat(if b == 0N { 0N } else { a / b })
+    ("%nat_mod", [RNat(a), RNat(b)]) => RNat(if b == 0N { a } else { a % b })
+    ("%nat_gcd", [RNat(a), RNat(b)]) => RNat(big_gcd(a, b))
+    ("%nat_pow", [RNat(a), RNat(b)]) => RNat(a.pow(b))
+    ("%nat_shl", [RNat(a), RNat(b)]) => RNat(a << b.to_int())
+    ("%nat_shr", [RNat(a), RNat(b)]) =>
+      RNat(if b.bit_length() > 31 { 0N } else { a >> b.to_int() })
+    ("%nat_log2", [RNat(a)]) =>
+      RNat(if a <= 1N { 0N } else { BigInt::from_int(a.bit_length() - 1) })
+    ("%nat_land", [RNat(a), RNat(b)]) => RNat(a & b)
+    ("%nat_lor", [RNat(a), RNat(b)]) => RNat(a | b)
+    ("%nat_lxor", [RNat(a), RNat(b)]) => RNat(a ^ b)
+    ("%nat_to_bigint", [RNat(a)]) => RNat(a)
+    ("%nat_of_bigint", [RNat(a)]) => RNat(if a < 0N { 0N } else { a })
+    // `BigInt`s are `RNat`s too
+    ("%bigint_of_int", [RLit(LInt(i))]) => RNat(BigInt::from_int(i))
+    ("%bigint_of_int64", [RLit(LInt64(i))]) => RNat(BigInt::from_int64(i))
+    ("%bigint_to_int", [RNat(a)]) => RLit(LInt(a.to_int()))
+    ("%bigint_to_int64", [RNat(a)]) => RLit(LInt64(a.to_int64()))
+    ("%bigint_add", [RNat(a), RNat(b)]) => RNat(a + b)
+    ("%bigint_sub", [RNat(a), RNat(b)]) => RNat(a - b)
+    ("%bigint_mul", [RNat(a), RNat(b)]) => RNat(a * b)
+    ("%bigint_div" | "%bigint_mod", [RNat(_), RNat(b)]) if b == 0N =>
+      raise CAbort("division by zero")
+    ("%bigint_div", [RNat(a), RNat(b)]) => RNat(a / b)
+    ("%bigint_mod", [RNat(a), RNat(b)]) => RNat(a % b)
+    ("%bigint_neg", [RNat(a)]) => RNat(-a)
+    ("%bigint_land", [RNat(a), RNat(b)]) => RNat(a & b)
+    ("%bigint_lor", [RNat(a), RNat(b)]) => RNat(a | b)
+    ("%bigint_lxor", [RNat(a), RNat(b)]) => RNat(a ^ b)
+    ("%bigint_shl", [RNat(a), RLit(LInt(n))]) => RNat(a << n)
+    ("%bigint_shr", [RNat(a), RLit(LInt(n))]) => RNat(a >> n)
+    ("%bigint_eq", [RNat(a), RNat(b)]) => RLit(LBool(a == b))
+    ("%bigint_lt", [RNat(a), RNat(b)]) => RLit(LBool(a < b))
+    ("%bigint_le", [RNat(a), RNat(b)]) => RLit(LBool(a <= b))
+    ("%bigint_gt", [RNat(a), RNat(b)]) => RLit(LBool(a > b))
+    ("%bigint_ge", [RNat(a), RNat(b)]) => RLit(LBool(a >= b))
+    ("%bigint_compare", [RNat(a), RNat(b)]) => RLit(LInt(a.compare(b)))
+    ("%bigint_pow", [RNat(a), RNat(b)]) => RNat(a.pow(b))
+    ("%bigint_to_string", [RNat(a)]) => RLit(LStr(a.to_string()))
+    ("%bigint_hash", [RNat(a)]) => RLit(LInt(a.hash()))
     ("%array_push", [RArr(xs), x]) => {
       xs.push(x)
       RLit(LUnit)
@@ -400,6 +446,18 @@ fn Machine::prim(
       }
     }
   }
+}
+
+///|
+fn big_gcd(a : BigInt, b : BigInt) -> BigInt {
+  let mut x = a
+  let mut y = b
+  while y != 0N {
+    let t = x % y
+    x = y
+    y = t
+  }
+  x
 }
 
 ///|

@@ -31,7 +31,7 @@ pub fn setup() -> Unit {
   for
     n in [
       "Int", "String", "Char", "Bool", "Unit", "Double", "Int64", "UInt", "UInt64",
-      "Byte", "Float",
+      "Byte", "Float", "BigInt",
     ] {
     builtin_data(n, U, 0, false)
   }
@@ -136,6 +136,11 @@ pub(all) struct Import {
 pub let import_skipped : Array[String] = []
 
 ///|
+/// Types of imported packages that are other types (`@bigint.BigInt` is
+/// MoonBit++'s `BigInt`).
+let import_type_aliases : Map[String, String] = {}
+
+///|
 /// Type check a program (after the prelude and the imported interfaces).
 pub fn check_program(
   file : String,
@@ -175,6 +180,7 @@ pub fn check_package(
     check_src("<prelude>", prelude_src)
   }
   import_skipped.clear()
+  import_type_aliases.clear()
   load_imports(imports)
   let decls : Array[@parser.Decl] = []
   for k = 0; k < files.length(); k = k + 1 {
@@ -298,6 +304,10 @@ fn load_imports(imports : Array[Import]) -> Unit raise CheckError {
     let r = @parser.parse_mbti(im.mbti, im.alias, im.path, aliases)
     for d in r.decls {
       decls.push(d)
+      // `@bigint.BigInt` is `BigInt`: `@bigint.BigInt::m` is `BigInt::m`
+      if d is DDef(_, n, [], Some(EType(_)), EVar(_, t)) {
+        import_type_aliases.set(n, t)
+      }
     }
     for s in r.skipped {
       import_skipped.push(s)

@@ -11,6 +11,23 @@ pub let nat_natives : Map[String, (String, Int32)] = {
   "Nat::op_equal": ("%nat_eq", 2),
   "Nat::compare": ("%nat_compare", 2),
   "Nat::to_string": ("%nat_to_string", 1),
+  "Nat::op_lt": ("%nat_lt", 2),
+  "Nat::op_le": ("%nat_le", 2),
+  "Nat::op_gt": ("%nat_gt", 2),
+  "Nat::op_ge": ("%nat_ge", 2),
+  "Nat::op_sub": ("%nat_sub", 2),
+  "Nat::op_div": ("%nat_div", 2),
+  "Nat::op_mod": ("%nat_mod", 2),
+  "Nat::gcd": ("%nat_gcd", 2),
+  "Nat::pow": ("%nat_pow", 2),
+  "Nat::op_shl": ("%nat_shl", 2),
+  "Nat::op_shr": ("%nat_shr", 2),
+  "Nat::log2": ("%nat_log2", 1),
+  "Nat::op_land": ("%nat_land", 2),
+  "Nat::op_lor": ("%nat_lor", 2),
+  "Nat::op_lxor": ("%nat_lxor", 2),
+  "Nat::to_bigint": ("%nat_to_bigint", 1),
+  "Nat::of_bigint": ("%nat_of_bigint", 1),
 }
 
 ///|
@@ -136,6 +153,36 @@ pub let prelude_src : String =
   #|fn[T] panic() -> T = "%panic"
   #|fn[T] abort(msg : String) -> T = "%abort"
   #|
+  #|// ---- BigInt -----------------------------------------------------------
+  #|// MoonBit's arbitrary-precision integers (also `@bigint.BigInt` when
+  #|// `moonbitlang/core/bigint` is imported). They are not computed during
+  #|// checking.
+  #|
+  #|fn BigInt::from_int(i : Int) -> BigInt = "%bigint_of_int"
+  #|fn BigInt::from_int64(i : Int64) -> BigInt = "%bigint_of_int64"
+  #|fn BigInt::to_int(self : BigInt) -> Int = "%bigint_to_int"
+  #|fn BigInt::to_int64(self : BigInt) -> Int64 = "%bigint_to_int64"
+  #|fn BigInt::op_add(self : BigInt, other : BigInt) -> BigInt = "%bigint_add"
+  #|fn BigInt::op_sub(self : BigInt, other : BigInt) -> BigInt = "%bigint_sub"
+  #|fn BigInt::op_mul(self : BigInt, other : BigInt) -> BigInt = "%bigint_mul"
+  #|fn BigInt::op_div(self : BigInt, other : BigInt) -> BigInt = "%bigint_div"
+  #|fn BigInt::op_mod(self : BigInt, other : BigInt) -> BigInt = "%bigint_mod"
+  #|fn BigInt::op_neg(self : BigInt) -> BigInt = "%bigint_neg"
+  #|fn BigInt::op_land(self : BigInt, other : BigInt) -> BigInt = "%bigint_land"
+  #|fn BigInt::op_lor(self : BigInt, other : BigInt) -> BigInt = "%bigint_lor"
+  #|fn BigInt::op_lxor(self : BigInt, other : BigInt) -> BigInt = "%bigint_lxor"
+  #|fn BigInt::op_shl(self : BigInt, n : Int) -> BigInt = "%bigint_shl"
+  #|fn BigInt::op_shr(self : BigInt, n : Int) -> BigInt = "%bigint_shr"
+  #|fn BigInt::op_equal(self : BigInt, other : BigInt) -> Bool = "%bigint_eq"
+  #|fn BigInt::op_lt(self : BigInt, other : BigInt) -> Bool = "%bigint_lt"
+  #|fn BigInt::op_le(self : BigInt, other : BigInt) -> Bool = "%bigint_le"
+  #|fn BigInt::op_gt(self : BigInt, other : BigInt) -> Bool = "%bigint_gt"
+  #|fn BigInt::op_ge(self : BigInt, other : BigInt) -> Bool = "%bigint_ge"
+  #|fn BigInt::compare(self : BigInt, other : BigInt) -> Int = "%bigint_compare"
+  #|fn BigInt::pow(self : BigInt, n : BigInt) -> BigInt = "%bigint_pow"
+  #|fn BigInt::to_string(self : BigInt) -> String = "%bigint_to_string"
+  #|fn BigInt::hash(self : BigInt) -> Int = "%bigint_hash"
+  #|
   #|// ---- Nat --------------------------------------------------------------
   #|
   #|fn int_to_nat(n : Int) -> Nat {
@@ -182,6 +229,145 @@ pub let prelude_src : String =
   #|
   #|fn Nat::to_string(self : Nat) -> String {
   #|  self.to_int().to_string()
+  #|}
+  #|
+  #|fn Nat::op_lt(self : Nat, other : Nat) -> Bool {
+  #|  self.compare(other) < 0
+  #|}
+  #|
+  #|fn Nat::op_le(self : Nat, other : Nat) -> Bool {
+  #|  self.compare(other) <= 0
+  #|}
+  #|
+  #|fn Nat::op_gt(self : Nat, other : Nat) -> Bool {
+  #|  self.compare(other) > 0
+  #|}
+  #|
+  #|fn Nat::op_ge(self : Nat, other : Nat) -> Bool {
+  #|  self.compare(other) >= 0
+  #|}
+  #|
+  #|// truncated: `a - b` is 0 when `b > a`
+  #|fn Nat::op_sub(self : Nat, other : Nat) -> Nat {
+  #|  match (self, other) {
+  #|    (_, Z) => self
+  #|    (Z, S(_)) => Z
+  #|    (S(a), S(b)) => a - b
+  #|  }
+  #|}
+  #|
+  #|// The definitions below are for checking (they run natively): their
+  #|// recursive calls get variables of patterns or constructed values, not
+  #|// calls, which would be computed again at each use.
+  #|
+  #|// `(q, r)` with `a = q * b + r` (`b > 0`): counts `a` down, `r` up to `b`
+  #|fn nat_divmod(a : Nat, b : Nat, q : Nat, r : Nat) -> (Nat, Nat) {
+  #|  match a {
+  #|    Z => (q, r)
+  #|    S(k) => if S(r) == b { nat_divmod(k, b, S(q), Z) } else { nat_divmod(k, b, q, S(r)) }
+  #|  }
+  #|}
+  #|
+  #|// `a / 0` is 0 and `a % 0` is `a`, as in Lean
+  #|fn Nat::op_div(self : Nat, other : Nat) -> Nat {
+  #|  match other {
+  #|    Z => Z
+  #|    S(_) =>
+  #|      match nat_divmod(self, other, Z, Z) {
+  #|        (q, _) => q
+  #|      }
+  #|  }
+  #|}
+  #|
+  #|fn Nat::op_mod(self : Nat, other : Nat) -> Nat {
+  #|  match other {
+  #|    Z => self
+  #|    S(_) =>
+  #|      match nat_divmod(self, other, Z, Z) {
+  #|        (_, r) => r
+  #|      }
+  #|  }
+  #|}
+  #|
+  #|fn Nat::gcd(self : Nat, other : Nat) -> Nat {
+  #|  match other {
+  #|    Z => self
+  #|    S(o) =>
+  #|      match self % S(o) {
+  #|        Z => S(o)
+  #|        S(r) => S(o).gcd(S(r))
+  #|      }
+  #|  }
+  #|}
+  #|
+  #|fn Nat::pow(self : Nat, n : Nat) -> Nat {
+  #|  match n {
+  #|    Z => S(Z)
+  #|    S(k) => self * self.pow(k)
+  #|  }
+  #|}
+  #|
+  #|fn Nat::op_shl(self : Nat, n : Nat) -> Nat {
+  #|  self * (2 : Nat).pow(n)
+  #|}
+  #|
+  #|fn Nat::op_shr(self : Nat, n : Nat) -> Nat {
+  #|  self / (2 : Nat).pow(n)
+  #|}
+  #|
+  #|// `(n / 2, n % 2 == 1)`
+  #|fn nat_half(n : Nat) -> (Nat, Bool) {
+  #|  match n {
+  #|    Z => (Z, false)
+  #|    S(Z) => (Z, true)
+  #|    S(S(k)) =>
+  #|      match nat_half(k) {
+  #|        (h, b) => (S(h), b)
+  #|      }
+  #|  }
+  #|}
+  #|
+  #|// `log2(0)` is 0
+  #|fn Nat::log2(self : Nat) -> Nat {
+  #|  match nat_half(self) {
+  #|    (Z, _) => Z
+  #|    (S(h), _) => S(S(h).log2())
+  #|  }
+  #|}
+  #|
+  #|// the bits of `a` and `b` combined by `f` (`f(false, false)` is false)
+  #|fn nat_bitwise(f : (Bool, Bool) -> Bool, a : Nat, b : Nat) -> Nat {
+  #|  match (nat_half(a), nat_half(b)) {
+  #|    ((Z, false), (Z, false)) => Z
+  #|    ((ha, ba), (hb, bb)) => {
+  #|      let low : Nat = if f(ba, bb) { 1 } else { 0 }
+  #|      low + nat_bitwise(f, ha, hb) * 2
+  #|    }
+  #|  }
+  #|}
+  #|
+  #|fn Nat::op_land(self : Nat, other : Nat) -> Nat {
+  #|  nat_bitwise((x, y) => x && y, self, other)
+  #|}
+  #|
+  #|fn Nat::op_lor(self : Nat, other : Nat) -> Nat {
+  #|  nat_bitwise((x, y) => x || y, self, other)
+  #|}
+  #|
+  #|fn Nat::op_lxor(self : Nat, other : Nat) -> Nat {
+  #|  nat_bitwise((x, y) => x != y, self, other)
+  #|}
+  #|
+  #|fn Nat::to_bigint(self : Nat) -> BigInt {
+  #|  match self {
+  #|    Z => BigInt::from_int(0)
+  #|    S(n) => n.to_bigint() + BigInt::from_int(1)
+  #|  }
+  #|}
+  #|
+  #|// a negative number is 0
+  #|fn Nat::of_bigint(b : BigInt) -> Nat {
+  #|  if b <= BigInt::from_int(0) { Z } else { S(Nat::of_bigint(b - BigInt::from_int(1))) }
   #|}
   #|
   #|fn plus(n : Nat, m : Nat) -> Nat {
@@ -558,6 +744,7 @@ pub let prelude_src : String =
   #|impl Show for Unit with to_string(self) { self.to_string() }
   #|impl Show for Nat with to_string(self) { self.to_string() }
   #|impl Show for Double with to_string(self) { self.to_string() }
+  #|impl Show for BigInt with to_string(self) { self.to_string() }
   #|
   #|impl[T : Show] Show for Array[T] with to_string(self) {
   #|  let mut s = "["
@@ -594,6 +781,7 @@ pub let prelude_src : String =
   #|impl Eq for Nat with op_equal(a, b) { a == b }
   #|impl Eq for Double with op_equal(a, b) { a == b }
   #|impl Eq for Unit with op_equal(_, _) { true }
+  #|impl Eq for BigInt with op_equal(a, b) { a == b }
   #|
   #|impl[T : Eq] Eq for Option[T] with op_equal(a, b) {
   #|  match (a, b) {
@@ -625,6 +813,7 @@ pub let prelude_src : String =
   #|}
   #|impl Compare for Nat with compare(a, b) { a.compare(b) }
   #|impl Compare for Unit with compare(_, _) { 0 }
+  #|impl Compare for BigInt with compare(a, b) { a.compare(b) }
   #|
   #|impl[T : Compare] Compare for Option[T] with compare(a, b) {
   #|  match (a, b) {
@@ -656,6 +845,7 @@ pub let prelude_src : String =
   #|impl Add for String with op_add(a, b) { a + b }
   #|impl Add for Nat with op_add(a, b) { a + b }
   #|impl Add for Double with op_add(a, b) { a + b }
+  #|impl Add for BigInt with op_add(a, b) { a + b }
   #|
   #|#mbt("Sub")
   #|trait Sub {
@@ -664,6 +854,8 @@ pub let prelude_src : String =
   #|
   #|impl Sub for Int with op_sub(a, b) { a - b }
   #|impl Sub for Double with op_sub(a, b) { a - b }
+  #|impl Sub for Nat with op_sub(a, b) { a - b }
+  #|impl Sub for BigInt with op_sub(a, b) { a - b }
   #|
   #|#mbt("Mul")
   #|trait Mul {
@@ -673,6 +865,7 @@ pub let prelude_src : String =
   #|impl Mul for Int with op_mul(a, b) { a * b }
   #|impl Mul for Double with op_mul(a, b) { a * b }
   #|impl Mul for Nat with op_mul(a, b) { a * b }
+  #|impl Mul for BigInt with op_mul(a, b) { a * b }
   #|
   #|#mbt("Div")
   #|trait Div {
@@ -681,6 +874,8 @@ pub let prelude_src : String =
   #|
   #|impl Div for Int with op_div(a, b) { a / b }
   #|impl Div for Double with op_div(a, b) { a / b }
+  #|impl Div for Nat with op_div(a, b) { a / b }
+  #|impl Div for BigInt with op_div(a, b) { a / b }
   #|
   #|#mbt("Mod")
   #|trait Mod {
@@ -688,6 +883,8 @@ pub let prelude_src : String =
   #|}
   #|
   #|impl Mod for Int with op_mod(a, b) { a % b }
+  #|impl Mod for Nat with op_mod(a, b) { a % b }
+  #|impl Mod for BigInt with op_mod(a, b) { a % b }
   #|
   #|#mbt("Neg")
   #|trait Neg {
@@ -696,6 +893,7 @@ pub let prelude_src : String =
   #|
   #|impl Neg for Int with op_neg(a) { -a }
   #|impl Neg for Double with op_neg(a) { -a }
+  #|impl Neg for BigInt with op_neg(a) { -a }
   #|
   #|#mbt("Default")
   #|trait Default {
@@ -707,6 +905,8 @@ pub let prelude_src : String =
   #|impl Default for String with default() { "" }
   #|impl Default for Bool with default() { false }
   #|impl Default for Unit with default() { () }
+  #|impl Default for Nat with default() { Z }
+  #|impl Default for BigInt with default() { BigInt::from_int(0) }
   #|impl[T] Default for Option[T] with default() { None }
   #|impl[T] Default for List[T] with default() { Nil }
   #|
@@ -716,6 +916,8 @@ pub let prelude_src : String =
   #|}
   #|
   #|impl BitAnd for Int with op_land(a, b) { a & b }
+  #|impl BitAnd for Nat with op_land(a, b) { a & b }
+  #|impl BitAnd for BigInt with op_land(a, b) { a & b }
   #|
   #|#mbt("BitOr")
   #|trait BitOr {
@@ -723,6 +925,8 @@ pub let prelude_src : String =
   #|}
   #|
   #|impl BitOr for Int with op_lor(a, b) { a | b }
+  #|impl BitOr for Nat with op_lor(a, b) { a | b }
+  #|impl BitOr for BigInt with op_lor(a, b) { a | b }
   #|
   #|#mbt("BitXOr")
   #|trait BitXOr {
@@ -730,6 +934,8 @@ pub let prelude_src : String =
   #|}
   #|
   #|impl BitXOr for Int with op_lxor(a, b) { a ^ b }
+  #|impl BitXOr for Nat with op_lxor(a, b) { a ^ b }
+  #|impl BitXOr for BigInt with op_lxor(a, b) { a ^ b }
   #|
   #|#mbt("Shl")
   #|trait Shl {
@@ -737,6 +943,7 @@ pub let prelude_src : String =
   #|}
   #|
   #|impl Shl for Int with op_shl(a, n) { a << n }
+  #|impl Shl for BigInt with op_shl(a, n) { a << n }
   #|
   #|#mbt("Shr")
   #|trait Shr {
@@ -744,6 +951,7 @@ pub let prelude_src : String =
   #|}
   #|
   #|impl Shr for Int with op_shr(a, n) { a >> n }
+  #|impl Shr for BigInt with op_shr(a, n) { a >> n }
   #|
   #|// `hash` is MoonBit's `Hash::hash`; the impls of `#mbt` types are MoonBit
   #|// impls whose `hash_combine` combines this hash. The interpreter's hashes
@@ -758,6 +966,7 @@ pub let prelude_src : String =
   #|impl Hash for Char with hash(self) { self.to_int() }
   #|impl Hash for Unit with hash(_) { 0 }
   #|impl Hash for Nat with hash(self) { self.to_int() }
+  #|impl Hash for BigInt with hash(self) { self.hash() }
   #|impl Hash for String with hash(self) {
   #|  let mut h = 0
   #|  for i = 0; i < self.length(); i = i + 1 {

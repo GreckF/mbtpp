@@ -477,3 +477,61 @@ test "a literal in a constructor pattern refines the later fields" {
     ),
   )
 }
+
+///|
+test "Nat operations and BigInt" {
+  inspect(
+    run_source(
+      "t.mbtpp",
+      (
+        #|lemma sub_ok : (7 : Nat) - 3 === 4 = Refl
+        #|lemma sub_trunc : (3 : Nat) - 7 === 0 = Refl
+        #|lemma div_ok : (17 : Nat) / 5 === 3 = Refl
+        #|lemma mod_ok : (17 : Nat) % 5 === 2 = Refl
+        #|lemma div0 : (17 : Nat) / 0 === 0 = Refl
+        #|lemma gcd_ok : (12 : Nat).gcd(18) === 6 = Refl
+        #|lemma land_ok : ((12 : Nat) & 10) === 8 = Refl
+        #|lemma lor_ok : ((12 : Nat) | 10) === 14 = Refl
+        #|lemma lxor_ok : ((12 : Nat) ^ 10) === 6 = Refl
+        #|lemma shl_ok : (3 : Nat) << 2 === 12 = Refl
+        #|lemma shr_ok : (13 : Nat) >> 2 === 3 = Refl
+        #|lemma pow_ok : (2 : Nat).pow(5) === 32 = Refl
+        #|lemma log2_ok : (9 : Nat).log2() === 3 = Refl
+        #|
+        #|fn main {
+        #|  ()
+        #|}
+      ),
+    ),
+    content="",
+  )
+  inspect(
+    run_source(
+      "t.mbtpp",
+      (
+        #|fn main {
+        #|  let a = int_to_nat(1000000)
+        #|  let b : Nat = 7
+        #|  println("\{a - b} \{b - a} \{a / b} \{a % b} \{a / 0} \{a % 0}")
+        #|  println("\{a.gcd(int_to_nat(2500))} \{a & int_to_nat(255)} \{a | b} \{a ^ b}")
+        #|  println(b << int_to_nat(100))
+        #|  println("\{b.pow(int_to_nat(40))} \{a.log2()} \{b < a}")
+        #|  println(a.to_bigint() * BigInt::from_int(-3))
+        #|  println(Nat::of_bigint(BigInt::from_int(-5)))
+        #|  let x = BigInt::from_int(1) << 70
+        #|  println("\{x} \{x / BigInt::from_int(3)} \{-x % BigInt::from_int(1000)}")
+        #|}
+      ),
+    ),
+    content=(
+      #|999993 0 142857 1 0 1000000
+      #|2500 64 1000007 1000007
+      #|8873554201597605810476922437632
+      #|6366805760909027985741435139224001 19 true
+      #|-3000000
+      #|0
+      #|1180591620717411303424 393530540239137101141 -424
+      #|
+    ),
+  )
+}

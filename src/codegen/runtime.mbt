@@ -441,6 +441,49 @@ let runtime_src : String =
   #|  }
   #|}
   #|
+  #|fn nat_sub(a : BigInt, b : BigInt) -> BigInt {
+  #|  if a > b { a - b } else { 0N }
+  #|}
+  #|
+  #|fn nat_div(a : BigInt, b : BigInt) -> BigInt {
+  #|  if b == 0N { 0N } else { a / b }
+  #|}
+  #|
+  #|fn nat_mod(a : BigInt, b : BigInt) -> BigInt {
+  #|  if b == 0N { a } else { a % b }
+  #|}
+  #|
+  #|fn nat_gcd(a : BigInt, b : BigInt) -> BigInt {
+  #|  let mut x = a
+  #|  let mut y = b
+  #|  while y != 0N {
+  #|    let t = x % y
+  #|    x = y
+  #|    y = t
+  #|  }
+  #|  x
+  #|}
+  #|
+  #|fn nat_shr(a : BigInt, n : BigInt) -> BigInt {
+  #|  if n.bit_length() > 31 { 0N } else { a >> n.to_int() }
+  #|}
+  #|
+  #|fn nat_log2(a : BigInt) -> BigInt {
+  #|  if a <= 1N { 0N } else { BigInt::from_int(a.bit_length() - 1) }
+  #|}
+  #|
+  #|fn nat_of_bigint(a : BigInt) -> BigInt {
+  #|  if a < 0N { 0N } else { a }
+  #|}
+  #|
+  #|fn bigint_div(a : BigInt, b : BigInt) -> BigInt raise {
+  #|  if b == 0N { rt_fail("division by zero") } else { a / b }
+  #|}
+  #|
+  #|fn bigint_mod(a : BigInt, b : BigInt) -> BigInt raise {
+  #|  if b == 0N { rt_fail("division by zero") } else { a % b }
+  #|}
+  #|
   #|fn as_unit(v : Value) -> Unit raise {
   #|  match v {
   #|    VUnit => ()

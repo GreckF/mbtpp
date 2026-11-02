@@ -6,6 +6,7 @@
 | --- | --- |
 | `Int32` (i.e. `Int`), `Double`, `Bool`, `Char`, `String`, `Unit` | The built-in types of the same name (`Int32` is `Int`) |
 | `Int64`, `UInt`, `UInt64`, `Byte`, `Float` | The built-in types of the same name |
+| `BigInt` (`@bigint.BigInt`) | The built-in type `BigInt`; `@bigint.BigInt::m` is `BigInt::m` |
 | `Array[T]`, `T?`, `Result[T, E]` | The types of the same name |
 | `StringView`, `ArrayView[T]` | `String`, `Array[T]` |
 | `pub(all) enum`, `pub(all) struct` | The same enum or struct, automatically `#mbt`; can be constructed and matched |

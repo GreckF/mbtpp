@@ -26,7 +26,8 @@ priv enum NTy {
   NChar
   NString
   NUnit
-  /// A Nat-like datatype (`Nat`, `Fin`, ...), a `BigInt` (see natlike.mbt).
+  /// A `BigInt`: MoonBit++'s `BigInt` (`NNat("BigInt")`), or a value of a
+  /// Nat-like datatype (`Nat`, `Fin`, ...; see natlike.mbt).
   NNat(String)
   NEnum(String, Array[NTy])
   /// An opaque MoonBit type (`Json`, `@bigint.BigInt`, `@hashmap.HashMap[K, V]`),
@@ -236,6 +237,7 @@ fn Gen::native_ty_in(self : Gen, ctx : Array[TyCtx], t : @tt.Tm) -> NTy? {
     Global("Char") => Some(NChar)
     Global("String") => Some(NString)
     Global("Unit") => Some(NUnit)
+    Global("BigInt") => Some(NNat("BigInt"))
     Pi(_, Expl, true, _, _) => {
       // one explicit argument group; the result may not depend on it
       let ps : Array[NTy] = []
@@ -773,6 +775,67 @@ fn Gen::native_sig(self : Gen, name : String) -> TSig? {
 ///|
 /// Native templates of primitives: (template, argument types, result type).
 let native_prims : Map[String, (String, Array[NTy], NTy)] = {
+  "%nat_lt": ("($0 < $1)", [NNat("Nat"), NNat("Nat")], NBool),
+  "%nat_le": ("($0 <= $1)", [NNat("Nat"), NNat("Nat")], NBool),
+  "%nat_gt": ("($0 > $1)", [NNat("Nat"), NNat("Nat")], NBool),
+  "%nat_ge": ("($0 >= $1)", [NNat("Nat"), NNat("Nat")], NBool),
+  "%nat_sub": ("nat_sub($0, $1)", [NNat("Nat"), NNat("Nat")], NNat("Nat")),
+  "%nat_div": ("nat_div($0, $1)", [NNat("Nat"), NNat("Nat")], NNat("Nat")),
+  "%nat_mod": ("nat_mod($0, $1)", [NNat("Nat"), NNat("Nat")], NNat("Nat")),
+  "%nat_gcd": ("nat_gcd($0, $1)", [NNat("Nat"), NNat("Nat")], NNat("Nat")),
+  "%nat_pow": ("$0.pow($1)", [NNat("Nat"), NNat("Nat")], NNat("Nat")),
+  "%nat_shl": ("($0 << $1.to_int())", [NNat("Nat"), NNat("Nat")], NNat("Nat")),
+  "%nat_shr": ("nat_shr($0, $1)", [NNat("Nat"), NNat("Nat")], NNat("Nat")),
+  "%nat_log2": ("nat_log2($0)", [NNat("Nat")], NNat("Nat")),
+  "%nat_land": ("($0 & $1)", [NNat("Nat"), NNat("Nat")], NNat("Nat")),
+  "%nat_lor": ("($0 | $1)", [NNat("Nat"), NNat("Nat")], NNat("Nat")),
+  "%nat_lxor": ("($0 ^ $1)", [NNat("Nat"), NNat("Nat")], NNat("Nat")),
+  "%nat_to_bigint": ("$0", [NNat("Nat")], NNat("BigInt")),
+  "%nat_of_bigint": ("nat_of_bigint($0)", [NNat("BigInt")], NNat("Nat")),
+  "%bigint_of_int": ("BigInt::from_int($0)", [NInt], NNat("BigInt")),
+  "%bigint_of_int64": ("BigInt::from_int64($0)", [NInt64], NNat("BigInt")),
+  "%bigint_to_int": ("$0.to_int()", [NNat("BigInt")], NInt),
+  "%bigint_to_int64": ("$0.to_int64()", [NNat("BigInt")], NInt64),
+  "%bigint_add": ("($0 + $1)", [NNat("BigInt"), NNat("BigInt")], NNat("BigInt")),
+  "%bigint_sub": ("($0 - $1)", [NNat("BigInt"), NNat("BigInt")], NNat("BigInt")),
+  "%bigint_mul": ("($0 * $1)", [NNat("BigInt"), NNat("BigInt")], NNat("BigInt")),
+  "%bigint_div": (
+    "bigint_div($0, $1)",
+    [NNat("BigInt"), NNat("BigInt")],
+    NNat("BigInt"),
+  ),
+  "%bigint_mod": (
+    "bigint_mod($0, $1)",
+    [NNat("BigInt"), NNat("BigInt")],
+    NNat("BigInt"),
+  ),
+  "%bigint_neg": ("(-$0)", [NNat("BigInt")], NNat("BigInt")),
+  "%bigint_land": (
+    "($0 & $1)",
+    [NNat("BigInt"), NNat("BigInt")],
+    NNat("BigInt"),
+  ),
+  "%bigint_lor": ("($0 | $1)", [NNat("BigInt"), NNat("BigInt")], NNat("BigInt")),
+  "%bigint_lxor": (
+    "($0 ^ $1)",
+    [NNat("BigInt"), NNat("BigInt")],
+    NNat("BigInt"),
+  ),
+  "%bigint_shl": ("($0 << $1)", [NNat("BigInt"), NInt], NNat("BigInt")),
+  "%bigint_shr": ("($0 >> $1)", [NNat("BigInt"), NInt], NNat("BigInt")),
+  "%bigint_eq": ("($0 == $1)", [NNat("BigInt"), NNat("BigInt")], NBool),
+  "%bigint_lt": ("($0 < $1)", [NNat("BigInt"), NNat("BigInt")], NBool),
+  "%bigint_le": ("($0 <= $1)", [NNat("BigInt"), NNat("BigInt")], NBool),
+  "%bigint_gt": ("($0 > $1)", [NNat("BigInt"), NNat("BigInt")], NBool),
+  "%bigint_ge": ("($0 >= $1)", [NNat("BigInt"), NNat("BigInt")], NBool),
+  "%bigint_compare": ("$0.compare($1)", [NNat("BigInt"), NNat("BigInt")], NInt),
+  "%bigint_pow": (
+    "$0.pow($1)",
+    [NNat("BigInt"), NNat("BigInt")],
+    NNat("BigInt"),
+  ),
+  "%bigint_to_string": ("$0.to_string()", [NNat("BigInt")], NString),
+  "%bigint_hash": ("$0.hash()", [NNat("BigInt")], NInt),
   "%nat_of_int": ("nat_of_int($0)", [NInt], NNat("Nat")),
   "%nat_to_int": ("$0.to_int()", [NNat("Nat")], NInt),
   "%nat_add": ("($0 + $1)", [NNat("Nat"), NNat("Nat")], NNat("Nat")),

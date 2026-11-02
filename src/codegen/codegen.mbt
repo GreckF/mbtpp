@@ -732,9 +732,18 @@ fn subst_args(template : String, args : Array[String]) -> String {
 
 ///|
 fn Gen::prim_call(self : Gen, p : String, args : Array[String]) -> String {
-  ignore(self)
-  match inline_prims.get(p) {
-    Some(tpl) if args.iter().all(a => !a.contains("$")) => subst_args(tpl, args)
+  if args.iter().any(a => a.contains("$")) {
+    return "prim(" + p.escape() + ", [" + args.join(", ") + "])"
+  }
+  match (inline_prims.get(p), native_prims.get(p)) {
+    (Some(tpl), _) => subst_args(tpl, args)
+    // the native template, between conversions
+    (None, Some((tpl, tys, res))) if args.length() == tys.length() =>
+      self.to_value(
+        res,
+        subst_args(tpl, args.mapi((i, a) => self.of_value(tys[i], a, None))),
+        None,
+      )
     _ => "prim(" + p.escape() + ", [" + args.join(", ") + "])"
   }
 }

@@ -49,6 +49,7 @@ let scalar_types : Array[(String, String, String)] = [
   ("Bool", "as_bool", "VBool"),
   ("Char", "as_char", "VChar"),
   ("String", "as_str", "VStr"),
+  ("BigInt", "as_nat", "VNat"),
 ]
 
 ///|
@@ -86,7 +87,7 @@ fn Gen::foreign_type(self : Gen, stack : Array[Binder], t : @tt.Tm) -> String? {
         Some(di) if di.builtin &&
           ![
             "Int", "Double", "Bool", "Char", "String", "Unit", "Array", "Error",
-            "Int64", "UInt", "UInt64", "Byte", "Float",
+            "Int64", "UInt", "UInt64", "Byte", "Float", "BigInt",
           ].contains(n) &&
           args.iter().all(a => is_tyvar(stack, a)) => {
           let ty = if args.length() == 0 {

@@ -117,7 +117,7 @@ pub fn app_val(f : Val, a : Val, i : Icit) -> Val {
         None => delayed_app(f, a, i)
       }
     VCon(n, sp) => VCon(n, sp_push(sp, a, i))
-    VPrim(n, sp) => reduce_prim(n, sp_push(sp, a, i))
+    VPrim(n, sp) => reduce_prim(n, sp_push(sp, a, i), lazy=true)
     VMatch(env, vs, cls, sp) => VMatch(env, vs, cls, sp_push(sp, a, i))
     VStuck(env, t, sp) => VStuck(env, t, sp_push(sp, a, i))
     _ => VStuck([], Lit(LUnit), [(f, Expl), (a, i)])
@@ -153,12 +153,20 @@ pub fn app_spine(f : Val, sp : Spine) -> Val {
 }
 
 ///|
-fn reduce_prim(n : String, sp : Spine) -> Val {
+/// With `lazy` (when the primitive is applied), an argument that is not a
+/// value yet and cannot raise is not computed: `force` does it when the value
+/// is needed (a primitive of an argument that is large to compute, like
+/// `int_to_nat(1000000).to_string()`, is not computed when it is merely
+/// checked).
+fn reduce_prim(n : String, sp : Spine, lazy~ : Bool = false) -> Val {
   match globals.get(n) {
     Some({ kind: GPrim(p, arity), .. }) if sp.length() == arity => {
       let lits : Array[Lit] = []
       for a in sp {
         if a.1 == Expl {
+          if lazy && !(a.0 is (VLit(_) | VPrim("%raise", _))) && !may_raise(a.0) {
+            return VPrim(n, sp)
+          }
           match force(a.0) {
             VLit(l) => lits.push(l)
             VPrim("%raise", [_, ..]) as r => return r
@@ -224,8 +232,9 @@ pub fn force_meta(v : Val) -> Val {
         Some(r) => force_meta(app_spine(r, sp))
         None => v
       }
+    // (arguments that are folded applications are not computed either)
     VPrim(n, sp) =>
-      match reduce_prim(n, sp) {
+      match reduce_prim(n, sp, lazy=true) {
         VPrim(_, _) => v
         w => w
       }

@@ -336,7 +336,7 @@ pub fn parse_mbti(
       DEnum(ed) => local.push(ed.name)
       DStruct(sd) => local.push(sd.name)
       DTrait(td) => local.push(td.name)
-      DOpaque(_, n, _) => local.push(n)
+      DOpaque(_, n, _) if builtin_alias(pkg_path, n) is None => local.push(n)
       DDef(_, n, _, _, _) if is_type_name(n) => local.push(n)
       _ => ()
     }
@@ -348,6 +348,8 @@ pub fn parse_mbti(
       } else if n == "Int32" {
         // MoonBit's `Int` is an alias of `Int32`
         EVar(p, "Int")
+      } else if builtin_alias(pkg_path, n) is Some(b) {
+        EVar(p, b)
       } else if local.contains(n) {
         EVar(p, prefix + n)
       } else if n.has_prefix("@builtin.") {
@@ -359,7 +361,13 @@ pub fn parse_mbti(
         match n.find(".") {
           Some(k) => {
             let a = n.unsafe_substring(start=1, end=k)
+            let t = n.unsafe_substring(start=k + 1, end=n.length())
+            let builtin = imports
+              .iter()
+              .find_first(path => last_segment(path) == a)
+              .bind(path => builtin_alias(path, t))
             match import_alias.get(a) {
+              _ if builtin is Some(b) => EVar(p, b)
               Some(u) =>
                 EVar(p, "@" + u + n.unsafe_substring(start=k, end=n.length()))
               None => EVar(p, n)
@@ -448,6 +456,9 @@ pub fn parse_mbti(
       }
       DDef(p, n, bs, ty, body) =>
         decls.push(DDef(p, prefix + n, bs, ty, map_names(body, qualify(None))))
+      // a type that is MoonBit++'s: `@bigint.BigInt` names it
+      DOpaque(p, n, _) if builtin_alias(pkg_path, n) is Some(b) =>
+        decls.push(DDef(p, prefix + n, [], Some(EType(p)), EVar(p, b)))
       DOpaque(p, n, k) => decls.push(DOpaque(p, prefix + n, k))
       DEnum(ed) => {
         let f = qualify(None)
@@ -525,6 +536,15 @@ pub fn parse_mbti(
     }
   }
   { decls, skipped, impls, usings: reexports, }
+}
+
+///|
+/// The built-in type of MoonBit++ that type `name` of package `path` is.
+fn builtin_alias(path : String, name : String) -> String? {
+  match (path, name) {
+    ("moonbitlang/core/bigint", "BigInt") => Some("BigInt")
+    _ => None
+  }
 }
 
 ///|

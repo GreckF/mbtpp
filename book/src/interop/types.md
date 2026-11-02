@@ -6,6 +6,7 @@
 | --- | --- |
 | `Int32`（即 `Int`）、`Double`、`Bool`、`Char`、`String`、`Unit` | 同名内置类型（`Int32` 即 `Int`） |
 | `Int64`、`UInt`、`UInt64`、`Byte`、`Float` | 同名内置类型 |
+| `BigInt`（`@bigint.BigInt`） | 内置类型 `BigInt`；`@bigint.BigInt::m` 即 `BigInt::m` |
 | `Array[T]`、`T?`、`Result[T, E]` | 同名类型 |
 | `StringView`、`ArrayView[T]` | `String`、`Array[T]` |
 | `pub(all) enum`、`pub(all) struct` | 同样的 enum、struct，自动 `#mbt`；可以构造和匹配 |

@@ -26,8 +26,8 @@ priv enum NTy {
   NChar
   NString
   NUnit
-  /// `Nat`, a `BigInt` (`Z` is 0, `S(n)` is n + 1).
-  NNat
+  /// A Nat-like datatype (`Nat`, `Fin`, ...), a `BigInt` (see natlike.mbt).
+  NNat(String)
   NEnum(String, Array[NTy])
   /// An opaque MoonBit type (`Json`, `@bigint.BigInt`, `@hashmap.HashMap[K, V]`),
   /// used as is.
@@ -236,7 +236,6 @@ fn Gen::native_ty_in(self : Gen, ctx : Array[TyCtx], t : @tt.Tm) -> NTy? {
     Global("Char") => Some(NChar)
     Global("String") => Some(NString)
     Global("Unit") => Some(NUnit)
-    Global("Nat") => Some(NNat)
     Pi(_, Expl, true, _, _) => {
       // one explicit argument group; the result may not depend on it
       let ps : Array[NTy] = []
@@ -287,6 +286,7 @@ fn Gen::native_ty_in(self : Gen, ctx : Array[TyCtx], t : @tt.Tm) -> NTy? {
           }
           Some(NForeign(d, targs))
         }
+        Global(d) if self.nat_like(d) is Some(_) => Some(NNat(d))
         Global(d) if self.enum_ok(d) => {
           let np = @tt.data_info(d).unwrap().nparams
           if args.length() < np {
@@ -366,7 +366,7 @@ fn Gen::mbt_ty(self : Gen, t : NTy) -> String {
     NChar => "Char"
     NString => "String"
     NUnit | NAny => "Unit"
-    NNat => "BigInt"
+    NNat(_) => "BigInt"
     NSelf => "Self"
     NVar(k) => tvar(k)
     NFun(ps, r) =>
@@ -421,7 +421,7 @@ fn Gen::to_value(
     NBool => "VBool(" + e + ")"
     NChar => "VChar(" + e + ")"
     NString => "VStr(" + e + ")"
-    NNat => "VNat(" + e + ")"
+    NNat(_) => "VNat(" + e + ")"
     NUnit | NAny => "{ ignore(" + e + "); VUnit }"
     NSelf => e
     NVar(k) =>
@@ -492,7 +492,7 @@ fn Gen::of_value(
     NBool => "as_bool(" + e + ")"
     NChar => "as_char(" + e + ")"
     NString => "as_str(" + e + ")"
-    NNat => "as_nat(" + e + ")"
+    NNat(_) => "as_nat(" + e + ")"
     NUnit | NAny => "as_unit(" + e + ")"
     NSelf => e
     NVar(k) =>
@@ -773,14 +773,13 @@ fn Gen::native_sig(self : Gen, name : String) -> TSig? {
 ///|
 /// Native templates of primitives: (template, argument types, result type).
 let native_prims : Map[String, (String, Array[NTy], NTy)] = {
-  "%nat_succ": ("($0 + 1N)", [NNat], NNat),
-  "%nat_of_int": ("nat_of_int($0)", [NInt], NNat),
-  "%nat_to_int": ("$0.to_int()", [NNat], NInt),
-  "%nat_add": ("($0 + $1)", [NNat, NNat], NNat),
-  "%nat_mul": ("($0 * $1)", [NNat, NNat], NNat),
-  "%nat_eq": ("($0 == $1)", [NNat, NNat], NBool),
-  "%nat_compare": ("$0.compare($1)", [NNat, NNat], NInt),
-  "%nat_to_string": ("$0.to_string()", [NNat], NString),
+  "%nat_of_int": ("nat_of_int($0)", [NInt], NNat("Nat")),
+  "%nat_to_int": ("$0.to_int()", [NNat("Nat")], NInt),
+  "%nat_add": ("($0 + $1)", [NNat("Nat"), NNat("Nat")], NNat("Nat")),
+  "%nat_mul": ("($0 * $1)", [NNat("Nat"), NNat("Nat")], NNat("Nat")),
+  "%nat_eq": ("($0 == $1)", [NNat("Nat"), NNat("Nat")], NBool),
+  "%nat_compare": ("$0.compare($1)", [NNat("Nat"), NNat("Nat")], NInt),
+  "%nat_to_string": ("$0.to_string()", [NNat("Nat")], NString),
   "%int_add": ("($0 + $1)", [NInt, NInt], NInt),
   "%int_sub": ("($0 - $1)", [NInt, NInt], NInt),
   "%int_mul": ("($0 * $1)", [NInt, NInt], NInt),
@@ -1082,9 +1081,9 @@ fn Gen::typed_app(
   t : @tt.Tm,
 ) -> (String, NTy) raise NotTyped {
   let (h, args) = flatten_app(t)
-  // a `Nat` is a `BigInt` (see `Gen::app`)
-  if @tt.nat_lit(t) is Some(k) {
-    return ("\{k}N", NNat)
+  // Nat-like data are `BigInt`s (see natlike.mbt)
+  if self.nat_numeral(t) is Some((k, d)) {
+    return ("\{k}N", NNat(d))
   }
   match nat_prim(h) {
     Some((p, k)) if args.length() == k => {
@@ -1132,6 +1131,13 @@ fn Gen::typed_app(
     None => raise NotTyped
   }
   match g.kind {
+    GCon(ci) if self.nat_con(n) is Some((nl, true)) => {
+      if args.length() != ci.nparams + ci.nargs {
+        raise NotTyped
+      }
+      let x = self.typed_check(env, args[ci.nparams + nl.field], NNat(nl.data))
+      ("(" + x + " + 1N)", NNat(nl.data))
+    }
     GCon(ci) => {
       if args.length() != ci.nparams + ci.nargs || !self.enum_ok(ci.data) {
         raise NotTyped
@@ -1442,14 +1448,18 @@ fn Gen::typed_pat(
   conds : Array[String],
 ) -> String raise NotTyped {
   match p {
-    // a test on the `BigInt` (see `nat_pat_slots`)
-    CPCon("Nat::Z" | "Nat::S", _) => {
-      if ty != NNat {
-        raise NotTyped
-      }
+    // a test on the `BigInt` (see `Gen::nat_pat`)
+    CPCon(c, _) if self.nat_con(c) is Some(_) => {
+      guard ty is NNat(_) else { raise NotTyped }
       let n = self.name("n")
-      let (k, exact) = nat_pat_slots(p, j => {
-        names.push(TVar(if j == 0 { n } else { "(\{n} - \{j}N)" }, NNat))
+      let (k, exact) = self.nat_pat(p, j => {
+        names.push(
+          match j {
+            Some(0) => TVar(n, ty)
+            Some(j) => TVar("(\{n} - \{j}N)", ty)
+            None => TNone
+          },
+        )
       })
       conds.push(n + (if exact { " == " } else { " >= " }) + "\{k}N")
       var_marker + n + end_marker

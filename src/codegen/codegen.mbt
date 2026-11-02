@@ -66,6 +66,8 @@ priv struct Gen {
   /// Constructors used, as variants of `Value`: name -> (variant, arity).
   ctors : Map[String, (String, Int32)]
   ctor_order : Array[String]
+  /// Datatypes that are `Nat` after erasure (see natlike.mbt).
+  nat_likes : Map[String, NatLike?]
   /// The global being emitted.
   mut cur_global : String
   /// Uses of async functions outside of native code (which are errors):
@@ -306,11 +308,28 @@ fn byte_lit(b : Byte) -> String {
 }
 
 ///|
-fn pat_code(p : @tt.CPat) -> String {
+/// A pattern of the runtime matcher (see `clauses_dynamic`).
+fn Gen::pat_code(self : Gen, p : @tt.CPat) -> String {
   match p {
     CPVar(_) | CPWild => "PAny"
-    CPCon(c, ps) =>
-      "PCon(" + c.escape() + ", [" + ps.map(pat_code).join(", ") + "])"
+    CPCon(c, _) if self.nat_con(c) is Some(_) => {
+      // the slots: `n - j`, or erased (-1)
+      let slots : Array[String] = []
+      let (k, exact) = self.nat_pat(p, j => {
+        slots.push(j.unwrap_or(-1).to_string())
+      })
+      "PNat(\{k}, \{exact}, [" + slots.join(", ") + "])"
+    }
+    CPCon(c, ps) => {
+      let subs = ps.mapi((j, q) => {
+        if self.er.con_erased(c, j) {
+          "PErased"
+        } else {
+          self.pat_code(q)
+        }
+      })
+      "PCon(" + c.escape() + ", [" + subs.join(", ") + "])"
+    }
     CPLit(l) => "PLit(" + lit_code(l) + ")"
   }
 }
@@ -342,10 +361,16 @@ fn Gen::native_pat(
   conds : Array[String],
 ) -> String {
   match p {
-    CPCon("Nat::Z" | "Nat::S", _) => {
+    CPCon(c, _) if self.nat_con(c) is Some(_) => {
       let n = self.name("n")
-      let (k, exact) = nat_pat_slots(p, j => {
-        names.push(LVar(if j == 0 { n } else { "VNat(as_nat(\{n}) - \{j}N)" }))
+      let (k, exact) = self.nat_pat(p, j => {
+        names.push(
+          match j {
+            Some(0) => LVar(n)
+            Some(j) => LVar("VNat(as_nat(\{n}) - \{j}N)")
+            None => LErased
+          },
+        )
       })
       conds.push("as_nat(\{n}) " + (if exact { "==" } else { ">=" }) + " \{k}N")
       var_marker + n + end_marker
@@ -392,28 +417,6 @@ fn Gen::native_pat(
       "(" + lp + as_marker + n + end_marker + ")"
     }
   }
-}
-
-///|
-/// A pattern `S(…S(q))` of a native `Nat` (see `Gen::app`), with `q` a
-/// variable, `_` or `Z`, is the test `n >= k`, or `n == k` when `q` is `Z`
-/// (the result: `(k, exact)`). Its nodes are slots with the values `n - j`,
-/// j = 0 .. k (outermost first), given to `slot`.
-fn nat_pat_slots(p : @tt.CPat, slot : (Int32) -> Unit) -> (Int32, Bool) {
-  let mut q = p
-  let mut k = 0
-  while true {
-    slot(k)
-    match q {
-      CPCon("Nat::S", [q2]) => {
-        q = q2
-        k = k + 1
-      }
-      CPCon("Nat::Z", _) => return (k, true)
-      _ => return (k, false)
-    }
-  }
-  (k, false)
 }
 
 ///|
@@ -529,7 +532,7 @@ fn Gen::clauses_dynamic(
     }
     buf.write_string(
       "if match_pats([" +
-      cl.pats.map(pat_code).join(", ") +
+      cl.pats.map(p => self.pat_code(p)).join(", ") +
       "], " +
       scruts +
       ", " +
@@ -764,9 +767,9 @@ fn Gen::app(self : Gen, env : Array[Local], t : @tt.Tm) -> String {
   if h is Global(n) && @tt.is_async_global(n) {
     return self.async_use(n)
   }
-  // a `Nat` is a `BigInt`: numerals, `S` and the prelude functions on `Nat`
-  // (`@tt.nat_natives`) are native
-  if @tt.nat_lit(t) is Some(k) {
+  // Nat-like data are `BigInt`s (see natlike.mbt), and the prelude
+  // functions on `Nat` (`@tt.nat_natives`) are native
+  if self.nat_numeral(t) is Some((k, _)) {
     return "VNat(\{k}N)"
   }
   match nat_prim(h) {
@@ -793,6 +796,13 @@ fn Gen::app(self : Gen, env : Array[Local], t : @tt.Tm) -> String {
                 self.gid(n) + "(" + direct.join(", ") + ")",
                 rest,
               )
+            }
+            GCon(ci) if args.length() >= ci.nparams + ci.nargs &&
+              self.nat_con(n) is Some((nl, true)) => {
+              let total = ci.nparams + ci.nargs
+              let rest = args[total:].to_array().map(a => self.tm(env, a))
+              let x = self.tm(env, args[ci.nparams + nl.field])
+              return apply_rest(self.prim_call("%nat_succ", [x]), rest)
             }
             GCon(ci) if args.length() >= ci.nparams + ci.nargs => {
               let total = ci.nparams + ci.nargs
@@ -826,10 +836,10 @@ fn Gen::app(self : Gen, env : Array[Local], t : @tt.Tm) -> String {
 }
 
 ///|
-/// The native operation of a global on `Nat`, and its arity (see `Gen::app`).
+/// The native operation of a prelude function on `Nat`, and its arity (see
+/// `Gen::app`).
 fn nat_prim(h : @tt.Tm) -> (String, Int32)? {
   match h {
-    Global("Nat::S") => Some(("%nat_succ", 1))
     Global(n) => @tt.nat_natives.get(n)
     _ => None
   }
@@ -992,7 +1002,8 @@ fn Gen::global_value(self : Gen, n : String) -> String {
     return self.async_use(n)
   }
   match @tt.globals.get(n) {
-    _ if n == "Nat::Z" => "VNat(0N)"
+    Some({ kind: GCon(ci), .. }) if ci.nparams + ci.nargs == 0 &&
+      self.nat_con(n) is Some(_) => "VNat(0N)"
     Some({ kind: GCon(ci), .. }) if ci.nparams + ci.nargs == 0 =>
       self.con_code(n, [])
     Some({ kind: GData(_), .. }) => "VType"
@@ -1071,7 +1082,7 @@ fn Gen::global_def(self : Gen, name : String) -> Unit raise CodegenError {
     None => raise CodegenError("unknown global " + name)
   }
   let id = self.gid(name)
-  // `S` and the prelude functions on `Nat` are native (see `app`)
+  // the prelude functions on `Nat` are native (see `app`)
   match nat_prim(Global(name)) {
     Some((p, k)) => {
       let xs = Array::makei(k, j => "a" + j.to_string())
@@ -1135,6 +1146,15 @@ fn Gen::global_def(self : Gen, name : String) -> Unit raise CodegenError {
     GFunc(None, _, _) =>
       self.cached(id, "rt_fail(\"" + name + " has no definition\")")
     GData(_) => self.cached(id, "VType")
+    GCon(ci) if self.nat_con(name) is Some((nl, is_succ)) => {
+      let total = ci.nparams + ci.nargs
+      let code = if is_succ {
+        "VNat(as_nat(a\{ci.nparams + nl.field}) + 1N)"
+      } else {
+        "VNat(0N)"
+      }
+      self.cached(id, curried(total, code))
+    }
     GCon(ci) => {
       let args : Array[String] = []
       for j = 0; j < ci.nargs; j = j + 1 {
@@ -1254,6 +1274,7 @@ fn Gen::new(imports : Array[(String, String)]) -> Gen {
     culprit: None,
     ctors: {},
     ctor_order: [],
+    nat_likes: {},
     cur_global: "",
     async_misuse: [],
   }

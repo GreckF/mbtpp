@@ -45,3 +45,12 @@ MoonBit++ 的设计与实现所参考的文献。每条注明用在哪里；采�
 11. Agda 用户手册：Opaque definitions（Agda 2.6.4 起）.
    <https://agda.readthedocs.io/en/latest/language/opaque-definitions.html>
    — 不用扩展类型、在展开处检查的实现方式；默认透明（[unfolding.md](unfolding.md)）。
+
+## 编译
+
+12. Edwin Brady, Conor McBride, James McKinna. Inductive Families Need Not Store Their Indices.
+   TYPES 2003, LNCS 3085.
+   — 擦除索引与只用于类型的字段，擦除后形状与 `Nat` 相同的类型用整数表示
+   （[编译到 MoonBit](../../book/src/interop/compile.md#nat)，`src/codegen/natlike.mbt`）。
+13. Edwin Brady. Idris 2: Quantitative Type Theory in Practice. ECOOP 2021.
+   — Idris 2 把形状与 `Nat` 相同的类型编译为整数；同上。

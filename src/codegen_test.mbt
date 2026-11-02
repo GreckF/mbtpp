@@ -776,3 +776,74 @@ test "codegen: Nat is a BigInt" {
     ),
   )
 }
+
+///|
+test "codegen: Nat-like datatypes are BigInts" {
+  let fin =
+    #|enum Fin : (Nat) -> Type {
+    #|  FZ[n : Nat] : Fin(S(n))
+    #|  FS[n : Nat](Fin(n)) : Fin(S(n))
+    #|}
+    #|
+    #|enum Vector[T] : Nat -> Type {
+    #|  Nil : Vector[T](0)
+    #|  Cons[n : Nat](T, Vector[T](n)) : Vector[T](S(n))
+    #|}
+    #|
+    #|fn[T, n : Nat] Vector::get(self : Vector[T](n), i : Fin(n)) -> T {
+    #|  match (self, i) {
+    #|    (Cons(x, _), FZ) => x
+    #|    (Cons(_, xs), FS(j)) => xs.get(j)
+    #|  }
+    #|}
+    #|
+  // `Fin`'s index fields are erased: it is `Nat` after erasure
+  inspect(
+    signatures(
+      fin +
+      (
+        #|fn main {
+        #|  let v : Vector[Int](2) = Cons(7, Cons(8, Nil))
+        #|  println(v.get(FS(FZ)))
+        #|}
+      ),
+    ),
+    content=(
+      #|enum E_Vector[T0] {
+      #|fn[T0] f_vector_get_t(self : E_Vector[T0], i : BigInt) -> T0 raise {
+      #|fn f_vector_get(a2 : Value, a3 : Value) -> Value raise {
+      #|fn main {
+      #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
+      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
+      #|fn f_show_to_string(inst : Value) -> Value raise {
+    ),
+  )
+  // an index field used at run time is kept: `Fin` stays an enum
+  inspect(
+    signatures(
+      fin +
+      (
+        #|fn[n : Nat] bound(i : Fin(n)) -> Int {
+        #|  match i {
+        #|    FZ[m] => m.to_int()
+        #|    FS[m](_) => m.to_int()
+        #|  }
+        #|}
+        #|
+        #|fn main {
+        #|  let i : Fin(3) = FS(FZ)
+        #|  println(bound(i))
+        #|}
+      ),
+    ),
+    content=(
+      #|enum E_Fin {
+      #|fn f_bound_t(i : E_Fin) -> Int raise {
+      #|fn f_bound(a1 : Value) -> Value raise {
+      #|fn main {
+      #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
+      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
+      #|fn f_show_to_string(inst : Value) -> Value raise {
+    ),
+  )
+}

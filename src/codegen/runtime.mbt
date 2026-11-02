@@ -41,10 +41,6 @@ let runtime_src : String =
   #|fn con_decode(v : Value) -> (String, Array[Value])? {
   #|  match v {
   #|    VDyn(c, xs) => return Some((c, xs))
-  #|    VNat(n) =>
-  #|      return Some(
-  #|        if n == 0N { ("Nat::Z", []) } else { ("Nat::S", [VNat(n - 1N)]) },
-  #|      )
   #|    _ => ()
   #|  }
   #|  for d in con_decoders {
@@ -81,6 +77,11 @@ let runtime_src : String =
   #|  PAny
   #|  PCon(String, Array[Pat])
   #|  PLit(Value)
+  #|  /// An erased field: matches without a value.
+  #|  PErased
+  #|  /// `S(…S(p))` of a Nat-like datatype: `n >= k` (`n == k` when exact);
+  #|  /// its slots are `n - j`, or erased (-1).
+  #|  PNat(Int, Bool, Array[Int])
   #|}
   #|
   #|///|
@@ -200,19 +201,42 @@ let runtime_src : String =
   #|}
   #|
   #|fn match_pat(p : Pat, v : Value, out : Array[Value]) -> Bool {
+  #|  match p {
+  #|    PNat(k, exact, slots) =>
+  #|      match v {
+  #|        VNat(n) => {
+  #|          let k = BigInt::from_int(k)
+  #|          if (exact && n != k) || n < k {
+  #|            return false
+  #|          }
+  #|          for j in slots {
+  #|            out.push(if j < 0 { VType } else { VNat(n - BigInt::from_int(j)) })
+  #|          }
+  #|          return true
+  #|        }
+  #|        _ => return false
+  #|      }
+  #|    _ => ()
+  #|  }
   #|  out.push(v)
   #|  match p {
-  #|    PAny => true
+  #|    PAny | PErased | PNat(_, _, _) => true
   #|    PCon(c, ps) =>
   #|      match con_name(v) {
-  #|        Some(c2) if c2 == c && con_fields(v).length() == ps.length() => {
+  #|        Some(c2) if c2 == c => {
   #|          let args = con_fields(v)
-  #|          for k = 0; k < ps.length(); k = k + 1 {
-  #|            if !match_pat(ps[k], args[k], out) {
+  #|          let mut i = 0
+  #|          for q in ps {
+  #|            if q is PErased {
+  #|              out.push(VType)
+  #|              continue
+  #|            }
+  #|            if i >= args.length() || !match_pat(q, args[i], out) {
   #|              return false
   #|            }
+  #|            i = i + 1
   #|          }
-  #|          true
+  #|          i == args.length()
   #|        }
   #|        _ => false
   #|      }

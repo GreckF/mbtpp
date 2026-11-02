@@ -69,6 +69,39 @@ fn f45_fact_t(n : BigInt) -> BigInt raise {
 仍然每层递归一次，只是每一层是 `BigInt` 的运算。`Nat` 不是 MoonBit 类型：`#mbt fn` 的参数和结果
 不能是 `Nat`，因为 MoonBit 传入的 `BigInt` 可能是负数。
 
+### 形状与 Nat 相同的类型
+
+编译后，擦除之后形状与 `Nat` 相同的数据类型也用 `BigInt` 表示：两个构造子，一个没有保留的字段（零），
+另一个只保留一个字段，类型是这个数据类型本身（后继）。最常见的是有限集 `Fin`：
+
+```text
+enum Fin : (Nat) -> Type {
+  FZ[n : Nat] : Fin(S(n))
+  FS[n : Nat](Fin(n)) : Fin(S(n))
+}
+```
+
+`FZ`、`FS` 的隐式字段 `n` 只用于类型，被擦除，所以 `Fin(n)` 的值就是一个下标，`FS(FS(FZ))` 是
+`2N`。按 `Fin` 取向量元素因此编译为按整数下标逐层递归：
+
+```text
+fn[T0] f46_vector_get_t(self : E_Vector[T0], i : BigInt) -> T0 raise {
+  match (self, i) {
+    (E_Vector::Cons(x, _), n0) if n0 == 0N => x
+    (E_Vector::Cons(_, xs), n1) if n1 >= 1N => f46_vector_get_t(xs, n1 - 1N)
+    _ => rt_fail("no match")
+  }
+}
+```
+
+- 自己定义的 `enum Peano { Zero; Succ(Peano) }` 也是这样。
+- 隐式字段在运行时用到时（例如模式 `FS[m](_) => m.to_int()`），它不被擦除，类型仍是普通的
+  enum。
+- 命题、错误类型、`#mbt` 类型和导入的类型保持原来的表示。
+- 这样的类型（`Nat` 除外）的实例不会成为 MoonBit 的 `impl`，因为它们在 MoonBit 中都是 `BigInt`；
+  用到这些实例的代码使用统一表示。
+- 解释器只对 `Nat` 这样做（解释器不做擦除）。
+
 ## 统一表示
 
 其余部分（类型层计算、GADT 细化、非 `#mbt` 的 trait 等）使用统一值表示 `Value`。它是运行时

@@ -60,7 +60,9 @@
   `S` adds one, a pattern `S(…S(p))` is a guard `n >= k` (`== k` when `p`
   is `Z`) whose slots are `n - j`, and the Prelude functions listed in
   `@tt.nat_natives` are native operations. The checker keeps the unary
-  definitions.
+  definitions. In compiled code (`natlike.mbt`) this holds for every
+  datatype that is `Nat` after erasure (a zero without kept fields, a
+  successor keeping one recursive field), like `Fin`, as in Idris 2.
 - `traits.mbt`: `#mbt` types and traits (checked in `src/tt/mbt.mbt`):
   `#mbt` datatypes are the MoonBit types of their names, `#mbt` traits
   MoonBit traits; bounds become MoonBit bounds, method calls `Tr::m(..)`,

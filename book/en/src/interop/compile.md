@@ -77,6 +77,41 @@ fn f45_fact_t(n : BigInt) -> BigInt raise {
 is not a MoonBit type: the parameters and results of a `#mbt fn` cannot be `Nat`, since a `BigInt`
 from MoonBit could be negative.
 
+### Types shaped like Nat
+
+In compiled code, data types that have the shape of `Nat` after erasure are `BigInt`s as well: two
+constructors, one without kept fields (the zero), and one keeping a single field whose type is the
+data type itself (the successor). The most common one is the finite set `Fin`:
+
+```text
+enum Fin : (Nat) -> Type {
+  FZ[n : Nat] : Fin(S(n))
+  FS[n : Nat](Fin(n)) : Fin(S(n))
+}
+```
+
+The implicit fields `n` of `FZ` and `FS` are only used in types and are erased, so a value of
+`Fin(n)` is just an index: `FS(FS(FZ))` is `2N`. Getting an element of a vector by a `Fin`
+therefore compiles to a recursion on an integer index:
+
+```text
+fn[T0] f46_vector_get_t(self : E_Vector[T0], i : BigInt) -> T0 raise {
+  match (self, i) {
+    (E_Vector::Cons(x, _), n0) if n0 == 0N => x
+    (E_Vector::Cons(_, xs), n1) if n1 >= 1N => f46_vector_get_t(xs, n1 - 1N)
+    _ => rt_fail("no match")
+  }
+}
+```
+
+- A type of your own like `enum Peano { Zero; Succ(Peano) }` is compiled the same way.
+- When an implicit field is used at run time (a pattern `FS[m](_) => m.to_int()`, say), it is not
+  erased, and the type stays an ordinary enum.
+- Propositions, error types, `#mbt` types and imported types keep their representations.
+- Instances for such types (other than `Nat`) do not become MoonBit `impl`s, since they are all
+  `BigInt` in MoonBit; code using those instances uses the uniform representation.
+- The interpreter does this for `Nat` only (it does not erase).
+
 ## Uniform representation
 
 Everything else (type-level computation, GADT refinement, non-`#mbt` traits, etc.) uses the uniform representation `Value`. It is

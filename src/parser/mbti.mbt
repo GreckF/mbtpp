@@ -572,11 +572,6 @@ fn mbti_item(p : Parser, pkg_path : String) -> Array[Decl] raise ParseError {
         })
       let ret = if p.accept("->") { p.expr() } else { EVar(pos, "Unit") }
       let raises = p.effect_opt(is_async)
-      // `nocancel` (an async function that cannot be cancelled) does not
-      // change how it is called
-      if p.peek().tok is TIdent("nocancel") {
-        ignore(p.advance())
-      }
       [
         DFn({
           pos,

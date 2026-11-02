@@ -323,6 +323,11 @@ fn Parser::effect_opt(self : Parser, is_async : Bool) -> Expr? raise ParseError 
     ignore(self.advance())
   }
   let mut r = if no_raise { None } else { self.raises_opt() }
+  // `nocancel` (an async function that cannot be cancelled) does not change
+  // how it is called
+  if is_async && self.peek().tok is TIdent("nocancel") && !self.peek().nl {
+    ignore(self.advance())
+  }
   let mut is_async = is_async
   // `!Raise[E]` is `raise E`, `!Async` is `async`
   let row = match row0 {
@@ -461,6 +466,8 @@ fn Parser::arrow(self : Parser) -> Expr raise ParseError {
   let raises = self.effect_opt(is_async)
   let binders = match lhs {
     ETuple(_, es) if parenthesised => exprs_to_binders(es)
+    // `(T[X]) -> Y`: the parentheses wrap the call-like `T[X]` in a block
+    EBlock(_, [SExpr(_, e)]) if parenthesised => exprs_to_binders([e])
     ELit(_, LUnit) if parenthesised => []
     _ => exprs_to_binders([lhs])
   }

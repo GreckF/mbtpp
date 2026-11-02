@@ -135,8 +135,33 @@ fn global_entry(cxt : Cxt, name : String) -> GEntry raise ElabError {
   ensure(cxt, name)
   match globals.get(name) {
     Some(g) => g
-    None => cxt.fail("unknown name " + name)
+    None => unknown_name(cxt, name)
   }
+}
+
+///|
+/// The error for a name not found: `@pkg.f` of a package not imported says so.
+fn[T] unknown_name(cxt : Cxt, x : String) -> T raise ElabError {
+  if x.has_prefix("@") {
+    match x.find(".") {
+      Some(k) => {
+        let pkg = x.unsafe_substring(start=0, end=k + 1)
+        let known = globals.keys().any(n => n.has_prefix(pkg)) ||
+          st.thunks.keys().any(n => n.has_prefix(pkg))
+        if !known {
+          cxt.fail(
+            "unknown name " +
+            x +
+            ": package " +
+            pkg.unsafe_substring(start=0, end=k) +
+            " is not imported (list it in the import block of moon.pkg)",
+          )
+        }
+      }
+      None => ()
+    }
+  }
+  cxt.fail("unknown name " + x)
 }
 
 ///|
@@ -191,7 +216,7 @@ fn resolve_name(
     if exact {
       return x
     }
-    cxt.fail("unknown name " + x)
+    unknown_name(cxt, x)
   }
   let chosen = match expected {
     Some(h) =>

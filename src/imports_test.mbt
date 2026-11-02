@@ -359,3 +359,54 @@ test "import: generic impls, SourceLoc and re-exports" {
     content="",
   )
 }
+
+///|
+/// Async higher-order functions, as in `moonbitlang/async`.
+let tasks_mbti : String =
+  #|package "demo/tasks"
+  #|
+  #|#callsite(autofill(loc))
+  #|pub async fn[X] with_group(async (Group[X]) -> X, loc~ : SourceLoc) -> X
+  #|pub async fn sleep(Int32) -> Unit noraise
+  #|
+  #|type Group[X]
+  #|pub fn[X] Group::add_defer(Self[X], async () -> Unit nocancel) -> Unit
+  #|#callsite(autofill(loc))
+  #|pub fn[X] Group::spawn_bg(Self[X], async () -> Unit, no_wait? : Bool, loc~ : SourceLoc) -> Unit
+  #|
+
+///|
+test "import: async function types with a parenthesised argument" {
+  let imports : Array[@tt.Import] = [
+    { alias: "tasks", path: "demo/tasks", mbti: tasks_mbti, },
+  ]
+  let r = try {
+    @tt.check_program(
+      "t.mbtpp",
+      (
+        #|async fn main {
+        #|  @tasks.with_group(fn(g) {
+        #|    g.add_defer(fn() { @tasks.sleep(1) })
+        #|    g.spawn_bg(fn() { @tasks.sleep(10) })
+        #|  })
+        #|}
+      ),
+      imports~,
+    )
+    "ok"
+  } catch {
+    @tt.CheckError(msg) => msg
+  }
+  inspect(r, content="ok")
+  inspect(@tt.import_skipped.join("\n"), content="")
+}
+
+///|
+test "import: a package that is not imported" {
+  inspect(
+    check_geo("fn main { @tasks.sleep(1) }"),
+    content=(
+      #|t.mbtpp:1:11: error: unknown name @tasks.sleep: package @tasks is not imported (list it in the import block of moon.pkg)
+    ),
+  )
+}

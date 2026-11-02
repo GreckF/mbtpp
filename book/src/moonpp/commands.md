@@ -21,7 +21,7 @@
 
 | 选项 | 作用 |
 | --- | --- |
-| `--verbose` | 列出导入时被跳过的接口项 |
+| `--verbose` | 列出导入时被跳过的接口项；`build`、`run --compiled` 时还列出没有原生版本的函数及原因 |
 | `--no-prelude` | 不加载 Prelude |
 | `--compiled` | `run` 时运行编译结果而不是解释执行 |
 | `-o`、`--output <目录>` | `build`、`run --compiled` 时生成项目的位置 |

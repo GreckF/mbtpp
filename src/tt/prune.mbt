@@ -82,7 +82,7 @@ pub let prelude_nat : Ref[Bool] = Ref::new(true)
 
 ///|
 /// Does `t` mention one of the globals of `names`?
-fn tm_mentions_any(t : Tm, names : Map[String, Bool]) -> Bool {
+pub fn tm_mentions_any(t : Tm, names : Map[String, Bool]) -> Bool {
   let go = (x : Tm) => tm_mentions_any(x, names)
   let cl = (c : Clause) => {
     c.pats.iter().any(p => pat_mentions_any(p, names)) ||

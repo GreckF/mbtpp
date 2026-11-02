@@ -21,7 +21,7 @@
 
 | Option | Description |
 | --- | --- |
-| `--verbose` | List interface items skipped during import |
+| `--verbose` | List interface items skipped during import; with `build` and `run --compiled`, also the functions without a native version, and why |
 | `--no-prelude` | Do not load the Prelude |
 | `--compiled` | With `run`, run the compiled output instead of interpreting |
 | `-o`, `--output <dir>` | Where `build` and `run --compiled` generate the project |

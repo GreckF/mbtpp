@@ -1214,35 +1214,15 @@ fn Gen::typed_app(
     None => ()
   }
   let n = match h {
+    // a native constant, possibly a function called
+    Global(n) if self.native_consts.contains(n) => {
+      let nt = self.native_const_ty(n)
+      return self.apply_groups(env, self.gid(n) + "_n()", nt, args)
+    }
     Global(n) => n
     Var(_) => {
-      // calling a function value, one argument group at a time
       let (code0, ty0) = self.typed(env, h)
-      let mut code = code0
-      let mut ty = ty0
-      let mut i = 0
-      while i < args.length() {
-        match ty {
-          NFun(ps, r) | NAsyncFun(ps, r) if i + ps.length() <= args.length() => {
-            let cs = self.typed_args(
-              env,
-              args[i:i + ps.length()].to_array(),
-              ps,
-            )
-            code = if unit_only(ps) && cs[0] == "()" {
-              code + "()"
-            } else if unit_only(ps) {
-              "{\nignore(" + cs[0] + ")\n" + code + "()\n}"
-            } else {
-              code + "(" + cs.join(", ") + ")"
-            }
-            ty = r
-            i = i + ps.length()
-          }
-          _ => raise NotTyped
-        }
-      }
-      return (code, ty)
+      return self.apply_groups(env, code0, ty0, args)
     }
     _ => raise NotTyped
   }
@@ -1250,6 +1230,79 @@ fn Gen::typed_app(
     Some(g) => g
     None => raise NotTyped
   }
+  self.typed_global_app(env, n, g, args)
+}
+
+///|
+/// The native type of a global constant.
+fn Gen::native_const_ty(self : Gen, n : String) -> NTy raise NotTyped {
+  match self.native_ty_in([], @tt.globals.get(n).unwrap().ty) {
+    Some(nt) => nt
+    None => raise NotTyped
+  }
+}
+
+///|
+/// The native code of a global constant whose definition is in the native
+/// fragment, and its type.
+fn Gen::typed_const(self : Gen, n : String) -> (String, NTy)? {
+  let body = match @tt.globals.get(n) {
+    Some({ kind: GFunc(Some(b), _, _), .. }) => b
+    _ => return None
+  }
+  let saved = self.cur_result
+  self.cur_result = None
+  let r = try {
+    let nt = self.native_const_ty(n)
+    Some((self.typed_check([], body, nt), nt))
+  } catch {
+    _ => None
+  }
+  self.cur_result = saved
+  r
+}
+
+///|
+/// Calling a function value `code0 : ty0`, one argument group at a time.
+fn Gen::apply_groups(
+  self : Gen,
+  env : Array[TLocal],
+  code0 : String,
+  ty0 : NTy,
+  args : Array[@tt.Tm],
+) -> (String, NTy) raise NotTyped {
+  let mut code = code0
+  let mut ty = ty0
+  let mut i = 0
+  while i < args.length() {
+    match ty {
+      NFun(ps, r) | NAsyncFun(ps, r) if i + ps.length() <= args.length() => {
+        let cs = self.typed_args(env, args[i:i + ps.length()].to_array(), ps)
+        code = if unit_only(ps) && cs[0] == "()" {
+          code + "()"
+        } else if unit_only(ps) {
+          "{\nignore(" + cs[0] + ")\n" + code + "()\n}"
+        } else {
+          code + "(" + cs.join(", ") + ")"
+        }
+        ty = r
+        i = i + ps.length()
+      }
+      _ => raise NotTyped
+    }
+  }
+  (code, ty)
+}
+
+///|
+/// An application of the global `n` (not a native constant).
+fn Gen::typed_global_app(
+  self : Gen,
+  env : Array[TLocal],
+  n : String,
+  g : @tt.GEntry,
+  args : Array[@tt.Tm],
+) -> (String, NTy) raise NotTyped {
   match g.kind {
     GCon(ci) if self.nat_con(n) is Some((nl, true)) => {
       if args.length() != ci.nparams + ci.nargs {
@@ -2088,9 +2141,13 @@ fn Gen::typed_def(self : Gen, name : String) -> String {
 /// functions with a native signature and remove those whose body is not in
 /// the fragment, until nothing changes (callers depend on callees).
 fn Gen::compute_typed(self : Gen) -> Unit {
-  for name, _ in @tt.globals {
+  for name, g in @tt.globals {
     if self.native_sig(name) is Some(_) {
       self.typed_set.push(name)
+    } else if is_native_const_candidate(name, g) &&
+      self.native_ty_in([], g.ty) is Some(_) {
+      // a global `let` of a native type (assumed native, as functions are)
+      self.native_consts.push(name)
     }
   }
   for tr in @tt.mbt_types.keys() {
@@ -2134,7 +2191,82 @@ fn Gen::compute_typed(self : Gen) -> Unit {
     for i in keep_impls {
       self.mbt_impls.push(i)
     }
+    // native constants: their definitions are native, and those that cannot
+    // be converted (arrays: both representations must see the same one) are
+    // used by native code only
+    let keep_consts : Array[String] = []
+    for c in self.native_consts {
+      match self.typed_const(c) {
+        Some((_, nt)) if self.convertible(nt, false) ||
+          !self.used_by_uniform_code(c) => keep_consts.push(c)
+        _ => changed = true
+      }
+    }
+    self.native_consts.clear()
+    for c in keep_consts {
+      self.native_consts.push(c)
+    }
   }
+}
+
+///|
+fn is_native_const_candidate(name : String, g : @tt.GEntry) -> Bool {
+  name != "main" &&
+  func_arity(name) is None &&
+  !@tt.is_async_global(name) &&
+  !@tt.is_proof_global(name) &&
+  g.kind is GFunc(Some(_), _, _)
+}
+
+///|
+/// Is the constant `c` used by code that stays in the uniform
+/// representation?
+fn Gen::used_by_uniform_code(self : Gen, c : String) -> Bool {
+  let names : Map[String, Bool] = {}
+  names.set(c, true)
+  for name, g in @tt.globals {
+    let body = match g.kind {
+      GFunc(Some(b), _, _) if name != c => b
+      _ => continue
+    }
+    let uniform = if self.typed_set.contains(name) {
+      // with bounds, the uniform version is translated too
+      !(self.native_sig(name) is Some(sig) && self.wrappable(sig))
+    } else if self.native_consts.contains(name) {
+      false
+    } else if func_arity(name) is None && self.typed_const_any(name) {
+      // a constant (or `main`) whose definition is native
+      false
+    } else {
+      true
+    }
+    if uniform && @tt.tm_mentions_any(body, names) {
+      return true
+    }
+  }
+  false
+}
+
+///|
+/// Is the definition of the constant `n` (of any type) in the native
+/// fragment?
+fn Gen::typed_const_any(self : Gen, n : String) -> Bool {
+  let body = match @tt.globals.get(n) {
+    Some({ kind: GFunc(Some(b), _, _), .. }) => b
+    _ => return false
+  }
+  if has_return(body) {
+    return false
+  }
+  let saved = self.cur_result
+  let r = try {
+    ignore(self.typed([], body))
+    true
+  } catch {
+    _ => false
+  }
+  self.cur_result = saved
+  r
 }
 
 ///|

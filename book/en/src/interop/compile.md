@@ -53,6 +53,28 @@ Arrays are not converted between native code and the uniform representation: as 
 not share their mutations. A function with arrays among its parameters or result has a native and a
 uniform version; native code passes arrays to native code, and uniform code to uniform code.
 
+A global `let` of a native type whose definition is in the native fragment is native too: it is
+computed once, when first used, and native code refers to it directly, so the functions reading or
+writing it keep their native versions. Uniform code sees it converted; a global `let` holding
+arrays (or other parts that cannot be converted) is native only when no uniform code uses it, so
+that both sides see the same array.
+
+```text
+struct Arena { kinds : Array[Int] }
+let glob : Arena = { kinds: [1, 2, 3] }
+fn kind_glob(e : Int) -> Int { glob.kinds[e] }   // fn f_kind_glob_t(e : Int) -> Int
+```
+
+`moonpp build --verbose` lists the functions and global `let`s of the program without a native
+version, with the reason, for example:
+
+```text
+without a native version (they run in the uniform representation):
+  bump: its body is not in the native fragment: in `glob`, the global let glob is not native
+  glob: it holds arrays, and code in the uniform representation uses it
+  sum_n: its signature has no native translation
+```
+
 ## Nat
 
 When type checking, `Nat` is the unary `Z`, `S(n)`, and proofs compute with the definitions. At run

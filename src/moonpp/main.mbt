@@ -26,7 +26,8 @@ let help_msg : String =
   #|
   #|options:
   #|  --no-prelude   do not load the prelude
-  #|  --verbose      list the interface items that could not be imported
+  #|  --verbose      list the interface items that could not be imported, and
+  #|                 (build, run --compiled) the functions without a native version
   #|  --compiled     (run) run the program compiled to MoonBit instead of interpreting it
   #|  -o, --output <dir>  (build, run --compiled) where to generate the MoonBit project
   #|
@@ -361,6 +362,17 @@ fn compile(opts : Options, path : String?) -> (String, String) raise Failure {
   }
   for w in @codegen.warnings {
     println("warning: " + w)
+  }
+  if opts.verbose {
+    let report = @codegen.native_report(imports.map(i => (i.path, i.alias)))
+    if report.length() > 0 {
+      println(
+        "without a native version (they run in the uniform representation):",
+      )
+      for r in report {
+        println("  " + r.0 + ": " + r.1)
+      }
+    }
   }
   let single = match path {
     Some(p) => p.has_suffix(".mbtpp")

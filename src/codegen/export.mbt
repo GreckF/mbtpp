@@ -102,6 +102,80 @@ fn source_name(n : String) -> String {
 }
 
 ///|
+/// The functions and global `let`s of the program (not of the Prelude)
+/// without a native version, with the reason (`moonpp build --verbose`).
+pub fn native_report(
+  imports : Array[(String, String)],
+) -> Array[(String, String)] {
+  let g = Gen::new(imports)
+  g.dry = true
+  g.compute_typed()
+  let out : Array[(String, String)] = []
+  let names : Array[String] = @tt.global_files.keys().collect()
+  names.sort()
+  for n in names {
+    let e = match @tt.globals.get(n) {
+      Some({ kind: GFunc(Some(_), _, _), .. } as e) => e
+      _ => continue
+    }
+    // the program's own definitions, not trait methods
+    let own = match @tt.global_files.get(n) {
+      Some(f) => @tt.source_files.contains(f)
+      None => false
+    }
+    let is_method = match n.rev_find("::") {
+      Some(i) =>
+        @tt.data_info(n.unsafe_substring(start=0, end=i))
+        is Some({ is_trait: true, .. })
+      None => false
+    }
+    if !own ||
+      is_method ||
+      n == "main" ||
+      @tt.is_proof_global(n) ||
+      n.contains("$") {
+      continue
+    }
+    if func_arity(n) is Some(_) {
+      if g.typed_set.contains(n) {
+        continue
+      }
+      let why = match g.native_sig(n) {
+        None => "its signature has no native translation"
+        Some(_) => {
+          g.diagnose = true
+          g.culprit = None
+          ignore(g.typed_fn(n))
+          g.diagnose = false
+          match g.culprit {
+            Some(c) => "its body is not in the native fragment: " + c
+            None => "its body is not in the native fragment"
+          }
+        }
+      }
+      out.push((n, why))
+    } else if is_native_const_candidate(n, e) && !g.native_consts.contains(n) {
+      let why = match g.typed_const(n) {
+        Some(_) =>
+          "it holds arrays, and code in the uniform representation uses it"
+        None => {
+          g.diagnose = true
+          g.culprit = None
+          ignore(g.typed_const_any(n))
+          g.diagnose = false
+          match g.culprit {
+            Some(c) => "its definition is not in the native fragment: " + c
+            None => "its definition is not in the native fragment"
+          }
+        }
+      }
+      out.push((n, why))
+    }
+  }
+  out
+}
+
+///|
 /// Why the term `t` is not in the native fragment.
 fn Gen::explain(self : Gen, env : Array[TLocal], t : @tt.Tm) -> String {
   let names = env.map(l => {
@@ -131,6 +205,12 @@ fn Gen::explain(self : Gen, env : Array[TLocal], t : @tt.Tm) -> String {
                 g.unsafe_substring(start=0, end=i) +
                 ", which is not #mbt",
               )
+            _ if func_arity(g) is None =>
+              if self.native_consts.contains(g) {
+                None
+              } else {
+                Some("the global let " + g + " is not native")
+              }
             _ =>
               if self.native_sig(g) is None {
                 Some(

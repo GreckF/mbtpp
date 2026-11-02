@@ -47,6 +47,25 @@ impl，它们的输出与比较和 Prelude 的实例相同。因此在 async 函
 数组不会在原生代码与统一表示之间转换：两边的数组若是副本，修改就不能共享。参数或结果含数组的
 函数有原生和统一表示两个版本，原生代码之间、统一表示代码之间各自直接传递数组。
 
+类型是原生类型、定义在原生片段中的全局 `let` 也是原生的：它在第一次使用时计算一次，原生代码直接
+引用它，所以读写它的函数仍有原生版本。统一表示中的代码看到的是它转换后的值；含数组（或其他不能
+转换的部分）的全局 `let` 只有在没有统一表示代码使用它时才是原生的，以保证两边是同一个数组。
+
+```text
+struct Arena { kinds : Array[Int] }
+let glob : Arena = { kinds: [1, 2, 3] }
+fn kind_glob(e : Int) -> Int { glob.kinds[e] }   // fn f_kind_glob_t(e : Int) -> Int
+```
+
+`moonpp build --verbose` 列出程序中没有原生版本的函数和全局 `let`，以及原因，例如：
+
+```text
+without a native version (they run in the uniform representation):
+  bump: its body is not in the native fragment: in `glob`, the global let glob is not native
+  glob: it holds arrays, and code in the uniform representation uses it
+  sum_n: its signature has no native translation
+```
+
 ## Nat
 
 类型检查时，`Nat` 是一进制的 `Z`、`S(n)`，证明按定义计算。运行时（解释器和编译后的程序）中，`Nat`

@@ -8,6 +8,8 @@ pub fn generate_files(Array[(String, String)]) -> Array[(String, String)] raise 
 
 pub fn native_fns(Array[(String, String)], Array[String]) -> Array[String]
 
+pub fn native_report(Array[(String, String)]) -> Array[(String, String)]
+
 pub fn runtime_code() -> String
 
 pub fn runtime_file_name() -> String

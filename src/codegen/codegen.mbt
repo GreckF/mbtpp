@@ -68,6 +68,9 @@ priv struct Gen {
   ctor_order : Array[String]
   /// Datatypes that are `Nat` after erasure (see natlike.mbt).
   nat_likes : Map[String, NatLike?]
+  /// Global constants (`let`) with a native version `<id>_n()` (see
+  /// `compute_typed`).
+  native_consts : Array[String]
   /// The global being emitted.
   mut cur_global : String
   /// Uses of async functions outside of native code (which are errors):
@@ -1135,6 +1138,46 @@ fn Gen::global_def(self : Gen, name : String) -> Unit raise CodegenError {
       }
     GFunc(Some(body), _, _) if func_arity(name) is Some(n) =>
       self.uniform_fn(name, id, body, n)
+    GFunc(Some(_), _, _) if self.native_consts.contains(name) => {
+      // a native constant: computed once, natively; the uniform code sees
+      // it converted (only when it can be: otherwise no uniform code uses
+      // it, see `compute_typed`)
+      let (code, nt) = self.typed_const(name).unwrap()
+      let ty = self.mbt_ty(nt)
+      // `((A) -> B raise)?`
+      let ty = if nt is (NFun(_, _) | NAsyncFun(_, _)) {
+        "(" + ty + ")"
+      } else {
+        ty
+      }
+      self.write(
+        (
+          $|
+          $|/// \{name}
+          $|let \{id}_cell : Ref[\{ty}?] = Ref::new(None)
+          $|
+          $|fn \{id}_n() -> \{ty} raise {
+          $|  match \{id}_cell.val {
+          $|    Some(v) => v
+          $|    None => {
+          $|      let v : \{ty} = \{code}
+          $|      \{id}_cell.val = Some(v)
+          $|      v
+          $|    }
+          $|  }
+          $|}
+          $|
+        ),
+      )
+      self.cached(
+        id,
+        if self.convertible(nt, false) {
+          self.to_value(nt, id + "_n()", None)
+        } else {
+          "rt_fail(\"\{name} has no uniform representation\")"
+        },
+      )
+    }
     GFunc(Some(body), _, _) => {
       self.write("\n/// " + name)
       // a value (or `main`) whose definition is in the native fragment
@@ -1293,6 +1336,7 @@ fn Gen::new(imports : Array[(String, String)]) -> Gen {
     ctors: {},
     ctor_order: [],
     nat_likes: {},
+    native_consts: [],
     cur_global: "",
     async_misuse: [],
   }

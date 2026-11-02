@@ -912,3 +912,70 @@ test "codegen: newtypes and value parameters" {
     ),
   )
 }
+
+///|
+test "codegen: global lets in native code" {
+  let arena =
+    #|struct Arena {
+    #|  kinds : Array[Int]
+    #|}
+    #|
+    #|let glob : Arena = { kinds: [1, 2, 3] }
+    #|
+    #|fn kind_glob(e : Int) -> Int {
+    #|  glob.kinds[e]
+    #|}
+    #|
+  // native: the functions reading it are native too
+  inspect(
+    signatures(arena + "fn main {\n  println(kind_glob(1))\n}\n"),
+    content=(
+      #|fn f_kind_glob_t(e : Int) -> Int raise {
+      #|fn f_kind_glob(a0 : Value) -> Value raise {
+      #|struct E_Arena(Array[Int])
+      #|fn f_arena_kinds_t(self : E_Arena) -> Array[Int] raise {
+      #|fn f_arena_kinds(self : Value) -> Value raise {
+      #|fn f_glob_n() -> E_Arena raise {
+      #|fn main {
+      #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
+      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
+      #|fn f_show_to_string(inst : Value) -> Value raise {
+    ),
+  )
+  // used by uniform code: arrays cannot be in both representations
+  inspect(
+    signatures(
+      arena +
+      (
+        #|fn NAry(n : Nat) -> Type {
+        #|  match n {
+        #|    Z => Int
+        #|    S(k) => (Int) -> NAry(k)
+        #|  }
+        #|}
+        #|
+        #|fn sum_n(n : Nat, acc : Int) -> NAry(n) {
+        #|  match n as m return NAry(m) {
+        #|    Z => acc + glob.kinds[0]
+        #|    S(k) => x => sum_n(k, acc + x)
+        #|  }
+        #|}
+        #|
+        #|fn main {
+        #|  println(kind_glob(1) + sum_n(1, 0)(2))
+        #|}
+      ),
+    ),
+    content=(
+      #|fn f_sum_n(n : Value, acc : Value) -> Value raise {
+      #|struct E_Arena(Array[Int])
+      #|fn f_arena_kinds_t(self : E_Arena) -> Array[Int] raise {
+      #|fn f_arena_kinds(self : Value) -> Value raise {
+      #|fn f_kind_glob(e : Value) -> Value raise {
+      #|fn main {
+      #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
+      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
+      #|fn f_show_to_string(inst : Value) -> Value raise {
+    ),
+  )
+}

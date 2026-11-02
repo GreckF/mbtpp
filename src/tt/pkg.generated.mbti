@@ -187,6 +187,8 @@ pub fn strict(Val) -> Val?
 
 pub fn tm_effect(Tm) -> (Bool, Tm?)
 
+pub fn tm_mentions_any(Tm, Map[String, Bool]) -> Bool
+
 pub fn trait_method_names(String) -> Array[String]
 
 pub fn trait_method_type(String, String) -> Tm?

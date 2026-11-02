@@ -18,7 +18,7 @@ fn cmd_ide(
 ) -> Bool raise Failure {
   let file = normalize_path(file)
   let dir = dir_of(file)
-  let files = if has_package_file(dir) {
+  let files = if is_project_package(dir) {
     ordered_files(dir, package_files(dir).map(normalize_path))
   } else {
     [file]
@@ -34,7 +34,7 @@ fn cmd_ide(
         Object(m) =>
           for k, v in m {
             if v is String(s) {
-              contents.set(normalize_path(k), s)
+              contents.set(absolute_path(k), s)
             }
           }
         _ => die("bad overlay " + o)
@@ -43,7 +43,7 @@ fn cmd_ide(
     None => ()
   }
   let srcs = files.map(f => {
-    let src = match contents.get(f) {
+    let src = match contents.get(absolute_path(f)) {
       Some(s) => s
       None =>
         @fs.read_file_to_string(f) catch {

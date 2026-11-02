@@ -87,6 +87,7 @@ fn reset_elab() -> Unit {
   st.pending.clear()
   st.type_defaults.clear()
   st.fresh = 0
+  prop_args.clear()
   reset_effects()
 }
 
@@ -268,6 +269,7 @@ fn insert(cxt : Cxt, t : Tm, ty : Val) -> (Tm, Val) raise ElabError {
     if i == Inst {
       add_pending(cxt, m, a)
     }
+    note_prop_arg(cxt, m, a)
     t = App(t, m, i)
     ty = inst(cl, cxt.eval(m))
   }
@@ -576,6 +578,7 @@ fn app_core(
     } else {
       implicit_meta(cxt, head)
     }
+    note_prop_arg(cxt, arg, a)
     impl_terms.push((arg, i))
     t = App(t, arg, i)
     ty = inst(cl, cxt.eval(arg))
@@ -840,13 +843,23 @@ fn elab_app(
     _ => ()
   }
   let (ht, hty, np) = infer_head(cxt, f, expected)
-  // `xs[i]` is indexing unless `xs` takes implicit arguments.
+  // `xs[i]` is indexing unless `xs` takes implicit arguments; `fs[i](x)`
+  // calls the element
   match (impl_args, expl_args) {
-    (Some(idx), None) if idx.length() == 1 && np == 0 =>
+    (Some(idx), _) if idx.length() == 1 && np == 0 =>
       match force(hty) {
         VPi(_, i, _, _, _) if i != Expl => ()
         VU | VProp => ()
-        _ => return elab_method(cxt, ht, hty, "op_get", None, [AE(idx[0])])
+        _ => {
+          let (et, ety) = elab_method(cxt, ht, hty, "op_get", None, [
+            AE(idx[0]),
+          ])
+          match expl_args {
+            None => return (et, ety)
+            Some(args) =>
+              return app_core(cxt, et, ety, 0, None, Some(args.map(AE(_))))
+          }
+        }
       }
     _ => ()
   }
@@ -1779,4 +1792,32 @@ fn occurs_any(hi : Int32, lo : Int32, v : Val) -> Bool {
     }
   }
   false
+}
+
+///|
+/// Implicit arguments that must be propositions (`[A : Prop]`), checked
+/// once their metas are solved (unification alone could solve them with
+/// any type).
+let prop_args : Array[(Cxt, Tm)] = []
+
+///|
+fn note_prop_arg(cxt : Cxt, arg : Tm, dom : Val) -> Unit {
+  if force(dom) is VProp {
+    prop_args.push((cxt, arg))
+  }
+}
+
+///|
+fn check_prop_args() -> Unit raise ElabError {
+  let todo = prop_args.copy()
+  prop_args.clear()
+  for x in todo {
+    let (cxt, arg) = x
+    let v = force(cxt.eval(arg))
+    if !(v is VFlex(_, _)) && !is_prop_type(cxt.ltypes(), v) {
+      cxt.fail(
+        "expected a proposition (a type in Prop), got " + cxt.show(v),
+      )
+    }
+  }
 }

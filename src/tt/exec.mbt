@@ -202,7 +202,14 @@ fn exec(xe : XEnv, t : Tm) -> Val raise ExecStop {
   match t {
     Var(ix) => xe.vals[xe.slot(ix)].val
     LetMut(_, _, v, b) => exec(xe.push(exec(xe, v), true), b)
-    Let(_, _, v, b) => exec(xe.push(exec(xe, v), false), b)
+    Let(_, _, v, b) => {
+      let x = exec(xe, v)
+      // the run stops at an `abort`
+      if is_abort(x) {
+        raise XStuck
+      }
+      exec(xe.push(x, false), b)
+    }
     Assign(ix, v) => {
       let x = exec(xe, v)
       xe.vals[xe.slot(ix)].val = x

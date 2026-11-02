@@ -194,7 +194,23 @@ fn check_block(
         Some(e) => check(c, e, bool_ty())
         None => Lit(LBool(true))
       }
-      let tb = check({ ..c, in_loop: true, }, body, unit_ty())
+      // as in MoonBit, the body sees an immutable copy of each loop variable
+      // (closures keep the value of their iteration)
+      let mut cb = c
+      for k = 0; k < lets.length(); k = k + 1 {
+        cb = cb.bind(lets[k].0, c.types[c.lvl - lets.length() + k])
+      }
+      let mut tb = check({ ..cb, in_loop: true, }, body, unit_ty())
+      for k = lets.length() - 1; k >= 0; k = k - 1 {
+        // under the variables and the copies 0 .. k-1: variable `k` is n-1
+        let (x, a, _) = lets[k]
+        tb = Let(
+          x,
+          tm_shift(a, lets.length(), 0),
+          Var(lets.length() - 1),
+          tb,
+        )
+      }
       let mut step = Lit(LUnit)
       for k = updates.length() - 1; k >= 0; k = k - 1 {
         let (x, e) = updates[k]

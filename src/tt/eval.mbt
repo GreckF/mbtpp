@@ -33,6 +33,8 @@ pub fn eval(env : Env, t : Tm) -> Val {
       let x = eval(env, v)
       match strict(x) {
         Some(r) if is_raise(r) => r
+        // the program stops there: no value for the rest
+        Some(r) if is_abort(r) => VStuck(env, t, [])
         Some(_) => eval(env_push(env, x), b)
         None => VStuck(env, t, [])
       }
@@ -511,4 +513,17 @@ fn quote_with(lvl : Int32, v : Val, full : Bool) -> Tm {
 ///|
 pub fn nf(env : Env, t : Tm) -> Tm {
   quote(env.length(), eval(env, t))
+}
+
+///|
+/// A call of `abort` or `panic`: the program stops.
+fn is_abort(v : Val) -> Bool {
+  match force(v) {
+    VPrim(n, _) =>
+      match globals.get(n) {
+        Some({ kind: GPrim(p, _), .. }) => p == "%abort" || p == "%panic"
+        _ => false
+      }
+    _ => false
+  }
 }

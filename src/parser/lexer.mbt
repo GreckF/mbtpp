@@ -144,6 +144,9 @@ pub fn tokenize(
         if dv >= base {
           break
         }
+        if v > (18446744073709551615UL - dv.to_uint64()) / base.to_uint64() {
+          raise ParseError(pos, "the integer literal is out of range")
+        }
         v = v * base.to_uint64() + dv.to_uint64()
         digits = digits + 1
         adv()
@@ -158,11 +161,18 @@ pub fn tokenize(
         TLit(LUInt64(v))
       } else if peek(0) == 'U' && !is_ident_char(peek(1)) {
         adv()
+        if v > 4294967295UL {
+          raise ParseError(pos, "the integer literal is out of range for UInt")
+        }
         TLit(LUInt(v.to_uint()))
       } else if peek(0) == 'L' && !is_ident_char(peek(1)) {
         adv()
         TLit(LInt64(v.reinterpret_as_int64()))
       } else {
+        // a bit pattern of 32 bits
+        if v > 4294967295UL {
+          raise ParseError(pos, "the integer literal is out of range for Int")
+        }
         TInt(v.to_int())
       }
       toks.push({ tok, pos, nl, })
@@ -196,6 +206,25 @@ pub fn tokenize(
             let ebuf = StringBuilder::new()
             let mut depth = 0
             while i < n && cs[i] != '\n' && !(cs[i] == '}' && depth == 0) {
+              // a string or a character in the expression
+              if cs[i] == '"' || cs[i] == '\'' {
+                let q = cs[i]
+                ebuf.write_char(q)
+                adv()
+                while i < n && cs[i] != q && cs[i] != '\n' {
+                  if cs[i] == '\\' && i + 1 < n {
+                    ebuf.write_char(cs[i])
+                    adv()
+                  }
+                  ebuf.write_char(cs[i])
+                  adv()
+                }
+                if i < n && cs[i] == q {
+                  ebuf.write_char(q)
+                  adv()
+                }
+                continue
+              }
               if cs[i] == '{' {
                 depth = depth + 1
               } else if cs[i] == '}' {
@@ -213,6 +242,9 @@ pub fn tokenize(
           }
           if interp && d == '\\' {
             adv()
+            if i >= n {
+              raise ParseError(pos, "unterminated string literal")
+            }
             let e = cs[i]
             adv()
             buf.write_char(escape_char(pos, e))
@@ -250,19 +282,24 @@ pub fn tokenize(
       adv()
       let ch = if i < n && cs[i] == '\\' {
         adv()
+        if i >= n {
+          raise ParseError(pos, "unterminated byte literal")
+        }
         let e = cs[i]
         adv()
         if e == 'x' {
           let mut b = 0
           for _ in 0..<2 {
-            let d = cs[i]
+            let d = if i < n { cs[i] } else { ' ' }
             b = b * 16 +
               (if d >= '0' && d <= '9' {
                 d.to_int() - '0'.to_int()
               } else if d >= 'a' && d <= 'f' {
                 d.to_int() - 'a'.to_int() + 10
-              } else {
+              } else if d >= 'A' && d <= 'F' {
                 d.to_int() - 'A'.to_int() + 10
+              } else {
+                raise ParseError(pos, "expected two hexadecimal digits after \\x")
               })
             adv()
           }
@@ -270,10 +307,17 @@ pub fn tokenize(
         } else {
           escape_char(pos, e)
         }
-      } else {
+      } else if i < n {
         let ch = cs[i]
         adv()
+        if ch.to_int() > 127 {
+          raise ParseError(
+            pos, "a byte literal is an ASCII character or an escape",
+          )
+        }
         ch
+      } else {
+        raise ParseError(pos, "unterminated byte literal")
       }
       if i >= n || cs[i] != '\'' {
         raise ParseError(pos, "unterminated byte literal")
@@ -284,30 +328,60 @@ pub fn tokenize(
       continue
     }
     if c >= '0' && c <= '9' {
+      let text = StringBuilder::new()
       let mut v : UInt64 = 0
+      let mut too_big = false
+      let digits = () => {
+        while i < n && ((cs[i] >= '0' && cs[i] <= '9') || cs[i] == '_') {
+          if cs[i] != '_' {
+            text.write_char(cs[i])
+          }
+          adv()
+        }
+      }
       while i < n && ((cs[i] >= '0' && cs[i] <= '9') || cs[i] == '_') {
         if cs[i] != '_' {
-          v = v * 10 + (cs[i].to_int() - '0'.to_int()).to_uint64()
+          let d = (cs[i].to_int() - '0'.to_int()).to_uint64()
+          if v > (18446744073709551615UL - d) / 10UL {
+            too_big = true
+          }
+          v = v * 10 + d
+          text.write_char(cs[i])
         }
         adv()
       }
-      // `1.5` is a Double, but not `0..n` or the field access `t.0.1`
+      // `1.5` and `1e3` are Doubles, but not `0..n` or the field access
+      // `t.0.1`
       let after_dot = toks.length() > 0 &&
         toks[toks.length() - 1].tok == TSym(".")
-      if !after_dot &&
+      let frac = !after_dot &&
         i + 1 < n &&
         cs[i] == '.' &&
         cs[i + 1] >= '0' &&
-        cs[i + 1] <= '9' {
+        cs[i + 1] <= '9'
+      if frac {
+        text.write_char('.')
         adv()
-        let mut d = v.to_double()
-        let mut scale = 0.1
-        while i < n && ((cs[i] >= '0' && cs[i] <= '9') || cs[i] == '_') {
-          if cs[i] != '_' {
-            d = d + (cs[i].to_int() - '0'.to_int()).to_double() * scale
-            scale = scale / 10.0
-          }
+        digits()
+      }
+      let exp = !after_dot &&
+        (peek(0) == 'e' || peek(0) == 'E') &&
+        (
+          (peek(1) >= '0' && peek(1) <= '9') ||
+          ((peek(1) == '+' || peek(1) == '-') && peek(2) >= '0' && peek(2) <= '9')
+        )
+      if exp {
+        text.write_char('e')
+        adv()
+        if peek(0) == '+' || peek(0) == '-' {
+          text.write_char(peek(0))
           adv()
+        }
+        digits()
+      }
+      if frac || exp {
+        let d = @string.parse_double(text.to_string()) catch {
+          _ => raise ParseError(pos, "invalid floating-point literal")
         }
         // `1.5F`: a Float
         if peek(0) == 'F' && !is_ident_char(peek(1)) {
@@ -319,21 +393,35 @@ pub fn tokenize(
         nl = false
         continue
       }
+      // `-2147483648`: the literal after a minus may be one more
+      let neg = toks.length() > 0 && toks[toks.length() - 1].tok == TSym("-")
+      let range = (max : UInt64, ty : String) => {
+        if too_big || v > max + (if neg { 1UL } else { 0UL }) {
+          raise ParseError(
+            pos,
+            "the integer literal " + text.to_string() + " is out of range for " + ty,
+          )
+        }
+      }
       // `1L` Int64, `1U` UInt, `1UL` UInt64, `1F` Float
       let tok = if peek(0) == 'U' && peek(1) == 'L' && !is_ident_char(peek(2)) {
         adv()
         adv()
+        range(18446744073709551615UL, "UInt64")
         TLit(LUInt64(v))
       } else if peek(0) == 'U' && !is_ident_char(peek(1)) {
         adv()
+        range(4294967295UL, "UInt")
         TLit(LUInt(v.to_uint()))
       } else if peek(0) == 'L' && !is_ident_char(peek(1)) {
         adv()
+        range(9223372036854775807UL, "Int64")
         TLit(LInt64(v.reinterpret_as_int64()))
       } else if peek(0) == 'F' && !is_ident_char(peek(1)) {
         adv()
         TLit(LFloat(Float::from_double(v.to_double())))
       } else {
+        range(2147483647UL, "Int")
         TInt(v.to_int())
       }
       toks.push({ tok, pos, nl, })
@@ -356,6 +444,9 @@ pub fn tokenize(
       adv()
       let ch = if i < n && cs[i] == '\\' {
         adv()
+        if i >= n {
+          raise ParseError(pos, "unterminated character literal")
+        }
         let e = cs[i]
         adv()
         escape_char(pos, e)
@@ -399,6 +490,25 @@ pub fn tokenize(
           let ebuf = StringBuilder::new()
           let mut depth = 0
           while i < n && !(cs[i] == '}' && depth == 0) {
+            // a string or a character in the expression
+            if cs[i] == '"' || cs[i] == '\'' {
+              let q = cs[i]
+              ebuf.write_char(q)
+              adv()
+              while i < n && cs[i] != q && cs[i] != '\n' {
+                if cs[i] == '\\' && i + 1 < n {
+                  ebuf.write_char(cs[i])
+                  adv()
+                }
+                ebuf.write_char(cs[i])
+                adv()
+              }
+              if i < n && cs[i] == q {
+                ebuf.write_char(q)
+                adv()
+              }
+              continue
+            }
             if cs[i] == '{' {
               depth = depth + 1
             } else if cs[i] == '}' {
@@ -416,6 +526,9 @@ pub fn tokenize(
         }
         if d == '\\' {
           adv()
+          if i >= n {
+            raise ParseError(pos, "unterminated string literal")
+          }
           let e = cs[i]
           adv()
           buf.write_char(escape_char(pos, e))

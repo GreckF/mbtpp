@@ -27,8 +27,15 @@ fn[T] die(msg : String) -> T raise Failure {
 ///|
 fn parent_dir(dir : String) -> String? {
   let d = dir_of(dir)
-  if d == dir || d == "." || d == "" || d == "/" {
+  if d == dir || d == "" || d == "/" {
     None
+  } else if d == "." {
+    // `src` is in the current directory
+    if dir == "." || dir == "./" {
+      None
+    } else {
+      Some(".")
+    }
   } else {
     Some(d)
   }
@@ -45,8 +52,21 @@ fn last_segment(path : String) -> String {
 ///|
 fn list_dir(dir : String) -> Array[String] {
   let names = (@fs.read_dir(dir) catch { _ => return [] }).to_array()
-  names.sort()
+  // dictionary order (`String::compare` puts shorter strings first)
+  names.sort_by(dict_compare)
   names
+}
+
+///|
+fn dict_compare(a : String, b : String) -> Int {
+  let n = if a.length() < b.length() { a.length() } else { b.length() }
+  for k = 0; k < n; k = k + 1 {
+    let c = a.code_unit_at(k).compare(b.code_unit_at(k))
+    if c != 0 {
+      return c
+    }
+  }
+  a.length().compare(b.length())
 }
 
 ///|
@@ -233,5 +253,41 @@ fn new_project(name : String) -> Unit raise Failure {
     @fs.write_string_to_file(path, f.1) catch {
       @fs.IOError(msg) => die("cannot write " + path + ": " + msg)
     }
+  }
+}
+
+///|
+/// Is `dir` a package of a project: it has a `moon.pkg`, or it is in the
+/// source directory of the project (as `moonpp check` finds packages)?
+fn is_project_package(dir : String) -> Bool {
+  if has_package_file(dir) {
+    return true
+  }
+  match find_project(dir) {
+    Some(root) => {
+      let src = module_source(root)
+      if src == "" {
+        return false
+      }
+      let base = normalize_path(root + "/" + src)
+      let d = normalize_path(dir)
+      d == base || d.has_prefix(base + "/")
+    }
+    None => false
+  }
+}
+
+///|
+/// An absolute form of a path, for comparisons.
+fn absolute_path(path : String) -> String {
+  let p = path.replace_all(old="\\", new="/")
+  let abs = p.has_prefix("/") ||
+    (p.length() > 1 && p.code_unit_at(1) == ':')
+  let full = normalize_path(if abs { p } else { current_dir() + "/" + p })
+  // a drive letter in either case
+  if full.length() > 1 && full.code_unit_at(1) == ':' {
+    full.substring(end=1).to_lower() + full.substring(start=1)
+  } else {
+    full
   }
 }

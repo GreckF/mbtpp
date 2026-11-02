@@ -488,13 +488,14 @@ fn Parser::pipe(self : Parser) -> Expr raise ParseError {
 ///|
 fn bin_prec(op : String) -> Int32 {
   match op {
+    // as in MoonBit: bitwise operators bind looser than comparisons
     "||" => 1
     "&&" => 2
-    "==" | "!=" | "===" | "<" | ">" | "<=" | ">=" | "is" => 3
-    "..<" | "..=" => 4
-    "|" => 5
-    "^" => 6
-    "&" => 7
+    "|" => 3
+    "^" => 4
+    "&" => 5
+    "==" | "!=" | "===" | "<" | ">" | "<=" | ">=" | "is" => 6
+    "..<" | "..=" => 7
     "<<" | ">>" => 8
     "+" | "-" => 9
     "*" | "/" | "%" => 10
@@ -926,7 +927,11 @@ fn Parser::primary(self : Parser) -> Expr raise ParseError {
       if es.length() == 0 {
         ELit(pos, LUnit)
       } else if es.length() == 1 && !trailing {
-        es[0]
+        // `(xs[i])(x)` calls the element: not `f[T](x)`
+        match es[0] {
+          EApp(_, _, Some(_), None) as e => EBlock(pos, [SExpr(pos, e)])
+          e => e
+        }
       } else {
         ETuple(pos, es)
       }

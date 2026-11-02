@@ -262,7 +262,7 @@ pub fn Cxt::refine(self : Cxt, eqs0 : Array[(Val, Val)]) -> Refined {
           eqs.push((sp1[k].0, sp2[k].0))
         }
       }
-      (VLit(l1), VLit(l2)) => if l1 != l2 { return RConflict }
+      (VLit(l1), VLit(l2)) => if !lit_same(l1, l2) { return RConflict }
       (VLit(_), VCon(_, _)) | (VCon(_, _), VLit(_)) => return RConflict
       // an error is not a value, and errors are equal when they are the same
       // error (see raise.mbt)

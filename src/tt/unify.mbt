@@ -254,7 +254,10 @@ fn unify_struct(ts : LTypes, t0 : Val, u0 : Val) -> Unit raise UnifyError {
       )
     }
     (VU, VU) | (VProp, VProp) => ()
-    (VLit(a), VLit(b)) => if a != b { raise UnifyError("literal mismatch") }
+    (VLit(a), VLit(b)) =>
+      if !lit_same(a, b) {
+        raise UnifyError("literal mismatch")
+      }
     // errors are not compared, effects are (see effects.mbt)
     (VRaises(a1, e1), VRaises(a2, e2)) => {
       unify(ts, a1, a2)
@@ -423,5 +426,17 @@ pub fn is_proof(ts : LTypes, v : Val) -> Bool {
   match type_of(ts, v) {
     Some(ty) => is_prop_type(ts, ty)
     None => false
+  }
+}
+
+///|
+/// Are two literals the same value? Floating-point literals are compared by
+/// their bits: `-0.0` and `0.0` differ (`1.0 / x` tells them apart), and a
+/// NaN is itself.
+pub fn lit_same(a : Lit, b : Lit) -> Bool {
+  match (a, b) {
+    (LDouble(x), LDouble(y)) => x.reinterpret_as_int64() == y.reinterpret_as_int64()
+    (LFloat(x), LFloat(y)) => x.reinterpret_as_int() == y.reinterpret_as_int()
+    _ => a == b
   }
 }

@@ -138,6 +138,7 @@ fn finish(
   st.type_defaults.clear()
   close_open_rows()
   solve_pending(true)
+  check_prop_args()
   let out = ts.map(t => zonk(lvl, t))
   for t in out {
     if has_metas(t) {

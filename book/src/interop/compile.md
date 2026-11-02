@@ -57,7 +57,12 @@ let glob : Arena = { kinds: [1, 2, 3] }
 fn kind_glob(e : Int) -> Int { glob.kinds[e] }   // fn f_kind_glob_t(e : Int) -> Int
 ```
 
-`moonpp build --verbose` 列出程序中没有原生版本的函数和全局 `let`，以及原因，例如：
+参数或结果含数组（或其他不能转换的部分）的函数，统一表示的代码只能调用它的统一版本。所以入口要
+留在原生片段中：`main`（以及全局 `let`）的定义在原生片段中时是原生的，可以使用 `return`；一旦
+`main` 只能用统一表示，它调用的这类函数也都在统一表示中运行。
+
+`moonpp build --verbose` 列出程序中没有原生版本的函数和全局 `let`（包括 `main`），以及原因，
+原因会沿着类型和字段一直追到源头，例如：
 
 ```text
 without a native version (they run in the uniform representation):

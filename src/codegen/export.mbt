@@ -111,6 +111,21 @@ pub fn native_report(
   g.dry = true
   g.compute_typed()
   let out : Array[(String, String)] = []
+  // `main`: when it is uniform, so is all it calls whose arguments cannot be
+  // converted (arrays)
+  if !@tt.is_async_global("main") && !g.typed_const_any("main") {
+    g.diagnose = true
+    g.culprit = None
+    ignore(g.typed_const_any("main"))
+    g.diagnose = false
+    out.push(
+      (
+        "main",
+        "its body is not in the native fragment" +
+        g.culprit.map(c => ": " + c).unwrap_or(""),
+      ),
+    )
+  }
   let names : Array[String] = @tt.global_files.keys().collect()
   names.sort()
   for n in names {

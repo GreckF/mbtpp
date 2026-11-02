@@ -1271,9 +1271,10 @@ fn Gen::typed_const(self : Gen, n : String) -> (String, NTy)? {
     _ => return None
   }
   let saved = self.cur_result
-  self.cur_result = None
   let r = try {
     let nt = self.native_const_ty(n)
+    // the code is the body of a function (`<id>_init`): `return` works
+    self.cur_result = Some(nt)
     Some((self.typed_check([], body, nt), nt))
   } catch {
     _ => None
@@ -2282,22 +2283,7 @@ fn Gen::used_by_uniform_code(self : Gen, c : String) -> Bool {
 /// Is the definition of the constant `n` (of any type) in the native
 /// fragment?
 fn Gen::typed_const_any(self : Gen, n : String) -> Bool {
-  let body = match @tt.globals.get(n) {
-    Some({ kind: GFunc(Some(b), _, _), .. }) => b
-    _ => return false
-  }
-  if has_return(body) {
-    return false
-  }
-  let saved = self.cur_result
-  let r = try {
-    ignore(self.typed([], body))
-    true
-  } catch {
-    _ => false
-  }
-  self.cur_result = saved
-  r
+  self.typed_const(n) is Some(_)
 }
 
 ///|

@@ -65,8 +65,15 @@ let glob : Arena = { kinds: [1, 2, 3] }
 fn kind_glob(e : Int) -> Int { glob.kinds[e] }   // fn f_kind_glob_t(e : Int) -> Int
 ```
 
-`moonpp build --verbose` lists the functions and global `let`s of the program without a native
-version, with the reason, for example:
+Uniform code can only call the uniform version of a function with arrays (or other parts that
+cannot be converted) among its parameters or result. So the entry should stay in the native
+fragment: `main` (like global `let`s) is native when its definition is in the native fragment, and
+may use `return`; when `main` can only be uniform, the functions of that kind that it calls run in
+the uniform representation too.
+
+`moonpp build --verbose` lists the functions and global `let`s of the program (`main` included)
+without a native version, with the reason, followed through types and fields to its source, for
+example:
 
 ```text
 without a native version (they run in the uniform representation):

@@ -111,6 +111,7 @@ test "codegen: native functions over scalars" {
       ),
     ),
     content=(
+      #|fn f_main_init() -> Unit raise {
       #|fn f_fib_t(n : Int) -> Int raise {
       #|fn f_fib(a0 : Value) -> Value raise {
       #|fn main {
@@ -150,6 +151,7 @@ test "codegen: indexed datatypes become generic enums; indices are erased" {
     ),
     content=(
       #|enum E_Vector[T0] {
+      #|fn f_main_init() -> Unit raise {
       #|fn[T0, T1] f_vector_map_t(self : E_Vector[T0], f : (T0) -> T1 raise) -> E_Vector[T1] raise {
       #|fn f_vector_map(a4 : Value, a5 : Value) -> Value raise {
       #|fn[T0] f_vector_append_t(self : E_Vector[T0], ys : E_Vector[T0]) -> E_Vector[T0] raise {
@@ -179,6 +181,7 @@ test "codegen: an implicit field used at runtime is kept" {
     ),
     content=(
       #|enum E_Vector[T0] {
+      #|fn f_main_init() -> Unit raise {
       #|fn[T0] f_len_t(v : E_Vector[T0]) -> BigInt raise {
       #|fn f_len(a2 : Value) -> Value raise {
       #|fn main {
@@ -305,6 +308,7 @@ test "codegen: #mbt functions must be native" {
     content=(
       #|fn f_twice_t(x : Int) -> Int raise {
       #|fn f_twice(a0 : Value) -> Value raise {
+      #|fn f_main_init() -> Unit raise {
       #|fn main {
       #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
       #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
@@ -418,6 +422,7 @@ test "codegen: proofs are erased" {
     content=(
       #|fn f_dec_t(n : Int) -> Int raise {
       #|fn f_dec(a0 : Value) -> Value raise {
+      #|fn f_main_init() -> Unit raise {
       #|fn[T0] f_cast_t(v : T0) -> T0 raise {
       #|fn f_cast(a2 : Value) -> Value raise {
       #|fn main {
@@ -709,6 +714,7 @@ test "codegen: a datatype that takes the name of a #mbt trait is not #mbt" {
     ),
     content=(
       #|enum E_Sub {
+      #|fn f_main_init() -> Unit raise {
       #|fn f_apply_t(n : BigInt, s : E_Sub) -> Int raise {
       #|fn f_apply(a0 : Value, a1 : Value) -> Value raise {
       #|fn main {
@@ -811,6 +817,7 @@ test "codegen: Nat-like datatypes are BigInts" {
     ),
     content=(
       #|enum E_Vector[T0] {
+      #|fn f_main_init() -> Unit raise {
       #|fn[T0] f_vector_get_t(self : E_Vector[T0], i : BigInt) -> T0 raise {
       #|fn f_vector_get(a2 : Value, a3 : Value) -> Value raise {
       #|fn main {
@@ -839,6 +846,7 @@ test "codegen: Nat-like datatypes are BigInts" {
     ),
     content=(
       #|enum E_Fin {
+      #|fn f_main_init() -> Unit raise {
       #|fn f_bound_t(i : E_Fin) -> Int raise {
       #|fn f_bound(a1 : Value) -> Value raise {
       #|fn main {
@@ -897,6 +905,7 @@ test "codegen: newtypes and value parameters" {
       #|enum E_Expr {
       #|struct E_Scoped(E_Expr)
       #|struct E_Ex(Int)
+      #|fn f_main_init() -> Unit raise {
       #|fn f_twice_t(x : E_Ex) -> E_Ex raise {
       #|fn f_twice(a0 : Value) -> Value raise {
       #|fn f_depth_t(e : E_Expr) -> Int raise {
@@ -930,11 +939,13 @@ test "codegen: global lets in native code" {
   inspect(
     signatures(arena + "fn main {\n  println(kind_glob(1))\n}\n"),
     content=(
+      #|fn f_main_init() -> Unit raise {
       #|fn f_kind_glob_t(e : Int) -> Int raise {
       #|fn f_kind_glob(a0 : Value) -> Value raise {
       #|struct E_Arena(Array[Int])
       #|fn f_arena_kinds_t(self : E_Arena) -> Array[Int] raise {
       #|fn f_arena_kinds(self : Value) -> Value raise {
+      #|fn f_glob_init() -> E_Arena raise {
       #|fn f_glob_n() -> E_Arena raise {
       #|fn main {
       #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
@@ -1014,6 +1025,7 @@ test "codegen: aliases in fields, if in match and while, string indexing" {
     signatures(src),
     content=(
       #|enum E_Decl {
+      #|fn f_main_init() -> Unit raise {
       #|fn f_count_t(d : E_Decl, n : Int) -> Int raise {
       #|fn f_count(a0 : Value, a1 : Value) -> Value raise {
       #|fn f_decl_ty_t(self : E_Decl) -> Int raise {
@@ -1033,6 +1045,42 @@ test "codegen: aliases in fields, if in match and while, string indexing" {
     content=(
       #|a
       #|5
+      #|
+    ),
+  )
+}
+
+///|
+/// `main` with `return` is native: the functions it calls with arrays run
+/// natively (they could not be called from uniform code).
+test "codegen: main with return is native" {
+  let src =
+    #|fn total(xs : Array[Int]) -> Int {
+    #|  let mut s = 0
+    #|  for x in xs {
+    #|    s = s + x
+    #|  }
+    #|  s
+    #|}
+    #|
+    #|fn main {
+    #|  let xs = [1, 2, 3]
+    #|  if xs.length() == 0 {
+    #|    println("empty")
+    #|    return
+    #|  }
+    #|  println(total(xs))
+    #|}
+  inspect(
+    fn_code(src, "main_init").length() > 0,
+    content=(
+      #|true
+    ),
+  )
+  inspect(
+    run_source("t.mbtpp", src),
+    content=(
+      #|6
       #|
     ),
   )

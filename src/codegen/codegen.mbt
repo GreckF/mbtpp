@@ -1033,6 +1033,28 @@ fn Gen::global_value(self : Gen, n : String) -> String {
 }
 
 ///|
+/// The native function computing the global value `name`.
+fn Gen::native_init(
+  self : Gen,
+  id : String,
+  name : String,
+  code : String,
+  nt : NTy,
+) -> Unit {
+  self.write(
+    "\n/// " +
+    name +
+    "\nfn " +
+    id +
+    "_init() -> " +
+    self.mbt_result(nt) +
+    " raise {\n" +
+    code +
+    "\n}\n",
+  )
+}
+
+///|
 /// Nested functions collecting `n` arguments `a0 .. a(n-1)`, then `final`.
 fn curried(n : Int32, final_ : String) -> String {
   let mut code = final_
@@ -1150,17 +1172,17 @@ fn Gen::global_def(self : Gen, name : String) -> Unit raise CodegenError {
       } else {
         ty
       }
+      self.native_init(id, name, code, nt)
       self.write(
         (
           $|
-          $|/// \{name}
           $|let \{id}_cell : Ref[\{ty}?] = Ref::new(None)
           $|
           $|fn \{id}_n() -> \{ty} raise {
           $|  match \{id}_cell.val {
           $|    Some(v) => v
           $|    None => {
-          $|      let v : \{ty} = \{code}
+          $|      let v : \{ty} = \{id}_init()
           $|      \{id}_cell.val = Some(v)
           $|      v
           $|    }
@@ -1178,32 +1200,19 @@ fn Gen::global_def(self : Gen, name : String) -> Unit raise CodegenError {
         },
       )
     }
-    GFunc(Some(body), _, _) => {
-      self.write("\n/// " + name)
-      // a value (or `main`) whose definition is in the native fragment
-      let native = if has_return(body) || self.dry {
-        None
-      } else {
-        let saved = self.cur_result
-        let r = try {
-          let (code, t) = self.typed([], body)
-          if self.convertible(t, false) {
-            Some(self.to_value(t, code, None))
-          } else {
-            None
-          }
-        } catch {
-          _ => None
+    GFunc(Some(body), _, _) =>
+      // a value (or `main`) whose definition is in the native fragment: its
+      // native code, in a function (for `return`)
+      match self.typed_const(name) {
+        Some((code, nt)) if !self.dry && self.convertible(nt, false) => {
+          self.native_init(id, name, code, nt)
+          self.cached(id, self.to_value(nt, id + "_init()", None))
         }
-        self.cur_result = saved
-        r
-      }
-      match native {
-        Some(code) => self.cached(id, code)
-        None =>
+        _ => {
+          self.write("\n/// " + name)
           self.cached(id, catch_return(has_return(body), self.tm([], body)))
+        }
       }
-    }
     GFunc(None, _, _) =>
       self.cached(id, "rt_fail(\"" + name + " has no definition\")")
     GData(_) => self.cached(id, "VType")

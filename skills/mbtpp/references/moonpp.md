@@ -20,7 +20,7 @@ moonpp version
 | `moonpp check [路径]` | 类型检查项目、包目录或单个文件；提示可以标 `#mbt` 的 `pub` 声明 |
 | `moonpp fix [路径]` | 给这些声明加 `#mbt`（检查失败时还原） |
 | `moonpp run [路径]` | 用解释器运行 main 包（或指定的包、文件） |
-| `moonpp run --compiled [路径]` | 编译到 MoonBit 后用 `moon run` 运行 |
+| `moonpp run --compiled [路径] [-- 参数…]` | 编译到 MoonBit 后用 `moon run` 运行，`--` 后的参数传给程序 |
 | `moonpp test [路径]` | 用解释器运行 `test "名字" { … }` 块 |
 | `moonpp build [路径] [-o 目录]` | 编译成 MoonBit 项目并 `moon build` |
 | `moonpp add <user/module[@版本]>` | 添加依赖（`moon add`）并生成缺少的 `.mbti` |
@@ -109,7 +109,8 @@ moon run main --target js
 
 - Windows 上 native 目标需要 MSVC Build Tools；没有时用 `--target js`。`moonbitlang/async` 支持
   native、JS、wasm，不支持 wasm-gc。
-- 生成的项目总是 main 包，不能生成库包。
+- 生成的项目总是 main 包，不能生成库包；它带 `{"type": "module"}` 的 `package.json`，JS 产物可以
+  直接 `node main.js`。
 
 ## 编辑器
 

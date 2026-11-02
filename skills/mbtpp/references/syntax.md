@@ -429,6 +429,16 @@ fn main {
 - 函数：`println`、`print`、`abort(msg)`、`panic()`、`fail(msg)`、`not(b)`、`int_to_nat(i)`、
   `n.to_int()`、`assert_eq`、`assert_true` 等。
 - `List`：`append`、`reverse`、`length`、`map`、`flat_map`（效应多态）。
-- `Nat` 在检查时是一进制的，运行时（解释器和编译后）是任意精度整数 `BigInt`：`+`、`*`、`==`、
-  `compare`、`to_int` 是原生运算，`S(k)` 模式是减一，所以可以放心做大数算术。
+- `Nat` 在检查时是一进制的，运行时（解释器和编译后）是任意精度整数：`+`、`-`（截断）、`*`、`/`、`%`
+  （除以 0 得 0 / 原数）、比较、`&`、`|`、`^`、`<<`、`>>`、`gcd`、`pow`、`log2`、`to_int`、`to_bigint`、
+  `Nat::of_bigint` 都是原生运算，`S(k)` 模式是减一，可以放心做大数算术。
+- `BigInt`：内建的任意精度整数（导入 `moonbitlang/core/bigint` 时 `@bigint.BigInt` 就是它），
+  `BigInt::from_int`、算术、位运算、比较、`pow`；检查时不计算。
+- `HashMap[K, V]`（键要 `Hash + Eq`）：哈希表，接口同 `Map`；`Map` 的查找是线性的，大表用 `HashMap`。
+- 元组有 `Show`、`Eq`、`Compare`、`Hash`；`ignore(x)` 丢弃一个值。
+- 可判定相等：`T::deq(a, b) : Dec[a === b]`（`Yes(证明)` 或 `No`），基本类型（`Double` 除外）、
+  `Nat`、`Option`、`List`、元组都有；trait `DecEq`；`derive(DecEq)`（同时 derive `Eq`）。
+  `reflect(b) : Reflect(b)` 给出布尔值连同证明。
+- `physical_equal(a, b)`、`ptr_deq(a, b)`：同一个对象时为真 / 给出证明（检查时不计算）。
+- 程序中与 Prelude 同名的类型取代 Prelude 的（连同其方法与实例）。
 - `moonpp --no-prelude` 关闭 Prelude。

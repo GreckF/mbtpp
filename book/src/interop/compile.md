@@ -15,7 +15,7 @@
 - `Nat`，即 MoonBit 的 `BigInt`（见下面的 [Nat](#nat)）；
 - 类型参数和函数类型；
 - 数组 `Array[T]`（`T` 是原生类型），即 MoonBit 的数组；
-- 参数都是类型、字段都是原生类型的数据类型。
+- 字段都是原生类型的数据类型。
 
 索引和被擦除的字段消失，例如：
 
@@ -23,6 +23,18 @@
 enum Vector[T] : Nat -> Type { Nil : …; Cons[n : Nat](T, Vector[T](n)) : … }
 // 编译为
 enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
+```
+
+不是类型的参数（值参数，如 `struct Scoped(n : Nat)` 的 `n`，以及命题参数）也像索引一样去掉，所以只在
+类型或证明字段中用到它们的数据类型仍是原生的。擦除之后只有一个构造子、只保留一个字段（且字段不是
+这个类型本身）的数据类型编译成 MoonBit 的元组 struct，不额外装箱：
+
+```text
+type Ex Int                          // struct E_Ex(Int)
+struct Scoped(n : Nat) {             // struct E_Scoped(E_Expr)
+  e : Expr
+  ok : closed(e, n) === true
+}
 ```
 
 `#mbt` 类型使用自己的名字而不是 `E_…`（见 [#mbt 类型与 trait](mbt-types.md)）。
@@ -163,3 +175,7 @@ fn f19_exp_eval(self : Value) -> Value raise {
 一个 `fib` 程序编译后约快 40 倍（解释器 7.85 秒，编译后 0.18 秒）。构造子成为 `Value` 的原生
 变体之前，统一表示中的数据是 `VCon(构造子名, 字段数组)`，匹配要比较字符串；改为原生变体后，
 对一棵 2^18 个叶子的 `Exp` 树求值 20 次，从 2.65 秒降到 1.26 秒。
+
+原生代码与统一表示之间按值递归转换（`expr_to_value`、`expr_of_value`）。如果数据是高度共享的
+DAG（例如共享子项的表达式），转换会展开共享，大小可能变成指数级。处理这种数据的函数应当留在原生
+片段中，避免让它们跨过边界：例如不要让它们经过类型层计算、GADT 细化等只能用统一表示的代码。

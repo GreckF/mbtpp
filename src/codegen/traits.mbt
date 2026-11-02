@@ -43,9 +43,50 @@ fn data_name(d : String) -> String {
 }
 
 ///|
+/// The field type of a datatype that is a newtype after erasure: one
+/// constructor keeping one field (not of the datatype itself). It is a
+/// MoonBit tuple struct `struct E_D(T)` rather than an enum (no box).
+fn Gen::newtype_field(self : Gen, d : String) -> NTy? {
+  if is_mbt_type(d) || !self.enum_ok(d) {
+    return None
+  }
+  match @tt.data_info(d).unwrap().cons {
+    [c] =>
+      match self.con_fields(c) {
+        Some(fs) =>
+          match fs.filter(f => f is Some(_)) {
+            [Some(t)] if !nty_mentions(t, d) => Some(t)
+            _ => None
+          }
+        None => None
+      }
+    _ => None
+  }
+}
+
+///|
+fn nty_mentions(t : NTy, d : String) -> Bool {
+  match t {
+    NEnum(e, args) => e == d || args.iter().any(a => nty_mentions(a, d))
+    NForeign(_, args) => args.iter().any(a => nty_mentions(a, d))
+    NFun(ps, r) | NAsyncFun(ps, r) =>
+      ps.iter().any(a => nty_mentions(a, d)) || nty_mentions(r, d)
+    _ => false
+  }
+}
+
+///|
 /// A value of datatype `d` built with constructor `c` from its (kept)
 /// fields.
-fn con_expr(d : String, c : String, args : Array[String]) -> String {
+fn Gen::con_expr(
+  self : Gen,
+  d : String,
+  c : String,
+  args : Array[String],
+) -> String {
+  if self.newtype_field(d) is Some(_) {
+    return data_name(d) + "(" + args[0] + ")"
+  }
   if is_mbt_struct(d) {
     let fs = struct_fields(d)
     data_name(d) +
@@ -64,12 +105,17 @@ fn con_expr(d : String, c : String, args : Array[String]) -> String {
 ///|
 /// A pattern for constructor `c` of datatype `d` with sub-patterns for its
 /// (kept) fields.
-fn con_pat(d : String, c : String, subs : Array[String]) -> String {
+fn Gen::con_pat(
+  self : Gen,
+  d : String,
+  c : String,
+  subs : Array[String],
+) -> String {
   if is_mbt_struct(d) {
     let fs = struct_fields(d)
     "{ " + [..subs.mapi((k, p) => fs[k] + ": " + p), ".."].join(", ") + " }"
   } else {
-    con_expr(d, c, subs)
+    self.con_expr(d, c, subs)
   }
 }
 

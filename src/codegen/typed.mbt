@@ -142,7 +142,7 @@ fn Gen::enum_ok(self : Gen, d : String) -> Bool {
       !d.has_prefix("%") &&
       (!d.has_prefix("@") || is_mbt_type(d)) &&
       di.cons.length() > 0 &&
-      data_params_are_types(d, di.nparams)
+      data_type_params(d) is Some(_)
     None => false
   }
   if !ok {
@@ -161,16 +161,52 @@ fn Gen::enum_ok(self : Gen, d : String) -> Bool {
 }
 
 ///|
-/// Are all parameters of datatype `d` of type `Type`?
-fn data_params_are_types(d : String, n : Int32) -> Bool {
+/// Which parameters of datatype `d` are types (`[T]`); the others (values,
+/// like `n : Nat`, and propositions) are dropped from its native enum, as
+/// indices are: its fields may only use them where they are erased.
+fn data_type_params(d : String) -> Array[Bool]? {
+  let di = @tt.data_info(d).unwrap()
+  let out : Array[Bool] = []
   let mut t = @tt.globals.get(d).unwrap().ty
-  for _ in 0..<n {
+  for _ in 0..<di.nparams {
     match t {
-      Pi(_, _, _, U, b) => t = b
-      _ => return false
+      Pi(_, _, _, a, b) => {
+        out.push(a is U)
+        t = b
+      }
+      _ => return None
     }
   }
-  true
+  Some(out)
+}
+
+///|
+/// The native type arguments of an application of datatype `d` (to its type
+/// parameters only).
+fn Gen::native_targs(
+  self : Gen,
+  d : String,
+  args : Array[@tt.Tm],
+  arg : (@tt.Tm) -> NTy?,
+) -> Array[NTy]? {
+  ignore(self)
+  let tps = match data_type_params(d) {
+    Some(tps) => tps
+    None => return None
+  }
+  if args.length() < tps.length() {
+    return None
+  }
+  let targs : Array[NTy] = []
+  for k = 0; k < tps.length(); k = k + 1 {
+    if tps[k] {
+      match arg(args[k]) {
+        Some(a) => targs.push(a)
+        None => return None
+      }
+    }
+  }
+  Some(targs)
 }
 
 ///|
@@ -183,10 +219,20 @@ fn Gen::con_fields(self : Gen, c : String) -> Array[NTy?]? {
   }
   let mut t = @tt.globals.get(c).unwrap().ty
   let ctx : Array[TyCtx] = []
+  let tps = match data_type_params(ci.data) {
+    Some(tps) => tps
+    None => return None
+  }
+  let mut ntv = 0
   for k = 0; k < ci.nparams; k = k + 1 {
     match t {
       Pi(_, _, _, _, b) => {
-        ctx.push(TyIs(NVar(k)))
+        if tps[k] {
+          ctx.push(TyIs(NVar(ntv)))
+          ntv = ntv + 1
+        } else {
+          ctx.push(TyOther)
+        }
         t = b
       }
       _ => return None
@@ -289,20 +335,10 @@ fn Gen::native_ty_in(self : Gen, ctx : Array[TyCtx], t : @tt.Tm) -> NTy? {
           Some(NForeign(d, targs))
         }
         Global(d) if self.nat_like(d) is Some(_) => Some(NNat(d))
-        Global(d) if self.enum_ok(d) => {
-          let np = @tt.data_info(d).unwrap().nparams
-          if args.length() < np {
-            return None
-          }
-          let targs : Array[NTy] = []
-          for k = 0; k < np; k = k + 1 {
-            match self.native_ty_in(ctx, args[k]) {
-              Some(a) => targs.push(a)
-              None => return None
-            }
-          }
-          Some(NEnum(d, targs))
-        }
+        Global(d) if self.enum_ok(d) =>
+          self
+          .native_targs(d, args, a => self.native_ty_in(ctx, a))
+          .map(targs => NEnum(d, targs))
         _ => None
       }
     }
@@ -561,7 +597,7 @@ fn Gen::need_enum(self : Gen, d : String) -> Unit {
   }
   self.enums_done.push(d)
   let di = @tt.data_info(d).unwrap()
-  let n = di.nparams
+  let n = data_type_params(d).unwrap().filter(b => b).length()
   let tvs : Array[String] = []
   for k = 0; k < n; k = k + 1 {
     tvs.push(tvar(k))
@@ -654,7 +690,7 @@ fn Gen::need_enum(self : Gen, d : String) -> Unit {
     ignore(args)
     to.write_string(
       "    " +
-      con_pat(d, c, kept.map(k => k.0)) +
+      self.con_pat(d, c, kept.map(k => k.0)) +
       " => " +
       self.con_code(c, kept.map(k => self.to_value(k.1, k.0, Some(to_convs)))) +
       "\n",
@@ -663,7 +699,11 @@ fn Gen::need_enum(self : Gen, d : String) -> Unit {
       "    " +
       self.con_code(c, vpats) +
       " => " +
-      con_expr(d, c, kept.map(k => self.of_value(k.1, k.0, Some(of_convs)))) +
+      self.con_expr(
+        d,
+        c,
+        kept.map(k => self.of_value(k.1, k.0, Some(of_convs))),
+      ) +
       "\n",
     )
   }
@@ -681,9 +721,14 @@ fn Gen::need_enum(self : Gen, d : String) -> Unit {
     "    _ => rt_fail(\"expected a " + d + ", got \" + show_value(v))\n  }\n}\n",
   )
   let into = self.data_convertible(d, true, [])
+  // a newtype is a tuple struct
+  let decl = match self.newtype_field(d) {
+    Some(ft) => "\n/// MoonBit++ \{d}\nstruct \{en}(\{self.mbt_ty(ft)})\n"
+    None => decl.to_string()
+  }
   self.write_to(
     self.file_of(d),
-    (if emit_decl { decl.to_string() } else { "" }) +
+    (if emit_decl { decl } else { "" }) +
     to.to_string() +
     (if into { of.to_string() } else { "" }),
   )
@@ -1205,9 +1250,12 @@ fn Gen::typed_app(
       if args.length() != ci.nparams + ci.nargs || !self.enum_ok(ci.data) {
         raise NotTyped
       }
+      let tps = data_type_params(ci.data).unwrap()
       let targs : Array[NTy] = []
       for k = 0; k < ci.nparams; k = k + 1 {
-        targs.push(self.type_arg(env, args[k]))
+        if tps[k] {
+          targs.push(self.type_arg(env, args[k]))
+        }
       }
       let fields = self.con_fields(n).unwrap()
       let fargs : Array[@tt.Tm] = []
@@ -1223,7 +1271,7 @@ fn Gen::typed_app(
       }
       let cs = self.typed_args(env, fargs, ftys)
       self.need_enum(ci.data)
-      (con_expr(ci.data, n, cs), NEnum(ci.data, targs))
+      (self.con_expr(ci.data, n, cs), NEnum(ci.data, targs))
     }
     GPrim(p, k) if args.length() == k && p.has_prefix("@mbt:") =>
       self.typed_ffi(env, n, p, g.ty, args)
@@ -1564,7 +1612,7 @@ fn Gen::typed_pat(
         "(" + subs.join(", ") + ")"
       }
       ignore(args)
-      "(" + con_pat(d, c, subs) + as_marker + n + end_marker + ")"
+      "(" + self.con_pat(d, c, subs) + as_marker + n + end_marker + ")"
     }
     CPLit(l) => {
       let n = self.name("lit")

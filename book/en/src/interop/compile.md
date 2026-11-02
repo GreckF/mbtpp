@@ -18,7 +18,7 @@ an ordinary (possibly generic) MoonBit function. The native types are:
 - `Nat`, as MoonBit's `BigInt` (see [Nat](#nat) below);
 - type parameters and function types;
 - arrays `Array[T]` (with `T` native), as MoonBit arrays;
-- data types whose parameters are all types and whose fields are all native types.
+- data types whose fields are all native types.
 
 Indices and erased fields disappear, for example:
 
@@ -26,6 +26,19 @@ Indices and erased fields disappear, for example:
 enum Vector[T] : Nat -> Type { Nil : …; Cons[n : Nat](T, Vector[T](n)) : … }
 // compiles to
 enum E_Vector[T0] { Nil; Cons(T0, E_Vector[T0]) }
+```
+
+Parameters that are not types (value parameters, like `n` of `struct Scoped(n : Nat)`, and
+propositions) disappear like indices, so data types using them only in types or proof fields stay
+native. A data type with one constructor keeping one field (not of the type itself) after erasure
+becomes a MoonBit tuple struct, without an extra box:
+
+```text
+type Ex Int                          // struct E_Ex(Int)
+struct Scoped(n : Nat) {             // struct E_Scoped(E_Expr)
+  e : Expr
+  ok : closed(e, n) === true
+}
 ```
 
 `#mbt` types use their own names instead of `E_…` (see [#mbt Types and Traits](mbt-types.md)).
@@ -176,3 +189,10 @@ Because `Value` can be extended from other files and other packages, this repres
 A `fib` program runs about 40 times faster when compiled (7.85 s interpreted, 0.18 s compiled). Before constructors became native
 variants of `Value`, data in the uniform representation was `VCon(constructor name, field array)` and matching compared strings; with native variants,
 evaluating an `Exp` tree with 2^18 leaves 20 times dropped from 2.65 s to 1.26 s.
+
+Values are converted recursively, by value, between native code and the uniform representation
+(`expr_to_value`, `expr_of_value`). For highly shared data (a DAG, like expressions sharing
+subterms), the conversion unfolds the sharing, and its size can grow exponentially. Functions on such
+data should stay in the native fragment, so that the data does not cross the boundary: for example,
+keep them away from code that needs the uniform representation (type-level computation, GADT
+refinement).

@@ -28,7 +28,8 @@ fn signatures(src : String) -> String {
         !l.contains("fn con_fields") &&
         !l.has_prefix("fn init")
       ) ||
-      l.has_prefix("enum E_") {
+      l.has_prefix("enum E_") ||
+      l.has_prefix("struct E_") {
       out.push((if is_async { "async " } else { "" }) + strip_counters(l))
     }
   }
@@ -606,7 +607,7 @@ test "codegen: arrays are MoonBit arrays in native code" {
       ),
     ),
     content=(
-      #|enum E_Counter {
+      #|struct E_Counter(Array[Int])
       #|fn f_fill_t(xs : Array[Int], v : Int) -> Unit raise {
       #|fn f_fill(xs : Value, v : Value) -> Value raise {
       #|fn f_counter_n_t(self : E_Counter) -> Array[Int] raise {
@@ -840,6 +841,70 @@ test "codegen: Nat-like datatypes are BigInts" {
       #|enum E_Fin {
       #|fn f_bound_t(i : E_Fin) -> Int raise {
       #|fn f_bound(a1 : Value) -> Value raise {
+      #|fn main {
+      #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
+      #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
+      #|fn f_show_to_string(inst : Value) -> Value raise {
+    ),
+  )
+}
+
+///|
+test "codegen: newtypes and value parameters" {
+  inspect(
+    signatures(
+      (
+        #|type Ex Int
+        #|
+        #|enum Expr {
+        #|  Var(Int)
+        #|  Lam(Expr)
+        #|}
+        #|
+        #|fn depth(e : Expr) -> Int {
+        #|  match e {
+        #|    Var(_) => 0
+        #|    Lam(b) => depth(b) + 1
+        #|  }
+        #|}
+        #|
+        #|// `n` only occurs in a proof: it is dropped like an index
+        #|struct Scoped(n : Int) {
+        #|  e : Expr
+        #|  ok : depth(e) === n
+        #|}
+        #|
+        #|fn twice(x : Ex) -> Ex {
+        #|  match x {
+        #|    Ex(n) => Ex(n * 2)
+        #|  }
+        #|}
+        #|
+        #|fn[n : Int] body(s : Scoped(n)) -> Expr {
+        #|  s.e
+        #|}
+        #|
+        #|fn main {
+        #|  let s : Scoped(1) = { e: Lam(Var(0)), ok: Refl }
+        #|  println(depth(body(s)))
+        #|  match twice(Ex(21)) {
+        #|    Ex(n) => println(n)
+        #|  }
+        #|}
+      ),
+    ),
+    content=(
+      #|enum E_Expr {
+      #|struct E_Scoped(E_Expr)
+      #|struct E_Ex(Int)
+      #|fn f_twice_t(x : E_Ex) -> E_Ex raise {
+      #|fn f_twice(a0 : Value) -> Value raise {
+      #|fn f_depth_t(e : E_Expr) -> Int raise {
+      #|fn f_depth(a0 : Value) -> Value raise {
+      #|fn f_body_t(s : E_Scoped) -> E_Expr raise {
+      #|fn f_body(a1 : Value) -> Value raise {
+      #|fn f_scoped_e_t(self : E_Scoped) -> E_Expr raise {
+      #|fn f_scoped_e(a1 : Value) -> Value raise {
       #|fn main {
       #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
       #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {

@@ -797,3 +797,48 @@ test "implicit arguments from the expected type" {
     ),
   )
 }
+
+///|
+/// A parameter that is a function returning a proof has no effects: neither
+/// the effect variable added to callbacks nor `!pure` is an error
+/// (bugs/004 of moonlit).
+test "callbacks returning proofs" {
+  inspect(
+    run_source(
+      "t.mbtpp",
+      (
+        #|enum Box : (Nat) -> Type {
+        #|  MkBox[n : Nat](e : (u : Unit) -> n === n) : Box(n)
+        #|}
+        #|
+        #|struct Cert {
+        #|  up : (rho : Int) -> rho === rho
+        #|}
+        #|
+        #|fn use_cb(n : Nat, e : (u : Unit) -> n === n) -> Box(n) {
+        #|  MkBox(e)
+        #|}
+        #|
+        #|fn use_pure(n : Nat, e : (u : Unit) -> n === n!pure) -> Box(n) {
+        #|  MkBox(e)
+        #|}
+        #|
+        #|fn flat(c : Cert, f : (rho : Int) -> rho === rho) -> Cert {
+        #|  { up: rho => match (c.up)(rho) { Refl => f(rho) } }
+        #|}
+        #|
+        #|fn main {
+        #|  match use_cb(3, _ => Refl) {
+        #|    MkBox(_) => println("ok")
+        #|  }
+        #|  let _ = use_pure(2, _ => Refl)
+        #|  let _ = flat({ up: _ => Refl }, _ => Refl)
+        #|}
+      ),
+    ),
+    content=(
+      #|ok
+      #|
+    ),
+  )
+}

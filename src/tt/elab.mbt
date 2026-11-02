@@ -496,6 +496,23 @@ fn infer_pi(
 }
 
 ///|
+/// Is the surface effect `r` no effect for a proof: no operations, no
+/// errors, at most an effect variable?
+fn pure_effects(r : @parser.Expr) -> Bool {
+  match r {
+    EApp(_, EVar(_, "%Effs"), Some([row, EVar(_, "%NoRaise")]), _) => {
+      let (items, tail) = row_exprs(row)
+      items.is_empty() &&
+      (
+        tail is EVar(_, "%RowNil") ||
+        (tail is EVar(_, x) && x.get_char(0) is Some('a'..<='z'))
+      )
+    }
+    _ => false
+  }
+}
+
+///|
 /// The codomain `ct` of a function type, with its errors. A proof cannot
 /// raise: proofs are erased, and the error would be lost at run time.
 fn raising_cod(
@@ -505,6 +522,9 @@ fn raising_cod(
   raises : @parser.Expr?,
 ) -> Tm raise ElabError {
   match raises {
+    // a function returning a proof performs no effects: `!pure`, and the
+    // effect variable added to a callback (effects.mbt), say nothing
+    Some(r) if is_prop && pure_effects(r) => ct
     Some(r) => {
       if is_prop {
         let what = if r is EApp(_, EVar(_, "%Effs"), _, _) {

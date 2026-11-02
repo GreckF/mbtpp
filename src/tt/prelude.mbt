@@ -405,12 +405,37 @@ pub let prelude_src : String =
   #|  }
   #|}
   #|
+  #|// `subst` for a motive that is a proposition (`NatLe(a, b)` to `NatLe(a, c)`)
+  #|fn[T, x : T, y : T] Id::subst_prop(p : x === y, motive : (T) -> Prop, px : motive(x)) -> motive(y) {
+  #|  match p {
+  #|    Refl => px
+  #|  }
+  #|}
+  #|
   #|// ---- decidable equality --------------------------------------------
   #|
-  #|// a decision: a proof of `P`, or none
+  #|// the false proposition (no proof), and negation
+  #|enum False : Prop {}
+  #|
+  #|fn Not(P : Prop) -> Prop {
+  #|  (P) -> False
+  #|}
+  #|
+  #|fn[T] absurd(f : False) -> T {
+  #|  match f {}
+  #|}
+  #|
+  #|// a decision: a proof of `P`, or of its negation (Lean's `Decidable`)
   #|enum Dec[P : Prop] {
   #|  Yes(P)
-  #|  No
+  #|  No(Not(P))
+  #|}
+  #|
+  #|// a proof found, or nothing known (`ptr_deq`: different objects may still
+  #|// be equal)
+  #|enum Known[P : Prop] {
+  #|  Proved(P)
+  #|  Unknown
   #|}
   #|
   #|// a `Bool` with a proof of its value
@@ -427,63 +452,71 @@ pub let prelude_src : String =
   #|}
   #|
   #|// `==` of these types is structural equality (not of `Double`: `0.0 ==
-  #|// -0.0`), so a comparison that succeeds proves the equality (axioms, not
+  #|// -0.0`), so a comparison proves the equality or its negation (axioms, not
   #|// computed during checking, erased when compiling)
   #|fn[a : Int, b : Int] Int::eq_sound(h : (a == b) === true) -> a === b = "%axiom"
+  #|fn[a : Int, b : Int] Int::ne_sound(h : (a == b) === false) -> Not(a === b) = "%axiom"
   #|fn[a : Int64, b : Int64] Int64::eq_sound(h : (a == b) === true) -> a === b = "%axiom"
+  #|fn[a : Int64, b : Int64] Int64::ne_sound(h : (a == b) === false) -> Not(a === b) = "%axiom"
   #|fn[a : UInt, b : UInt] UInt::eq_sound(h : (a == b) === true) -> a === b = "%axiom"
+  #|fn[a : UInt, b : UInt] UInt::ne_sound(h : (a == b) === false) -> Not(a === b) = "%axiom"
   #|fn[a : UInt64, b : UInt64] UInt64::eq_sound(h : (a == b) === true) -> a === b = "%axiom"
+  #|fn[a : UInt64, b : UInt64] UInt64::ne_sound(h : (a == b) === false) -> Not(a === b) = "%axiom"
   #|fn[a : Byte, b : Byte] Byte::eq_sound(h : (a == b) === true) -> a === b = "%axiom"
+  #|fn[a : Byte, b : Byte] Byte::ne_sound(h : (a == b) === false) -> Not(a === b) = "%axiom"
   #|fn[a : Char, b : Char] Char::eq_sound(h : (a == b) === true) -> a === b = "%axiom"
+  #|fn[a : Char, b : Char] Char::ne_sound(h : (a == b) === false) -> Not(a === b) = "%axiom"
   #|fn[a : String, b : String] String::eq_sound(h : (a == b) === true) -> a === b = "%axiom"
+  #|fn[a : String, b : String] String::ne_sound(h : (a == b) === false) -> Not(a === b) = "%axiom"
   #|fn[a : BigInt, b : BigInt] BigInt::eq_sound(h : (a == b) === true) -> a === b = "%axiom"
+  #|fn[a : BigInt, b : BigInt] BigInt::ne_sound(h : (a == b) === false) -> Not(a === b) = "%axiom"
   #|
   #|fn Int::deq(a : Int, b : Int) -> Dec[a === b] {
   #|  match reflect(a == b) {
   #|    IsTrue(h) => Yes(Int::eq_sound(h))
-  #|    IsFalse(_) => No
+  #|    IsFalse(h) => No(Int::ne_sound(h))
   #|  }
   #|}
   #|fn Int64::deq(a : Int64, b : Int64) -> Dec[a === b] {
   #|  match reflect(a == b) {
   #|    IsTrue(h) => Yes(Int64::eq_sound(h))
-  #|    IsFalse(_) => No
+  #|    IsFalse(h) => No(Int64::ne_sound(h))
   #|  }
   #|}
   #|fn UInt::deq(a : UInt, b : UInt) -> Dec[a === b] {
   #|  match reflect(a == b) {
   #|    IsTrue(h) => Yes(UInt::eq_sound(h))
-  #|    IsFalse(_) => No
+  #|    IsFalse(h) => No(UInt::ne_sound(h))
   #|  }
   #|}
   #|fn UInt64::deq(a : UInt64, b : UInt64) -> Dec[a === b] {
   #|  match reflect(a == b) {
   #|    IsTrue(h) => Yes(UInt64::eq_sound(h))
-  #|    IsFalse(_) => No
+  #|    IsFalse(h) => No(UInt64::ne_sound(h))
   #|  }
   #|}
   #|fn Byte::deq(a : Byte, b : Byte) -> Dec[a === b] {
   #|  match reflect(a == b) {
   #|    IsTrue(h) => Yes(Byte::eq_sound(h))
-  #|    IsFalse(_) => No
+  #|    IsFalse(h) => No(Byte::ne_sound(h))
   #|  }
   #|}
   #|fn Char::deq(a : Char, b : Char) -> Dec[a === b] {
   #|  match reflect(a == b) {
   #|    IsTrue(h) => Yes(Char::eq_sound(h))
-  #|    IsFalse(_) => No
+  #|    IsFalse(h) => No(Char::ne_sound(h))
   #|  }
   #|}
   #|fn String::deq(a : String, b : String) -> Dec[a === b] {
   #|  match reflect(a == b) {
   #|    IsTrue(h) => Yes(String::eq_sound(h))
-  #|    IsFalse(_) => No
+  #|    IsFalse(h) => No(String::ne_sound(h))
   #|  }
   #|}
   #|fn BigInt::deq(a : BigInt, b : BigInt) -> Dec[a === b] {
   #|  match reflect(a == b) {
   #|    IsTrue(h) => Yes(BigInt::eq_sound(h))
-  #|    IsFalse(_) => No
+  #|    IsFalse(h) => No(BigInt::ne_sound(h))
   #|  }
   #|}
   #|
@@ -491,7 +524,8 @@ pub let prelude_src : String =
   #|  match (a, b) {
   #|    (true, true) => Yes(Refl)
   #|    (false, false) => Yes(Refl)
-  #|    _ => No
+  #|    (true, false) => No(h => match h {})
+  #|    (false, true) => No(h => match h {})
   #|  }
   #|}
   #|
@@ -510,9 +544,10 @@ pub let prelude_src : String =
   #|          match p {
   #|            Refl => Yes(Refl)
   #|          }
-  #|        No => No
+  #|        No(n) => No(h => match h { Refl => n(Refl) })
   #|      }
-  #|    _ => No
+  #|    (Z, S(_)) => No(h => match h {})
+  #|    (S(_), Z) => No(h => match h {})
   #|  }
   #|}
   #|
@@ -521,10 +556,10 @@ pub let prelude_src : String =
   #|fn[T] physical_equal(a : T, b : T) -> Bool = "%physical_equal"
   #|fn[T, a : T, b : T] physical_equal_sound(h : physical_equal(a, b) === true) -> a === b = "%axiom"
   #|
-  #|fn[T] ptr_deq(a : T, b : T) -> Dec[a === b] {
+  #|fn[T] ptr_deq(a : T, b : T) -> Known[a === b] {
   #|  match reflect(physical_equal(a, b)) {
-  #|    IsTrue(h) => Yes(physical_equal_sound(h))
-  #|    IsFalse(_) => No
+  #|    IsTrue(h) => Proved(physical_equal_sound(h))
+  #|    IsFalse(_) => Unknown
   #|  }
   #|}
   #|
@@ -1094,8 +1129,8 @@ pub let prelude_src : String =
   #|  }
   #|}
   #|
-  #|// decidable equality: `deq` gives a proof when the values are equal
-  #|// (`derive(DecEq)` also derives `Eq`)
+  #|// decidable equality: `deq` proves that the values are equal, or that they
+  #|// are not (`derive(DecEq)` also derives `Eq`)
   #|trait DecEq : Eq {
   #|  deq(a : Self, b : Self) -> Dec[a === b]
   #|}
@@ -1121,9 +1156,10 @@ pub let prelude_src : String =
   #|          match p {
   #|            Refl => Yes(Refl)
   #|          }
-  #|        No => No
+  #|        No(n) => No(h => match h { Refl => n(Refl) })
   #|      }
-  #|    _ => No
+  #|    (None, Some(_)) => No(h => match h {})
+  #|    (Some(_), None) => No(h => match h {})
   #|  }
   #|}
   #|
@@ -1133,28 +1169,39 @@ pub let prelude_src : String =
   #|    (Cons(x, xs), Cons(y, ys)) =>
   #|      match DecEq::deq(x, y) {
   #|        Yes(p) =>
-  #|          match DecEq::deq(xs, ys) {
-  #|            Yes(q) =>
-  #|              match (p, q) {
-  #|                (Refl, Refl) => Yes(Refl)
+  #|          match p {
+  #|            Refl =>
+  #|              match DecEq::deq(xs, ys) {
+  #|                Yes(q) =>
+  #|                  match q {
+  #|                    Refl => Yes(Refl)
+  #|                  }
+  #|                No(n) => No(h => match h { Refl => n(Refl) })
   #|              }
-  #|            No => No
   #|          }
-  #|        No => No
+  #|        No(n) => No(h => match h { Refl => n(Refl) })
   #|      }
-  #|    _ => No
+  #|    (Nil, Cons(_, _)) => No(h => match h {})
+  #|    (Cons(_, _), Nil) => No(h => match h {})
   #|  }
   #|}
   #|
   #|impl[A : DecEq, B : DecEq] DecEq for Tuple2[A, B] with deq(x, y) {
   #|  match (x, y) {
   #|    ((a1, b1), (a2, b2)) =>
-  #|      match (DecEq::deq(a1, a2), DecEq::deq(b1, b2)) {
-  #|        (Yes(p), Yes(q)) =>
-  #|          match (p, q) {
-  #|            (Refl, Refl) => Yes(Refl)
+  #|      match DecEq::deq(a1, a2) {
+  #|        Yes(p) =>
+  #|          match p {
+  #|            Refl =>
+  #|              match DecEq::deq(b1, b2) {
+  #|                Yes(q) =>
+  #|                  match q {
+  #|                    Refl => Yes(Refl)
+  #|                  }
+  #|                No(n) => No(h => match h { Refl => n(Refl) })
+  #|              }
   #|          }
-  #|        _ => No
+  #|        No(n) => No(h => match h { Refl => n(Refl) })
   #|      }
   #|  }
   #|}
@@ -1162,12 +1209,26 @@ pub let prelude_src : String =
   #|impl[A : DecEq, B : DecEq, C : DecEq] DecEq for Tuple3[A, B, C] with deq(x, y) {
   #|  match (x, y) {
   #|    ((a1, b1, c1), (a2, b2, c2)) =>
-  #|      match (DecEq::deq(a1, a2), DecEq::deq(b1, b2), DecEq::deq(c1, c2)) {
-  #|        (Yes(p), Yes(q), Yes(r)) =>
-  #|          match (p, q, r) {
-  #|            (Refl, Refl, Refl) => Yes(Refl)
+  #|      match DecEq::deq(a1, a2) {
+  #|        Yes(p) =>
+  #|          match p {
+  #|            Refl =>
+  #|              match DecEq::deq(b1, b2) {
+  #|                Yes(q) =>
+  #|                  match q {
+  #|                    Refl =>
+  #|                      match DecEq::deq(c1, c2) {
+  #|                        Yes(r) =>
+  #|                          match r {
+  #|                            Refl => Yes(Refl)
+  #|                          }
+  #|                        No(n) => No(h => match h { Refl => n(Refl) })
+  #|                      }
+  #|                  }
+  #|                No(n) => No(h => match h { Refl => n(Refl) })
+  #|              }
   #|          }
-  #|        _ => No
+  #|        No(n) => No(h => match h { Refl => n(Refl) })
   #|      }
   #|  }
   #|}

@@ -266,7 +266,21 @@ fn enum_body(tr : String, cons : Array[(String, String, Int32)]) -> String {
         ") => " +
         deq_chain(xs, ys)
       })
-      "deq(a, b) { match (a, b) { " + [..arms, "_ => No"].join("; ") + " } }"
+      // different constructors: their equality is impossible
+      for c1 in cons {
+        for c2 in cons {
+          if c1.0 != c2.0 {
+            arms.push(
+              "(" +
+              con_pat(c1.0, Array::make(c1.2, "_")) +
+              ", " +
+              con_pat(c2.0, Array::make(c2.2, "_")) +
+              ") => No(h => match h {})",
+            )
+          }
+        }
+      }
+      "deq(a, b) { match (a, b) { " + arms.join("; ") + " } }"
     }
     "Eq" => {
       let arms = cons.map(c => {
@@ -366,7 +380,8 @@ fn struct_body(tr : String, fields : Array[String]) -> String {
 
 ///|
 /// `Yes(Refl)` when `DecEq::deq(x_k, y_k)` proves each pair equal: the
-/// proofs are matched with `Refl`, which unifies the fields.
+/// proofs are matched with `Refl`, which unifies the fields; otherwise `No`
+/// with the refutation of the pair (by matching an equality of the values).
 fn deq_chain(xs : Array[String], ys : Array[String]) -> String {
   let mut code = "Yes(Refl)"
   for k = xs.length() - 1; k >= 0; k = k - 1 {
@@ -376,7 +391,7 @@ fn deq_chain(xs : Array[String], ys : Array[String]) -> String {
       ys[k] +
       ") { Yes(p\{k}) => match p\{k} { Refl => " +
       code +
-      " }; No => No }"
+      " }; No(n\{k}) => No(h => match h { Refl => n\{k}(Refl) }) }"
   }
   code
 }

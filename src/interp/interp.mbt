@@ -385,7 +385,7 @@ fn Machine::prim(
       if a == b {
         RCon("Dec::Yes", [RType])
       } else {
-        RCon("Dec::No", [])
+        RCon("Dec::No", [RType])
       }
     ("%nat_succ", [RNat(n)]) => RNat(n + 1N)
     ("%nat_of_int", [RLit(LInt(i))]) =>

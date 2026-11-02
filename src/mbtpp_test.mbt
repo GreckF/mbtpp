@@ -554,7 +554,7 @@ test "deq, DecEq and physical equality" {
         #|} derive(DecEq)
         #|
         #|lemma int_yes : Int::deq(3, 3) === Yes(Refl) = Refl
-        #|lemma int_no : Int::deq(3, 4) === No = Refl
+        #|lemma int_no : (Int::deq(3, 4) is No(_)) === true = Refl
         #|lemma nat_yes : Nat::deq(5, 5) === Yes(Refl) = Refl
         #|
         #|// a value looked up by a key comes with a proof that the key is the one asked
@@ -564,7 +564,7 @@ test "deq, DecEq and physical equality" {
         #|    Cons((k2, v), rest) =>
         #|      match DecEq::deq(k, k2) {
         #|        Yes(_) => Some(v)
-        #|        No => find(k, rest)
+        #|        No(_) => find(k, rest)
         #|      }
         #|  }
         #|}
@@ -598,7 +598,7 @@ test "deq, DecEq and physical equality" {
         #|  let xs = [1, 2]
         #|  println(physical_equal(xs, xs))
         #|  println(physical_equal(xs, [1, 2]))
-        #|  println(yes(ptr_deq(xs, xs)))
+        #|  println(ptr_deq(xs, xs) is Proved(_))
         #|}
       ),
     ),
@@ -838,6 +838,66 @@ test "callbacks returning proofs" {
     ),
     content=(
       #|ok
+      #|
+    ),
+  )
+}
+
+///|
+/// `No` carries a refutation: properties of functions defined with `deq`
+/// are provable on variables.
+test "refutations in Dec" {
+  inspect(
+    run_source(
+      "t.mbtpp",
+      (
+        #|fn upd(rho : (String) -> Nat, p : String, m : Nat) -> (String) -> Nat {
+        #|  n => match String::deq(n, p) {
+        #|    Yes(_) => m
+        #|    No(_) => rho(n)
+        #|  }
+        #|}
+        #|
+        #|lemma upd_same(rho : (String) -> Nat, p : String, m : Nat) -> upd(rho, p, m)(p) === m {
+        #|  match String::deq(p, p) {
+        #|    Yes(_) => Refl
+        #|    No(nope) => absurd(nope(Refl))
+        #|  }
+        #|}
+        #|
+        #|enum Color {
+        #|  Red
+        #|  Rgb(Int, Int, Int)
+        #|} derive(DecEq)
+        #|
+        #|lemma color_refl(c : Color) -> (DecEq::deq(c, c) is Yes(_)) === true {
+        #|  match DecEq::deq(c, c) {
+        #|    Yes(_) => Refl
+        #|    No(nope) => absurd(nope(Refl))
+        #|  }
+        #|}
+        #|
+        #|enum NatLe : (Nat, Nat) -> Prop {
+        #|  LeZ[n : Nat] : NatLe(0, n)
+        #|  LeS[a : Nat, b : Nat](NatLe(a, b)) : NatLe(S(a), S(b))
+        #|}
+        #|
+        #|lemma move[a : Nat, b : Nat, c : Nat](h : NatLe(a, b), e : b === c) -> NatLe(a, c) {
+        #|  Id::subst_prop(e, x => NatLe(a, x), h)
+        #|}
+        #|
+        #|fn main {
+        #|  let r = upd(_ => 0, "x", 5)
+        #|  println(r("x") + r("y"))
+        #|  println(DecEq::deq(Red, Rgb(1, 2, 3)) is No(_))
+        #|  println(Nat::deq(3, 4) is No(_))
+        #|}
+      ),
+    ),
+    content=(
+      #|5
+      #|true
+      #|true
       #|
     ),
   )

@@ -436,6 +436,9 @@ fn elab_match(
         None => cxt.eval(cxt.fresh_meta())
       }
       let sts = scrs.map(s => infer_ins(cxt, s))
+      // the instances of the scrutinees (`DecEq::deq(c, c)`), so that they
+      // are found in the goal
+      solve_pending(false)
       let svals = sts.map(x => cxt.eval(x.0))
       // a scrutinee that is not a variable but occurs in the goal (of a
       // proof): abstract it, and match on a variable instead (`with`)

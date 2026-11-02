@@ -27,6 +27,27 @@ fn tm_shift(t : Tm, d : Int32, c : Int32) -> Tm {
 
 ///|
 fn tm_eq(a : Tm, b : Tm) -> Bool {
+  let all = (xs : Array[Tm], ys : Array[Tm]) => {
+    xs.length() == ys.length() &&
+    xs.iter().zip(ys.iter()).all(p => tm_eq(p.0, p.1))
+  }
+  let clauses = (cs : Array[Clause], ds : Array[Clause]) => {
+    cs.length() == ds.length() &&
+    cs
+    .iter()
+    .zip(ds.iter())
+    .all(p => {
+      let (c, d) = p
+      c.pats.length() == d.pats.length() &&
+      c.pats.iter().zip(d.pats.iter()).all(q => cpat_eq(q.0, q.1)) &&
+      (match (c.cond, d.cond) {
+        (None, None) => true
+        (Some(x), Some(y)) => tm_eq(x, y)
+        _ => false
+      }) &&
+      tm_eq(c.body, d.body)
+    })
+  }
   match (a, b) {
     (Var(x), Var(y)) => x == y
     (Global(x), Global(y)) => x == y
@@ -37,6 +58,33 @@ fn tm_eq(a : Tm, b : Tm) -> Bool {
       i == j && tm_eq(a1, a2) && tm_eq(b1, b2)
     (U, U) | (PropU, PropU) => true
     (Lit(x), Lit(y)) => x == y
+    // (the matches of definitions, e.g. in instances, are compared too)
+    (Match(s1, c1), Match(s2, c2)) => all(s1, s2) && clauses(c1, c2)
+    (Let(_, t1, v1, b1), Let(_, t2, v2, b2))
+    | (LetMut(_, t1, v1, b1), LetMut(_, t2, v2, b2))
+    | (While(t1, v1, b1), While(t2, v2, b2)) =>
+      tm_eq(t1, t2) && tm_eq(v1, v2) && tm_eq(b1, b2)
+    (Raises(x1, y1), Raises(x2, y2))
+    | (Seq(x1, y1), Seq(x2, y2))
+    | (Defer(x1, y1), Defer(x2, y2)) => tm_eq(x1, x2) && tm_eq(y1, y2)
+    (Return(x), Return(y)) | (Raise(x), Raise(y)) => tm_eq(x, y)
+    (Assign(i, x), Assign(j, y)) => i == j && tm_eq(x, y)
+    (Try(x, c1), Try(y, c2)) => tm_eq(x, y) && clauses(c1, c2)
+    (ArrayLit(xs), ArrayLit(ys)) => all(xs, ys)
+    (Break, Break) | (Continue, Continue) => true
+    _ => false
+  }
+}
+
+///|
+fn cpat_eq(p : CPat, q : CPat) -> Bool {
+  match (p, q) {
+    (CPVar(_) | CPWild, CPVar(_) | CPWild) => true
+    (CPCon(c, ps), CPCon(d, qs)) =>
+      c == d &&
+      ps.length() == qs.length() &&
+      ps.iter().zip(qs.iter()).all(x => cpat_eq(x.0, x.1))
+    (CPLit(x), CPLit(y)) => x == y
     _ => false
   }
 }

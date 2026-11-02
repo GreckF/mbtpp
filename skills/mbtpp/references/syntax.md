@@ -436,9 +436,11 @@ fn main {
   `BigInt::from_int`、算术、位运算、比较、`pow`；检查时不计算。
 - `HashMap[K, V]`（键要 `Hash + Eq`）：哈希表，接口同 `Map`；`Map` 的查找是线性的，大表用 `HashMap`。
 - 元组有 `Show`、`Eq`、`Compare`、`Hash`；`ignore(x)` 丢弃一个值。
-- 可判定相等：`T::deq(a, b) : Dec[a === b]`（`Yes(证明)` 或 `No`），基本类型（`Double` 除外）、
+- 可判定相等：`T::deq(a, b) : Dec[a === b]`（`Yes(证明)` 或 `No(反驳)`，反驳是 `Not(P) = (P) -> False`，
+  用 `absurd(nope(Refl))` 排除不可能的 `No`），基本类型（`Double` 除外）、
   `Nat`、`Option`、`List`、元组都有；trait `DecEq`；`derive(DecEq)`（同时 derive `Eq`）。
   `reflect(b) : Reflect(b)` 给出布尔值连同证明。
-- `physical_equal(a, b)`、`ptr_deq(a, b)`：同一个对象时为真 / 给出证明（检查时不计算）。
+- `physical_equal(a, b)`、`ptr_deq(a, b) : Known[a === b]`：同一个对象时为真 / 给出证明（检查时不计算）。
+- `Id::subst_prop(p, motive, px)`：`motive` 返回 `Prop` 的 `subst`。
 - 程序中与 Prelude 同名的类型取代 Prelude 的（连同其方法与实例）。
 - `moonpp --no-prelude` 关闭 Prelude。

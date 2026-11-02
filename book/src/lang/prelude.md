@@ -12,8 +12,8 @@
 | `assert_eq`、`assert_not_eq`、`assert_true`、`assert_false` | 测试断言（抛出 `Failure`） |
 | `Nat`（`Z`、`S`） | 自然数，整数字面量在 `Nat` 处展开；`+`、`-`（截断：不够减时为 0）、`*`、`/`、`%`（`n / 0` 是 0，`n % 0` 是 `n`）、`==`、`<` 等比较、`compare`、`&`、`\|`、`^`、`<<`、`>>`（移位量是 `Nat`）、`n.gcd(m)`、`n.pow(m)`、`n.log2()`（`log2(0)` 是 0）、`n.to_int()`、`int_to_nat(i)`、`n.to_bigint()`、`Nat::of_bigint(b)`（负数为 0）。检查时按一元定义计算，运行时是任意精度整数（见[编译到 MoonBit](../interop/compile.md#nat)） |
 | `BigInt` | 任意精度整数（MoonBit 的 `BigInt`；导入 `moonbitlang/core/bigint` 时 `@bigint.BigInt` 就是它）：`BigInt::from_int`、`from_int64`、`to_int`、`to_int64`、算术、位运算、比较、`pow`、`to_string`、`hash`。没有字面量；检查时不计算 |
-| `Id[T](x)(y)`、`===`、`Refl` | 命题相等；`Id::sym`、`Id::trans`、`Id::cong`、`Id::subst` |
-| `Dec[P]`（`Yes`、`No`）、`T::deq`、`DecEq`、`reflect`、`physical_equal`、`ptr_deq` | 可判定相等与指针相等（见[命题相等](equality.md#可判定相等)） |
+| `Id[T](x)(y)`、`===`、`Refl` | 命题相等；`Id::sym`、`Id::trans`、`Id::cong`、`Id::subst`、`Id::subst_prop` |
+| `False`、`Not(P)`、`absurd`；`Dec[P]`（`Yes(P)`、`No(Not(P))`）、`T::deq`、`DecEq`、`reflect`；`physical_equal`、`ptr_deq`（`Known[P]`） | 否定、可判定相等与指针相等（见[命题相等](equality.md#可判定相等)） |
 | `Option[T]`（`None`、`Some`）、`T?` | 可选值 |
 | `Result[T, E]`（`Ok`、`Err`） | 结果 |
 | `List[T]`（`Nil`、`Cons`） | 链表：`append`、`reverse`、`length`、`map`、`flat_map` |

@@ -231,6 +231,25 @@ pub fn unify(ts : LTypes, t : Val, u : Val) -> Unit raise UnifyError {
 ///|
 fn unify_struct(ts : LTypes, t0 : Val, u0 : Val) -> Unit raise UnifyError {
   let lvl = ts.length()
+  // the same function applied to the same arguments: equal without
+  // unfolding (a large `Nat` literal `int_to_nat(n)` against itself, say);
+  // only when no meta is solved by it (no first-order approximation)
+  match (force_meta(t0), force_meta(u0)) {
+    (VGlobal(a, sp1), VGlobal(b, sp2)) if a == b && sp1.length() == sp2.length() => {
+      let snap = snapshot_metas()
+      let same = try {
+        unify_sp(ts, sp1, sp2)
+        metas_unchanged(snap)
+      } catch {
+        _ => false
+      }
+      if same {
+        return
+      }
+      restore_metas(snap)
+    }
+    _ => ()
+  }
   let t = force(t0)
   let u = force(u0)
   match (t, u) {

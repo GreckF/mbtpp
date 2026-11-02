@@ -21,6 +21,8 @@ pub fn check_package(Array[(String, String)], prelude? : Bool, imports? : Array[
 
 pub fn check_program(String, String, prelude? : Bool, imports? : Array[Import]) -> Unit raise CheckError
 
+pub let checking_hook : @ref.Ref[(String) -> Unit]
+
 pub fn clause_body_val(Array[Val], Int32, Clause) -> Val
 
 pub fn clause_guard_val(Array[Val], Int32, Clause) -> Val?
@@ -118,6 +120,8 @@ pub let mbt_types : Map[String, MbtInfo]
 pub fn meta_sol(Int32) -> Val?
 
 pub let metas : Array[MetaEntry]
+
+pub fn metas_unchanged(Array[Val?]) -> Bool
 
 pub let mut_fields : Map[String, Bool]
 

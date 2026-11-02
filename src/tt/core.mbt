@@ -274,6 +274,18 @@ pub fn restore_metas(s : Array[Val?]) -> Unit {
 }
 
 ///|
+/// Was no meta solved since the snapshot `s`?
+pub fn metas_unchanged(s : Array[Val?]) -> Bool {
+  for i = 0; i < metas.length(); i = i + 1 {
+    let before = if i < s.length() { s[i] } else { None }
+    if before is None && metas[i].sol is Some(_) {
+      return false
+    }
+  }
+  true
+}
+
+///|
 pub fn reset_state() -> Unit {
   globals.clear()
   global_files.clear()

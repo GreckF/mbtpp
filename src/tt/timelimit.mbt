@@ -78,6 +78,7 @@ fn with_time_limit(
   if time_frames.last() is Some(f) && f.name == name {
     return th()
   }
+  (checking_hook.val)(name)
   let limit = match time_limits.get(name) {
     Some(l) => l
     None => Some(default_time_limit.val)
@@ -157,3 +158,8 @@ fn limit_names(d : @parser.Decl) -> Array[String] {
     _ => []
   }
 }
+
+///|
+/// Called with the name of each definition when its checking starts (the
+/// JS build of moonpp names it when the checker runs out of stack).
+pub let checking_hook : Ref[(String) -> Unit] = Ref::new(_ => ())

@@ -1076,7 +1076,13 @@ fn infer_bin(
 // Checking
 
 ///|
+/// A `Nat` literal: `S(…S(Z))`, or `int_to_nat(n)` for a large one, which
+/// is unfolded one `S` at a time, only as far as needed (`b > 1000000` does
+/// not build a million constructors; at run time it is a `BigInt`).
 fn nat_tm(n : Int32) -> Tm {
+  if n > 64 && prelude_nat.val && globals.contains("int_to_nat") {
+    return App(Global("int_to_nat"), Lit(LInt(n)), Expl)
+  }
   let mut t = Global("Nat::Z")
   for _ in 0..<n {
     t = App(Global("Nat::S"), t, Expl)

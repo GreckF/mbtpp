@@ -787,6 +787,7 @@ fn run_cli(args : Array[String]) -> Bool raise Failure {
 
 ///|
 fn main {
+  install_crash_report()
   // the first argument is the program itself
   let args = @sys.get_cli_args()
   let ok = run_cli(args[1:].to_array()) catch {

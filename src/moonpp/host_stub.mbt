@@ -21,6 +21,11 @@ fn current_dir() -> String {
 let can_run_commands : Bool = false
 
 ///|
+fn install_crash_report() -> Unit {
+  ()
+}
+
+///|
 fn set_exit_code(code : Int32) -> Unit {
   @sys.exit(code)
 }

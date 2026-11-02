@@ -44,6 +44,9 @@ pub fn nat_lit(t : Tm) -> Int32? {
   while true {
     match cur {
       Global("Nat::Z") => return Some(n)
+      // a large literal (see `nat_tm`)
+      App(Global("int_to_nat"), Lit(LInt(k)), Expl) if k >= 0 =>
+        return Some(n + k)
       App(Global("Nat::S"), a, Expl) => {
         n = n + 1
         cur = a

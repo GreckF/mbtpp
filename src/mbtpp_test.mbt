@@ -723,3 +723,33 @@ test "a type of the program replaces the Prelude's" {
     ),
   )
 }
+
+///|
+/// A large `Nat` literal is not unfolded into constructors unless needed
+/// (bugs/002 of moonlit).
+test "large Nat literals" {
+  inspect(
+    run_source(
+      "t.mbtpp",
+      (
+        #|fn f(b : Nat) -> Bool {
+        #|  b > 16777216
+        #|}
+        #|
+        #|lemma same : (1000000 : Nat) === int_to_nat(1000000) = Refl
+        #|lemma small : (100 : Nat) - 98 === 2 = Refl
+        #|
+        #|fn main {
+        #|  println(f(int_to_nat(20000000)))
+        #|  let x : Nat = 1000000
+        #|  println(x + 1)
+        #|}
+      ),
+    ),
+    content=(
+      #|true
+      #|1000001
+      #|
+    ),
+  )
+}

@@ -1194,7 +1194,19 @@ fn Gen::typed_app(
     return ("\{k}N", NNat(d))
   }
   match nat_prim(h) {
-    Some((p, k)) if args.length() == k => {
+    Some(("%nat_deq", 2)) if args.length() == 2 && self.enum_ok("Dec") => {
+      let cs = self.prim_args(env, args, [NNat("Nat"), NNat("Nat")])
+      self.need_enum("Dec")
+      return (
+        "(if \{cs[0]} == \{cs[1]} { " +
+        self.con_expr("Dec", "Dec::Yes", []) +
+        " } else { " +
+        self.con_expr("Dec", "Dec::No", []) +
+        " })",
+        NEnum("Dec", []),
+      )
+    }
+    Some((p, k)) if args.length() == k && native_prims.get(p) is Some(_) => {
       let (tpl, tys, res) = native_prims.get(p).unwrap()
       return (subst_args(tpl, self.prim_args(env, args, tys)), res)
     }
@@ -1293,6 +1305,12 @@ fn Gen::typed_app(
       } else {
         raise NotTyped
       }
+    }
+    // MoonBit's `physical_equal`, at any type
+    GPrim("%physical_equal", 3) if args.length() == 3 => {
+      let (ca, ta) = self.typed(env, args[1])
+      let cb = self.typed_check(env, args[2], ta)
+      ("physical_equal(" + ca + ", " + cb + ")", NBool)
     }
     GPrim(p, k) if args.length() == k && p.has_prefix("%array_") =>
       self.typed_array(env, p, args)
@@ -1627,7 +1645,8 @@ fn Gen::typed_pat(
         (LStr(s), NString) => s.escape()
         (LChar(c), NChar) => char_lit(c)
         (LBool(b), NBool) => b.to_string()
-        (LUnit, NUnit) => "()"
+        // (`(())` is not a MoonBit pattern)
+        (LUnit, NUnit) => "_"
         _ => raise NotTyped
       }
       "(" + lp + as_marker + n + end_marker + ")"

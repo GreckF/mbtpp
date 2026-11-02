@@ -147,6 +147,7 @@ fn main {
 - `Compare`：先按构造子的声明顺序，再从左到右比较字段。`Compare` 需要 `Eq`，所以写
   `derive(Eq, Compare)`。
 - `Hash`：构造子的位置与各字段的哈希。
+- `DecEq`：逐个字段 `deq`，相等时给出证明（见[可判定相等](equality.md#可判定相等)），同时 derive `Eq`。
 - `ToJson`、`FromJson`、`Debug`：由 MoonBit 自己 derive，所以类型必须是 `#mbt`；生成的
   MoonBit 声明带有 `derive(ToJson, @json.FromJson, Debug)`，MoonBit++ 的实例调用这些 MoonBit
   方法（因此只在编译后的程序中运行）。`FromJson` 需要导入 `moonbitlang/core/json`，`Debug`

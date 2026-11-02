@@ -705,6 +705,8 @@ let inline_prims : Map[String, String] = {
   "%array_push": "{ as_arr($0).push($1); VUnit }",
   "%print": "{ rt_write(as_str($0)); VUnit }",
   "%nat_succ": "VNat(as_nat($0) + 1N)",
+  "%axiom": "VType",
+  "%physical_equal": "VBool(physical_equal($0, $1))",
   "%nat_of_int": "VNat(nat_of_int(as_int($0)))",
   "%nat_to_int": "VInt(as_nat($0).to_int())",
   "%nat_add": "VNat(as_nat($0) + as_nat($1))",
@@ -734,6 +736,13 @@ fn subst_args(template : String, args : Array[String]) -> String {
 fn Gen::prim_call(self : Gen, p : String, args : Array[String]) -> String {
   if args.iter().any(a => a.contains("$")) {
     return "prim(" + p.escape() + ", [" + args.join(", ") + "])"
+  }
+  if p == "%nat_deq" {
+    return "if as_nat(\{args[0]}) == as_nat(\{args[1]}) { " +
+      self.con_code("Dec::Yes", []) +
+      " } else { " +
+      self.con_code("Dec::No", []) +
+      " }"
   }
   match (inline_prims.get(p), native_prims.get(p)) {
     (Some(tpl), _) => subst_args(tpl, args)

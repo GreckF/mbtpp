@@ -690,6 +690,8 @@ let runtime_src : String =
   #|    ("%nat_eq", [VNat(a), VNat(b)]) => VBool(a == b)
   #|    ("%nat_compare", [VNat(a), VNat(b)]) => VInt(a.compare(b))
   #|    ("%nat_to_string", [VNat(n)]) => VStr(n.to_string())
+  #|    ("%axiom", _) => VType
+  #|    ("%physical_equal", [a, b]) => VBool(physical_equal(a, b))
   #|    ("%panic", _) => rt_fail("panic")
   #|    ("%abort", [VStr(s)]) => rt_fail(s)
   #|    ("%error_to_string", [e]) => VStr(show_value(e))

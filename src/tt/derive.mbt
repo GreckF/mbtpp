@@ -14,7 +14,7 @@
 /// gives `impl[T : Eq] Eq for Tree[T]`. Indexed types, GADT constructors and
 /// explicit parameters are not supported.
 let derivable : Array[String] = [
-  "Show", "Eq", "Compare", "Hash", "ToJson", "FromJson", "Debug",
+  "Show", "Eq", "Compare", "Hash", "DecEq", "ToJson", "FromJson", "Debug",
 ]
 
 ///|
@@ -40,6 +40,11 @@ fn expand_derives(
   for d in decls {
     let ds : Array[(Pos, String)] = []
     out.push(strip_derives(d, ds))
+    // `DecEq` needs `Eq`
+    match ds.iter().find_first(x => x.1 == "DecEq") {
+      Some((p, _)) if !ds.iter().any(x => x.1 == "Eq") => ds.push((p, "Eq"))
+      _ => ()
+    }
     for x in ds {
       let (p, tr) = x
       for g in derived_impls(d.inner(), p, tr, generated_mbt(d)) {
@@ -249,6 +254,20 @@ fn enum_body(tr : String, cons : Array[(String, String, Int32)]) -> String {
       })
       "to_string(self) { match self { " + arms.join("; ") + " } }"
     }
+    "DecEq" => {
+      let arms = cons.map(c => {
+        let (q, _, n) = c
+        let xs = vars("x", n)
+        let ys = vars("y", n)
+        "(" +
+        con_pat(q, xs) +
+        ", " +
+        con_pat(q, ys) +
+        ") => " +
+        deq_chain(xs, ys)
+      })
+      "deq(a, b) { match (a, b) { " + [..arms, "_ => No"].join("; ") + " } }"
+    }
     "Eq" => {
       let arms = cons.map(c => {
         let (q, _, n) = c
@@ -307,6 +326,20 @@ fn enum_body(tr : String, cons : Array[(String, String, Int32)]) -> String {
 /// The method of `tr` for a struct with the given fields.
 fn struct_body(tr : String, fields : Array[String]) -> String {
   match tr {
+    "DecEq" => {
+      let xs = vars("x", fields.length())
+      let ys = vars("y", fields.length())
+      let pat = (vs : Array[String]) => {
+        "{ " + fields.mapi((k, f) => f + ": " + vs[k]).join(", ") + " }"
+      }
+      "deq(a, b) { match (a, b) { (" +
+      pat(xs) +
+      ", " +
+      pat(ys) +
+      ") => " +
+      deq_chain(xs, ys) +
+      " } }"
+    }
     "Hash" =>
       "hash(self) { " + hash_fold("0", fields.map(f => "self." + f)) + " }"
     "Show" => {
@@ -329,6 +362,23 @@ fn struct_body(tr : String, fields : Array[String]) -> String {
       lex_compare(fields.map(f => "a." + f), fields.map(f => "b." + f)) +
       " }"
   }
+}
+
+///|
+/// `Yes(Refl)` when `DecEq::deq(x_k, y_k)` proves each pair equal: the
+/// proofs are matched with `Refl`, which unifies the fields.
+fn deq_chain(xs : Array[String], ys : Array[String]) -> String {
+  let mut code = "Yes(Refl)"
+  for k = xs.length() - 1; k >= 0; k = k - 1 {
+    code = "match DecEq::deq(" +
+      xs[k] +
+      ", " +
+      ys[k] +
+      ") { Yes(p\{k}) => match p\{k} { Refl => " +
+      code +
+      " }; No => No }"
+  }
+  code
 }
 
 ///|

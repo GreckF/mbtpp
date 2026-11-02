@@ -535,3 +535,93 @@ test "Nat operations and BigInt" {
     ),
   )
 }
+
+///|
+/// Decidable equality with proofs, `derive(DecEq)`, `ptr_deq`.
+test "deq, DecEq and physical equality" {
+  inspect(
+    run_source(
+      "t.mbtpp",
+      (
+        #|enum Color {
+        #|  Red
+        #|  Rgb(Int, Int, Int)
+        #|} derive(DecEq, Show)
+        #|
+        #|struct Key {
+        #|  name : String
+        #|  id : Nat
+        #|} derive(DecEq)
+        #|
+        #|lemma int_yes : Int::deq(3, 3) === Yes(Refl) = Refl
+        #|lemma int_no : Int::deq(3, 4) === No = Refl
+        #|lemma nat_yes : Nat::deq(5, 5) === Yes(Refl) = Refl
+        #|
+        #|// a value looked up by a key comes with a proof that the key is the one asked
+        #|fn[K : DecEq, V] find(k : K, xs : List[(K, V)]) -> Option[V] {
+        #|  match xs {
+        #|    Nil => None
+        #|    Cons((k2, v), rest) =>
+        #|      match DecEq::deq(k, k2) {
+        #|        Yes(_) => Some(v)
+        #|        No => find(k, rest)
+        #|      }
+        #|  }
+        #|}
+        #|
+        #|fn[T] cast(p : Int::deq(1, 1) === Yes(Refl), x : T) -> T {
+        #|  let _ = p
+        #|  x
+        #|}
+        #|
+        #|fn[P : Prop] yes(d : Dec[P]) -> Bool {
+        #|  d is Yes(_)
+        #|}
+        #|
+        #|fn main {
+        #|  println(yes(Int::deq(3, 3)))
+        #|  println(yes("ab".deq("a" + "b")))
+        #|  println(yes('x'.deq('y')))
+        #|  println(yes(true.deq(true)))
+        #|  println(yes(().deq(())))
+        #|  println(yes(int_to_nat(1000000).deq(int_to_nat(1000000))))
+        #|  println(yes(BigInt::from_int(7).deq(BigInt::from_int(8))))
+        #|  println(yes(DecEq::deq(Some(Cons(1, Nil)), Some(Cons(1, Nil)))))
+        #|  println(yes(DecEq::deq((1, "a", true), (1, "a", false))))
+        #|  println(yes(DecEq::deq(Rgb(1, 2, 3), Rgb(1, 2, 3))))
+        #|  println(yes(DecEq::deq(Red, Rgb(0, 0, 0))))
+        #|  println(Rgb(1, 2, 3) == Rgb(1, 2, 3))
+        #|  let k : Key = { name: "a", id: 3 }
+        #|  println(yes(DecEq::deq(k, { name: "a", id: 3 })))
+        #|  println(k == { name: "a", id: 4 })
+        #|  println(find(2, Cons((1, "one"), Cons((2, "two"), Nil))))
+        #|  let xs = [1, 2]
+        #|  println(physical_equal(xs, xs))
+        #|  println(physical_equal(xs, [1, 2]))
+        #|  println(yes(ptr_deq(xs, xs)))
+        #|}
+      ),
+    ),
+    content=(
+      #|true
+      #|true
+      #|false
+      #|true
+      #|true
+      #|true
+      #|false
+      #|true
+      #|false
+      #|true
+      #|false
+      #|true
+      #|true
+      #|false
+      #|Some(two)
+      #|true
+      #|false
+      #|true
+      #|
+    ),
+  )
+}

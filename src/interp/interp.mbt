@@ -148,6 +148,15 @@ fn rmatch(p : @tt.CPat, v : RVal, out : Array[RVal]) -> Bool {
         RNat(n) if n > 0N => rmatch(q, RNat(n - 1N), out)
         _ => false
       }
+    // a proof that is not computed (an axiom): proofs are irrelevant, and
+    // only matched where the result is a proof or the proposition is a
+    // subsingleton
+    CPCon(_, ps) if v is RType => {
+      for q in ps {
+        ignore(rmatch(q, RType, out))
+      }
+      true
+    }
     CPCon(c, ps) =>
       match v {
         RCon(c2, args) if c2 == c && args.length() == ps.length() => {
@@ -367,6 +376,15 @@ fn Machine::prim(
         RLit(LUnit)
       } else {
         raise CAbort("index out of bounds: " + i.to_string())
+      }
+    // proofs by axioms are not computed
+    ("%axiom", _) => RType
+    ("%physical_equal", [a, b]) => RLit(LBool(physical_equal(a, b)))
+    ("%nat_deq", [RNat(a), RNat(b)]) =>
+      if a == b {
+        RCon("Dec::Yes", [RType])
+      } else {
+        RCon("Dec::No", [])
       }
     ("%nat_succ", [RNat(n)]) => RNat(n + 1N)
     ("%nat_of_int", [RLit(LInt(i))]) =>

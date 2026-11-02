@@ -11,6 +11,7 @@ The Prelude is loaded automatically into every program (`moonpp --no-prelude` tu
 | `Nat` (`Z`, `S`) | Natural numbers; integer literals expand at type `Nat`; `+`, `-` (truncated: 0 when the subtrahend is larger), `*`, `/`, `%` (`n / 0` is 0, `n % 0` is `n`), `==`, `<` and the other comparisons, `compare`, `&`, `\|`, `^`, `<<`, `>>` (shifting by a `Nat`), `n.gcd(m)`, `n.pow(m)`, `n.log2()` (`log2(0)` is 0), `n.to_int()`, `int_to_nat(i)`, `n.to_bigint()`, `Nat::of_bigint(b)` (negative numbers give 0). Unary definitions when checking, arbitrary-precision integers at run time (see [Compiling to MoonBit](../interop/compile.md#nat)) |
 | `BigInt` | Arbitrary-precision integers (MoonBit's `BigInt`; `@bigint.BigInt` is this type when `moonbitlang/core/bigint` is imported): `BigInt::from_int`, `from_int64`, `to_int`, `to_int64`, arithmetic, bitwise operators, comparisons, `pow`, `to_string`, `hash`. No literals; not computed during checking |
 | `Id[T](x)(y)`, `===`, `Refl` | Propositional equality; `Id::sym`, `Id::trans`, `Id::cong`, `Id::subst` |
+| `Dec[P]` (`Yes`, `No`), `T::deq`, `DecEq`, `reflect`, `physical_equal`, `ptr_deq` | Decidable and pointer equality (see [Propositional Equality](equality.md#decidable-equality)) |
 | `Option[T]` (`None`, `Some`), `T?` | Optional values |
 | `Result[T, E]` (`Ok`, `Err`) | Results |
 | `List[T]` (`Nil`, `Cons`) | Linked lists: `append`, `reverse`, `length`, `map`, `flat_map` |

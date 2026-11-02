@@ -265,7 +265,7 @@ test "a run that cannot finish keeps the call folded" {
     content=(
       #|t.mbtpp:2:37: error: type mismatch
       #|  expected: abs(x) === x
-      #|  actual:   ?396(x) === ?396(x)
+      #|  actual:   ?535(x) === ?535(x)
     ),
   )
   // arrays are mutable
@@ -279,7 +279,7 @@ test "a run that cannot finish keeps the call folded" {
     content=(
       #|t.mbtpp:2:31: error: type mismatch
       #|  expected: first(()) === 1
-      #|  actual:   ?397 === ?397
+      #|  actual:   ?536 === ?536
     ),
   )
 }
@@ -405,7 +405,7 @@ test "indexing an empty vector" {
     content=(
       #|t.mbtpp:32:36: error: type mismatch
       #|  expected: Fin(0)
-      #|  actual:   Fin(S(?402(_)))
+      #|  actual:   Fin(S(?541(_)))
     ),
   )
 }
@@ -418,8 +418,8 @@ test "ill-typed object term" {
     ),
     content=(
       #|t.mbtpp:26:40: error: type mismatch
-      #|  expected: Term(?396(_), TArr(?397(_), ?398(_)))
-      #|  actual:   Term(?399(_), TInt)
+      #|  expected: Term(?535(_), TArr(?536(_), ?537(_)))
+      #|  actual:   Term(?538(_), TInt)
     ),
   )
 }
@@ -431,7 +431,7 @@ test "unbound object variable" {
     content=(
       #|t.mbtpp:26:36: error: type mismatch
       #|  expected: Term(Empty, TInt)
-      #|  actual:   Term(Ext(?398(_), ?399(_)), ?399(_))
+      #|  actual:   Term(Ext(?537(_), ?538(_)), ?538(_))
     ),
   )
 }
@@ -669,7 +669,7 @@ test "file order: a hint when a later file's function is needed" {
     content=(
       #|facts.mbtpp:1:36: error: type mismatch
       #|  expected: Shape::area(Sq(3)) === 9
-      #|  actual:   ?396 === ?396
+      #|  actual:   ?535 === ?535
       #|hint: Shape::area is defined in shapes.mbtpp, which is checked after facts.mbtpp, so its definition could not be used here; the error may come from that. Files are checked in dictionary order; to check shapes.mbtpp first, list it in the package's moon.pkg: options("mbtpp-order": [ "shapes.mbtpp", ... ])
     ),
   )
@@ -781,7 +781,7 @@ test "derive: what is not supported" {
   inspect(
     check("enum E { A } derive(Arbitrary)"),
     content=(
-      #|t.mbtpp:1:21: error: derive(Arbitrary) is not supported (only Show, Eq, Compare, Hash, ToJson, FromJson, Debug)
+      #|t.mbtpp:1:21: error: derive(Arbitrary) is not supported (only Show, Eq, Compare, Hash, DecEq, ToJson, FromJson, Debug)
     ),
   )
   inspect(

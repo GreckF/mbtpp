@@ -156,6 +156,8 @@ fn main {
 - `Compare`: by constructor, in declaration order, then by fields from left to right. `Compare`
   needs `Eq`, so write `derive(Eq, Compare)`.
 - `Hash`: the position of the constructor and the hashes of the fields.
+- `DecEq`: `deq` on the fields one by one, with a proof when equal (see [Decidable
+  equality](equality.md#decidable-equality)); it also derives `Eq`.
 - `ToJson`, `FromJson`, `Debug`: derived by MoonBit itself, so the type must be `#mbt`; the
   generated MoonBit declaration has `derive(ToJson, @json.FromJson, Debug)` and the MoonBit++
   instances call these MoonBit methods (so they run in compiled programs only). `FromJson` needs

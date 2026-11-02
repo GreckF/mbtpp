@@ -898,7 +898,11 @@ fn Gen::tm(self : Gen, env : Array[Local], t : @tt.Tm) -> String {
     Lam(x, _, _, b) => {
       let v = self.name(x)
       let body = self.tm(push_local(env, LVar(v)), b)
-      "VFun(" + v + " => " + catch_return(has_return(b), body) + ")"
+      let body = catch_return(has_return(b), body)
+      // `moon fmt` may turn a long `x => y` into `x => { y }`, which is a
+      // record: a variable alone is `value_id(y)`
+      let body = if is_ident(body) { "value_id(" + body + ")" } else { body }
+      "VFun(" + v + " => " + body + ")"
     }
     App(_, _, _) => self.app(env, t)
     // a proof is not computed

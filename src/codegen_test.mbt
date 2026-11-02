@@ -1085,3 +1085,28 @@ test "codegen: main with return is native" {
     ),
   )
 }
+
+///|
+/// A lambda whose body is a variable: `moon fmt` may print a long `x => y`
+/// as `x => { y }`, a record (bugs/005 of moonlit).
+test "codegen: a variable alone is not a lambda body" {
+  @tt.check_program(
+    "t.mbtpp",
+    (
+      #|fn drop(m : HashMap[(Int, Int), Int], x : Int, y : Int) -> Unit {
+      #|  if x > -1 {
+      #|    m.remove((x, y))
+      #|  }
+      #|}
+      #|
+      #|fn main {
+      #|  let m : HashMap[(Int, Int), Int] = HashMap::new()
+      #|  drop(m, 1, 2)
+      #|}
+    ),
+  ) catch {
+    _ => abort("check failed")
+  }
+  let code = @codegen.generate([]) catch { _ => abort("codegen failed") }
+  inspect(code.contains("=> value_id(self"), content="true")
+}

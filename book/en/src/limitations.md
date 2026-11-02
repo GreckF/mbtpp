@@ -39,6 +39,8 @@
 
 - `Hash` values differ between the interpreter and the compiled program (which uses MoonBit's hashes).
 - Values are converted by value between the uniform representation and native code, so frequently passing large data across the boundary is slow.
+- A runtime error in native code (an index out of bounds, a division by zero, ...) stops the program
+  without running `defer`s; the interpreter and the uniform code run them first.
 
 ## Tooling
 

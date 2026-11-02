@@ -71,6 +71,12 @@ priv struct Gen {
   /// Global constants (`let`) with a native version `<id>_n()` (see
   /// `compute_typed`).
   native_consts : Array[String]
+  /// Whether the native version of a function or constant may raise (see
+  /// `compute_typed`); not raising, it is a MoonBit function without
+  /// `raise`, whose calls need no error propagation.
+  raising : Map[String, Bool]
+  /// While translating native code: whether it may raise.
+  mut may_raise : Bool
   /// The global being emitted.
   mut cur_global : String
   /// Uses of async functions outside of native code (which are errors):
@@ -1040,6 +1046,7 @@ fn Gen::native_init(
   name : String,
   code : String,
   nt : NTy,
+  raise_ : String,
 ) -> Unit {
   self.write(
     "\n/// " +
@@ -1048,7 +1055,8 @@ fn Gen::native_init(
     id +
     "_init() -> " +
     self.mbt_result(nt) +
-    " raise {\n" +
+    raise_ +
+    " {\n" +
     code +
     "\n}\n",
   )
@@ -1165,6 +1173,7 @@ fn Gen::global_def(self : Gen, name : String) -> Unit raise CodegenError {
       // it converted (only when it can be: otherwise no uniform code uses
       // it, see `compute_typed`)
       let (code, nt) = self.typed_const(name).unwrap()
+      let r = if self.fn_raises(name) { " raise" } else { "" }
       let ty = self.mbt_ty(nt)
       // `((A) -> B raise)?`
       let ty = if nt is (NFun(_, _) | NAsyncFun(_, _)) {
@@ -1172,13 +1181,13 @@ fn Gen::global_def(self : Gen, name : String) -> Unit raise CodegenError {
       } else {
         ty
       }
-      self.native_init(id, name, code, nt)
+      self.native_init(id, name, code, nt, r)
       self.write(
         (
           $|
           $|let \{id}_cell : Ref[\{ty}?] = Ref::new(None)
           $|
-          $|fn \{id}_n() -> \{ty} raise {
+          $|fn \{id}_n() -> \{ty}\{r} {
           $|  match \{id}_cell.val {
           $|    Some(v) => v
           $|    None => {
@@ -1205,7 +1214,7 @@ fn Gen::global_def(self : Gen, name : String) -> Unit raise CodegenError {
       // native code, in a function (for `return`)
       match self.typed_const(name) {
         Some((code, nt)) if !self.dry && self.convertible(nt, false) => {
-          self.native_init(id, name, code, nt)
+          self.native_init(id, name, code, nt, " raise")
           self.cached(id, self.to_value(nt, id + "_init()", None))
         }
         _ => {
@@ -1346,6 +1355,8 @@ fn Gen::new(imports : Array[(String, String)]) -> Gen {
     ctor_order: [],
     nat_likes: {},
     native_consts: [],
+    raising: {},
+    may_raise: false,
     cur_global: "",
     async_misuse: [],
   }

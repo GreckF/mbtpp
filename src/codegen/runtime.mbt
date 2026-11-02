@@ -86,6 +86,34 @@ let runtime_src : String =
   #|
   #|///|
   #|/// Indexing of native arrays, with the errors of the uniform code.
+  #|/// A runtime error in native code that does not raise: reported as
+  #|/// `run_main` reports one, then the program stops.
+  #|fn[T] rt_stop(msg : String) -> T {
+  #|  rt_flush()
+  #|  println("runtime error: " + msg)
+  #|  panic()
+  #|}
+  #|
+  #|///|
+  #|/// Indexing in native code (no `raise`: no error to propagate).
+  #|fn[T] rt_index(xs : Array[T], i : Int) -> T {
+  #|  if i >= 0 && i < xs.length() {
+  #|    xs[i]
+  #|  } else {
+  #|    rt_stop("index out of bounds: " + i.to_string())
+  #|  }
+  #|}
+  #|
+  #|///|
+  #|fn[T] rt_index_set(xs : Array[T], i : Int, x : T) -> Unit {
+  #|  if i >= 0 && i < xs.length() {
+  #|    xs[i] = x
+  #|  } else {
+  #|    rt_stop("index out of bounds: " + i.to_string())
+  #|  }
+  #|}
+  #|
+  #|///|
   #|fn[T] rt_arr_get(xs : Array[T], i : Int) -> T raise {
   #|  if i >= 0 && i < xs.length() {
   #|    xs[i]
@@ -124,17 +152,17 @@ let runtime_src : String =
   #|  raise CRaise(v)
   #|}
   #|
-  #|fn int_div(a : Int, b : Int) -> Int raise {
+  #|fn int_div(a : Int, b : Int) -> Int {
   #|  if b == 0 {
-  #|    rt_fail("division by zero")
+  #|    rt_stop("division by zero")
   #|  } else {
   #|    a / b
   #|  }
   #|}
   #|
-  #|fn int_mod(a : Int, b : Int) -> Int raise {
+  #|fn int_mod(a : Int, b : Int) -> Int {
   #|  if b == 0 {
-  #|    rt_fail("division by zero")
+  #|    rt_stop("division by zero")
   #|  } else {
   #|    a % b
   #|  }
@@ -441,25 +469,25 @@ let runtime_src : String =
   #|  }
   #|}
   #|
-  #|fn str_get(a : String, i : Int) -> Char raise {
+  #|fn str_get(a : String, i : Int) -> Char {
   #|  match a.get_char(i) {
   #|    Some(c) => c
-  #|    None => rt_fail("index out of bounds")
+  #|    None => rt_stop("index out of bounds")
   #|  }
   #|}
   #|
-  #|fn str_substring(a : String, i : Int, j : Int) -> String raise {
+  #|fn str_substring(a : String, i : Int, j : Int) -> String {
   #|  if i >= 0 && i <= j && j <= a.length() {
   #|    a.unsafe_substring(start=i, end=j)
   #|  } else {
-  #|    rt_fail("index out of bounds")
+  #|    rt_stop("index out of bounds")
   #|  }
   #|}
   #|
-  #|fn int_to_char(a : Int) -> Char raise {
+  #|fn int_to_char(a : Int) -> Char {
   #|  match a.to_char() {
   #|    Some(c) => c
-  #|    None => rt_fail("invalid character code")
+  #|    None => rt_stop("invalid character code")
   #|  }
   #|}
   #|
@@ -498,12 +526,12 @@ let runtime_src : String =
   #|  if a < 0N { 0N } else { a }
   #|}
   #|
-  #|fn bigint_div(a : BigInt, b : BigInt) -> BigInt raise {
-  #|  if b == 0N { rt_fail("division by zero") } else { a / b }
+  #|fn bigint_div(a : BigInt, b : BigInt) -> BigInt {
+  #|  if b == 0N { rt_stop("division by zero") } else { a / b }
   #|}
   #|
-  #|fn bigint_mod(a : BigInt, b : BigInt) -> BigInt raise {
-  #|  if b == 0N { rt_fail("division by zero") } else { a % b }
+  #|fn bigint_mod(a : BigInt, b : BigInt) -> BigInt {
+  #|  if b == 0N { rt_stop("division by zero") } else { a % b }
   #|}
   #|
   #|fn as_unit(v : Value) -> Unit raise {

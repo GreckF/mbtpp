@@ -171,7 +171,6 @@ test "floating-point literals are compared by their bits" {
       #|t.mbtpp:2:32: error: type mismatch
       #|  expected: 0 === 0
       #|  actual:   ?869(_) === ?869(_)
-
     ),
   )
 }
@@ -277,7 +276,6 @@ test "check-time execution: inline lambdas, aborts, attribute order" {
       #|t.mbtpp:10:27: error: type mismatch
       #|  expected: k(()) === 5
       #|  actual:   ?874(_) === ?874(_)
-
     ),
   )
 }

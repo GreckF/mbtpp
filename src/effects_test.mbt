@@ -776,7 +776,6 @@ test "a polymorphic call that may raise is not unfolded" {
       #|t.mbtpp:4:78: error: type mismatch
       #|  expected: len(List::map(xs, (x) => chk(x))) === len(xs)
       #|  actual:   ?871(xs) === ?871(xs)
-
     ),
   )
 }
@@ -812,7 +811,7 @@ test "effect polymorphic functions get async versions in native code" {
       ),
     ),
     content=(
-      #|fn f_len_t(xs : E_List[Int]) -> Int raise {
+      #|fn f_len_t(xs : E_List[Int]) -> Int {
       #|fn f_len(a0 : Value) -> Value raise {
       #|async fn f_inc_t(x : Int) -> Int raise {
       #|fn[T0, T1] f_mymap_t(xs : E_List[T0], f : (T0) -> T1 raise) -> E_List[T1] raise {
@@ -873,7 +872,6 @@ test "ctl handlers are computed during checking" {
       #|t.mbtpp:34:77: error: type mismatch
       #|  expected: all_counts(()) === Cons(2, Cons(2, Cons(2, Cons(2, Nil))))
       #|  actual:   ?892(_) === ?892(_)
-
     ),
   )
 }

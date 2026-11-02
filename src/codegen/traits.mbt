@@ -628,6 +628,7 @@ fn Gen::typed_method(
   m : String,
   args : Array[@tt.Tm],
 ) -> (String, NTy) raise NotTyped {
+  self.may_raise = true
   if args.length() < 2 {
     raise NotTyped
   }

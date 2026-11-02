@@ -208,7 +208,6 @@ test "wrong index" {
       #|t.mbtpp:5:38: error: type mismatch
       #|  expected: Vector[Int](1)
       #|  actual:   Vector[?869(_)](0)
-
     ),
   )
 }
@@ -267,7 +266,6 @@ test "a run that cannot finish keeps the call folded" {
       #|t.mbtpp:2:37: error: type mismatch
       #|  expected: abs(x) === x
       #|  actual:   ?867(x) === ?867(x)
-
     ),
   )
   // arrays are mutable
@@ -282,7 +280,6 @@ test "a run that cannot finish keeps the call folded" {
       #|t.mbtpp:2:31: error: type mismatch
       #|  expected: first(()) === 1
       #|  actual:   ?868 === ?868
-
     ),
   )
 }
@@ -409,7 +406,6 @@ test "indexing an empty vector" {
       #|t.mbtpp:32:36: error: type mismatch
       #|  expected: Fin(0)
       #|  actual:   Fin(S(?873(_)))
-
     ),
   )
 }
@@ -424,7 +420,6 @@ test "ill-typed object term" {
       #|t.mbtpp:26:40: error: type mismatch
       #|  expected: Term(Empty, TArr(?868(_), TInt))
       #|  actual:   Term(?870(_), TInt)
-
     ),
   )
 }
@@ -437,7 +432,6 @@ test "unbound object variable" {
       #|t.mbtpp:26:37: error: type mismatch
       #|  expected: Elem(Empty, TInt)
       #|  actual:   Elem(Ext(?869(_), ?870(_)), ?870(_))
-
     ),
   )
 }
@@ -677,7 +671,6 @@ test "file order: a hint when a later file's function is needed" {
       #|  expected: Shape::area(Sq(3)) === 9
       #|  actual:   ?867 === ?867
       #|hint: Shape::area is defined in shapes.mbtpp, which is checked after facts.mbtpp, so its definition could not be used here; the error may come from that. Files are checked in dictionary order; to check shapes.mbtpp first, list it in the package's moon.pkg: options("mbtpp-order": [ "shapes.mbtpp", ... ])
-
     ),
   )
   inspect(check_files([shapes, facts]), content="ok")

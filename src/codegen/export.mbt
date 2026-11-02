@@ -397,7 +397,7 @@ fn Gen::export_fn(self : Gen, name : String, sig : TSig) -> Unit {
     "[" + self.tvars_with_bounds(sig.ntvars, sig.bounds) + "]"
   }
   let call = self.gid(name) + "_t(" + args.join(", ") + ")"
-  let body_code = if raises {
+  let body_code = if raises || !self.fn_raises(name) {
     call
   } else {
     // control flow and failures are errors of the native code

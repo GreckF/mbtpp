@@ -65,6 +65,12 @@ let glob : Arena = { kinds: [1, 2, 3] }
 fn kind_glob(e : Int) -> Int { glob.kinds[e] }   // fn f_kind_glob_t(e : Int) -> Int
 ```
 
+A native function that cannot raise is a MoonBit function without `raise` (on the JS backend, a call
+of a `raise` function allocates and checks a result object). Only `raise`, calls of functions that
+may raise (function values and trait methods included) and calls through the uniform representation
+raise; runtime errors in native code (an index out of bounds, a division by zero, no matching arm)
+are not error values: they print the message of the uniform code and stop the program.
+
 Uniform code can only call the uniform version of a function with arrays (or other parts that
 cannot be converted) among its parameters or result. So the entry should stay in the native
 fragment: `main` (like global `let`s) is native when its definition is in the native fragment, and

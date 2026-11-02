@@ -112,7 +112,7 @@ test "codegen: native functions over scalars" {
     ),
     content=(
       #|fn f_main_init() -> Unit raise {
-      #|fn f_fib_t(n : Int) -> Int raise {
+      #|fn f_fib_t(n : Int) -> Int {
       #|fn f_fib(a0 : Value) -> Value raise {
       #|fn main {
       #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
@@ -154,7 +154,7 @@ test "codegen: indexed datatypes become generic enums; indices are erased" {
       #|fn f_main_init() -> Unit raise {
       #|fn[T0, T1] f_vector_map_t(self : E_Vector[T0], f : (T0) -> T1 raise) -> E_Vector[T1] raise {
       #|fn f_vector_map(a4 : Value, a5 : Value) -> Value raise {
-      #|fn[T0] f_vector_append_t(self : E_Vector[T0], ys : E_Vector[T0]) -> E_Vector[T0] raise {
+      #|fn[T0] f_vector_append_t(self : E_Vector[T0], ys : E_Vector[T0]) -> E_Vector[T0] {
       #|fn f_vector_append(a3 : Value, a4 : Value) -> Value raise {
       #|fn main {
     ),
@@ -182,7 +182,7 @@ test "codegen: an implicit field used at runtime is kept" {
     content=(
       #|enum E_Vector[T0] {
       #|fn f_main_init() -> Unit raise {
-      #|fn[T0] f_len_t(v : E_Vector[T0]) -> BigInt raise {
+      #|fn[T0] f_len_t(v : E_Vector[T0]) -> BigInt {
       #|fn f_len(a2 : Value) -> Value raise {
       #|fn main {
       #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
@@ -306,7 +306,7 @@ test "codegen: #mbt functions must be native" {
       ),
     ),
     content=(
-      #|fn f_twice_t(x : Int) -> Int raise {
+      #|fn f_twice_t(x : Int) -> Int {
       #|fn f_twice(a0 : Value) -> Value raise {
       #|fn f_main_init() -> Unit raise {
       #|fn main {
@@ -420,10 +420,10 @@ test "codegen: proofs are erased" {
       ),
     ),
     content=(
-      #|fn f_dec_t(n : Int) -> Int raise {
+      #|fn f_dec_t(n : Int) -> Int {
       #|fn f_dec(a0 : Value) -> Value raise {
       #|fn f_main_init() -> Unit raise {
-      #|fn[T0] f_cast_t(v : T0) -> T0 raise {
+      #|fn[T0] f_cast_t(v : T0) -> T0 {
       #|fn f_cast(a2 : Value) -> Value raise {
       #|fn main {
       #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
@@ -613,17 +613,17 @@ test "codegen: arrays are MoonBit arrays in native code" {
     ),
     content=(
       #|struct E_Counter(Array[Int])
-      #|fn f_fill_t(xs : Array[Int], v : Int) -> Unit raise {
+      #|fn f_fill_t(xs : Array[Int], v : Int) -> Unit {
       #|fn f_fill(xs : Value, v : Value) -> Value raise {
-      #|fn f_counter_n_t(self : E_Counter) -> Array[Int] raise {
+      #|fn f_counter_n_t(self : E_Counter) -> Array[Int] {
       #|fn f_counter_n(self : Value) -> Value raise {
-      #|fn f_bump_t(c : E_Counter) -> Unit raise {
+      #|fn f_bump_t(c : E_Counter) -> Unit {
       #|fn f_bump(c : Value) -> Value raise {
       #|async fn main {
       #|enum E_Map[T0, T1] {
-      #|fn[T0, T1] f_map_map_values_t(self : E_Map[T0, T1]) -> Array[Array[T1]] raise {
+      #|fn[T0, T1] f_map_map_values_t(self : E_Map[T0, T1]) -> Array[Array[T1]] {
       #|fn f_map_map_values(self : Value) -> Value raise {
-      #|fn[T0, T1] f_map_map_keys_t(self : E_Map[T0, T1]) -> Array[Array[T0]] raise {
+      #|fn[T0, T1] f_map_map_keys_t(self : E_Map[T0, T1]) -> Array[Array[T0]] {
       #|fn f_map_map_keys(self : Value) -> Value raise {
       #|fn[T0 : Eq, T1] f_map_op_set_t(self : E_Map[T0, T1], key : T0, value : T1) -> Unit raise {
       #|fn f_map_op_set(v_inst_k : Value, self : Value, key : Value, value : Value) -> Value raise {
@@ -632,7 +632,7 @@ test "codegen: arrays are MoonBit arrays in native code" {
       #|fn[T0 : Eq, T1] f_map_index_of_t(self : E_Map[T0, T1], key : T0) -> Int raise {
       #|fn f_map_index_of(v_inst_k : Value, self : Value, key : Value) -> Value raise {
       #|fn f_eq_op_equal(inst : Value) -> Value raise {
-      #|fn[T0, T1] f_map_new_t(v : Unit) -> E_Map[T0, T1] raise {
+      #|fn[T0, T1] f_map_new_t(v : Unit) -> E_Map[T0, T1] {
       #|fn f_map_new(v : Value) -> Value raise {
       #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
       #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
@@ -715,7 +715,7 @@ test "codegen: a datatype that takes the name of a #mbt trait is not #mbt" {
     content=(
       #|enum E_Sub {
       #|fn f_main_init() -> Unit raise {
-      #|fn f_apply_t(n : BigInt, s : E_Sub) -> Int raise {
+      #|fn f_apply_t(n : BigInt, s : E_Sub) -> Int {
       #|fn f_apply(a0 : Value, a1 : Value) -> Value raise {
       #|fn main {
       #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
@@ -758,12 +758,12 @@ test "codegen: Nat is a BigInt" {
   inspect(
     fn_code(src, "pred2"),
     content=(
-      #|fn f_pred2_t(n : BigInt) -> BigInt raise {
+      #|fn f_pred2_t(n : BigInt) -> BigInt {
       #|match n {
       #|n if n >= 2N => (n - 2N)
       #|n if n == 1N => n
       #|_ => 0N
-      #|_ => rt_fail("no match")
+      #|_ => rt_stop("no match")
       #|}
       #|fn f_pred2(a0 : Value) -> Value raise {
       #|  VNat(f_pred2_t(as_nat(a0)))
@@ -818,7 +818,7 @@ test "codegen: Nat-like datatypes are BigInts" {
     content=(
       #|enum E_Vector[T0] {
       #|fn f_main_init() -> Unit raise {
-      #|fn[T0] f_vector_get_t(self : E_Vector[T0], i : BigInt) -> T0 raise {
+      #|fn[T0] f_vector_get_t(self : E_Vector[T0], i : BigInt) -> T0 {
       #|fn f_vector_get(a2 : Value, a3 : Value) -> Value raise {
       #|fn main {
       #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
@@ -847,7 +847,7 @@ test "codegen: Nat-like datatypes are BigInts" {
     content=(
       #|enum E_Fin {
       #|fn f_main_init() -> Unit raise {
-      #|fn f_bound_t(i : E_Fin) -> Int raise {
+      #|fn f_bound_t(i : E_Fin) -> Int {
       #|fn f_bound(a1 : Value) -> Value raise {
       #|fn main {
       #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
@@ -906,13 +906,13 @@ test "codegen: newtypes and value parameters" {
       #|struct E_Scoped(E_Expr)
       #|struct E_Ex(Int)
       #|fn f_main_init() -> Unit raise {
-      #|fn f_twice_t(x : E_Ex) -> E_Ex raise {
+      #|fn f_twice_t(x : E_Ex) -> E_Ex {
       #|fn f_twice(a0 : Value) -> Value raise {
-      #|fn f_depth_t(e : E_Expr) -> Int raise {
+      #|fn f_depth_t(e : E_Expr) -> Int {
       #|fn f_depth(a0 : Value) -> Value raise {
-      #|fn f_body_t(s : E_Scoped) -> E_Expr raise {
+      #|fn f_body_t(s : E_Scoped) -> E_Expr {
       #|fn f_body(a1 : Value) -> Value raise {
-      #|fn f_scoped_e_t(self : E_Scoped) -> E_Expr raise {
+      #|fn f_scoped_e_t(self : E_Scoped) -> E_Expr {
       #|fn f_scoped_e(a1 : Value) -> Value raise {
       #|fn main {
       #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
@@ -940,13 +940,13 @@ test "codegen: global lets in native code" {
     signatures(arena + "fn main {\n  println(kind_glob(1))\n}\n"),
     content=(
       #|fn f_main_init() -> Unit raise {
-      #|fn f_kind_glob_t(e : Int) -> Int raise {
+      #|fn f_kind_glob_t(e : Int) -> Int {
       #|fn f_kind_glob(a0 : Value) -> Value raise {
       #|struct E_Arena(Array[Int])
-      #|fn f_arena_kinds_t(self : E_Arena) -> Array[Int] raise {
+      #|fn f_arena_kinds_t(self : E_Arena) -> Array[Int] {
       #|fn f_arena_kinds(self : Value) -> Value raise {
-      #|fn f_glob_init() -> E_Arena raise {
-      #|fn f_glob_n() -> E_Arena raise {
+      #|fn f_glob_init() -> E_Arena {
+      #|fn f_glob_n() -> E_Arena {
       #|fn main {
       #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {
       #|fn f_println(v_inst_t : Value, x : Value) -> Value raise {
@@ -980,7 +980,7 @@ test "codegen: global lets in native code" {
     content=(
       #|fn f_sum_n(n : Value, acc : Value) -> Value raise {
       #|struct E_Arena(Array[Int])
-      #|fn f_arena_kinds_t(self : E_Arena) -> Array[Int] raise {
+      #|fn f_arena_kinds_t(self : E_Arena) -> Array[Int] {
       #|fn f_arena_kinds(self : Value) -> Value raise {
       #|fn f_kind_glob(e : Value) -> Value raise {
       #|fn main {
@@ -1026,13 +1026,13 @@ test "codegen: aliases in fields, if in match and while, string indexing" {
     content=(
       #|enum E_Decl {
       #|fn f_main_init() -> Unit raise {
-      #|fn f_count_t(d : E_Decl, n : Int) -> Int raise {
+      #|fn f_count_t(d : E_Decl, n : Int) -> Int {
       #|fn f_count(a0 : Value, a1 : Value) -> Value raise {
-      #|fn f_decl_ty_t(self : E_Decl) -> Int raise {
+      #|fn f_decl_ty_t(self : E_Decl) -> Int {
       #|fn f_decl_ty(a0 : Value) -> Value raise {
-      #|fn f_first_t(d : E_Decl) -> Char raise {
+      #|fn f_first_t(d : E_Decl) -> Char {
       #|fn f_first(a0 : Value) -> Value raise {
-      #|fn f_decl_name_t(self : E_Decl) -> String raise {
+      #|fn f_decl_name_t(self : E_Decl) -> String {
       #|fn f_decl_name(a0 : Value) -> Value raise {
       #|fn main {
       #|fn[T0 : Show] f_println_t(x : T0) -> Unit raise {

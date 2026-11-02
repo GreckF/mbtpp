@@ -531,6 +531,7 @@ fn Gen::of_value(
   e : String,
   convs : Array[String]?,
 ) -> String {
+  self.may_raise = true
   match t {
     NInt => "as_int(" + e + ")"
     NDouble => "as_double(" + e + ")"
@@ -1143,11 +1144,13 @@ fn Gen::typed_check(
           _ => raise NotTyped
         }
       }
-      // `return` in the lambda returns from it
+      // `return` in the lambda returns from it; its errors are its own
       let saved = self.cur_result
+      let outer = self.may_raise
       self.cur_result = Some(r)
       let res = Ok(self.typed(e, b)) catch { err => Err(err) }
       self.cur_result = saved
+      self.may_raise = outer
       let (cb, tb) = match res {
         Ok(x) => x
         Err(_) => raise NotTyped
@@ -1237,6 +1240,9 @@ fn Gen::typed_app(
     // a native constant, possibly a function called
     Global(n) if self.native_consts.contains(n) => {
       let nt = self.native_const_ty(n)
+      if self.fn_raises(n) {
+        self.may_raise = true
+      }
       return self.apply_groups(env, self.gid(n) + "_n()", nt, args)
     }
     Global(n) => n
@@ -1271,6 +1277,8 @@ fn Gen::typed_const(self : Gen, n : String) -> (String, NTy)? {
     _ => return None
   }
   let saved = self.cur_result
+  let saved_raise = self.may_raise
+  self.may_raise = false
   let r = try {
     let nt = self.native_const_ty(n)
     // the code is the body of a function (`<id>_init`): `return` works
@@ -1279,8 +1287,18 @@ fn Gen::typed_const(self : Gen, n : String) -> (String, NTy)? {
   } catch {
     _ => None
   }
+  if self.dry && r is Some(_) && self.native_consts.contains(n) {
+    self.raising.set(n, self.may_raise)
+  }
   self.cur_result = saved
+  self.may_raise = saved_raise
   r
+}
+
+///|
+/// May the native version of the function or constant `n` raise?
+fn Gen::fn_raises(self : Gen, n : String) -> Bool {
+  self.raising.get(n).unwrap_or(true)
 }
 
 ///|
@@ -1295,6 +1313,10 @@ fn Gen::apply_groups(
   let mut code = code0
   let mut ty = ty0
   let mut i = 0
+  if args.length() > 0 {
+    // native function values are `raise` functions
+    self.may_raise = true
+  }
   while i < args.length() {
     match ty {
       NFun(ps, r) | NAsyncFun(ps, r) if i + ps.length() <= args.length() => {
@@ -1433,6 +1455,7 @@ fn Gen::typed_global_app(
         }
       }
       let cs = self.typed_args(env, ps, tys)
+      self.may_raise = true
       (self.gid(n) + "_ta(" + cs.join(", ") + ")", subst_nty(sig.result, inst))
     }
     GFunc(_, _, _) =>
@@ -1465,6 +1488,9 @@ fn Gen::typed_global_app(
           }
           let cs = self.typed_args(env, ps, tys)
           let id = self.gid(n)
+          if !self.typed_set.contains(n) || self.fn_raises(n) {
+            self.may_raise = true
+          }
           if self.typed_set.contains(n) && sig.bounds.length() > 0 {
             if inst.contains(NAny) {
               raise NotTyped
@@ -1632,6 +1658,7 @@ fn Gen::typed_ffi(
     }
   }
   if raises {
+    self.may_raise = true
     (
       "(try { " + call + " } catch { err => raise CRaise(foreign_error(err)) })",
       res,
@@ -1846,7 +1873,16 @@ fn Gen::typed_term(
     // `CRaise(v)`; a clause tests the constructor of the error and binds
     // its fields (from the `Value`)
     Try(b, cls) => {
+      let outer = self.may_raise
+      self.may_raise = false
       let (cb, tb) = self.typed(env, b)
+      if !self.may_raise {
+        // nothing to catch
+        self.may_raise = outer
+        return (cb, tb)
+      }
+      // (errors not caught are raised again)
+      self.may_raise = true
       let err = self.name("err")
       let mut ty = tb
       let arms : Array[String] = []
@@ -1985,7 +2021,7 @@ fn Gen::typed_term(
               resolve_bindings(lhs, cb + when) + when + " => " + cb + "\n",
             )
           }
-          buf.write_string("_ => rt_fail(\"no match\")\n}")
+          buf.write_string("_ => rt_stop(\"no match\")\n}")
           (buf.to_string(), ty)
         }
       }
@@ -2028,6 +2064,7 @@ fn Gen::typed_term(
       if !self.convertible(tv, false) {
         raise NotTyped
       }
+      self.may_raise = true
       ("raise CRaise(" + self.to_value(tv, cv, None) + ")", NAny)
     }
     Seq(a, b) => {
@@ -2036,16 +2073,18 @@ fn Gen::typed_term(
       ("{\n" + stmt(ca, ta) + "\n" + cb + "\n}", tb)
     }
     Defer(a, b) => {
+      // the errors of the deferred code are dropped
+      let outer = self.may_raise
+      self.may_raise = false
       let (ca, ta) = self.typed(env, a)
+      let deferred = if self.may_raise {
+        "defer (try { " + stmt(ca, ta) + " } catch { _ => () })"
+      } else {
+        "defer " + paren_block(stmt(ca, ta))
+      }
+      self.may_raise = outer
       let (cb, tb) = self.typed(env, b)
-      (
-        "{\ndefer (try { " +
-        stmt(ca, ta) +
-        " } catch { _ => () })\n" +
-        cb +
-        "\n}",
-        tb,
-      )
+      ("{\n" + deferred + "\n" + cb + "\n}", tb)
     }
     _ => raise NotTyped
   }
@@ -2088,12 +2127,19 @@ fn Gen::typed_fn(
   }
   self.cur_result = Some(sig.result)
   self.cur_bounds = sig.bounds
+  self.may_raise = false
   // checked against the result type (a lambda or `[]` needs it)
   let res = Ok((self.typed_check(env, b, sig.result), sig.result)) catch {
     err => Err(err)
   }
   self.cur_result = None
   self.cur_bounds = []
+  // decided by the analysis (`compute_typed`, dry): when emitting, other
+  // code made on the way (enums, conversions) would count too
+  let raises = if self.dry { self.may_raise } else { self.fn_raises(name) }
+  if self.dry && !async_version && !@tt.is_async_global(name) {
+    self.raising.set(name, raises)
+  }
   match res {
     Ok((code, ty)) =>
       match unify_nty(ty, sig.result) {
@@ -2117,7 +2163,11 @@ fn Gen::typed_fn(
             params.join(", ") +
             ") -> " +
             self.mbt_result(sig.result) +
-            " raise {\n" +
+            (if raises || async_version || @tt.is_async_global(name) {
+              " raise {\n"
+            } else {
+              " {\n"
+            }) +
             code +
             "\n}\n",
           )
@@ -2195,14 +2245,27 @@ fn Gen::compute_typed(self : Gen) -> Unit {
       }
     }
   }
+  // assumed not to raise, until found to (as typed functions are assumed
+  // native)
+  for n in self.typed_set {
+    self.raising.set(n, false)
+  }
+  for c in self.native_consts {
+    self.raising.set(c, false)
+  }
   let mut changed = true
   while changed {
     changed = false
     let keep : Array[String] = []
     for n in self.typed_set {
+      let before = self.raising.get(n)
       if self.typed_fn(n) is Some(_) {
         keep.push(n)
+        if self.raising.get(n) != before {
+          changed = true
+        }
       } else {
+        self.raising.remove(n)
         changed = true
       }
     }
@@ -2228,10 +2291,19 @@ fn Gen::compute_typed(self : Gen) -> Unit {
     // used by native code only
     let keep_consts : Array[String] = []
     for c in self.native_consts {
+      let before = self.raising.get(c)
       match self.typed_const(c) {
         Some((_, nt)) if self.convertible(nt, false) ||
-          !self.used_by_uniform_code(c) => keep_consts.push(c)
-        _ => changed = true
+          !self.used_by_uniform_code(c) => {
+          keep_consts.push(c)
+          if self.raising.get(c) != before {
+            changed = true
+          }
+        }
+        _ => {
+          self.raising.remove(c)
+          changed = true
+        }
       }
     }
     self.native_consts.clear()
@@ -2413,14 +2485,16 @@ fn Gen::typed_array(
     }
     ("%array_new", _) => ("(Array::new() : " + self.mbt_ty(at) + ")", at)
     ("%array_length", 2) => (arr() + ".length()", NInt)
+    // out of bounds, the program stops with the error of the uniform code,
+    // without raising (no error propagation at each access)
     ("%array_get", 3) => {
       let i = self.typed_check(env, args[2], NInt)
-      ("rt_arr_get(" + arr() + ", " + i + ")", elem)
+      ("rt_index(" + arr() + ", " + i + ")", elem)
     }
     ("%array_set", 4) => {
       let i = self.typed_check(env, args[2], NInt)
       let x = self.typed_check(env, args[3], elem)
-      ("rt_arr_set(" + arr() + ", " + i + ", " + x + ")", NUnit)
+      ("rt_index_set(" + arr() + ", " + i + ", " + x + ")", NUnit)
     }
     ("%array_push", 3) => {
       let x = self.typed_check(env, args[2], elem)

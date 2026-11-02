@@ -471,9 +471,9 @@ test "a literal in a constructor pattern refines the later fields" {
       ),
     ),
     content=(
-      #|t.mbtpp:12:24: error: type mismatch
-      #|  expected: Maybe[x === true]
-      #|  actual:   Maybe[x === _]
+      #|t.mbtpp:12:25: error: type mismatch
+      #|  expected: x === true
+      #|  actual:   x === _
     ),
   )
 }
@@ -749,6 +749,50 @@ test "large Nat literals" {
     content=(
       #|true
       #|1000001
+      #|
+    ),
+  )
+}
+
+///|
+/// The expected type determines the implicit arguments of a constructor
+/// before its arguments are checked (bugs/003 of moonlit).
+test "implicit arguments from the expected type" {
+  inspect(
+    run_source(
+      "t.mbtpp",
+      (
+        #|fn f(n : Nat) -> Nat {
+        #|  n
+        #|}
+        #|
+        #|enum IsZ : (Nat) -> Type {
+        #|  MkIsZ[n : Nat](h : f(n) === Z) : IsZ(n)
+        #|}
+        #|
+        #|enum K2 : (Nat) -> Type {
+        #|  KZero[n : Nat](k : (Nat) -> f(n) === Z) : K2(n)
+        #|}
+        #|
+        #|fn direct() -> IsZ(Z) {
+        #|  MkIsZ(Refl)
+        #|}
+        #|
+        #|fn lam() -> K2(Z) {
+        #|  KZero(_ => Refl)
+        #|}
+        #|
+        #|fn main {
+        #|  let _ = direct()
+        #|  let _ = lam()
+        #|  let x : K2(Z) = KZero(rho => Refl)
+        #|  let _ = x
+        #|  println("ok")
+        #|}
+      ),
+    ),
+    content=(
+      #|ok
       #|
     ),
   )

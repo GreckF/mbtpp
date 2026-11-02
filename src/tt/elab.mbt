@@ -567,6 +567,26 @@ fn insert_until(
 }
 
 ///|
+/// The result of applying `ty` to its next `n` explicit arguments, if it
+/// does not depend on them and is not a function (the end of the
+/// application). Errors and effects of the call are not part of it.
+fn result_without_args(ty : Val, n : Int32, lvl : Int32) -> Val? {
+  let mut t = force(ty)
+  for _ in 0..<n {
+    match t {
+      VPi(_, Expl, _, _, cl) if !tm_occurs(cl.body, 0) =>
+        t = force(inst(cl, v_var(lvl)))
+      _ => return None
+    }
+  }
+  match t {
+    VPi(_, _, _, _, _) => None
+    VRaises(r, _) => Some(r)
+    _ => Some(t)
+  }
+}
+
+///|
 /// Number of explicit binders in the argument group at the head of `ty`.
 fn group_size(ty : Val, lvl : Int32) -> Int32 {
   let mut n = 0
@@ -591,6 +611,7 @@ fn app_core(
   skip_params : Int32,
   impl_args : Array[@parser.Expr]?,
   expl_args : Array[Arg]?,
+  expected~ : Val? = None,
 ) -> (Tm, Val) raise ElabError {
   let mut t = head
   let mut ty = head_ty
@@ -658,6 +679,26 @@ fn app_core(
           " argument(s), got " +
           args.length().to_string(),
         )
+      }
+      // The expected type first, when the result does not depend on the
+      // arguments: it may determine the implicit arguments that the types
+      // of the arguments mention (`MkIsZ(Refl) : IsZ(Z)` gives `n = Z` before
+      // `Refl : f(n) === Z` is checked). Only an attempt: on failure the
+      // arguments are checked as before, and the mismatch reported after.
+      // (not when the expected type is itself unknown: solving it now would
+      // guess)
+      match expected {
+        Some(e) if !(force(e) is VFlex(_, _)) =>
+          match result_without_args(ty, n, cxt.lvl) {
+            Some(r) => {
+              let snap = snapshot_metas()
+              cxt.unify(e, r) catch {
+                _ => restore_metas(snap)
+              }
+            }
+            None => ()
+          }
+        _ => ()
       }
       // Lambdas are checked last, so that the other arguments can
       // determine the types of their parameters.
@@ -895,7 +936,15 @@ fn elab_app(
       }
     _ => ()
   }
-  app_core(cxt, ht, hty, np, impl_args, expl_args.map(as_ => as_.map(AE(_))))
+  app_core(
+    cxt,
+    ht,
+    hty,
+    np,
+    impl_args,
+    expl_args.map(as_ => as_.map(AE(_))),
+    expected~,
+  )
 }
 
 // ---------------------------------------------------------------------------

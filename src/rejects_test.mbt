@@ -205,9 +205,9 @@ test "wrong index" {
       ),
     ),
     content=(
-      #|t.mbtpp:5:34: error: type mismatch
-      #|  expected: Vector[Int](2)
-      #|  actual:   Vector[Int](1)
+      #|t.mbtpp:5:38: error: type mismatch
+      #|  expected: Vector[Int](1)
+      #|  actual:   Vector[?824(_)](0)
     ),
   )
 }
@@ -418,7 +418,7 @@ test "ill-typed object term" {
     ),
     content=(
       #|t.mbtpp:26:40: error: type mismatch
-      #|  expected: Term(?822(_), TArr(?823(_), ?824(_)))
+      #|  expected: Term(Empty, TArr(?823(_), TInt))
       #|  actual:   Term(?825(_), TInt)
     ),
   )
@@ -429,9 +429,9 @@ test "unbound object variable" {
   inspect(
     check(stlc_prelude + "fn bad() -> Term(Empty, TInt) { Var(Here) }"),
     content=(
-      #|t.mbtpp:26:36: error: type mismatch
-      #|  expected: Term(Empty, TInt)
-      #|  actual:   Term(Ext(?824(_), ?825(_)), ?825(_))
+      #|t.mbtpp:26:37: error: type mismatch
+      #|  expected: Elem(Empty, TInt)
+      #|  actual:   Elem(Ext(?824(_), ?825(_)), ?825(_))
     ),
   )
 }
@@ -491,9 +491,9 @@ test "tagged: wrong type for an optional argument" {
   inspect(
     check(labelled_prelude + "fn main { println(f(1, a=2, c=\"x\")) }"),
     content=(
-      #|t.mbtpp:2:29: error: type mismatch
-      #|  expected: Option[Int]
-      #|  actual:   Option[String]
+      #|t.mbtpp:2:31: error: type mismatch
+      #|  expected: Int
+      #|  actual:   String
     ),
   )
 }

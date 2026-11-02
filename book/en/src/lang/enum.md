@@ -74,6 +74,9 @@ enum Sigma[A](P : (A) -> Type) {
 ## Using constructors
 
 - The data type's parameters are always inferred; `[...]` supplies only the constructor's own implicit parameters, e.g. `Cons[n](x, xs)`.
+- When the expected type is known, it determines the implicit arguments before the arguments are
+  checked: in `MkIsZ(Refl) : IsZ(Z)`, `n` is `Z` before `Refl : f(n) === Z` is checked (calls of
+  functions too, when their result type does not depend on the explicit arguments).
 - Constructors with the same name are disambiguated by the expected type, or you can write the full name `Vector::Cons`.
 - An enum whose universe is `Prop` is a proposition, e.g. `Id` in the Prelude (see [Propositional Equality](equality.md)).
 

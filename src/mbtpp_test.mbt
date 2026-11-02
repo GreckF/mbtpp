@@ -391,3 +391,89 @@ test "Nat runs as a BigInt" {
     ),
   )
 }
+
+///|
+/// A literal sub-pattern refines its field in the types of the later fields
+/// (bugs/001 of moonlit).
+test "a literal in a constructor pattern refines the later fields" {
+  inspect(
+    run_source(
+      "t.mbtpp",
+      (
+        #|enum Maybe[P : Prop] {
+        #|  Yes(P)
+        #|  No
+        #|}
+        #|
+        #|enum Sing(x : Bool) {
+        #|  MkSing(y : Bool, eq : x === y)
+        #|}
+        #|
+        #|enum SingI(x : Int) {
+        #|  MkSingI(y : Int, eq : x === y)
+        #|}
+        #|
+        #|fn lit(x : Bool, s : Sing(x)) -> Maybe[x === true] {
+        #|  match s {
+        #|    MkSing(true, e) => Yes(e)
+        #|    MkSing(false, _) => No
+        #|  }
+        #|}
+        #|
+        #|fn lit_int(x : Int, s : SingI(x)) -> Maybe[x === 0] {
+        #|  match s {
+        #|    MkSingI(0, e) => Yes(e)
+        #|    MkSingI(_, _) => No
+        #|  }
+        #|}
+        #|
+        #|fn main {
+        #|  match lit(true, MkSing(true, Refl)) {
+        #|    Yes(_) => println("yes")
+        #|    No => println("no")
+        #|  }
+        #|  match lit_int(3, MkSingI(3, Refl)) {
+        #|    Yes(_) => println("yes")
+        #|    No => println("no")
+        #|  }
+        #|}
+      ),
+    ),
+    content=(
+      #|yes
+      #|no
+      #|
+    ),
+  )
+  // `_` does not know the value
+  inspect(
+    run_source(
+      "t.mbtpp",
+      (
+        #|enum Maybe[P : Prop] {
+        #|  Yes(P)
+        #|  No
+        #|}
+        #|
+        #|enum Sing(x : Bool) {
+        #|  MkSing(y : Bool, eq : x === y)
+        #|}
+        #|
+        #|fn lit(x : Bool, s : Sing(x)) -> Maybe[x === true] {
+        #|  match s {
+        #|    MkSing(_, e) => Yes(e)
+        #|  }
+        #|}
+        #|
+        #|fn main {
+        #|  ()
+        #|}
+      ),
+    ),
+    content=(
+      #|t.mbtpp:12:24: error: type mismatch
+      #|  expected: Maybe[x === true]
+      #|  actual:   Maybe[x === _]
+    ),
+  )
+}

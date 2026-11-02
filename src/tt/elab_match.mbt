@@ -94,15 +94,22 @@ fn check_pat(
     PLit(_, l) => {
       cxt.unify(ty, lit_type(l))
       let out = simple(as_name, CPLit(l))
-      // in the clause, the scrutinee is the literal
-      match scrut {
-        Some(v) if refine_scrut && !is_mut_var(out.cxt, v) =>
+      // in the clause, the scrutinee is the literal; so is the slot of a
+      // sub-pattern, which later fields of the constructor may mention (as
+      // for constructor patterns)
+      let v = match scrut {
+        Some(v) if refine_scrut && !is_mut_var(out.cxt, v) => Some(v)
+        Some(_) => None
+        None => Some(v_var(out.slot))
+      }
+      match v {
+        Some(v) =>
           match out.cxt.refine([(v, VLit(l))]) {
             ROk(c2) => { ..out, cxt: c2, }
             RConflict => { ..out, pat: CPWild, conflict: true, }
             RStuck(_) => out
           }
-        _ => out
+        None => out
       }
     }
     PTuple(q, ps) =>

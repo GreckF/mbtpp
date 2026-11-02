@@ -89,7 +89,8 @@ lemma insert_length(x : Int, xs : List[Int]) -> length(insert(x, xs)) === S(leng
 - This is done only when the goal is a proposition; a `match` in an ordinary function is not
   affected.
 - Literal patterns (`true`, `0`, `"a"`) refine the matched variable too: in the arm, the variable is
-  that literal.
+  that literal. So does a literal sub-pattern of a constructor: in `MkSing(true, e)`, the field is
+  `true` in the type of the later field `e`.
 
 ## Eliminating Prop
 

@@ -842,6 +842,64 @@ pub let prelude_src : String =
   #|  }
   #|}
   #|
+  #|impl[A : Show, B : Show] Show for Tuple2[A, B] with to_string(self) {
+  #|  match self {
+  #|    (a, b) => "(" + a.to_string() + ", " + b.to_string() + ")"
+  #|  }
+  #|}
+  #|impl[A : Show, B : Show, C : Show] Show for Tuple3[A, B, C] with to_string(self) {
+  #|  match self {
+  #|    (a, b, c) =>
+  #|      "(" + a.to_string() + ", " + b.to_string() + ", " + c.to_string() + ")"
+  #|  }
+  #|}
+  #|impl[A : Eq, B : Eq] Eq for Tuple2[A, B] with op_equal(x, y) {
+  #|  match (x, y) {
+  #|    ((a1, b1), (a2, b2)) => a1 == a2 && b1 == b2
+  #|  }
+  #|}
+  #|impl[A : Eq, B : Eq, C : Eq] Eq for Tuple3[A, B, C] with op_equal(x, y) {
+  #|  match (x, y) {
+  #|    ((a1, b1, c1), (a2, b2, c2)) => a1 == a2 && b1 == b2 && c1 == c2
+  #|  }
+  #|}
+  #|impl[A : Compare, B : Compare] Compare for Tuple2[A, B] with compare(x, y) {
+  #|  match (x, y) {
+  #|    ((a1, b1), (a2, b2)) => {
+  #|      let c = a1.compare(a2)
+  #|      if c == 0 { b1.compare(b2) } else { c }
+  #|    }
+  #|  }
+  #|}
+  #|impl[A : Compare, B : Compare, C : Compare] Compare for Tuple3[A, B, C] with compare(x, y) {
+  #|  match (x, y) {
+  #|    ((a1, b1, c1), (a2, b2, c2)) => {
+  #|      let c = a1.compare(a2)
+  #|      if c != 0 {
+  #|        c
+  #|      } else {
+  #|        let d = b1.compare(b2)
+  #|        if d == 0 { c1.compare(c2) } else { d }
+  #|      }
+  #|    }
+  #|  }
+  #|}
+  #|impl[A : Hash, B : Hash] Hash for Tuple2[A, B] with hash(self) {
+  #|  match self {
+  #|    (a, b) => a.hash() * 31 + b.hash()
+  #|  }
+  #|}
+  #|impl[A : Hash, B : Hash, C : Hash] Hash for Tuple3[A, B, C] with hash(self) {
+  #|  match self {
+  #|    (a, b, c) => (a.hash() * 31 + b.hash()) * 31 + c.hash()
+  #|  }
+  #|}
+  #|
+  #|fn[T] ignore(x : T) -> Unit {
+  #|  let _ = x
+  #|  ()
+  #|}
+  #|
   #|fn[T : Show] println(x : T) -> Unit {
   #|  print_string(x.to_string() + "\n")
   #|}

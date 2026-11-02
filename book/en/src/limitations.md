@@ -10,7 +10,7 @@
 - A generic instance overlapping a more specific one (`impl[T] Tr for Array[T]` and
   `impl Tr for Array[Int]`) is not an error, and the generic one found first is used; MoonBit
   rejects such programs. Implementing the same method twice for the same type is an error.
-- `Array` and tuples have no `Compare` instance; integer literals are not overloaded by the expected
+- `Array` has no `Compare` instance; integer literals are not overloaded by the expected
   type (`let x : Int64 = 3` needs `3L`).
 - A match on a proof (of a `Prop` that is not a subsingleton) may appear where the result is a
   proof, but the side effects of its arms (output, assignments) do not happen in the compiled

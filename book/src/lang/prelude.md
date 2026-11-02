@@ -13,12 +13,13 @@
 | `Option[T]`（`None`、`Some`）、`T?` | 可选值 |
 | `Result[T, E]`（`Ok`、`Err`） | 结果 |
 | `List[T]`（`Nil`、`Cons`） | 链表：`append`、`reverse`、`length`、`map`、`flat_map` |
-| `(a, b)`、`(a, b, c)` | 元组（`Tuple2`、`Tuple3`） |
+| `(a, b)`、`(a, b, c)` | 元组（`Tuple2`、`Tuple3`）；元素满足约束时有 `Show`、`Eq`、`Compare`、`Hash` |
 | `Failure`、`fail(msg)` | 通用错误 |
 | `Show`、`Eq`、`Compare`、`Add`、`Sub`、`Mul`、`Div`、`Mod`、`Neg`、`Default`、`Monad` | trait（见 [trait](traits.md)） |
 | `println`、`print`、`print_string` | 输出（`println` 和 `print` 需要 `Show`） |
 | `abort(msg)`、`panic()` | 终止程序 |
 | `not(b)` | 布尔取反 |
+| `ignore(x)` | 丢弃一个值 |
 
 内置类型的方法：
 

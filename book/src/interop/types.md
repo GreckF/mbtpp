@@ -68,5 +68,6 @@ MoonBit 填入。填入的位置是生成的 `.mbt` 中的位置。
 
 - trait 既不是 Prelude trait、也不是导入的 trait 的 `impl`（例如没有导入 `moonbitlang/core/debug`
   时的 `@debug.Debug`）；
-- `#deprecated` 的项；
 - trait 的重新导出（`@builtin` 的除外），以及来源包未导入的函数的重新导出。
+
+`#deprecated` 的项照常导入（MoonBit 也只对它们的使用给出警告）。

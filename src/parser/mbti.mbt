@@ -311,9 +311,7 @@ pub fn parse_mbti(
   let skipped : Array[String] = []
   let usings : Array[(Int32, String)] = []
   for item in items {
-    if item.attrs.iter().any(a => a.has_prefix("#deprecated")) {
-      continue
-    }
+    // `#deprecated` items are imported (MoonBit only warns about their uses)
     let first = match item.text.find("\n") {
       Some(k) => item.text.unsafe_substring(start=0, end=k)
       None => item.text

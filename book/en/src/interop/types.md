@@ -71,6 +71,7 @@ The following items are skipped; `moonpp check --verbose` lists them:
 
 - `impl`s of traits that are neither Prelude traits nor imported traits (e.g. `@debug.Debug`
   when `moonbitlang/core/debug` is not imported);
-- `#deprecated` items;
 - trait re-exports (except those of `@builtin`), and re-exported functions whose package is not
   imported.
+
+`#deprecated` items are imported as usual (MoonBit, too, only warns about their uses).

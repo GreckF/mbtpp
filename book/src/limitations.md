@@ -14,8 +14,8 @@
   变量）在编译后的程序中不会发生，因为证明被擦除。
 - 比较运算符可以连写（`a == b == c` 按左结合解析），MoonBit 不允许。
 - 含数组模式的 `match` 不做覆盖检查，也不细化类型。
-- `Map` 是 Prelude 用 MoonBit++ 实现的（按插入顺序，查找是线性的），不是 MoonBit 的 `Map`：参数或返回值
-  是 MoonBit `Map` 的导入函数不能调用。
+- `Map` 和 `HashMap` 是 Prelude 用 MoonBit++ 实现的（`Map` 的查找是线性的，大的表用 `HashMap`），不是
+  MoonBit 的 `Map`、`HashMap`：参数或返回值是 MoonBit 的这些类型的导入函数不能调用。
 - 没有 `BigInt` 字面量（`1N`）、`Int16`、`UInt16`；导入的 `@bigint` 中与 Prelude 同名的 `BigInt` 方法（如带
   `radix?` 的 `to_string`）被 Prelude 的取代；`Float` 的方法只有运算、比较和转换。
 - 类型检查时执行非纯函数时，用到数组、导入函数或捕获 `let mut` 的 lambda 的调用不执行（见[可变状态与循环](lang/mutation.md)）。

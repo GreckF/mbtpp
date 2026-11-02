@@ -55,7 +55,7 @@ test "a call on an argument that may raise is not unfolded" {
     content=(
       #|t.mbtpp:10:55: error: type mismatch
       #|  expected: const0(head(xs)) === 0
-      #|  actual:   ?535(xs) === ?535(xs)
+      #|  actual:   ?822(xs) === ?822(xs)
     ),
   )
 }
@@ -80,7 +80,7 @@ test "an error is not a value" {
     content=(
       #|t.mbtpp:10:34: error: type mismatch
       #|  expected: head(Nil) === 0
-      #|  actual:   ?536(_) === ?536(_)
+      #|  actual:   ?823(_) === ?823(_)
     ),
   )
 }
@@ -105,7 +105,7 @@ test "errors are compared" {
     content=(
       #|t.mbtpp:10:44: error: type mismatch
       #|  expected: head(Nil) === (raise Other)
-      #|  actual:   ?536(_) === ?536(_)
+      #|  actual:   ?823(_) === ?823(_)
     ),
   )
 }
@@ -130,7 +130,7 @@ test "a lambda does not catch the error of its argument" {
     content=(
       #|t.mbtpp:10:52: error: type mismatch
       #|  expected: (raise Empty) === 0
-      #|  actual:   ?538(_) === ?538(_)
+      #|  actual:   ?825(_) === ?825(_)
     ),
   )
 }
@@ -155,7 +155,7 @@ test "a match does not catch the error of its scrutinee" {
     content=(
       #|t.mbtpp:10:53: error: type mismatch
       #|  expected: (raise Empty) === 0
-      #|  actual:   ?537(_) === ?537(_)
+      #|  actual:   ?824(_) === ?824(_)
     ),
   )
 }
@@ -181,7 +181,7 @@ test "the implicit arguments of a lemma are values" {
     content=(
       #|t.mbtpp:11:46: error: type mismatch
       #|  expected: const0(head(Nil)) === 0
-      #|  actual:   const0(?537(_)) === 0
+      #|  actual:   const0(?824(_)) === 0
     ),
   )
 }

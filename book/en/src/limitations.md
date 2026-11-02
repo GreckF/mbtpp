@@ -18,8 +18,9 @@
 - Comparison operators can be chained (`a == b == c` parses left-associatively); MoonBit does not
   allow it.
 - A `match` with array patterns is not checked for coverage and does not refine types.
-- `Map` is implemented in MoonBit++ by the Prelude (in insertion order, with linear lookups); it is
-  not MoonBit's `Map`, so imported functions taking or returning a MoonBit `Map` cannot be called.
+- `Map` and `HashMap` are implemented in MoonBit++ by the Prelude (`Map` has linear lookups; use
+  `HashMap` for large tables); they are not MoonBit's `Map` and `HashMap`, so imported functions
+  taking or returning those MoonBit types cannot be called.
 - There are no `BigInt` literals (`1N`), `Int16` or `UInt16`; the methods of the imported `@bigint`
   named like the Prelude's `BigInt` methods (`to_string` with `radix?`) give way to the Prelude's; `Float` only has its operators,
   comparisons and conversions.

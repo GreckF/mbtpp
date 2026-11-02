@@ -854,6 +854,177 @@ pub let prelude_src : String =
   #|  s + "}"
   #|}
   #|
+  #|// ---- HashMap ----------------------------------------------------------
+  #|
+  #|// A hash table (keys with `Hash + Eq`), in insertion order: `m[k]`,
+  #|// `m[k] = v`, `for k, v in m`, `{}` and `{ k: v }` where a `HashMap` is
+  #|// expected. The entries are in arrays; `hm_table` (open addressing, a size
+  #|// that is a power of 2) has their positions + 1, or 0 for a free slot.
+  #|// Removed entries stay (dead) until the table grows.
+  #|struct HashMap[K, V] {
+  #|  mut hm_keys : Array[K]
+  #|  mut hm_values : Array[V]
+  #|  mut hm_alive : Array[Bool]
+  #|  mut hm_table : Array[Int]
+  #|  mut hm_count : Int
+  #|}
+  #|
+  #|fn[K, V] HashMap::new() -> HashMap[K, V] {
+  #|  {
+  #|    hm_keys: [],
+  #|    hm_values: [],
+  #|    hm_alive: [],
+  #|    hm_table: Array::make(8, 0),
+  #|    hm_count: 0,
+  #|  }
+  #|}
+  #|
+  #|// the slot of `key`: where it is, or the free slot that ends its probe
+  #|fn[K : Hash + Eq, V] HashMap::slot(self : HashMap[K, V], key : K) -> Int {
+  #|  let mask = self.hm_table.length() - 1
+  #|  let mut i = key.hash() & mask
+  #|  while true {
+  #|    let e = self.hm_table[i]
+  #|    if e == 0 {
+  #|      return i
+  #|    }
+  #|    if self.hm_alive[e - 1] && self.hm_keys[e - 1] == key {
+  #|      return i
+  #|    }
+  #|    i = (i + 1) & mask
+  #|  }
+  #|  i
+  #|}
+  #|
+  #|// the position of `key` in the entries, or -1
+  #|fn[K : Hash + Eq, V] HashMap::index_of(self : HashMap[K, V], key : K) -> Int {
+  #|  self.hm_table[self.slot(key)] - 1
+  #|}
+  #|
+  #|// a table twice as large (when needed), without the dead entries
+  #|fn[K : Hash + Eq, V] HashMap::grow(self : HashMap[K, V]) -> Unit {
+  #|  let ks : Array[K] = Array::new()
+  #|  let vs : Array[V] = Array::new()
+  #|  let alive : Array[Bool] = Array::new()
+  #|  for i = 0; i < self.hm_keys.length(); i = i + 1 {
+  #|    if self.hm_alive[i] {
+  #|      ks.push(self.hm_keys[i])
+  #|      vs.push(self.hm_values[i])
+  #|      alive.push(true)
+  #|    }
+  #|  }
+  #|  let mut size = self.hm_table.length()
+  #|  while ks.length() * 2 >= size {
+  #|    size = size * 2
+  #|  }
+  #|  self.hm_keys = ks
+  #|  self.hm_values = vs
+  #|  self.hm_alive = alive
+  #|  self.hm_table = Array::make(size, 0)
+  #|  for i = 0; i < ks.length(); i = i + 1 {
+  #|    self.hm_table[self.slot(ks[i])] = i + 1
+  #|  }
+  #|}
+  #|
+  #|fn[K : Hash + Eq, V] HashMap::set(self : HashMap[K, V], key : K, value : V) -> Unit {
+  #|  let s = self.slot(key)
+  #|  let e = self.hm_table[s]
+  #|  if e > 0 {
+  #|    self.hm_values[e - 1] = value
+  #|  } else {
+  #|    self.hm_keys.push(key)
+  #|    self.hm_values.push(value)
+  #|    self.hm_alive.push(true)
+  #|    self.hm_table[s] = self.hm_keys.length()
+  #|    self.hm_count = self.hm_count + 1
+  #|    if self.hm_keys.length() * 2 >= self.hm_table.length() {
+  #|      self.grow()
+  #|    }
+  #|  }
+  #|}
+  #|
+  #|fn[K : Hash + Eq, V] HashMap::get(self : HashMap[K, V], key : K) -> V? {
+  #|  let i = self.index_of(key)
+  #|  if i < 0 { None } else { Some(self.hm_values[i]) }
+  #|}
+  #|
+  #|fn[K : Hash + Eq, V] HashMap::op_get(self : HashMap[K, V], key : K) -> V? {
+  #|  self.get(key)
+  #|}
+  #|
+  #|fn[K : Hash + Eq, V] HashMap::op_set(self : HashMap[K, V], key : K, value : V) -> Unit {
+  #|  self.set(key, value)
+  #|}
+  #|
+  #|fn[K : Hash + Eq, V] HashMap::contains(self : HashMap[K, V], key : K) -> Bool {
+  #|  self.index_of(key) >= 0
+  #|}
+  #|
+  #|fn[K : Hash + Eq, V] HashMap::remove(self : HashMap[K, V], key : K) -> Unit {
+  #|  let i = self.index_of(key)
+  #|  if i >= 0 {
+  #|    self.hm_alive[i] = false
+  #|    self.hm_count = self.hm_count - 1
+  #|  }
+  #|}
+  #|
+  #|fn[K, V] HashMap::length(self : HashMap[K, V]) -> Int {
+  #|  self.hm_count
+  #|}
+  #|
+  #|fn[K, V] HashMap::size(self : HashMap[K, V]) -> Int {
+  #|  self.hm_count
+  #|}
+  #|
+  #|fn[K, V] HashMap::is_empty(self : HashMap[K, V]) -> Bool {
+  #|  self.hm_count == 0
+  #|}
+  #|
+  #|fn[K, V] HashMap::keys(self : HashMap[K, V]) -> Array[K] {
+  #|  let out : Array[K] = Array::new()
+  #|  for i = 0; i < self.hm_keys.length(); i = i + 1 {
+  #|    if self.hm_alive[i] { out.push(self.hm_keys[i]) }
+  #|  }
+  #|  out
+  #|}
+  #|
+  #|fn[K, V] HashMap::values(self : HashMap[K, V]) -> Array[V] {
+  #|  let out : Array[V] = Array::new()
+  #|  for i = 0; i < self.hm_keys.length(); i = i + 1 {
+  #|    if self.hm_alive[i] { out.push(self.hm_values[i]) }
+  #|  }
+  #|  out
+  #|}
+  #|
+  #|fn[K, V] HashMap::to_array(self : HashMap[K, V]) -> Array[(K, V)] {
+  #|  let out : Array[(K, V)] = Array::new()
+  #|  for i = 0; i < self.hm_keys.length(); i = i + 1 {
+  #|    if self.hm_alive[i] { out.push((self.hm_keys[i], self.hm_values[i])) }
+  #|  }
+  #|  out
+  #|}
+  #|
+  #|fn[K : Hash + Eq, V] HashMap::from_array(xs : Array[(K, V)]) -> HashMap[K, V] {
+  #|  let m : HashMap[K, V] = HashMap::new()
+  #|  for i = 0; i < xs.length(); i = i + 1 {
+  #|    m.set(xs[i].0, xs[i].1)
+  #|  }
+  #|  m
+  #|}
+  #|
+  #|impl[K : Show, V : Show] Show for HashMap[K, V] with to_string(self) {
+  #|  let mut s = "{"
+  #|  let mut first = true
+  #|  for i = 0; i < self.hm_keys.length(); i = i + 1 {
+  #|    if self.hm_alive[i] {
+  #|      if !first { s = s + ", " }
+  #|      first = false
+  #|      s = s + self.hm_keys[i].to_string() + ": " + self.hm_values[i].to_string()
+  #|    }
+  #|  }
+  #|  s + "}"
+  #|}
+  #|
   #|// ---- traits -----------------------------------------------------------
   #|
   #|#mbt("Show")

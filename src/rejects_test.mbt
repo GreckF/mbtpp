@@ -265,7 +265,7 @@ test "a run that cannot finish keeps the call folded" {
     content=(
       #|t.mbtpp:2:37: error: type mismatch
       #|  expected: abs(x) === x
-      #|  actual:   ?535(x) === ?535(x)
+      #|  actual:   ?822(x) === ?822(x)
     ),
   )
   // arrays are mutable
@@ -279,7 +279,7 @@ test "a run that cannot finish keeps the call folded" {
     content=(
       #|t.mbtpp:2:31: error: type mismatch
       #|  expected: first(()) === 1
-      #|  actual:   ?536 === ?536
+      #|  actual:   ?823 === ?823
     ),
   )
 }
@@ -405,7 +405,7 @@ test "indexing an empty vector" {
     content=(
       #|t.mbtpp:32:36: error: type mismatch
       #|  expected: Fin(0)
-      #|  actual:   Fin(S(?541(_)))
+      #|  actual:   Fin(S(?828(_)))
     ),
   )
 }
@@ -418,8 +418,8 @@ test "ill-typed object term" {
     ),
     content=(
       #|t.mbtpp:26:40: error: type mismatch
-      #|  expected: Term(?535(_), TArr(?536(_), ?537(_)))
-      #|  actual:   Term(?538(_), TInt)
+      #|  expected: Term(?822(_), TArr(?823(_), ?824(_)))
+      #|  actual:   Term(?825(_), TInt)
     ),
   )
 }
@@ -431,7 +431,7 @@ test "unbound object variable" {
     content=(
       #|t.mbtpp:26:36: error: type mismatch
       #|  expected: Term(Empty, TInt)
-      #|  actual:   Term(Ext(?537(_), ?538(_)), ?538(_))
+      #|  actual:   Term(Ext(?824(_), ?825(_)), ?825(_))
     ),
   )
 }
@@ -669,7 +669,7 @@ test "file order: a hint when a later file's function is needed" {
     content=(
       #|facts.mbtpp:1:36: error: type mismatch
       #|  expected: Shape::area(Sq(3)) === 9
-      #|  actual:   ?535 === ?535
+      #|  actual:   ?822 === ?822
       #|hint: Shape::area is defined in shapes.mbtpp, which is checked after facts.mbtpp, so its definition could not be used here; the error may come from that. Files are checked in dictionary order; to check shapes.mbtpp first, list it in the package's moon.pkg: options("mbtpp-order": [ "shapes.mbtpp", ... ])
     ),
   )

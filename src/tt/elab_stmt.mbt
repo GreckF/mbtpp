@@ -224,7 +224,8 @@ fn check_block(
       (Seq(loop_tm, r), rty)
     }
     // `for k, v in m` on a map: its pairs
-    SForIn(p, [k, v], e, body) if infer_ins(cxt.at(p), e).1 is VData("Map", _) => {
+    SForIn(p, [k, v], e, body) if infer_ins(cxt.at(p), e).1
+      is VData("Map" | "HashMap", _) => {
       let pair = fresh_name_gen("__kv")
       let body2 : @parser.Expr = EBlock(p, [
         SLet(p, PTuple(p, [PVar(p, k), PVar(p, v)]), None, EVar(p, pair)),

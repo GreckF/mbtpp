@@ -775,7 +775,7 @@ test "a polymorphic call that may raise is not unfolded" {
     content=(
       #|t.mbtpp:4:78: error: type mismatch
       #|  expected: len(List::map(xs, (x) => chk(x))) === len(xs)
-      #|  actual:   ?539(xs) === ?539(xs)
+      #|  actual:   ?826(xs) === ?826(xs)
     ),
   )
 }
@@ -871,7 +871,7 @@ test "ctl handlers are computed during checking" {
     content=(
       #|t.mbtpp:34:77: error: type mismatch
       #|  expected: all_counts(()) === Cons(2, Cons(2, Cons(2, Cons(2, Nil))))
-      #|  actual:   ?560(_) === ?560(_)
+      #|  actual:   ?847(_) === ?847(_)
     ),
   )
 }

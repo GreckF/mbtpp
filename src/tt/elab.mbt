@@ -1145,8 +1145,11 @@ pub fn check(cxt0 : Cxt, e : @parser.Expr, ty0 : Val) -> Tm raise ElabError {
       Lam(x, i, false, check(c2, e, inst(cl, v)))
     }
     // `{}` where a map is expected: the empty map
-    (EBlock(p, []), VData("Map", _)) =>
-      check(cxt, EApp(p, EVar(p, "Map::new"), None, Some([])), ty)
+    (EBlock(p, []), VData("Map" | "HashMap" as m, _)) =>
+      check(cxt, EApp(p, EVar(p, m + "::new"), None, Some([])), ty)
+    // `{ k: v }` where a `HashMap` is expected
+    (EApp(p, EVar(q, "Map::from_array"), None, Some(xs)), VData("HashMap", _)) =>
+      check(cxt, EApp(p, EVar(q, "HashMap::from_array"), None, Some(xs)), ty)
     (EBlock(_, stmts), _) => check_block(cxt, stmts, Some(ty)).0
     (EIf(_, c, t, el), _) => {
       let tc = check(cxt, c, bool_ty())

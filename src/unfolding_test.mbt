@@ -25,7 +25,7 @@ test "an opaque function is not unfolded" {
     content=(
       #|t.mbtpp:8:35: error: type mismatch
       #|  expected: plus(1, 1) === 2
-      #|  actual:   ?535(_) === ?535(_)
+      #|  actual:   ?822(_) === ?822(_)
       #|hint: plus is opaque here; if the definition is needed, add #unfold(plus) to the declaration, or use unfold(plus) { … }
     ),
   )
@@ -125,7 +125,7 @@ test "a transparent function that unfolds an opaque one" {
     content=(
       #|t.mbtpp:12:34: error: type mismatch
       #|  expected: double(1) === 2
-      #|  actual:   ?537(_) === ?537(_)
+      #|  actual:   ?824(_) === ?824(_)
       #|hint: plus is opaque here; if the definition is needed, add #unfold(plus) to the declaration, or use unfold(plus) { … }
     ),
   )
@@ -154,7 +154,7 @@ test "an opaque function is not run during checking" {
     content=(
       #|t.mbtpp:9:36: error: type mismatch
       #|  expected: sum_to(10) === 55
-      #|  actual:   ?537(_) === ?537(_)
+      #|  actual:   ?824(_) === ?824(_)
       #|hint: sum_to is opaque here; if the definition is needed, add #unfold(sum_to) to the declaration, or use unfold(sum_to) { … }
     ),
   )

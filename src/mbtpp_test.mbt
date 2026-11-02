@@ -625,3 +625,48 @@ test "deq, DecEq and physical equality" {
     ),
   )
 }
+
+///|
+test "HashMap" {
+  inspect(
+    run_source(
+      "t.mbtpp",
+      (
+        #|fn main {
+        #|  let m : HashMap[String, Int] = {}
+        #|  m["a"] = 1
+        #|  m["b"] = 2
+        #|  m["a"] = 3
+        #|  println(m)
+        #|  println("\{m["a"]} \{m["zz"]}")
+        #|  m.remove("a")
+        #|  println(m.contains("a"))
+        #|  m["a"] = 9
+        #|  for k, v in m {
+        #|    println(k + "=" + v.to_string())
+        #|  }
+        #|  let big : HashMap[(Int, Int), Int] = HashMap::new()
+        #|  for i = 0; i < 300; i = i + 1 {
+        #|    big[(i, i % 7)] = i
+        #|  }
+        #|  for i = 0; i < 200; i = i + 2 {
+        #|    big.remove((i, i % 7))
+        #|  }
+        #|  println("\{big.length()} \{big[(201, 201 % 7)]} \{big[(2, 2)]}")
+        #|  let lit : HashMap[String, Int] = { "x": 1, "y": 2 }
+        #|  println(lit)
+        #|}
+      ),
+    ),
+    content=(
+      #|{a: 3, b: 2}
+      #|Some(3) None
+      #|false
+      #|b=2
+      #|a=9
+      #|200 Some(201) None
+      #|{x: 1, y: 2}
+      #|
+    ),
+  )
+}

@@ -1,6 +1,9 @@
 # Prelude
 
-The Prelude is loaded automatically into every program (`moonpp --no-prelude` turns it off).
+The Prelude is loaded automatically into every program (`moonpp --no-prelude` turns it off). A
+declaration of the program with the name of a Prelude type or trait replaces it: the Prelude's
+methods and instances of that type, and its definitions using it, are gone (your own `HashMap`,
+say).
 
 | Name | Description |
 | --- | --- |

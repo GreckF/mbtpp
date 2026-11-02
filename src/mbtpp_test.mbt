@@ -670,3 +670,56 @@ test "HashMap" {
     ),
   )
 }
+
+///|
+/// A type of the program with the name of a Prelude type replaces it, with
+/// everything of the Prelude that uses it.
+test "a type of the program replaces the Prelude's" {
+  inspect(
+    run_source(
+      "t.mbtpp",
+      (
+        #|struct HashMap[K, V] {
+        #|  mut items : Array[(K, V)]
+        #|}
+        #|
+        #|fn[K, V] HashMap::new() -> HashMap[K, V] {
+        #|  { items: [] }
+        #|}
+        #|
+        #|fn[K : Eq, V] HashMap::set(self : HashMap[K, V], k : K, v : V) -> Unit {
+        #|  self.items.push((k, v))
+        #|}
+        #|
+        #|fn[K, V] HashMap::length(self : HashMap[K, V]) -> Int {
+        #|  self.items.length()
+        #|}
+        #|
+        #|enum Nat {
+        #|  Zero
+        #|  Succ(Nat, String)
+        #|}
+        #|
+        #|fn Nat::count(self : Nat) -> Int {
+        #|  match self {
+        #|    Zero => 0
+        #|    Succ(n, _) => n.count() + 1
+        #|  }
+        #|}
+        #|
+        #|fn main {
+        #|  let m : HashMap[String, Int] = HashMap::new()
+        #|  m.set("a", 1)
+        #|  m.set("b", 2)
+        #|  println(m.length())
+        #|  println(Succ(Succ(Zero, "x"), "y").count())
+        #|}
+      ),
+    ),
+    content=(
+      #|2
+      #|2
+      #|
+    ),
+  )
+}

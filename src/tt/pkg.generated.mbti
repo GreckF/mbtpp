@@ -141,6 +141,8 @@ pub fn pat_slots(CPat) -> Int32
 
 pub fn pats_slots(Array[CPat]) -> Int32
 
+pub let prelude_nat : @ref.Ref[Bool]
+
 pub let prelude_src : String
 
 pub fn prim_pure(String, Array[@parser.Lit]) -> @parser.Lit?

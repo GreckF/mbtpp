@@ -858,7 +858,7 @@ fn Gen::app(self : Gen, env : Array[Local], t : @tt.Tm) -> String {
 /// `Gen::app`).
 fn nat_prim(h : @tt.Tm) -> (String, Int32)? {
   match h {
-    Global(n) => @tt.nat_natives.get(n)
+    Global(n) if @tt.prelude_nat.val => @tt.nat_natives.get(n)
     _ => None
   }
 }

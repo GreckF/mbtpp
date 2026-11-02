@@ -176,6 +176,7 @@ pub fn check_package(
 ) -> Unit raise CheckError {
   setup()
   last_error.clear()
+  prelude_nat.val = true
   if prelude {
     check_src("<prelude>", prelude_src)
   }
@@ -196,6 +197,9 @@ pub fn check_package(
     for d in ds {
       decls.push(d)
     }
+  }
+  if prelude {
+    prune_prelude(decls)
   }
   check_decls(decls) catch {
     ElabError(p, msg) => {

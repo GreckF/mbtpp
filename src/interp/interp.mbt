@@ -105,9 +105,10 @@ fn Machine::global(self : Machine, n : String) -> RVal raise Ctl {
   }
   let v = match @tt.globals.get(n) {
     // `Nat` is native: its constructors and the prelude functions on it
-    _ if n == "Nat::Z" => RNat(0N)
-    _ if n == "Nat::S" => RPartial(PPrim("%nat_succ", 1), [])
-    _ if @tt.nat_natives.get(n) is Some((p, arity)) =>
+    _ if n == "Nat::Z" && @tt.prelude_nat.val => RNat(0N)
+    _ if n == "Nat::S" && @tt.prelude_nat.val =>
+      RPartial(PPrim("%nat_succ", 1), [])
+    _ if @tt.prelude_nat.val && @tt.nat_natives.get(n) is Some((p, arity)) =>
       RPartial(PPrim(p, arity), [])
     Some(g) =>
       match g.kind {
@@ -142,8 +143,8 @@ fn rmatch(p : @tt.CPat, v : RVal, out : Array[RVal]) -> Bool {
   out.push(v)
   match p {
     CPVar(_) | CPWild => true
-    CPCon("Nat::Z", []) => v is RNat(n) && n == 0N
-    CPCon("Nat::S", [q]) =>
+    CPCon("Nat::Z", []) if @tt.prelude_nat.val => v is RNat(n) && n == 0N
+    CPCon("Nat::S", [q]) if @tt.prelude_nat.val =>
       match v {
         RNat(n) if n > 0N => rmatch(q, RNat(n - 1N), out)
         _ => false

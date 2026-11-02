@@ -1,6 +1,7 @@
 # Prelude
 
-每个程序都自动加载 Prelude（`moonpp --no-prelude` 可以关闭）。
+每个程序都自动加载 Prelude（`moonpp --no-prelude` 可以关闭）。程序中与 Prelude 的类型或 trait 同名的
+声明取代它：Prelude 中这个类型的方法、实例和用到它的定义都不再存在（例如自己定义的 `HashMap`）。
 
 | 名字 | 说明 |
 | --- | --- |
